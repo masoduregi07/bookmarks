@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>내 북마크 보관함</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="북마크">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#E9EDF1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151A21" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAAB+ElEQVR42u3ZsW0CUQyAYbDeCHS0DAAbhCIjRFkgCzAJC7ABI1Ako6WgJZFCOHS2v7+kgNPzh48Ty/Vmu5BuFY5AcAgOwSE4BIfgEByCQ3AIDgkOwSE4BIfgEByCQ3AIDsEhwSE4BIfgEByCQ3AIDsEhOCQ4BIfgEBx6RiPX5X4cz9lP/HR4sznktiI4BIcEh+AQHIJDcAgOwSE4BIfgkNL9Zf++W2U/8ZPNIbcVwSE4JDgEh+AQHIJDcAgOwSE4BIcEh+AQHIJDcAgOwSE4BIfgEBwSHIJDcAgOwSE4BIfgEByCQ4JDcAgOwSE4BIfgEByCQ3BIcAgOwSE4BIfgEByCQ3AIDsEhwSE4BIfgEByCQ3AIDsEhOCQ4BMc9vb7sHQIcP8rgA47fdgYf14YjuEnh+uLl69PmIMNPEDj+PvvOPoIMPuD417x7+ggy+IDjATPu5mNgccebNHnEDTKskNY4pphlBx9BBh9NcUw9v9o+ggw+2uF45syq+hhYPPBDiz3iBhlWSAscc5hNJR9BBh/FccxtHjV8BBl8lMUx5xlk9zGw8IhbbXPk+lImXSFBhmuugyPvjTzdlS/Xm+1CqvooKzgEh+AQHIJDcAgOCQ7BITgEh+AQHIJDcAgOwSE4JDgEh+AQHIJDcAgOwSE4BIcEh+AQHJqqb3m+OfupPm7aAAAAAElFTkSuQmCC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E9EDF1; --paper:#F8FAFB; --ink:#1B2430; --muted:#5E6B7A; --line:#CBD3DC;
+  --accent:#1F5E8C; --accent-soft:#D6E4EF; --star:#B8860B; --danger:#A33A3A;
+  --serif:"Gowun Batang","Noto Serif KR","Apple SD Gothic Neo",serif;
+  --sans:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#151A21; --paper:#1D242D; --ink:#E4E9EF; --muted:#94A0AE; --line:#323C48;
+    --accent:#7FB3DB; --accent-soft:#233444; --star:#E0B64A; --danger:#E08080;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#151A21; --paper:#1D242D; --ink:#E4E9EF; --muted:#94A0AE; --line:#323C48;
+  --accent:#7FB3DB; --accent-soft:#233444; --star:#E0B64A; --danger:#E08080;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+img{max-width:100%}
+
+.wrap{max-width:1240px;margin:0 auto;padding:28px 20px 60px;display:grid;grid-template-columns:230px 1fr;gap:36px}
+header.top{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:14px}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,4vw,40px);line-height:1.1;margin:0;letter-spacing:-.01em}
+.count{color:var(--muted);font-size:14px;margin-top:6px}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn.btn-filters{display:none}
+.drawer-backdrop{display:none}
+
+.btn{border:1px solid var(--line);background:var(--paper);padding:8px 14px;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.primary:hover{opacity:.88}
+.btn.ghost{background:transparent;border-color:transparent;padding:6px 8px;color:var(--muted);font-size:14px}
+.btn.ghost:hover{color:var(--ink);border-color:transparent}
+.btn.danger{color:var(--danger)}
+.btn.small{padding:4px 10px;font-size:13px}
+
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;max-height:calc(100vh - 40px);overflow-y:auto}
+.side-head{display:flex;justify-content:space-between;align-items:center;margin:22px 0 8px}
+.side-head:first-child{margin-top:0}
+.side-head h2{font-size:13px;font-weight:600;color:var(--muted);margin:0}
+.side-head button{border:0;background:transparent;color:var(--accent);font-size:13px;cursor:pointer;padding:2px 4px}
+.filters{display:flex;flex-direction:column;gap:2px}
+.filter{display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;border:0;background:transparent;padding:6px 10px;border-radius:5px;cursor:pointer}
+.filter span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.filter:hover{background:var(--accent-soft)}
+.filter.on{background:var(--ink);color:var(--paper)}
+.filter .n{font-size:12px;opacity:.7;flex:none}
+.filter.drop-target{outline:2px dashed var(--accent)}
+.backup-note{font-size:12.5px;color:var(--muted);margin-top:24px;line-height:1.5}
+
+main{min-width:0}
+.quick{display:flex;gap:8px;margin-bottom:16px}
+.quick input{flex:1;border:1px dashed var(--muted);background:transparent;border-radius:6px;padding:11px 14px}
+.quick input:focus{border-style:solid;background:var(--paper)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
+.search{flex:1 1 240px;border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:9px 12px}
+select{border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:9px 10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--paper)}
+.seg button{border:0;background:transparent;padding:8px 14px;cursor:pointer;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.folder-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:-4px 0 18px}
+.folder-bar strong{font-family:var(--serif);font-size:22px;font-weight:700;margin-right:6px}
+.active-filters{font-size:13px;color:var(--muted);margin:-8px 0 16px}
+.active-filters button{border:0;background:none;color:var(--accent);cursor:pointer;padding:0 4px;font-size:13px}
+
+/* list layout */
+.list{display:flex;flex-direction:column;gap:14px}
+.item{background:var(--paper);border-left:4px solid var(--line);padding:16px 18px 10px;border-radius:0 6px 6px 0}
+.item.starred{border-left-color:var(--star)}
+.meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;font-size:13px;color:var(--muted)}
+.who{color:var(--ink);font-weight:600;font-size:14px}
+.who a{color:inherit;text-decoration:none}
+.who a:hover{text-decoration:underline}
+.badge{font-size:11px;padding:1px 6px;border-radius:3px;background:var(--accent-soft);color:var(--accent);font-weight:500}
+.folder-label{font-size:12px;border:1px solid var(--line);border-radius:3px;padding:0 6px;color:var(--muted)}
+.text{font-family:var(--serif);font-size:16.5px;line-height:1.75;margin:10px 0 6px;white-space:pre-wrap;word-break:break-word;max-width:68ch}
+.text.empty{font-family:var(--sans);font-size:14px;color:var(--muted);font-style:italic}
+.imgs{display:flex;gap:8px;overflow-x:auto;margin:10px 0 6px;padding-bottom:2px}
+.imgs img{height:150px;width:auto;border-radius:5px;cursor:zoom-in;object-fit:cover;background:var(--bg);flex:none}
+.note{font-size:14px;margin:8px 0 4px;padding:8px 12px;background:var(--bg);border-radius:5px;max-width:68ch;white-space:pre-wrap}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{font-size:12.5px;color:var(--accent);background:var(--accent-soft);border:0;border-radius:3px;padding:1px 8px;cursor:pointer}
+.row-actions{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin-top:8px;margin-left:-8px}
+.row-actions select{padding:4px 6px;font-size:13px;margin-left:6px;max-width:150px}
+.embed{margin-top:10px;overflow-x:auto}
+
+/* grid layout */
+.list.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;align-items:start}
+.list.grid .item{margin:0;border-left:0;border-top:4px solid var(--line);border-radius:0 0 6px 6px;padding:14px 14px 8px}
+.list.grid .item.starred{border-top-color:var(--star)}
+.list.grid .text{font-size:15px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.list.grid .text.open{display:block;cursor:auto}
+.list.grid .text.empty{cursor:auto}
+.list.grid .imgs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;overflow:visible;margin:10px -14px 6px}
+.list.grid .imgs img{width:100%;height:84px;border-radius:0}
+.list.grid .imgs img:first-child{grid-column:1/-1;height:auto;max-height:280px}
+.list.grid .row-actions .btn.ghost{font-size:13px;padding:5px 6px}
+.list.grid .row-actions select{margin-left:0}
+
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted);border:1px dashed var(--line);border-radius:8px}
+.empty-state strong{display:block;font-family:var(--serif);font-size:20px;color:var(--ink);margin-bottom:6px}
+
+dialog{border:0;border-radius:10px;padding:0;width:min(580px,94vw);max-height:92vh;background:var(--paper);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(15,20,28,.5)}
+.dlg{padding:22px 24px}
+.dlg h3{font-family:var(--serif);font-size:22px;margin:0 0 16px}
+.field{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.field label{font-size:13px;color:var(--muted)}
+.field input,.field textarea,.field select{border:1px solid var(--line);background:var(--bg);border-radius:6px;padding:9px 11px;width:100%}
+.field textarea{resize:vertical;min-height:80px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:12.5px;color:var(--muted);margin-top:2px}
+.dlg-foot{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+
+.draft-imgs{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:1px dashed var(--line);border-radius:6px;background:var(--bg);min-height:64px;align-items:center}
+.draft-imgs.over{border-color:var(--accent);background:var(--accent-soft)}
+.thumb{position:relative;width:78px;height:78px}
+.thumb img{width:100%;height:100%;object-fit:cover;border-radius:5px}
+.thumb button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:var(--ink);color:var(--paper);cursor:pointer;font-size:13px;line-height:1}
+.add-img{width:78px;height:78px;border:1px solid var(--line);background:var(--paper);border-radius:5px;cursor:pointer;color:var(--muted);font-size:13px}
+
+#lightbox{width:auto;max-width:96vw;background:transparent;box-shadow:none;overflow:visible}
+#lightbox::backdrop{background:rgba(8,10,14,.88)}
+#lightbox img{display:block;max-width:94vw;max-height:84vh;border-radius:4px;margin:0 auto}
+.lb-bar{display:flex;justify-content:center;gap:10px;margin-top:12px}
+.lb-bar button{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:6px;padding:8px 14px;cursor:pointer}
+.lb-bar span{color:#ccd;align-self:center;font-size:14px}
+
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);padding:10px 18px;border-radius:6px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:10}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* tablet (iPad portrait, small laptops) */
+@media (max-width:1024px){
+  .wrap{grid-template-columns:200px 1fr;gap:24px;padding:22px 18px 50px}
+  .list.grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+}
+/* phone: sidebar becomes a slide-in drawer */
+@media (max-width:700px){
+  .wrap{grid-template-columns:1fr;gap:16px;padding:16px 14px 50px}
+  header.top{align-items:stretch}
+  .actions{flex-wrap:nowrap;overflow-x:auto;margin:0 -14px;padding:0 14px 4px;scrollbar-width:none}
+  .actions::-webkit-scrollbar{display:none}
+  .actions .btn{flex:none}
+  .btn.btn-filters{display:inline-block}
+  aside{position:fixed;top:0;bottom:0;left:0;z-index:20;width:min(300px,86vw);height:100vh;height:100dvh;max-height:none;background:var(--paper);
+    padding:calc(env(safe-area-inset-top,0px) + 20px) 18px calc(env(safe-area-inset-bottom,0px) + 20px);
+    transform:translateX(-102%);transition:transform .22s ease;box-shadow:0 0 40px rgba(0,0,0,.25)}
+  aside.open{transform:none}
+  .drawer-backdrop.open{display:block;position:fixed;inset:0;z-index:19;background:rgba(15,20,28,.45)}
+  .two{grid-template-columns:1fr}
+  .list.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .list.grid .item{padding:12px 12px 6px}
+  .list.grid .imgs{margin:8px -12px 6px}
+  .item{padding:14px 14px 8px}
+  .text{font-size:16px}
+}
+/* touch screens (iPad, phones): bigger targets, no zoom-on-focus */
+@media (pointer:coarse){
+  input,textarea,select,.search{font-size:16px}
+  .btn.ghost{padding:9px 10px}
+  .filter{padding:9px 12px}
+  .tag{padding:4px 10px}
+  .seg button{padding:9px 16px}
+  .row-actions select{padding:7px 8px}
+  .thumb button{width:28px;height:28px;top:-8px;right:-8px}
+}
+@media (prefers-reduced-motion:reduce){.toast,aside{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>내 북마크 보관함</h1>
+      <div class="count" id="count"></div>
+    </div>
+    <div class="actions">
+      <button class="btn primary" id="btnAdd">북마크 추가</button>
+      <button class="btn" id="btnBulk">여러 개 붙여넣기</button>
+      <button class="btn" id="btnImport">파일 가져오기</button>
+      <button class="btn" id="btnExportJson">백업(JSON)</button>
+      <button class="btn" id="btnExportHtml">HTML로 내보내기</button>
+      <input type="file" id="fileInput" accept=".json,.txt,.csv,.html" hidden>
+    </div>
+  </header>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside id="sidebar">
+    <div class="side-head"><h2>보기</h2></div>
+    <div class="filters" id="viewFilters"></div>
+    <div class="side-head"><h2>폴더</h2><button id="btnNewFolder">새 폴더</button></div>
+    <div class="filters" id="folderFilters"></div>
+    <div class="side-head"><h2>태그</h2></div>
+    <div class="filters" id="tagFilters"></div>
+    <p class="backup-note" id="backupNote"></p>
+  </aside>
+
+  <main>
+    <div class="quick">
+      <input id="quickUrl" type="url" placeholder="트윗 링크 붙여넣기 + Enter" autocomplete="off">
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-filters" id="btnFilters" aria-controls="sidebar" aria-expanded="false">폴더·필터</button>
+      <input class="search" id="search" type="search" placeholder="검색 ( / )">
+      <select id="sort" aria-label="정렬">
+        <option value="saved-desc">저장한 순 (최신)</option>
+        <option value="saved-asc">저장한 순 (오래된)</option>
+        <option value="tweet-desc">트윗 작성일 (최신)</option>
+        <option value="tweet-asc">트윗 작성일 (오래된)</option>
+        <option value="author">작성자 이름순</option>
+      </select>
+      <div class="seg" role="group" aria-label="보기 방식">
+        <button id="layoutList" aria-pressed="true">목록</button>
+        <button id="layoutGrid" aria-pressed="false">카드</button>
+      </div>
+    </div>
+    <div id="folderBar"></div>
+    <div class="list" id="list"></div>
+  </main>
+</div>
+
+<dialog id="editDlg">
+  <form method="dialog" class="dlg" id="editForm">
+    <h3 id="editTitle">북마크 추가</h3>
+    <div class="field">
+      <label for="fUrl">트윗 링크</label>
+      <input id="fUrl" required placeholder="https://x.com/username/status/1234567890">
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="fAuthor">작성자 (@아이디)</label>
+        <input id="fAuthor" placeholder="링크에서 자동 입력">
+      </div>
+      <div class="field">
+        <label for="fFolder">폴더</label>
+        <select id="fFolder"></select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="fText">트윗 본문</label>
+      <textarea id="fText" rows="4" placeholder="원문 삭제 대비용 본문 복사"></textarea>
+    </div>
+    <div class="field">
+      <label>이미지</label>
+      <div class="draft-imgs" id="draftImgs"></div>
+      <div class="hint">선택 · 끌어다 놓기 · 붙여넣기(⌘/Ctrl+V). 큰 이미지 자동 축소.</div>
+      <input type="file" id="imgInput" accept="image/*" multiple hidden>
+    </div>
+    <div class="field">
+      <label for="fNote">내 메모</label>
+      <textarea id="fNote" rows="2"></textarea>
+    </div>
+    <div class="field">
+      <label for="fTags">태그</label>
+      <input id="fTags" placeholder="쉼표로 구분">
+    </div>
+    <div class="dlg-foot">
+      <button class="btn" value="cancel" formnovalidate>취소</button>
+      <button class="btn primary" value="save" id="saveBtn">저장</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="bulkDlg">
+  <form method="dialog" class="dlg">
+    <h3>여러 개 붙여넣기</h3>
+    <div class="field">
+      <label for="bulkText">트윗 링크 목록</label>
+      <textarea id="bulkText" rows="8" placeholder="텍스트 붙여넣기 (트윗 링크만 자동 추출)"></textarea>
+      <div class="hint">본문·이미지는 이후 ‘편집’에서 추가.</div>
+    </div>
+    <div class="two">
+      <div class="field">
+        <label for="bulkFolder">폴더</label>
+        <select id="bulkFolder"></select>
+      </div>
+      <div class="field">
+        <label for="bulkTags">공통 태그</label>
+        <input id="bulkTags" placeholder="선택">
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn" value="cancel" formnovalidate>취소</button>
+      <button class="btn primary" value="save">추가</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="lightbox">
+  <img id="lbImg" alt="">
+  <div class="lb-bar">
+    <button id="lbPrev">이전</button>
+    <span id="lbPos"></span>
+    <button id="lbNext">다음</button>
+    <button id="lbClose">닫기</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(() => {
+const KEY = 'tw-bookmark-archive-v1';
+const FINE_POINTER = matchMedia('(pointer:fine)').matches;
+const TOUCH = matchMedia('(pointer:coarse)').matches;
+const TWITTER_EPOCH = 1288834974657n;
+let items = [];
+let meta = { lastBackup: null, folders: [], layout: 'list' };
+let state = { view: 'all', tag: null, folder: null, q: '', sort: 'saved-desc' };
+let editingId = null;
+let draft = [];            // images in the open edit dialog: {id, blob?, isNew}
+let lb = { ids: [], i: 0 }; // lightbox
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+
+// ---------- image store (IndexedDB, so large images don't fill localStorage) ----------
+const IDB = (() => {
+  let dbp = null;
+  function open(){
+    if(dbp) return dbp;
+    dbp = new Promise((res, rej) => {
+      try{
+        const r = indexedDB.open('tw-bookmark-images', 1);
+        r.onupgradeneeded = () => r.result.createObjectStore('images');
+        r.onsuccess = () => res(r.result);
+        r.onerror = () => rej(r.error);
+      }catch(e){ rej(e); }
+    });
+    dbp.catch(() => { dbp = null; });
+    return dbp;
+  }
+  async function run(mode, fn){
+    const db = await open();
+    return new Promise((res, rej) => {
+      const t = db.transaction('images', mode);
+      const req = fn(t.objectStore('images'));
+      t.oncomplete = () => res(req ? req.result : undefined);
+      t.onerror = () => rej(t.error);
+      t.onabort = () => rej(t.error);
+    });
+  }
+  return {
+    put: (id, blob) => run('readwrite', s => s.put(blob, id)),
+    get: id => run('readonly', s => s.get(id)),
+    del: id => run('readwrite', s => s.delete(id))
+  };
+})();
+const urlCache = new Map();
+async function imgUrl(id){
+  if(urlCache.has(id)) return urlCache.get(id);
+  try{
+    const blob = await IDB.get(id);
+    if(!blob) return null;
+    const u = URL.createObjectURL(blob); urlCache.set(id, u); return u;
+  }catch(e){ return null; }
+}
+function dropUrl(id){ const u = urlCache.get(id); if(u){ URL.revokeObjectURL(u); urlCache.delete(id); } }
+async function hydrate(root = document){
+  for(const img of root.querySelectorAll('img[data-img]:not([src])')){
+    const u = await imgUrl(img.dataset.img);
+    if(u) img.src = u; else img.alt = '이미지 없음';
+  }
+}
+function loadImg(src){ return new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; }); }
+async function compress(file){
+  if(!file || !file.type.startsWith('image/')) return null;
+  if(file.type === 'image/gif' || file.size < 250 * 1024) return file;
+  const src = URL.createObjectURL(file);
+  try{
+    const im = await loadImg(src);
+    const max = 1600;
+    const r = Math.min(1, max / Math.max(im.naturalWidth, im.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.round(im.naturalWidth * r); c.height = Math.round(im.naturalHeight * r);
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(im, 0, 0, c.width, c.height);
+    const out = await new Promise(res => c.toBlob(res, 'image/jpeg', 0.85));
+    return out && out.size < file.size ? out : file;
+  }catch(e){ return file; }
+  finally{ URL.revokeObjectURL(src); }
+}
+const blobToDataUrl = b => new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(b); });
+const dataUrlToBlob = async d => (await fetch(d)).blob();
+
+// ---------- storage ----------
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(raw){
+      const d = JSON.parse(raw);
+      items = Array.isArray(d.items) ? d.items : [];
+      meta = Object.assign({ lastBackup: null, folders: [], layout: 'list' }, d.meta || {});
+    }
+  }catch(e){ items = []; }
+  items.forEach(i => { i.images ??= []; i.folder ??= null; i.tags ??= []; });
+}
+let persistAsked = false;
+function save(){
+  if(!persistAsked){ persistAsked = true; try{ navigator.storage?.persist?.().catch(()=>{}); }catch(e){} }
+  try{ localStorage.setItem(KEY, JSON.stringify({ items, meta })); }
+  catch(e){ toast('저장 실패. JSON 백업 권장.'); }
+}
+
+// ---------- helpers ----------
+function parseUrl(url){
+  const m = String(url).match(/(?:twitter\.com|x\.com)\/([A-Za-z0-9_]{1,15})\/status(?:es)?\/(\d+)/i);
+  return m ? { author: m[1], tweetId: m[2], url: `https://x.com/${m[1]}/status/${m[2]}` } : null;
+}
+function dateFromId(id){
+  try{ const ms = Number((BigInt(id) >> 22n) + TWITTER_EPOCH); return ms > 1.2e12 ? ms : null; }catch(e){ return null; }
+}
+function fmt(ms){
+  if(!ms) return '';
+  const d = new Date(ms);
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+const splitTags = s => [...new Set(String(s||'').split(',').map(t => t.trim().replace(/^#/,'')).filter(Boolean))];
+const folderName = id => meta.folders.find(f => f.id === id)?.name || null;
+const realFolder = () => (state.folder && state.folder !== '__none') ? state.folder : null;
+
+function makeItem({ url, author, text, note, tags, tweetId, tweetDate, savedAt, folder, images }){
+  const p = parseUrl(url) || {};
+  const id2 = tweetId || p.tweetId || null;
+  return {
+    id: uid(), url: p.url || url, tweetId: id2,
+    author: (author || p.author || '').replace(/^@/,''),
+    text: text || '', note: note || '', tags: tags || [],
+    tweetDate: tweetDate || (id2 ? dateFromId(id2) : null),
+    savedAt: savedAt || Date.now(),
+    folder: folder || null, images: images || [],
+    starred: false, read: false
+  };
+}
+function exists(tweetId){ return tweetId && items.some(i => i.tweetId === tweetId); }
+function folderOptions(selected){
+  return `<option value="">미분류</option>` + meta.folders.map(f =>
+    `<option value="${f.id}" ${f.id===selected?'selected':''}>${esc(f.name)}</option>`).join('');
+}
+
+// ---------- render ----------
+function filtered(){
+  const q = state.q.toLowerCase();
+  const arr = items.filter(i => {
+    if(state.view === 'starred' && !i.starred) return false;
+    if(state.view === 'unread' && i.read) return false;
+    if(state.view === 'untagged' && i.tags.length) return false;
+    if(state.view === 'images' && !i.images.length) return false;
+    if(state.folder === '__none' && i.folder) return false;
+    if(realFolder() && i.folder !== state.folder) return false;
+    if(state.tag && !i.tags.includes(state.tag)) return false;
+    if(q && !(`${i.text} ${i.note} ${i.author} ${i.tags.join(' ')} ${folderName(i.folder)||''}`.toLowerCase().includes(q))) return false;
+    return true;
+  });
+  const by = {
+    'saved-desc': (a,b) => b.savedAt - a.savedAt,
+    'saved-asc': (a,b) => a.savedAt - b.savedAt,
+    'tweet-desc': (a,b) => (b.tweetDate||0) - (a.tweetDate||0),
+    'tweet-asc': (a,b) => (a.tweetDate||0) - (b.tweetDate||0),
+    'author': (a,b) => a.author.localeCompare(b.author)
+  }[state.sort];
+  return arr.sort(by);
+}
+
+function renderSidebar(){
+  const views = [
+    ['all','전체', items.length],
+    ['starred','별표', items.filter(i=>i.starred).length],
+    ['unread','안 읽음', items.filter(i=>!i.read).length],
+    ['images','이미지 있음', items.filter(i=>i.images.length).length],
+    ['untagged','태그 없음', items.filter(i=>!i.tags.length).length]
+  ];
+  $('#viewFilters').innerHTML = views.map(([k,l,n]) =>
+    `<button class="filter ${state.view===k?'on':''}" data-view="${k}"><span>${l}</span><span class="n">${n}</span></button>`).join('');
+
+  const fc = {}; let none = 0;
+  items.forEach(i => i.folder && folderName(i.folder) ? fc[i.folder] = (fc[i.folder]||0)+1 : none++);
+  $('#folderFilters').innerHTML =
+    meta.folders.map(f => `<button class="filter ${state.folder===f.id?'on':''}" data-folder="${f.id}"><span>${esc(f.name)}</span><span class="n">${fc[f.id]||0}</span></button>`).join('') +
+    `<button class="filter ${state.folder==='__none'?'on':''}" data-folder="__none"><span>미분류</span><span class="n">${none}</span></button>`;
+
+  const counts = {};
+  items.forEach(i => i.tags.forEach(t => counts[t] = (counts[t]||0)+1));
+  const tags = Object.entries(counts).sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0]));
+  $('#tagFilters').innerHTML = tags.length
+    ? tags.map(([t,n]) => `<button class="filter ${state.tag===t?'on':''}" data-tag="${esc(t)}"><span>#${esc(t)}</span><span class="n">${n}</span></button>`).join('')
+    : `<span class="backup-note" style="margin:0">태그 없음</span>`;
+
+  $('#backupNote').textContent = meta.lastBackup
+    ? `마지막 백업: ${fmt(meta.lastBackup)}`
+    : `이 브라우저에만 저장됨. 정기 백업 권장.`;
+}
+
+function renderFolderBar(){
+  const bits = [];
+  if(state.view !== 'all') bits.push({ all:'전체', starred:'별표', unread:'안 읽음', images:'이미지 있음', untagged:'태그 없음' }[state.view]);
+  if(state.tag) bits.push('#' + state.tag);
+  let html = '';
+  const fid = realFolder();
+  if(fid){
+    html += `<div class="folder-bar"><strong>${esc(folderName(fid))}</strong>
+      <button class="btn small" data-folder-act="rename">이름 바꾸기</button>
+      <button class="btn small danger" data-folder-act="delete">폴더 삭제</button></div>`;
+  }else if(state.folder === '__none'){
+    html += `<div class="folder-bar"><strong>미분류</strong></div>`;
+  }
+  if(bits.length) html += `<div class="active-filters">필터: ${bits.map(esc).join(', ')} <button data-clear>모두 해제</button></div>`;
+  $('#folderBar').innerHTML = html;
+}
+
+function itemHtml(i){
+  const fname = !realFolder() && i.folder ? folderName(i.folder) : null;
+  return `
+  <article class="item ${i.starred?'starred':''}" data-id="${i.id}"${FINE_POINTER ? ' draggable="true"' : ''}>
+    <div class="meta">
+      <span class="who">${i.author ? `<a href="https://x.com/${esc(i.author)}" target="_blank" rel="noopener">@${esc(i.author)}</a>` : '작성자 미상'}</span>
+      ${i.read ? '' : '<span class="badge">안 읽음</span>'}
+      ${fname ? `<span class="folder-label">${esc(fname)}</span>` : ''}
+      ${i.tweetDate ? `<span>작성 ${fmt(i.tweetDate)}</span>` : ''}
+      <span>저장 ${fmt(i.savedAt)}</span>
+    </div>
+    <div class="text ${i.text?'':'empty'}">${i.text ? esc(i.text) : '본문 없음'}</div>
+    ${i.images.length ? `<div class="imgs">${i.images.map((id,n) => `<img data-img="${id}" data-n="${n}" alt="첨부 이미지 ${n+1}" loading="lazy">`).join('')}</div>` : ''}
+    ${i.note ? `<div class="note">${esc(i.note)}</div>` : ''}
+    ${i.tags.length ? `<div class="tags">${i.tags.map(t=>`<button class="tag" data-tag="${esc(t)}">#${esc(t)}</button>`).join('')}</div>` : ''}
+    <div class="row-actions">
+      <a class="btn ghost" href="${esc(i.url)}" target="_blank" rel="noopener">원문 열기</a>
+      ${i.tweetId ? `<button class="btn ghost" data-act="embed">원문 미리보기</button>` : ''}
+      <button class="btn ghost" data-act="star">${i.starred?'별표 해제':'별표'}</button>
+      <button class="btn ghost" data-act="read">${i.read?'안 읽음으로':'읽음으로'}</button>
+      <button class="btn ghost" data-act="edit">편집</button>
+      <button class="btn ghost danger" data-act="del">삭제</button>
+      ${meta.folders.length ? `<select data-move aria-label="폴더 이동">${folderOptions(i.folder)}</select>` : ''}
+    </div>
+    <div class="embed"></div>
+  </article>`;
+}
+
+function render(){
+  renderSidebar();
+  const active = (state.view !== 'all') + !!state.folder + !!state.tag;
+  $('#btnFilters').textContent = active ? `폴더·필터 (${active})` : '폴더·필터';
+  renderFolderBar();
+  const grid = meta.layout === 'grid';
+  $('#layoutList').setAttribute('aria-pressed', !grid);
+  $('#layoutGrid').setAttribute('aria-pressed', grid);
+  const list = $('#list');
+  list.classList.toggle('grid', grid);
+
+  const arr = filtered();
+  $('#count').textContent = items.length
+    ? (arr.length === items.length ? `${items.length}개` : `${items.length}개 중 ${arr.length}개 표시`)
+    : '';
+  if(!items.length){
+    list.classList.remove('grid');
+    list.innerHTML = `<div class="empty-state"><strong>보관함 비어 있음</strong>링크 붙여넣기 또는 파일 가져오기</div>`;
+    return;
+  }
+  if(!arr.length){
+    list.classList.remove('grid');
+    list.innerHTML = `<div class="empty-state"><strong>${realFolder() && !state.q && !state.tag && state.view==='all' ? '빈 폴더' : '결과 없음'}</strong>${realFolder() ? '' : ''}</div>`;
+    return;
+  }
+  list.innerHTML = arr.map(itemHtml).join('');
+  hydrate(list);
+}
+
+// ---------- toast ----------
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// ---------- folders ----------
+function newFolder(){
+  const name = (prompt('폴더 이름') || '').trim();
+  if(!name) return null;
+  if(meta.folders.some(f => f.name === name)){ toast('이미 있는 폴더 이름'); return null; }
+  const f = { id: 'f' + uid(), name };
+  meta.folders.push(f); save(); render(); toast(`‘${name}’ 폴더 생성`);
+  return f;
+}
+function renameFolder(id){
+  const f = meta.folders.find(x => x.id === id); if(!f) return;
+  const name = (prompt('폴더 이름', f.name) || '').trim();
+  if(!name || name === f.name) return;
+  if(meta.folders.some(x => x.name === name)){ toast('이미 있는 폴더 이름'); return; }
+  f.name = name; save(); render(); toast('이름 변경 완료');
+}
+function deleteFolder(id){
+  const f = meta.folders.find(x => x.id === id); if(!f) return;
+  const n = items.filter(i => i.folder === id).length;
+  if(!confirm(`‘${f.name}’ 폴더 삭제?${n ? `\n북마크 ${n}개는 미분류로 이동` : ''}`)) return;
+  items.forEach(i => { if(i.folder === id) i.folder = null; });
+  meta.folders = meta.folders.filter(x => x.id !== id);
+  state.folder = null; save(); render(); toast('폴더 삭제 완료');
+}
+function moveTo(itemId, folderId){
+  const it = items.find(i => i.id === itemId); if(!it) return;
+  it.folder = folderId || null; save(); render();
+  toast(folderId ? `‘${folderName(folderId)}’로 이동` : '미분류로 이동');
+}
+
+// ---------- edit dialog ----------
+function renderDraft(){
+  const box = $('#draftImgs');
+  box.innerHTML = draft.map((d, n) => `<div class="thumb"><img data-draft="${n}" alt="첨부 이미지 ${n+1}"><button type="button" data-rm="${n}" aria-label="이미지 삭제">×</button></div>`).join('')
+    + `<button type="button" class="add-img" id="btnPickImg">이미지 추가</button>`;
+  box.querySelectorAll('img[data-draft]').forEach(async img => {
+    const d = draft[+img.dataset.draft];
+    if(d.isNew){ d.url ??= URL.createObjectURL(d.blob); img.src = d.url; }
+    else { const u = await imgUrl(d.id); if(u) img.src = u; }
+  });
+}
+async function addDraftFiles(files){
+  const list = [...files].filter(f => f.type.startsWith('image/'));
+  if(!list.length) return;
+  for(const f of list){
+    const blob = await compress(f);
+    if(blob) draft.push({ id: 'img' + uid(), blob, isNew: true });
+  }
+  renderDraft();
+}
+function openEdit(item, preset = {}){
+  editingId = item ? item.id : null;
+  $('#editTitle').textContent = item ? '북마크 편집' : '북마크 추가';
+  $('#saveBtn').textContent = item ? '저장' : '저장';
+  $('#fUrl').value = item?.url || preset.url || '';
+  $('#fAuthor').value = item?.author || preset.author || '';
+  $('#fText').value = item?.text || '';
+  $('#fNote').value = item?.note || '';
+  $('#fTags').value = item?.tags.join(', ') || '';
+  $('#fFolder').innerHTML = folderOptions(item ? item.folder : realFolder());
+  draft = (item?.images || []).map(id => ({ id, isNew: false }));
+  renderDraft();
+  $('#editDlg').showModal();
+  (item || preset.url ? $('#fText') : $('#fUrl')).focus();
+}
+
+$('#fUrl').addEventListener('input', e => {
+  const p = parseUrl(e.target.value);
+  if(p && !$('#fAuthor').value) $('#fAuthor').value = p.author;
+});
+$('#draftImgs').addEventListener('click', e => {
+  if(e.target.id === 'btnPickImg'){ $('#imgInput').click(); return; }
+  const rm = e.target.closest('[data-rm]');
+  if(rm){
+    const d = draft.splice(+rm.dataset.rm, 1)[0];
+    if(d?.isNew && d.url) URL.revokeObjectURL(d.url);
+    renderDraft();
+  }
+});
+$('#imgInput').addEventListener('change', async e => { await addDraftFiles(e.target.files); e.target.value = ''; });
+const dz = $('#draftImgs');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+dz.addEventListener('drop', e => { e.preventDefault(); e.stopPropagation(); dz.classList.remove('over'); addDraftFiles(e.dataTransfer.files); });
+document.addEventListener('paste', e => {
+  if(!$('#editDlg').open) return;
+  const files = [...(e.clipboardData?.items || [])].filter(x => x.kind === 'file' && x.type.startsWith('image/')).map(x => x.getAsFile());
+  if(files.length){ e.preventDefault(); addDraftFiles(files); }
+});
+
+$('#editDlg').addEventListener('close', async () => {
+  const saving = $('#editDlg').returnValue === 'save';
+  $('#editDlg').returnValue = '';
+  if(!saving){
+    draft.forEach(d => d.isNew && d.url && URL.revokeObjectURL(d.url));
+    draft = []; return;
+  }
+  const url = $('#fUrl').value.trim();
+  const p = parseUrl(url);
+  const old = editingId ? items.find(i => i.id === editingId) : null;
+  if(!old && p && exists(p.tweetId)){ toast('이미 저장된 트윗'); draft = []; return; }
+
+  // persist images
+  let imgFail = false;
+  for(const d of draft.filter(d => d.isNew)){
+    try{ await IDB.put(d.id, d.blob); if(d.url){ urlCache.set(d.id, d.url); } }
+    catch(e){ imgFail = true; if(d.url) URL.revokeObjectURL(d.url); d.failed = true; }
+  }
+  const imageIds = draft.filter(d => !d.failed).map(d => d.id);
+  if(old){
+    for(const id of old.images.filter(id => !imageIds.includes(id))){ dropUrl(id); IDB.del(id).catch(()=>{}); }
+  }
+  draft = [];
+
+  const data = {
+    url, author: $('#fAuthor').value.trim(), text: $('#fText').value.trim(),
+    note: $('#fNote').value.trim(), tags: splitTags($('#fTags').value),
+    folder: $('#fFolder').value || null, images: imageIds
+  };
+  if(old){
+    Object.assign(old, data, {
+      url: p?.url || url, author: (data.author || p?.author || '').replace(/^@/,''),
+      tweetId: p?.tweetId || old.tweetId, tweetDate: p ? dateFromId(p.tweetId) : old.tweetDate
+    });
+  }else{
+    items.push(makeItem(data));
+  }
+  save(); render();
+  toast(imgFail ? '저장 완료 (일부 이미지 실패)' : '저장 완료');
+});
+
+// ---------- bulk ----------
+$('#bulkDlg').addEventListener('close', () => {
+  if($('#bulkDlg').returnValue !== 'save') return;
+  $('#bulkDlg').returnValue = '';
+  const n = addFromText($('#bulkText').value, splitTags($('#bulkTags').value), $('#bulkFolder').value || null);
+  $('#bulkText').value = ''; $('#bulkTags').value = '';
+  toast(n ? `${n}개 추가` : '새 링크 없음');
+});
+function addFromText(text, tags = [], folder = null){
+  const re = /https?:\/\/(?:www\.|mobile\.)?(?:twitter|x)\.com\/[A-Za-z0-9_]{1,15}\/status(?:es)?\/\d+/gi;
+  const found = [...new Set(String(text).match(re) || [])];
+  let n = 0;
+  found.forEach(u => {
+    const p = parseUrl(u);
+    if(p && !exists(p.tweetId)){ items.push(makeItem({ url: u, tags: [...tags], folder })); n++; }
+  });
+  if(n){ save(); render(); }
+  return n;
+}
+
+// ---------- import / export ----------
+async function importData(text){
+  let data;
+  try{ data = JSON.parse(text); }catch(e){ return addFromText(text); }
+
+  // folders from our own backup
+  const folderMap = {};
+  if(Array.isArray(data.folders)){
+    data.folders.forEach(f => {
+      if(!f?.id || !f?.name) return;
+      const same = meta.folders.find(x => x.id === f.id || x.name === f.name);
+      if(same) folderMap[f.id] = same.id;
+      else { meta.folders.push({ id: f.id, name: f.name }); folderMap[f.id] = f.id; }
+    });
+  }
+  const images = (data.images && typeof data.images === 'object') ? data.images : {};
+
+  let arr = Array.isArray(data) ? data : (data.items || data.bookmarks || data.data || data.tweets || []);
+  if(!Array.isArray(arr)) arr = [];
+  let added = 0;
+  for(const r of arr){
+    if(!r || typeof r !== 'object') continue;
+    const legacy = r.legacy || r.tweet?.legacy || {};
+    const user = r.user || r.author || r.core?.user_results?.result?.legacy || {};
+    const tweetId = String(r.tweetId || r.id_str || r.rest_id || r.tweet_id || r.id || legacy.id_str || '').replace(/\D/g,'') || null;
+    const author = (typeof user === 'string' ? user : (user.screen_name || user.username || '')) || r.screen_name || r.username || '';
+    let url = r.url || r.tweet_url || r.link || '';
+    if(!parseUrl(url) && tweetId && tweetId.length > 8) url = `https://x.com/${author || 'i'}/status/${tweetId}`;
+    const p = parseUrl(url);
+    if(!p || exists(p.tweetId)) continue;
+    const created = r.tweetDate || (r.created_at || legacy.created_at ? Date.parse(r.created_at || legacy.created_at) : null);
+
+    const imgIds = [];
+    for(const id of (Array.isArray(r.images) ? r.images : [])){
+      if(typeof images[id] !== 'string') continue;
+      try{ await IDB.put(id, await dataUrlToBlob(images[id])); imgIds.push(id); }catch(e){}
+    }
+    const it = makeItem({
+      url, author: typeof author === 'string' ? author : '',
+      text: r.text || r.full_text || legacy.full_text || r.content || '',
+      note: r.note || '', tags: Array.isArray(r.tags) ? r.tags : splitTags(r.tags),
+      tweetId: p.tweetId, tweetDate: Number.isFinite(created) ? created : null,
+      savedAt: r.savedAt || Date.now(),
+      folder: r.folder ? (folderMap[r.folder] || null) : null,
+      images: imgIds
+    });
+    if(r.starred) it.starred = true;
+    if(r.read) it.read = true;
+    items.push(it); added++;
+  }
+  save(); render();
+  return added;
+}
+async function handleImportText(text){
+  const n = await importData(text);
+  toast(n ? `${n}개 가져옴` : '새 항목 없음');
+}
+
+async function deliver(name, content, type){
+  const blob = content instanceof Blob ? content : new Blob([content], { type });
+  if(TOUCH && navigator.canShare){
+    try{
+      const file = new File([blob], name, { type });
+      if(navigator.canShare({ files: [file] })){
+        await navigator.share({ files: [file], title: name });
+        return true;
+      }
+    }catch(e){
+      if(e.name === 'AbortError') return false;   // user closed the share sheet
+    }
+  }
+  download(name, blob, type);
+  return true;
+}
+function download(name, content, type){
+  const blob = content instanceof Blob ? content : new Blob([content], { type });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+}
+const stamp = () => { const d = new Date(); return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`; };
+async function collectImages(list){
+  const out = {};
+  for(const i of list) for(const id of i.images){
+    try{ const b = await IDB.get(id); if(b) out[id] = await blobToDataUrl(b); }catch(e){}
+  }
+  return out;
+}
+
+async function exportJson(){
+  if(!items.length){ toast('북마크 없음'); return; }
+  toast('백업 파일 생성 중…');
+  const images = await collectImages(items);
+  const json = JSON.stringify({ version: 2, exportedAt: Date.now(), folders: meta.folders, items, images });
+  const ok = await deliver(`bookmarks-backup-${stamp()}.json`, json, 'application/json');
+  if(!ok){ toast('백업 취소'); return; }
+  meta.lastBackup = Date.now(); save(); render(); toast('백업 완료');
+}
+
+async function exportHtml(){
+  if(!items.length){ toast('북마크 없음'); return; }
+  toast('HTML 생성 중…');
+  const images = await collectImages(items);
+  const sorted = [...items].sort((a,b) => b.savedAt - a.savedAt);
+  const groups = [...meta.folders.map(f => ({ name: f.name, list: sorted.filter(i => i.folder === f.id) })),
+                  { name: '미분류', list: sorted.filter(i => !i.folder || !folderName(i.folder)) }].filter(g => g.list.length);
+  const art = i => `<article><p class="m"><a href="${esc(i.url)}">@${esc(i.author||'?')}</a>${i.tweetDate?` · ${fmt(i.tweetDate)}`:''}</p>${i.text?`<p class="t">${esc(i.text)}</p>`:''}${i.images.filter(id=>images[id]).map(id=>`<img src="${images[id]}" alt="">`).join('')}${i.note?`<p class="n">${esc(i.note)}</p>`:''}${i.tags.length?`<p class="g">${i.tags.map(t=>'#'+esc(t)).join(' ')}</p>`:''}</article>`;
+  const toc = groups.length > 1 ? `<nav>${groups.map((g,n)=>`<a href="#g${n}">${esc(g.name)} (${g.list.length})</a>`).join(' ')}</nav>` : '';
+  const body = groups.map((g,n) => `<section id="g${n}"><h2>${esc(g.name)}</h2>${g.list.map(art).join('\n')}</section>`).join('\n');
+  const html = `<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>북마크 아카이브 ${stamp()}</title><style>body{max-width:680px;margin:40px auto;padding:0 18px;font-family:"Apple SD Gothic Neo","Malgun Gothic",serif;line-height:1.7;color:#1B2430;background:#F8FAFB}h1{font-size:26px;border-bottom:2px solid #1B2430;padding-bottom:10px}h2{font-size:19px;margin-top:40px;border-bottom:1px solid #CBD3DC;padding-bottom:6px}nav{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}nav a{color:#1F5E8C}article{border-left:3px solid #CBD3DC;padding:4px 0 4px 16px;margin:22px 0}.m{font-size:13px;color:#5E6B7A;margin:0}.m a{color:#1B2430;font-weight:600}.t{white-space:pre-wrap;margin:6px 0}img{max-width:100%;border-radius:4px;margin:6px 0;display:block}.n{background:#E9EDF1;padding:6px 10px;border-radius:4px;font-size:14px}.g{color:#1F5E8C;font-size:13px;margin:4px 0}</style></head><body><h1>북마크 아카이브</h1><p style="color:#5E6B7A">${items.length}개 · ${fmt(Date.now())} 내보냄</p>${toc}${body}</body></html>`;
+  await deliver(`bookmarks-${stamp()}.html`, html, 'text/html');
+}
+
+// ---------- tweet embed (needs internet) ----------
+function loadWidgets(){
+  if(window.twttr?.widgets) return Promise.resolve(window.twttr);
+  if(loadWidgets.p) return loadWidgets.p;
+  loadWidgets.p = new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://platform.twitter.com/widgets.js'; s.async = true;
+    s.onload = () => { const wait = () => window.twttr?.widgets ? res(window.twttr) : setTimeout(wait, 100); wait(); };
+    s.onerror = () => { loadWidgets.p = null; rej(); };
+    document.head.appendChild(s);
+  });
+  return loadWidgets.p;
+}
+
+// ---------- lightbox ----------
+async function showLb(){
+  const u = await imgUrl(lb.ids[lb.i]);
+  $('#lbImg').src = u || '';
+  $('#lbPos').textContent = lb.ids.length > 1 ? `${lb.i+1} / ${lb.ids.length}` : '';
+  $('#lbPrev').hidden = $('#lbNext').hidden = lb.ids.length < 2;
+}
+$('#lbPrev').onclick = () => { lb.i = (lb.i - 1 + lb.ids.length) % lb.ids.length; showLb(); };
+$('#lbNext').onclick = () => { lb.i = (lb.i + 1) % lb.ids.length; showLb(); };
+$('#lbClose').onclick = () => $('#lightbox').close();
+let swipeX = null;
+$('#lightbox').addEventListener('touchstart', e => { swipeX = e.touches[0].clientX; }, { passive: true });
+$('#lightbox').addEventListener('touchend', e => {
+  if(swipeX === null) return;
+  const dx = e.changedTouches[0].clientX - swipeX; swipeX = null;
+  if(Math.abs(dx) > 50 && lb.ids.length > 1) (dx > 0 ? $('#lbPrev') : $('#lbNext')).click();
+});
+$('#lightbox').addEventListener('click', e => { if(e.target.id === 'lightbox' || (e.target.id === 'lbImg' && !TOUCH)) $('#lightbox').close(); });
+document.addEventListener('keydown', e => {
+  if(!$('#lightbox').open) return;
+  if(e.key === 'ArrowLeft') $('#lbPrev').click();
+  if(e.key === 'ArrowRight') $('#lbNext').click();
+});
+
+// ---------- events ----------
+document.addEventListener('click', async e => {
+  if(e.target.closest('dialog')) return;
+  const v = e.target.closest('[data-view]');
+  if(v){ state.view = v.dataset.view; if(v.dataset.view === 'all'){ state.tag = null; state.folder = null; } render(); return; }
+  const fo = e.target.closest('[data-folder]');
+  if(fo){ state.folder = state.folder === fo.dataset.folder ? null : fo.dataset.folder; render(); return; }
+  const t = e.target.closest('[data-tag]');
+  if(t){ state.tag = state.tag === t.dataset.tag ? null : t.dataset.tag; render(); return; }
+  if(e.target.closest('[data-clear]')){ state.view = 'all'; state.tag = null; render(); return; }
+  const fa = e.target.closest('[data-folder-act]');
+  if(fa){ fa.dataset.folderAct === 'rename' ? renameFolder(realFolder()) : deleteFolder(realFolder()); return; }
+
+  const img = e.target.closest('.imgs img');
+  if(img){
+    const it = items.find(i => i.id === img.closest('.item').dataset.id);
+    lb = { ids: it.images, i: +img.dataset.n }; await showLb(); $('#lightbox').showModal(); return;
+  }
+  const tx = e.target.closest('.list.grid .text:not(.empty)');
+  if(tx){ tx.classList.toggle('open'); return; }
+
+  const a = e.target.closest('[data-act]');
+  if(!a) return;
+  const art = a.closest('.item'); const it = items.find(i => i.id === art.dataset.id);
+  switch(a.dataset.act){
+    case 'star': it.starred = !it.starred; break;
+    case 'read': it.read = !it.read; break;
+    case 'edit': openEdit(it); return;
+    case 'del':
+      if(!confirm('삭제?')) return;
+      it.images.forEach(id => { dropUrl(id); IDB.del(id).catch(()=>{}); });
+      items = items.filter(i => i.id !== it.id); toast('삭제 완료'); break;
+    case 'embed': {
+      const box = art.querySelector('.embed');
+      if(box.childElementCount){ box.innerHTML = ''; a.textContent = '원문 미리보기'; return; }
+      a.textContent = '불러오는 중…';
+      try{
+        const tw = await loadWidgets();
+        const el = await tw.widgets.createTweet(it.tweetId, box, { dnt: true, theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light' });
+        a.textContent = '미리보기 닫기';
+        if(!el) box.innerHTML = '<p class="hint">원문 없음 (삭제 또는 비공개)</p>';
+      }catch(err){
+        a.textContent = '원문 미리보기';
+        toast('불러오기 실패 (인터넷 연결 확인)');
+      }
+      return;
+    }
+  }
+  save(); render();
+});
+document.addEventListener('change', e => {
+  const s = e.target.closest('[data-move]');
+  if(s) moveTo(s.closest('.item').dataset.id, s.value);
+});
+
+// drag a bookmark onto a folder in the sidebar
+let dragId = null;
+document.addEventListener('dragstart', e => {
+  const art = e.target.closest?.('.item');
+  if(art){ dragId = art.dataset.id; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId); }
+});
+document.addEventListener('dragend', () => { dragId = null; document.querySelectorAll('.drop-target').forEach(x => x.classList.remove('drop-target')); });
+document.addEventListener('dragover', e => {
+  e.preventDefault();
+  document.querySelectorAll('.drop-target').forEach(x => x.classList.remove('drop-target'));
+  const f = dragId && e.target.closest?.('[data-folder]');
+  if(f) f.classList.add('drop-target');
+});
+document.addEventListener('drop', async e => {
+  e.preventDefault();
+  const f = e.target.closest?.('[data-folder]');
+  if(dragId){
+    if(f) moveTo(dragId, f.dataset.folder === '__none' ? null : f.dataset.folder);
+    dragId = null; return;
+  }
+  if(document.querySelector('dialog[open]')) return;
+  const file = e.dataTransfer.files[0];
+  if(file) handleImportText(await file.text());
+});
+
+function setDrawer(open){
+  $('#sidebar').classList.toggle('open', open);
+  $('#drawerBackdrop').classList.toggle('open', open);
+  $('#btnFilters').setAttribute('aria-expanded', open);
+}
+$('#btnFilters').onclick = () => setDrawer(!$('#sidebar').classList.contains('open'));
+$('#drawerBackdrop').onclick = () => setDrawer(false);
+$('#sidebar').addEventListener('click', e => {
+  if(e.target.closest('[data-view],[data-folder],[data-tag]') && matchMedia('(max-width:700px)').matches) setTimeout(() => setDrawer(false), 120);
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape') setDrawer(false); });
+$('#btnAdd').onclick = () => openEdit(null);
+$('#btnBulk').onclick = () => { $('#bulkFolder').innerHTML = folderOptions(realFolder()); $('#bulkDlg').showModal(); $('#bulkText').focus(); };
+$('#btnNewFolder').onclick = () => { const f = newFolder(); if(f){ state.folder = f.id; render(); } };
+$('#btnImport').onclick = () => $('#fileInput').click();
+$('#fileInput').onchange = async e => {
+  const file = e.target.files[0]; if(!file) return;
+  await handleImportText(await file.text());
+  e.target.value = '';
+};
+$('#btnExportJson').onclick = exportJson;
+$('#btnExportHtml').onclick = exportHtml;
+$('#layoutList').onclick = () => { meta.layout = 'list'; save(); render(); };
+$('#layoutGrid').onclick = () => { meta.layout = 'grid'; save(); render(); };
+
+$('#quickUrl').addEventListener('keydown', e => {
+  if(e.key !== 'Enter') return;
+  const v = e.target.value.trim(); if(!v) return;
+  const p = parseUrl(v);
+  if(!p){ toast('트윗 링크 아님'); return; }
+  if(exists(p.tweetId)){ toast('이미 저장된 트윗'); e.target.value = ''; return; }
+  e.target.value = '';
+  openEdit(null, { url: p.url, author: p.author });
+});
+
+$('#search').addEventListener('input', e => { state.q = e.target.value; render(); });
+$('#sort').addEventListener('change', e => { state.sort = e.target.value; render(); });
+document.addEventListener('keydown', e => {
+  if(e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) && !document.querySelector('dialog[open]')){
+    e.preventDefault(); $('#search').focus();
+  }
+});
+
+load(); render();
+})();
+</script>
+</body>
+</html>
