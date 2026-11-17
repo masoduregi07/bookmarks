@@ -40,6 +40,7 @@ button.sm:active{transform:translate(1px,1px)}
 .top header .tabs button.on{color:var(--ink);padding:8px 22px 9px 18px;background:var(--panel);
   box-shadow:inset 0 4px 0 var(--pink)}
 .top header .tabs button[data-tab=anim].on{box-shadow:inset 0 4px 0 var(--mint)}
+.top header .tabs button[data-tab=fig].on{box-shadow:inset 0 4px 0 var(--yel)}
 .top header .tabs svg{width:16px;height:16px}
 .top header{min-height:0}
 .top header .src{background:var(--panel);padding:2px 8px;margin-bottom:6px}
@@ -63,6 +64,10 @@ header h1{font-size:12px;font-weight:700;background:var(--panel);padding:2px 6px
 .tabs svg{width:14px;height:14px;shape-rendering:crispEdges;fill:currentColor}
 .tabs button.on svg .acc{fill:var(--pink)}
 .tabs button[data-tab=anim].on svg .acc{fill:var(--mint)}
+.tabs button[data-tab=fig].on svg .acc{fill:var(--yel)}
+#mfcLink{position:absolute;right:10px;bottom:40px;font-size:11px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px;color:var(--ink);text-decoration:none}
+#mfcLink:hover{background:var(--yel)}
+body.zen #mfcLink{display:none}
 .sp{flex:1}
 .src{display:flex;align-items:center;gap:8px;color:var(--tx2);padding:8px 0}
 .src label{display:flex;align-items:center;gap:5px;cursor:pointer}
@@ -196,6 +201,7 @@ footer .grp>label{margin-right:0}
     <nav class="tabs">
     <button data-tab="film" class="on"><svg viewBox="0 0 14 14"><path d="M0 1h14v12H0z"/><path fill="#fff" d="M2 4h10v6H2z"/><path class="acc" fill="#fff" d="M3 5h8v4H3z"/><path fill="#fff" d="M2 2h2v1H2zM6 2h2v1H6zM10 2h2v1h-2zM2 11h2v1H2zM6 11h2v1H6zM10 11h2v1h-2z"/></svg>영화</button>
     <button data-tab="anim"><svg viewBox="0 0 14 14"><path d="M1 1h10v12H1z"/><path fill="#fff" d="M3 3h6v8H3z"/><path class="acc" fill="#fff" d="M4 5h4v5H4z"/><path d="M11 3h2v10H3v-2h8z" opacity=".45"/><path d="M5 4h2v1H5zM4 8h1v1H4zM7 8h1v1H7z"/></svg>애니메이션 레이아웃</button>
+    <button data-tab="fig"><svg viewBox="0 0 14 14"><path d="M5 0h4v1h1v4H9v1H5V5H4V1h1z"/><path d="M4 6h6v1h1v4H9v1H5v-1H3V7h1z"/><path class="acc" fill="#fff" d="M6 2h2v2H6z"/><path d="M2 12h10v2H2z" opacity=".45"/></svg>피규어</button>
   </nav>
   <div class="sp"></div>
   <button id="keyBtn" class="sm">단축키</button>
@@ -265,6 +271,7 @@ footer .grp>label{margin-right:0}
   <div id="info" class="mono"></div>
   <div id="timerBig" class="mono"></div>
   <a id="srcLink" class="hidden" target="_blank" rel="noopener noreferrer"></a>
+  <a id="mfcLink" class="hidden" target="_blank" rel="noopener noreferrer">MyFigureCollection에서 찾기 ↗</a>
 </main>
 
 </div>
@@ -308,12 +315,14 @@ const $=s=>document.querySelector(s);
 const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s'};
 let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
-  grid:{film:'thirds',anim:'field'},gridOn:{film:true,anim:true},hist:{film:[],anim:[]},pos:{film:-1,anim:-1},seen:{film:new Set(),anim:new Set()},queue:{film:[],anim:[]}};
+  grid:{film:'thirds',anim:'field',fig:'thirds'},gridOn:{film:true,anim:true,fig:false},hist:{film:[],anim:[],fig:[]},pos:{film:-1,anim:-1,fig:-1},seen:{film:new Set(),anim:new Set(),fig:new Set()},queue:{film:[],anim:[],fig:[]}};
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
-const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],person:null,onePer:false},anim:{kinds:[],region:'',score:0,tags:''}});
+const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],person:null,onePer:false},anim:{kinds:[],region:'',score:0,tags:''},fig:{kinds:[],kw:'',onePer:true}});
 S.f=FDEF();S.legacyAnim=false;
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
-  if(p.f){S.f={film:{...S.f.film,...p.f.film},anim:{...S.f.anim,...p.f.anim}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
+  if(p.f){S.f={film:{...S.f.film,...p.f.film},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
+for(const t of['film','anim','fig'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
+if(!['film','anim','fig'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
 const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating}))}catch(e){}};
 
@@ -386,6 +395,42 @@ async function fgRandom(){
   throw new Error(rest.length?'조건에 맞는 컷을 찾지 못함 · 필터를 줄여 보기':'이미지를 찾지 못함');
 }
 
+// ---------- GOOD SMILE COMPANY (product pages)
+const GS='https://www.goodsmile.com/';
+const GS_SEED=[2539,4379,10119,11861,12431,11275,2046,5434,3173,1136995,9687,5617];
+const gs={pool:new Set(GS_SEED),bad:new Set(),seen:new Set()};
+try{JSON.parse(localStorage.getItem('cutref-gs')||'[]').forEach(i=>gs.pool.add(i))}catch(e){}
+const gsSave=()=>{try{localStorage.setItem('cutref-gs',JSON.stringify([...gs.pool].slice(-3000)))}catch(e){}};
+const FKINDS=[['nendo','넨도로이드'],['figma','figma'],['pop','POP UP PARADE'],['scale','스케일']];
+function gsKind(title,html){const t=title.toLowerCase();
+  if(/pop up parade/.test(t))return 'pop';if(/nendoroid/.test(t))return 'nendo';if(/figma/.test(t))return 'figma';
+  if(/1\/\d{1,2}(th)?\s*scale|scale figure|\b1\/[4-9]\b/i.test(t+' '+html.slice(0,400000)))return 'scale';return 'other'}
+async function getText(u){const r=await fetch(P(u),{credentials:'omit'});return {ok:r.ok,status:r.status,text:r.ok?await r.text():''}}
+async function gsRandom(){
+  const f=S.f.fig,kw=f.kw.trim().toLowerCase();let lastErr='';
+  for(let tries=0;tries<10;tries++){
+    const pool=[...gs.pool].filter(i=>!gs.bad.has(i)&&!(f.onePer&&gs.seen.has(i)));
+    const id=(Math.random()<.55&&pool.length>8)?pool[rnd(pool.length)]:1000+rnd(13500);
+    if(gs.bad.has(id)||(f.onePer&&gs.seen.has(id)))continue;
+    let r;try{r=await getText(GS+'en/product/'+id)}catch(e){lastErr=e.message;continue}
+    if(!r.ok){gs.bad.add(id);gs.pool.delete(id);lastErr='HTTP '+r.status;continue}
+    const html=r.text;
+    for(const m of html.matchAll(/\/product\/image\/(\d+)\//g)){const n=+m[1];if(n!==id&&!gs.bad.has(n))gs.pool.add(n)}
+    for(const m of html.matchAll(/\/en\/product\/(\d+)/g)){const n=+m[1];if(n!==id&&!gs.bad.has(n))gs.pool.add(n)}
+    gs.pool.add(id);gsSave();
+    const re=new RegExp(`(?:https://(?:www\\.goodsmile\\.com|storage\\.googleapis\\.com))?/gsc-webrevo-sdk-storage-prd/product/image/${id}/[A-Za-z0-9_-]+\\.(?:jpe?g|png|webp)`,'g');
+    const imgs=[...new Set([...html.matchAll(re)].map(m=>m[0].startsWith('http')?m[0]:'https://www.goodsmile.com'+m[0]))].filter(u=>!S.seen.fig.has(u));
+    if(!imgs.length){gs.bad.add(id);continue}
+    const tm=html.match(/<title>([^<]*)<\/title>/i),title=dec(tm?tm[1]:'').split('｜')[0].trim()||('#'+id);
+    if(f.kinds.length&&!f.kinds.includes(gsKind(title,html)))continue;
+    if(kw&&!title.toLowerCase().includes(kw))continue;
+    gs.seen.add(id);
+    const url=imgs[rnd(imgs.length)];
+    return {kind:'img',url,title,link:GS+'en/product/'+id,key:url,mfc:'https://myfigurecollection.net/search.v4.php?keywords='+encodeURIComponent(title.replace(/[:：].*$/,''))};
+  }
+  throw new Error((f.kinds.length||kw)?'조건에 맞는 피규어를 찾지 못함 · 필터를 줄이거나 다시 시도':'피규어를 불러오지 못함'+(lastErr?' · '+lastErr:''));
+}
+
 // ---------- SAKUGABOORU (Moebooru API)
 async function sbRandom(){
   const a=S.f.anim,tl=['order:random'];
@@ -404,15 +449,16 @@ async function sbRandom(){
 }
 
 // ---------- queue / prefetch
-const fetching={film:false,anim:false};
+const fetching={film:false,anim:false,fig:false};
+const SRC={film:fgRandom,anim:sbRandom,fig:gsRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE'};
 async function fill(tab){
   if(fetching[tab])return;fetching[tab]=true;
-  try{while(S.queue[tab].length<2){const it=await(tab==='film'?fgRandom():sbRandom());
+  try{while(S.queue[tab].length<2){const it=await SRC[tab]();
     S.seen[tab].add(it.key);if(it.kind==='img'){const pre=new Image();pre.referrerPolicy='no-referrer';pre.src=M(it.url)}
     S.queue[tab].push(it)}}
   catch(e){lastErr[tab]=e.message}finally{fetching[tab]=false}
 }
-const lastErr={film:'',anim:''};
+const lastErr={film:'',anim:'',fig:''};
 async function next(){const t=S.tab;
   if(S.pos[t]<S.hist[t].length-1){S.pos[t]++;show();return}
   if(!S.queue[t].length){const lt=setTimeout(()=>toast('불러오는 중…'),700);lastErr[t]='';await fill(t);clearTimeout(lt);
@@ -427,7 +473,7 @@ const img=$('#img'),vid=$('#vid'),ov=$('#ov'),stage=$('#stage'),msg=$('#msg');
 function media(){return vid.classList.contains('hidden')?img:vid}
 function showErr(e){
   img.classList.add('hidden');vid.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
-  msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');toast((/조건에 맞는/.test(e)?'결과 없음 · ':'연결 실패 · ')+e,'err');
+  msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');$('#mfcLink').classList.add('hidden');toast((/조건에 맞는/.test(e)?'결과 없음 · ':'연결 실패 · ')+e,'err');
   const nores=/조건에 맞는/.test(e);
   msg.innerHTML=nores?`<b>결과 없음</b><br>${e}`:`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">설정 → API 연결에서 연결 테스트로 확인.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
 }
@@ -445,7 +491,8 @@ function show(){
     img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.src=M(it.url);
   }
   $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;
-  const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${t==='film'?'FILM-GRAB':'SAKUGABOORU'}</b> ↗`;sl.classList.remove('hidden');
+  const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${SRCNAME[t]}</b> ↗`;sl.classList.remove('hidden');
+  const ml=$('#mfcLink');if(it.mfc){ml.href=it.mfc;ml.classList.remove('hidden')}else ml.classList.add('hidden');
   applyView();
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -558,25 +605,28 @@ let fltDirty=false,personT=null,personRes=[];
 function fChange(){fltDirty=true;save();renderRow();renderFlt();if(curPop)placeP(curPop)}
 function applyFilter(){const t=S.tab;S.queue[t]=[];fg.pages={};S.queue[t]=[];next();toast('필터 적용','ok')}
 function fCount(t){const f=S.f[t];
+  if(t==='fig')return f.kinds.length+(f.kw.trim()?1:0)+(f.onePer?1:0);
   if(t==='film')return f.genre.length+f.year.length+f.country.length+f.ratio.length+(f.person?1:0)+(f.onePer?1:0);
   return f.kinds.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length}
 function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
   if(t==='film'){for(const k of['genre','year','country','ratio'])f[k].forEach(x=>ch.push([x.name,'c',k,x.id]));
     if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
+  else if(t==='fig'){f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
   else{f.kinds.forEach(k=>ch.push([(KINDS.find(x=>x[0]===k)||[k,k])[1],'k',k]));
     if(f.region)ch.push([REGIONS.find(x=>x[0]===f.region)[1],'r']);if(f.score)ch.push(['인기 '+f.score+'+','s']);
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
   $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
-    (ch.length?ch.map(c=>`<span class="chip set" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${t==='film'?'FILM-GRAB 전체에서 랜덤':'SAKUGABOORU 전체에서 랜덤'}</span>`);
+    (ch.length?ch.map(c=>`<span class="chip set" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일 컴퍼니'})[t]} 전체에서 랜덤</span>`);
   $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};
 }
 $('#frow').addEventListener('click',e=>{const c=e.target.closest('[data-rm]');if(!c)return;const [ty,a,b]=c.dataset.rm.split('|'),t=S.tab,f=S.f[t];
   if(ty==='c')f[a]=f[a].filter(x=>String(x.id)!==b);else if(ty==='p')f.person=null;else if(ty==='one')f.onePer=false;
   else if(ty==='k')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='r')f.region='';else if(ty==='s')f.score=0;
+  else if(ty==='gk')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='kw')f.kw='';
   else if(ty==='t')f.tags=f.tags.trim().split(/\s+/).filter(x=>x&&x!==a).join(' ');
   save();renderRow();if(curPop==='flt'){renderFlt();fltDirty=true}else applyFilter()});
 function opts(list,isOn,attr){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
-function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent=t==='film'?'필터 · FILM-GRAB':'필터 · SAKUGABOORU';
+function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일 컴퍼니'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){h=`<div class="gb"><span class="msg">${FGC.err?'분류를 불러오지 못함 · 설정 → 연결 테스트 확인':'분류 불러오는 중…'}</span></div>`;
@@ -587,6 +637,11 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent=t=
       `<input type="text" id="fPerson" placeholder="이름 검색 (영문)" autocomplete="off"><div class="gr" id="fPersonRes">${personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join('')}</div>`}</div>`;
     h+=`<div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 영화당 1장</label><a id="fReset">초기화</a></div>`;
     b.innerHTML=h;
+  }else if(t==='fig'){const f=S.f.fig;
+    b.innerHTML=`<div class="gb"><h3><span>제품 종류 · 하나라도 맞으면</span><span>${f.kinds.length?f.kinds.length+'개':''}</span></h3><div class="gr">${opts(FKINDS,v=>f.kinds.includes(v),'data-fkind')}</div></div>
+    <div class="gb"><h3><span>제품 이름 검색 (영문)</span></h3><input type="text" id="fKw" value="${esc(f.kw)}" placeholder="예: Miku, Frieren" autocomplete="off"></div>
+    <div class="gb"><span class="msg">MyFigureCollection은 보안 확인 때문에 직접 불러올 수 없음 · 컷마다 오른쪽 아래 'MyFigureCollection에서 찾기'로 열기</span></div>
+    <div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 피규어당 1장</label><a id="fReset">초기화</a></div>`;
   }else{const f=S.f.anim;
     b.innerHTML=`<div class="gb"><h3><span>작화 종류 · 최대 3개, 하나라도 맞으면</span><span>${f.kinds.length?f.kinds.length+'개':''}</span></h3><div class="gr tall">${opts(KINDS,v=>f.kinds.includes(v),'data-kind')}</div></div>
     <div class="gb"><h3><span>지역</span></h3><div class="gr">${opts(REGIONS,v=>f.region===v,'data-region')}</div></div>
@@ -601,24 +656,26 @@ $('#fltPop').addEventListener('click',e=>{const o=e.target.closest('.o,#fReset')
     f[k]=f[k].some(x=>x.id===id)?f[k].filter(x=>x.id!==id):[...f[k],{id,name:g.name}]}
   else if(o.dataset.pid){f.person={id:+o.dataset.pid,name:o.dataset.pname};personRes=[]}
   else if('pclr' in o.dataset)f.person=null;
+  else if(o.dataset.fkind){const k=o.dataset.fkind;f.kinds=f.kinds.includes(k)?f.kinds.filter(x=>x!==k):[...f.kinds,k]}
   else if(o.dataset.kind){const k=o.dataset.kind;if(f.kinds.includes(k))f.kinds=f.kinds.filter(x=>x!==k);else if(f.kinds.length<3)f.kinds=[...f.kinds,k];else{toast('작화 종류는 3개까지','err');return}}
   else if(o.dataset.region!==undefined)f.region=o.dataset.region;
   else if(o.dataset.score!==undefined)f.score=+o.dataset.score;
   fChange()});
-$('#fltPop').addEventListener('change',e=>{if(e.target.id==='fOne'){S.f.film.onePer=e.target.checked;fChange()}
+$('#fltPop').addEventListener('change',e=>{if(e.target.id==='fOne'){S.f[S.tab].onePer=e.target.checked;fChange()}
   else if(e.target.id==='fPlay'){S.play=e.target.checked;save();if(!vid.classList.contains('hidden')){S.play?vid.play().catch(()=>{}):vid.pause()}}});
 $('#fltPop').addEventListener('input',e=>{
   if(e.target.id==='fTags'){S.f.anim.tags=e.target.value;fltDirty=true;save();renderRow()}
+  else if(e.target.id==='fKw'){S.f.fig.kw=e.target.value;fltDirty=true;save();renderRow()}
   else if(e.target.id==='fPerson'){clearTimeout(personT);const q=e.target.value.trim();if(q.length<2){personRes=[];$('#fPersonRes').innerHTML='';return}
     personT=setTimeout(async()=>{try{const {data}=await getJSON(FG+`tags?search=${encodeURIComponent(q)}&per_page=10&orderby=count&order=desc&_fields=id,name`);
       personRes=data.map(x=>({id:x.id,name:dec(x.name)}));const r=$('#fPersonRes');if(r)r.innerHTML=personRes.length?personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join(''):'<span class="msg">찾지 못함</span>';placeP('flt')}
       catch(err){const r=$('#fPersonRes');if(r)r.innerHTML='<span class="msg">검색 실패</span>'}},350)}});
-$('#fltPop').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='fTags'){e.preventDefault();closeP()}});
+$('#fltPop').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='fTags'||e.target.id==='fKw')){e.preventDefault();closeP()}});
 if(S.legacyAnim)loadCats().then(()=>{const a=FGC.groups.genre&&FGC.groups.genre.kids.find(x=>/^animation$/i.test(x.name));
   if(a&&!S.f.film.genre.length){S.f.film.genre=[{id:a.id,name:a.name}];save();renderRow();resetQueues('film')}},()=>{});
 $('#resetBtn').onclick=()=>{fillPop(DEF);toast('기본값으로 채움 · 저장을 눌러 적용')};
 $('#saveBtn').onclick=()=>{Object.assign(S,readPop());applyCfg();save();
-  fg.pages={};FGC.ready=null;FGC.groups={};S.queue={film:[],anim:[]};closePop();toast('설정 저장됨','ok');
+  fg.pages={};FGC.ready=null;FGC.groups={};S.queue={film:[],anim:[],fig:[]};closePop();toast('설정 저장됨','ok');
   if(S.pos[S.tab]<0||!msg.classList.contains('hidden'))next();else fill(S.tab)};
 async function ping(url,cfg){const t0=performance.now();
   const u=cfg.proxy?cfg.proxy+encodeURIComponent(url):url;
