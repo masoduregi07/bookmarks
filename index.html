@@ -75,9 +75,6 @@ header h1{font-size:12px;font-weight:700;background:var(--panel);padding:2px 6px
 .tabs button[data-tab=anim].on svg .acc{fill:var(--mint)}
 .tabs button[data-tab=fig].on svg .acc{fill:var(--yel)}
 .tabs button[data-tab="3d"].on svg .acc{fill:var(--sky)}
-#mfcLink{position:absolute;right:10px;bottom:40px;font-size:11px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px;color:var(--ink);text-decoration:none}
-#mfcLink:hover{background:var(--yel)}
-body.zen #mfcLink{display:none}
 .sp{flex:1}
 .src{display:flex;align-items:center;gap:8px;color:var(--tx2);padding:8px 0}
 .src label{display:flex;align-items:center;gap:5px;cursor:pointer}
@@ -94,7 +91,8 @@ input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset
 #info{position:absolute;left:10px;top:10px;font-size:11px;color:var(--ink);display:flex;gap:8px;align-items:center;background:var(--panel);border:2px solid var(--ink);padding:2px 6px}
 #info a{color:var(--ink)}
 #timerBig{position:absolute;right:10px;top:10px;font-size:14px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px}
-#timerBig:empty,#info:empty{display:none}
+#timerBig:empty,#info:empty,#info.gone{display:none}
+#info{cursor:pointer;user-select:none;-webkit-user-select:none}
 #timerBig.run{background:var(--mint)}#timerBig.pause{background:var(--yel)}
 #tIn{width:62px;text-align:center;font-variant-numeric:tabular-nums}
 #tmr.run #tIn{background:var(--mint)}#tmr.pause #tIn{background:var(--yel)}
@@ -425,7 +423,6 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   <div id="info" class="mono"></div>
   <div id="timerBig" class="mono"></div>
   <a id="srcLink" class="hidden" target="_blank" rel="noopener noreferrer"></a>
-  <a id="mfcLink" class="hidden" target="_blank" rel="noopener noreferrer">MyFigureCollection에서 찾기 ↗</a>
 </main>
 
 </div>
@@ -606,7 +603,7 @@ async function gsRandom(){
     if(f.kwEx.trim()&&f.kwEx.toLowerCase().split(/[,\s]+/).filter(Boolean).some(w=>title.toLowerCase().includes(w)))continue;
     gs.seen.add(id);
     const url=imgs[rnd(imgs.length)];
-    return {kind:'img',url,title,link:GS+'en/product/'+id,key:url,src:'GOOD SMILE',mfc:'https://myfigurecollection.net/search.v4.php?keywords='+encodeURIComponent(title.replace(/[:：].*$/,''))};
+    return {kind:'img',url,title,link:GS+'en/product/'+id,key:url,src:'GOOD SMILE'};
   }
   throw new Error((f.kinds.length||kw||f.kindsEx.length||f.kwEx.trim())?'조건에 맞는 피규어를 찾지 못함 · 필터를 줄이거나 다시 시도':'피규어를 불러오지 못함'+(lastErr?' · '+lastErr:''));
 }
@@ -627,8 +624,7 @@ async function dbRandom(){
   const p=list[0];db.seen.add(p.id);
   const nm=x=>(x||'').split(' ').filter(Boolean)[0]||'';
   const who=(nm(p.tag_string_character)||nm(p.tag_string_copyright)||'figure').replace(/_/g,' ').replace(/\s*\(.*\)$/,'');
-  return {kind:'img',url:p.large_file_url||p.file_url,title:`#${p.id} ${who}`,link:DB+'posts/'+p.id,key:'db'+p.id,src:'DANBOORU',
-    mfc:'https://myfigurecollection.net/search.v4.php?keywords='+encodeURIComponent(who)};
+  return {kind:'img',url:p.large_file_url||p.file_url,title:`#${p.id} ${who}`,link:DB+'posts/'+p.id,key:'db'+p.id,src:'DANBOORU'};
 }
 async function figRandom(){
   const src=S.f.fig.src,order=src==='gs'?[gsRandom]:src==='db'?[dbRandom]:(Math.random()<.5?[gsRandom,dbRandom]:[dbRandom,gsRandom]);
@@ -692,7 +688,7 @@ const img=$('#img'),vid=$('#vid'),ov=$('#ov'),stage=$('#stage'),msg=$('#msg'),c3
 function media(){return !c3d.classList.contains('hidden')?c3d:vid.classList.contains('hidden')?img:vid}
 function showErr(e){
   img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
-  msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');$('#mfcLink').classList.add('hidden');toast((/조건에 맞는/.test(e)?'결과 없음 · ':'연결 실패 · ')+e,'err');
+  msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');toast((/조건에 맞는/.test(e)?'결과 없음 · ':'연결 실패 · ')+e,'err');
   try{syncSaveBtn()}catch(_){}
   const nores=/조건에 맞는/.test(e);
   msg.innerHTML=nores?`<b>결과 없음</b><br>${e}`:`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">설정 → API 연결에서 연결 테스트로 확인.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
@@ -714,11 +710,11 @@ function show(){
     vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');img.classList.remove('hidden');
     img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.src=M(it.url);
   }
-  $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;
+  $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;$('#info').classList.remove('gone');
   const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${it.src||SRCNAME[t]}</b> ↗`;sl.classList.remove('hidden');
-  const ml=$('#mfcLink');if(it.mfc){ml.href=it.mfc;ml.classList.remove('hidden')}else ml.classList.add('hidden');
   applyView();
 }
+$('#info').addEventListener('click',e=>{e.stopPropagation();$('#info').classList.add('gone')});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function applyView(){
   const t=S.tab,f=S.tone==='color'?'':S.tone==='gray'?'grayscale(1)':`url(#${S.tone})`;
