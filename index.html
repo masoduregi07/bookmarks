@@ -88,7 +88,7 @@ input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset
 #timerBig.run{background:var(--mint)}#timerBig.pause{background:var(--yel)}
 #tIn{width:62px;text-align:center;font-variant-numeric:tabular-nums}
 #tmr.run #tIn{background:var(--mint)}#tmr.pause #tIn{background:var(--yel)}
-.seg.ic button{padding:4px 7px;display:flex;align-items:center;height:28px}
+.seg.ic button{padding:4px 7px;display:flex;align-items:center;justify-content:center;height:28px;min-width:30px}
 .seg.ic svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges}
 #srcLink{position:absolute;right:10px;bottom:10px;font-size:11px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px;color:var(--ink);text-decoration:none;display:flex;gap:6px;align-items:center}
 #srcLink:hover{background:var(--yel)}
@@ -392,7 +392,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <input type="text" id="tIn" value="05:00" title="시간 입력 (예: 5 = 5분, 1:30, 90s)" autocomplete="off">
     <div class="seg"><button data-add="300">+5분</button><button data-add="600">+10분</button><button data-add="1800">+30분</button></div>
     <div class="seg ic">
-      <button id="tPlay" title="재생 (T)"><svg viewBox="0 0 10 10"><path d="M2 1h2v1h2v1h2v1h1v2H8v1H6v1H4v1H2z"/></svg></button>
+      <button id="tPlay" title="재생 (T)"><svg viewBox="0.5 0 10 10"><path d="M2 1h2v1h2v1h2v1h1v2H8v1H6v1H4v1H2z"/></svg></button>
       <button id="tPause" title="일시정지 (T)"><svg viewBox="0 0 10 10"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg></button>
       <button id="tReset" title="리셋"><svg viewBox="0 0 10 10"><path d="M3 0h1v1h1v1h2v1h1v1h1v4H8v1H7v1H3V9H2V8H1V5h2v2h1v1h2V7h1V4H6V3H4v1H3v1H2V4H1V3h1V2h1z"/></svg></button>
     </div>
