@@ -159,7 +159,7 @@ body.zen #info{display:none}
 const $=s=>document.querySelector(s);
 const FG='https://film-grab.com/wp-json/wp/v2/';
 const SB='https://www.sakugabooru.com/';
-const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,timer:0,onlyAnim:false,tags:'',play:false,proxy:'',
+const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,timer:0,onlyAnim:false,tags:'',play:false,proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',
   grid:{film:'thirds',anim:'field'},hist:{film:[],anim:[]},pos:{film:-1,anim:-1},seen:{film:new Set(),anim:new Set()},queue:{film:[],anim:[]}};
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','timer','onlyAnim','tags','play','proxy','grid'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
 const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,timer:S.timer,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid}))}catch(e){}};
