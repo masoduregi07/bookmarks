@@ -114,25 +114,25 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .sw input:checked+i::after{left:16px;background:var(--ink)}
 .off{opacity:.35;pointer-events:none}
 .hidden{display:none!important}
-#setPop{position:fixed;z-index:15;width:340px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
-#setPop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
+.pop{position:fixed;z-index:15;width:var(--pw,340px);background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
+.pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
   clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
-#setPop .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 12px;border-bottom:2px solid var(--ink);font-weight:700}
-#setPop .hd button{padding:0 6px;box-shadow:none;line-height:14px}
-#setPop section{padding:10px 12px 12px}
-#setPop h3{font-size:11px;color:var(--tx2);font-weight:400;margin-bottom:8px}
-#setPop .row{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:8px;margin-bottom:6px}
-#setPop .row span{color:var(--tx2);font-size:11px}
-#setPop .row input,#setPop .row select{width:100%;min-width:0;font-size:11px}
-#setPop .chk{display:flex;align-items:center;gap:6px;margin:4px 0 8px;cursor:pointer;color:var(--ink)}
-#setPop .st{border:2px dotted var(--soft);padding:6px 8px;margin:8px 0 10px;display:grid;gap:3px;font-size:11px}
-#setPop .st div{display:flex;justify-content:space-between}
-#setPop .st b{font-weight:400;color:var(--tx3)}
-#setPop .st b.ok{color:var(--ink)}#setPop .st b.ok::before{content:"● ";color:#5aa37a}
-#setPop .st b.err{color:var(--ink)}#setPop .st b.err::before{content:"✕ ";color:#d26a82}
-#setPop .btns{display:flex;gap:6px;justify-content:flex-end}
-#setPop .btns .pri{background:var(--ink);color:#fff}
-#setPop .btns .pri:hover{background:#55524c}
+.pop .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 12px;border-bottom:2px solid var(--ink);font-weight:700}
+.pop .hd button{padding:0 6px;box-shadow:none;line-height:14px}
+.pop section{padding:10px 12px 12px}
+.pop h3{font-size:11px;color:var(--tx2);font-weight:400;margin-bottom:8px}
+.pop .row{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:8px;margin-bottom:6px}
+.pop .row span{color:var(--tx2);font-size:11px}
+.pop .row input,.pop .row select{width:100%;min-width:0;font-size:11px}
+.pop .chk{display:flex;align-items:center;gap:6px;margin:4px 0 8px;cursor:pointer;color:var(--ink)}
+.pop .st{border:2px dotted var(--soft);padding:6px 8px;margin:8px 0 10px;display:grid;gap:3px;font-size:11px}
+.pop .st div{display:flex;justify-content:space-between}
+.pop .st b{font-weight:400;color:var(--tx3)}
+.pop .st b.ok{color:var(--ink)}.pop .st b.ok::before{content:"● ";color:#5aa37a}
+.pop .st b.err{color:var(--ink)}.pop .st b.err::before{content:"✕ ";color:#d26a82}
+.pop .btns{display:flex;gap:6px;justify-content:flex-end}
+.pop .btns .pri{background:var(--ink);color:#fff}
+.pop .btns .pri:hover{background:#55524c}
 #setBtn.on{background:var(--ink);color:#fff}
 body.zen .top{display:none}
 body.zen #app{grid-template-rows:0 1fr;gap:0}
@@ -152,7 +152,32 @@ footer{column-gap:0!important;justify-content:center}
 footer .grp+.grp{border-left:none!important;padding-left:0!important}
 footer .dv{flex:1 1 0;min-width:16px;max-width:150px;align-self:stretch;display:flex;justify-content:center}
 footer .dv::before{content:"";border-left:2px dotted var(--ink);margin:2px 0}
-footer .keys{flex-basis:100%;margin-top:2px;text-align:center}
+footer .frow{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px;cursor:pointer;white-space:nowrap;line-height:1}
+.chip:hover{background:var(--yel)}
+.chip.on{background:var(--ink);color:#fff}
+.chip.set{background:var(--yel)}
+.chip.set b{font-weight:400;color:var(--tx2);margin-left:2px}
+.chip.set:hover b{color:var(--ink)}
+.cnt{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 3px;background:var(--pink);border:2px solid var(--ink);font-size:10px;font-weight:700;color:var(--ink)}
+.chip .ar{width:8px;height:5px;background:currentColor;clip-path:polygon(0 0,100% 0,100% 40%,80% 40%,80% 70%,60% 70%,60% 100%,40% 100%,40% 70%,20% 70%,20% 40%,0 40%)}
+.frow .none{color:var(--tx3);font-size:11px}
+#fltPop .gb{margin-bottom:10px}
+#fltPop .gb h3{display:flex;justify-content:space-between;margin-bottom:6px}
+#fltPop .gr{display:flex;flex-wrap:wrap;gap:4px;max-height:96px;overflow:auto;padding:1px}
+#fltPop .gr.tall{max-height:none}
+#fltPop .o{padding:2px 7px;border:2px solid var(--ink);background:#fff;cursor:pointer;font-size:11px;line-height:16px;white-space:nowrap}
+#fltPop .o:hover{background:var(--yel)}
+#fltPop .o.on{background:var(--ink);color:#fff}
+#fltPop .msg{color:var(--tx3);font-size:11px}
+#fltPop input[type=text]{width:100%;font-size:11px;margin-bottom:4px}
+#fltPop .ft{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:2px dotted var(--soft)}
+#fltPop .ft label{display:flex;align-items:center;gap:6px;cursor:pointer}
+#fltPop .ft a{color:var(--tx2);cursor:pointer;font-size:11px}
+#keyPop dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:12px}
+#keyPop dt{display:flex;gap:3px;justify-content:flex-end}
+#keyPop kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border:2px solid var(--ink);background:#fff;box-shadow:1px 1px 0 var(--shd);font:inherit;font-size:11px}
+#keyPop dd{color:var(--tx2)}
 footer input[type=range]{width:60px}
 footer #tmr .seg:not(.ic) button{padding:4px 7px}
 footer .grp>label{margin-right:0}
@@ -173,16 +198,7 @@ footer .grp>label{margin-right:0}
     <button data-tab="anim"><svg viewBox="0 0 14 14"><path d="M1 1h10v12H1z"/><path fill="#fff" d="M3 3h6v8H3z"/><path class="acc" fill="#fff" d="M4 5h4v5H4z"/><path d="M11 3h2v10H3v-2h8z" opacity=".45"/><path d="M5 4h2v1H5zM4 8h1v1H4zM7 8h1v1H7z"/></svg>애니메이션 레이아웃</button>
   </nav>
   <div class="sp"></div>
-  <div class="src" id="srcFilm">
-    <span class="mono">FILM-GRAB</span>
-    <label><input type="checkbox" id="onlyAnim"> 애니메이션 영화만</label>
-  </div>
-  <div class="src hidden" id="srcAnim">
-    <span class="mono">SAKUGABOORU</span>
-    <input type="text" id="tags" placeholder="태그 (예: effects, character_acting)" style="width:220px">
-    <label><input type="checkbox" id="play"> 영상 재생</label>
-  </div>
-
+  <button id="keyBtn" class="sm">단축키</button>
   <button id="zen" class="sm">UI 숨김</button>
   <button id="setBtn" class="sm">설정</button>
 </header>
@@ -237,7 +253,7 @@ footer .grp>label{margin-right:0}
       <button id="tReset" title="리셋"><svg viewBox="0 0 10 10"><path d="M3 0h1v1h1v1h2v1h1v1h1v4H8v1H7v1H3V9H2V8H1V5h2v2h1v1h2V7h1V4H6V3H4v1H3v1H2V4H1V3h1V2h1z"/></svg></button>
     </div>
   </div>
-  <span class="keys">Space/→ 다음 · ← 이전 · G 색 · D 분할 켜기/끄기 · F 반전 · H 숨김 · T 타이머 · , . 프레임</span>
+  <div class="frow" id="frow"></div>
 </footer>
 </div>
 
@@ -253,8 +269,8 @@ footer .grp>label{margin-right:0}
 
 </div>
 
-<div id="setPop" class="hidden" role="dialog" aria-label="설정">
-  <div class="hd">설정<button id="setX" title="닫기">×</button></div>
+<div id="setPop" class="pop hidden" role="dialog" aria-label="설정">
+  <div class="hd">설정<button id="setX" class="px" title="닫기">×</button></div>
   <section>
     <h3>API 연결</h3>
     <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
@@ -266,6 +282,24 @@ footer .grp>label{margin-right:0}
     <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
   </section>
 </div>
+<div id="keyPop" class="pop hidden" role="dialog" aria-label="단축키" style="--pw:250px">
+  <div class="hd">단축키<button class="px" title="닫기">×</button></div>
+  <section><dl>
+    <dt><kbd>Space</kbd><kbd>→</kbd></dt><dd>다음 컷</dd>
+    <dt><kbd>←</kbd></dt><dd>이전 컷</dd>
+    <dt><kbd>G</kbd></dt><dd>색 모드 바꾸기</dd>
+    <dt><kbd>D</kbd></dt><dd>분할 켜기 / 끄기</dd>
+    <dt><kbd>F</kbd></dt><dd>좌우반전</dd>
+    <dt><kbd>H</kbd></dt><dd>UI 숨김</dd>
+    <dt><kbd>T</kbd></dt><dd>타이머 재생 / 일시정지</dd>
+    <dt><kbd>,</kbd><kbd>.</kbd></dt><dd>영상 한 프레임 앞 / 뒤</dd>
+    <dt><kbd>Esc</kbd></dt><dd>미니창 닫기</dd>
+  </dl></section>
+</div>
+<div id="fltPop" class="pop hidden" role="dialog" aria-label="필터" style="--pw:380px">
+  <div class="hd"><span id="fltTitle">필터</span><button class="px" title="닫기">×</button></div>
+  <section id="fltBody"></section>
+</div>
 <div id="toasts"></div>
 
 <script>
@@ -273,11 +307,15 @@ footer .grp>label{margin-right:0}
 const $=s=>document.querySelector(s);
 const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s'};
 let FG,SB;
-const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,onlyAnim:false,tags:'',play:false,...DEF,
+const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
   grid:{film:'thirds',anim:'field'},gridOn:{film:true,anim:true},hist:{film:[],anim:[]},pos:{film:-1,anim:-1},seen:{film:new Set(),anim:new Set()},queue:{film:[],anim:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','onlyAnim','tags','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],person:null,onePer:false},anim:{kinds:[],region:'',score:0,tags:''}});
+S.f=FDEF();S.legacyAnim=false;
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
+  if(p.f){S.f={film:{...S.f.film,...p.f.film},anim:{...S.f.anim,...p.f.anim}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -293,12 +331,23 @@ const rnd=n=>Math.floor(Math.random()*n);
 const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/$/,'')+u:u;
 
 // ---------- FILM-GRAB (WordPress REST)
-const fg={total:{},animCat:undefined};
-async function fgAnimCat(){
-  if(fg.animCat!==undefined)return fg.animCat;
-  try{const {data}=await getJSON(FG+'categories?search=animation&per_page=20&_fields=id,name,slug');
-    const c=data.find(x=>/^animation$/i.test(x.slug)||/^animation$/i.test(x.name))||data[0];fg.animCat=c?c.id:null}catch(e){fg.animCat=null}
-  return fg.animCat;
+const fg={pages:{},seenPost:new Set()};
+const dec=s=>new DOMParser().parseFromString(s||'','text/html').body.textContent;
+const FGROUPS=[['genre','장르',['genre']],['year','연도',['year','years']],['country','국가',['country','countries']],['ratio','화면비',['aspect-ratio','aspect-ratios','aspectratio']]];
+const FGC={ready:null,groups:{},err:false};
+function loadCats(){
+  if(FGC.ready)return FGC.ready;
+  FGC.err=false;
+  FGC.ready=(async()=>{
+    const slugs=FGROUPS.flatMap(g=>g[2]);
+    const {data}=await getJSON(FG+'categories?per_page=100&_fields=id,name,slug&slug='+slugs.join(','));
+    for(const [k,,ss] of FGROUPS){const c=data.find(x=>ss.includes(x.slug));if(!c)continue;const kids=[];
+      for(let pg=1;pg<=4;pg++){const r=await getJSON(FG+`categories?parent=${c.id}&per_page=100&page=${pg}&orderby=name&_fields=id,name,count`);
+        kids.push(...r.data);if(r.data.length<100)break}
+      FGC.groups[k]={id:c.id,kids:kids.filter(x=>x.count>0).map(x=>({id:x.id,name:dec(x.name)}))}}
+  })();
+  FGC.ready.catch(()=>{FGC.ready=null;FGC.err=true});
+  return FGC.ready;
 }
 function pickImages(html){
   const d=new DOMParser().parseFromString(html,'text/html');const out=new Set();
@@ -310,30 +359,40 @@ function pickImages(html){
   return [...out];
 }
 async function fgRandom(){
-  const cat=S.onlyAnim?await fgAnimCat():null;
-  if(S.onlyAnim&&!cat)throw new Error('애니메이션 분류를 찾지 못함');
-  const key=cat||'all',q=cat?`&categories=${cat}`:'';
-  if(!fg.total[key]){const {headers}=await getJSON(FG+`posts?per_page=1&_fields=id${q}`);
-    fg.total[key]=parseInt(headers.get('X-WP-Total'))||1000}
-  for(let tries=0;tries<4;tries++){
-    const page=1+rnd(fg.total[key]);
-    let data;try{({data}=await getJSON(FG+`posts?per_page=1&page=${page}&_fields=id,link,title,content${q}`))}catch(e){if(tries<3)continue;throw e}
-    const p=data[0];if(!p)continue;
-    const imgs=pickImages(p.content.rendered).filter(u=>!S.seen.film.has(u));
-    if(!imgs.length)continue;
-    const url=imgs[rnd(imgs.length)];
-    const t=new DOMParser().parseFromString(p.title.rendered,'text/html').body.textContent;
-    return {kind:'img',url,title:t,link:p.link,key:url};
+  const f=S.f.film,groups=['genre','year','country','ratio'].filter(k=>f[k].length);
+  const srv=groups[0],rest=groups.slice(1);
+  let q='';if(srv)q+='&categories='+f[srv].map(x=>x.id).join(',');if(f.person)q+='&tags='+f.person.id;
+  const per=rest.length?10:1,key=q+'|'+per;
+  if(!fg.pages[key]){const {headers}=await getJSON(FG+`posts?per_page=${per}&_fields=id${q}`);
+    const tot=parseInt(headers.get('X-WP-Total'));if(tot===0)throw new Error('조건에 맞는 영화가 없음');
+    fg.pages[key]=parseInt(headers.get('X-WP-TotalPages'))||Math.ceil((tot||1000)/per)}
+  for(let tries=0;tries<6;tries++){
+    const page=1+rnd(fg.pages[key]);
+    let data;try{({data}=await getJSON(FG+`posts?per_page=${per}&page=${page}&_fields=id,link,title,content,categories${q}`))}catch(e){if(tries<5)continue;throw e}
+    const list=data.filter(p=>rest.every(k=>f[k].some(x=>(p.categories||[]).includes(x.id)))&&!(f.onePer&&fg.seenPost.has(p.id)));
+    for(let i=list.length-1;i>0;i--){const j=rnd(i+1);[list[i],list[j]]=[list[j],list[i]]}
+    for(const p of list){
+      const imgs=pickImages(p.content.rendered).filter(u=>!S.seen.film.has(u));
+      if(!imgs.length)continue;
+      fg.seenPost.add(p.id);
+      const url=imgs[rnd(imgs.length)];return {kind:'img',url,title:dec(p.title.rendered),link:p.link,key:url};
+    }
   }
-  throw new Error('이미지를 찾지 못함');
+  throw new Error(rest.length?'조건에 맞는 컷을 찾지 못함 · 필터를 줄여 보기':'이미지를 찾지 못함');
 }
 
 // ---------- SAKUGABOORU (Moebooru API)
 async function sbRandom(){
-  const tags=['order:random',...(S.sbRating?['rating:'+S.sbRating]:[]),...S.tags.trim().split(/\s+/).filter(Boolean)].join(' ');
+  const a=S.f.anim,tl=['order:random'];
+  if(S.sbRating)tl.push('rating:'+S.sbRating);
+  if(a.region==='west')tl.push('western');else if(a.region==='jp')tl.push('-western');
+  if(a.score)tl.push('score:>='+a.score);
+  if(a.kinds.length===1)tl.push(a.kinds[0]);else a.kinds.forEach(k=>tl.push('~'+k));
+  tl.push(...a.tags.trim().split(/\s+/).filter(Boolean));
+  const tags=tl.join(' ');
   const {data}=await getJSON(SB+`post.json?limit=8&tags=${encodeURIComponent(tags)}`);
   const list=data.filter(p=>p.file_url&&!S.seen.anim.has(p.id));
-  if(!list.length)throw new Error('결과 없음 (태그 확인)');
+  if(!list.length)throw new Error('조건에 맞는 클립이 없음 · 필터를 줄여 보기');
   const p=list[0];const ext=(p.file_ext||p.file_url.split('.').pop()).toLowerCase();
   const tagStr=(p.tags||'').split(' ').slice(0,4).join(' ');
   return {kind:/mp4|webm|mov/.test(ext)?'vid':'img',url:abs(p.file_url),title:`#${p.id} ${tagStr}`,link:SB+'post/show/'+p.id,key:p.id};
@@ -363,8 +422,9 @@ const img=$('#img'),vid=$('#vid'),ov=$('#ov'),stage=$('#stage'),msg=$('#msg');
 function media(){return vid.classList.contains('hidden')?img:vid}
 function showErr(e){
   img.classList.add('hidden');vid.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
-  msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');toast('연결 실패 · '+e,'err');
-  msg.innerHTML=`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">설정 → API 연결에서 연결 테스트로 확인.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
+  msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');toast((/조건에 맞는/.test(e)?'결과 없음 · ':'연결 실패 · ')+e,'err');
+  const nores=/조건에 맞는/.test(e);
+  msg.innerHTML=nores?`<b>결과 없음</b><br>${e}`:`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">설정 → API 연결에서 연결 테스트로 확인.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
 }
 function show(){
   const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();
@@ -389,12 +449,11 @@ function applyView(){
   img.style.filter=vid.style.filter=f;
   img.classList.toggle('flip',S.flip);vid.classList.toggle('flip',S.flip);
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
-  $('#srcFilm').classList.toggle('hidden',t!=='film');$('#srcAnim').classList.toggle('hidden',t!=='anim');
   document.querySelectorAll('#tone button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.tone));
   document.querySelectorAll('#lc button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.lc));
   $('#flip').classList.toggle('on',S.flip);
   $('#grid').value=S.grid[t];$('#gridOn').checked=S.gridOn[t];$('#gridOpts').classList.toggle('off',!S.gridOn[t]);$('#customBox').classList.toggle('hidden',S.grid[t]!=='custom');
-  $('#op').value=S.op;$('#onlyAnim').checked=S.onlyAnim;$('#tags').value=S.tags;$('#play').checked=S.play;
+  $('#op').value=S.op;renderRow();
   $('#prev').disabled=S.pos[t]<=0;
   drawGrid();
 }
@@ -445,7 +504,7 @@ function cutTimer(){if(tState!=='idle')tLeft=S.tDur;tRender()}
 function tSet(sec){S.tDur=Math.max(0,Math.min(sec,6*3600));save();tReset()}
 
 // ---------- events
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;save();
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(curPop)closeP();S.tab=b.dataset.tab;save();
   if(S.pos[S.tab]<0)next();else show();applyView()});
 $('#next').onclick=next;$('#prev').onclick=prev;
 document.querySelectorAll('#tone button').forEach(b=>b.onclick=()=>{S.tone=b.dataset.v;save();applyView()});
@@ -464,24 +523,97 @@ $('#tIn').onkeydown=e=>{if(e.key==='Enter')e.target.blur()};
 document.querySelectorAll('#tmr [data-add]').forEach(b=>b.onclick=()=>{const a=+b.dataset.add;
   if(tState==='idle')tSet(S.tDur+a);else{S.tDur+=a;tLeft+=a;save();tRender()}toast(b.textContent+' → '+fmt(tState==='idle'?S.tDur:tLeft))});
 tRender();
-$('#onlyAnim').onchange=e=>{S.onlyAnim=e.target.checked;save();resetQueues('film')};
-let tagT;$('#tags').oninput=e=>{S.tags=e.target.value;save();clearTimeout(tagT);tagT=setTimeout(()=>resetQueues('anim'),600)};
-$('#tags').onkeydown=e=>{if(e.key==='Enter'){S.queue.anim=[];next()}};
-$('#play').onchange=e=>{S.play=e.target.checked;save();if(!vid.classList.contains('hidden')){S.play?vid.play().catch(()=>{}):vid.pause()}};
+// ---------- popovers (settings / shortcuts / filter)
 const pop=$('#setPop'),sb=$('#setBtn');
+const POPS={set:{el:pop,btn:sb,align:'right'},key:{el:$('#keyPop'),btn:$('#keyBtn'),align:'right'},flt:{el:$('#fltPop'),btn:null,align:'left'}};
+let curPop=null;
 function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl;$('#sbRating').value=c.sbRating}
 function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim(),sbRating:$('#sbRating').value}}
-function placePop(){const r=sb.getBoundingClientRect(),w=340,left=Math.max(8,Math.min(innerWidth-w-8,r.right-w));
-  pop.style.top=(r.bottom+8)+'px';pop.style.left=left+'px';pop.style.setProperty('--caret',(left+w-r.right+r.width/2-5)+'px')}
-function openPop(){fillPop(S);placePop();pop.classList.remove('hidden');sb.classList.add('on')}
-function closePop(){pop.classList.add('hidden');sb.classList.remove('on')}
-sb.onclick=e=>{e.stopPropagation();pop.classList.contains('hidden')?openPop():closePop()};
-$('#setX').onclick=closePop;
-document.addEventListener('mousedown',e=>{if(!pop.classList.contains('hidden')&&!pop.contains(e.target)&&e.target!==sb)closePop()});
-addEventListener('resize',()=>{if(!pop.classList.contains('hidden'))placePop()});
+function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const r=P.btn.getBoundingClientRect(),w=el.offsetWidth||340;
+  const left=Math.max(8,Math.min(innerWidth-w-8,P.align==='left'?r.left:r.right-w));
+  el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
+  el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
+function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
+  if(n==='set')fillPop(S);if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
+  P.el.classList.remove('hidden');placeP(n);P.btn.classList.add('on');curPop=n}
+function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;P.el.classList.add('hidden');P.btn&&P.btn.classList.remove('on');curPop=null;
+  if(n==='flt'){if(fltDirty){fltDirty=false;applyFilter()}else renderRow()}}
+function closePop(){closeP()}
+sb.onclick=e=>{e.stopPropagation();curPop==='set'?closeP():openP('set')};
+$('#keyBtn').onclick=e=>{e.stopPropagation();curPop==='key'?closeP():openP('key')};
+document.querySelectorAll('.pop .px').forEach(b=>b.onclick=closeP);
+document.addEventListener('mousedown',e=>{if(!curPop)return;const P=POPS[curPop];
+  if(!P.el.contains(e.target)&&!(P.btn&&P.btn.contains(e.target)))closeP()});
+addEventListener('resize',()=>{if(curPop)placeP(curPop)});
+
+// ---------- filters
+const KINDS=[['effects','이펙트'],['character_acting','캐릭터 연기'],['fighting','액션'],['running','달리기'],['hair','머리카락'],['cloth','옷자락'],['smoke','연기·연무'],['fire','불'],['liquid','물·액체'],['explosions','폭발'],['animals','동물'],['background_animation','배경 작화'],['crowd','군중'],['mecha','메카']];
+const REGIONS=[['','전체'],['jp','일본'],['west','서양']],SCORES=[[0,'전체'],[20,'20+'],[50,'50+'],[100,'100+']];
+let fltDirty=false,personT=null,personRes=[];
+function fChange(){fltDirty=true;save();renderRow();renderFlt();if(curPop)placeP(curPop)}
+function applyFilter(){const t=S.tab;S.queue[t]=[];fg.pages={};S.queue[t]=[];next();toast('필터 적용','ok')}
+function fCount(t){const f=S.f[t];
+  if(t==='film')return f.genre.length+f.year.length+f.country.length+f.ratio.length+(f.person?1:0)+(f.onePer?1:0);
+  return f.kinds.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length}
+function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
+  if(t==='film'){for(const k of['genre','year','country','ratio'])f[k].forEach(x=>ch.push([x.name,'c',k,x.id]));
+    if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
+  else{f.kinds.forEach(k=>ch.push([(KINDS.find(x=>x[0]===k)||[k,k])[1],'k',k]));
+    if(f.region)ch.push([REGIONS.find(x=>x[0]===f.region)[1],'r']);if(f.score)ch.push(['인기 '+f.score+'+','s']);
+    f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
+  $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
+    (ch.length?ch.map(c=>`<span class="chip set" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${t==='film'?'FILM-GRAB 전체에서 랜덤':'SAKUGABOORU 전체에서 랜덤'}</span>`);
+  $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};
+}
+$('#frow').addEventListener('click',e=>{const c=e.target.closest('[data-rm]');if(!c)return;const [ty,a,b]=c.dataset.rm.split('|'),t=S.tab,f=S.f[t];
+  if(ty==='c')f[a]=f[a].filter(x=>String(x.id)!==b);else if(ty==='p')f.person=null;else if(ty==='one')f.onePer=false;
+  else if(ty==='k')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='r')f.region='';else if(ty==='s')f.score=0;
+  else if(ty==='t')f.tags=f.tags.trim().split(/\s+/).filter(x=>x&&x!==a).join(' ');
+  save();renderRow();if(curPop==='flt'){renderFlt();fltDirty=true}else applyFilter()});
+function opts(list,isOn,attr){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
+function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent=t==='film'?'필터 · FILM-GRAB':'필터 · SAKUGABOORU';
+  const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
+  if(t==='film'){const f=S.f.film;let h='';
+    if(!Object.keys(FGC.groups).length){h=`<div class="gb"><span class="msg">${FGC.err?'분류를 불러오지 못함 · 설정 → 연결 테스트 확인':'분류 불러오는 중…'}</span></div>`;
+      if(!FGC.err)loadCats().then(()=>{if(curPop==='flt'&&S.tab==='film'){renderFlt();placeP('flt')}},()=>{if(curPop==='flt'){renderFlt()}})}
+    else for(const [k,l] of FGROUPS){const g=FGC.groups[k];if(!g)continue;
+      h+=`<div class="gb"><h3><span>${l}</span><span>${f[k].length?f[k].length+'개':''}</span></h3><div class="gr">${opts(g.kids.map(x=>[x.id,x.name]),v=>f[k].some(x=>x.id===v),`data-g="${k}" data-id`)}</div></div>`}
+    h+=`<div class="gb"><h3><span>인물 (감독 · 촬영 · 미술 · 의상)</span></h3>${f.person?`<div class="gr"><span class="o on" data-pclr>${esc(f.person.name)} ×</span></div>`:
+      `<input type="text" id="fPerson" placeholder="이름 검색 (영문)" autocomplete="off"><div class="gr" id="fPersonRes">${personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join('')}</div>`}</div>`;
+    h+=`<div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 영화당 1장</label><a id="fReset">초기화</a></div>`;
+    b.innerHTML=h;
+  }else{const f=S.f.anim;
+    b.innerHTML=`<div class="gb"><h3><span>작화 종류 · 최대 3개, 하나라도 맞으면</span><span>${f.kinds.length?f.kinds.length+'개':''}</span></h3><div class="gr tall">${opts(KINDS,v=>f.kinds.includes(v),'data-kind')}</div></div>
+    <div class="gb"><h3><span>지역</span></h3><div class="gr">${opts(REGIONS,v=>f.region===v,'data-region')}</div></div>
+    <div class="gb"><h3><span>인기 (점수)</span></h3><div class="gr">${opts(SCORES,v=>f.score===+v,'data-score')}</div></div>
+    <div class="gb"><h3><span>태그 직접 입력 · 띄어쓰기로 여러 개, 앞에 - 붙이면 제외</span></h3><input type="text" id="fTags" value="${esc(f.tags)}" placeholder="예: yutaka_nakamura  -3d_cg" autocomplete="off"></div>
+    <div class="ft"><label><input type="checkbox" id="fPlay" ${S.play?'checked':''}> 영상 재생</label><a id="fReset">초기화</a></div>`}
+  if(ae){const el=document.getElementById(ae);if(el&&el.tagName==='INPUT'){el.focus();try{el.setSelectionRange(sel,sel)}catch(e){}}}
+}
+$('#fltPop').addEventListener('click',e=>{const o=e.target.closest('.o,#fReset');if(!o)return;const t=S.tab,f=S.f[t];
+  if(o.id==='fReset'){S.f[t]=FDEF()[t];personRes=[];return fChange()}
+  if(o.dataset.g){const k=o.dataset.g,id=+o.dataset.id,g=FGC.groups[k].kids.find(x=>x.id===id);
+    f[k]=f[k].some(x=>x.id===id)?f[k].filter(x=>x.id!==id):[...f[k],{id,name:g.name}]}
+  else if(o.dataset.pid){f.person={id:+o.dataset.pid,name:o.dataset.pname};personRes=[]}
+  else if('pclr' in o.dataset)f.person=null;
+  else if(o.dataset.kind){const k=o.dataset.kind;if(f.kinds.includes(k))f.kinds=f.kinds.filter(x=>x!==k);else if(f.kinds.length<3)f.kinds=[...f.kinds,k];else{toast('작화 종류는 3개까지','err');return}}
+  else if(o.dataset.region!==undefined)f.region=o.dataset.region;
+  else if(o.dataset.score!==undefined)f.score=+o.dataset.score;
+  fChange()});
+$('#fltPop').addEventListener('change',e=>{if(e.target.id==='fOne'){S.f.film.onePer=e.target.checked;fChange()}
+  else if(e.target.id==='fPlay'){S.play=e.target.checked;save();if(!vid.classList.contains('hidden')){S.play?vid.play().catch(()=>{}):vid.pause()}}});
+$('#fltPop').addEventListener('input',e=>{
+  if(e.target.id==='fTags'){S.f.anim.tags=e.target.value;fltDirty=true;save();renderRow()}
+  else if(e.target.id==='fPerson'){clearTimeout(personT);const q=e.target.value.trim();if(q.length<2){personRes=[];$('#fPersonRes').innerHTML='';return}
+    personT=setTimeout(async()=>{try{const {data}=await getJSON(FG+`tags?search=${encodeURIComponent(q)}&per_page=10&orderby=count&order=desc&_fields=id,name`);
+      personRes=data.map(x=>({id:x.id,name:dec(x.name)}));const r=$('#fPersonRes');if(r)r.innerHTML=personRes.length?personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join(''):'<span class="msg">찾지 못함</span>';placeP('flt')}
+      catch(err){const r=$('#fPersonRes');if(r)r.innerHTML='<span class="msg">검색 실패</span>'}},350)}});
+$('#fltPop').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='fTags'){e.preventDefault();closeP()}});
+if(S.legacyAnim)loadCats().then(()=>{const a=FGC.groups.genre&&FGC.groups.genre.kids.find(x=>/^animation$/i.test(x.name));
+  if(a&&!S.f.film.genre.length){S.f.film.genre=[{id:a.id,name:a.name}];save();renderRow();resetQueues('film')}},()=>{});
 $('#resetBtn').onclick=()=>{fillPop(DEF);toast('기본값으로 채움 · 저장을 눌러 적용')};
 $('#saveBtn').onclick=()=>{Object.assign(S,readPop());applyCfg();save();
-  fg.total={};fg.animCat=undefined;S.queue={film:[],anim:[]};closePop();toast('설정 저장됨','ok');
+  fg.pages={};FGC.ready=null;FGC.groups={};S.queue={film:[],anim:[]};closePop();toast('설정 저장됨','ok');
   if(S.pos[S.tab]<0||!msg.classList.contains('hidden'))next();else fill(S.tab)};
 async function ping(url,cfg){const t0=performance.now();
   const u=cfg.proxy?cfg.proxy+encodeURIComponent(url):url;
@@ -496,7 +628,7 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
 
 const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&!pop.classList.contains('hidden')){closePop();return}
+  if(e.key==='Escape'&&curPop){closeP();return}
   if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
