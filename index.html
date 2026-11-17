@@ -183,6 +183,10 @@ footer .frow{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:
 #fltPop .o{padding:2px 7px;border:2px solid var(--ink);background:#fff;cursor:pointer;font-size:11px;line-height:16px;white-space:nowrap}
 #fltPop .o:hover{background:var(--yel)}
 #fltPop .o.on{background:var(--ink);color:#fff}
+#fltPop .o.ex{background:var(--pink);color:var(--ink);text-decoration:line-through;text-decoration-thickness:2px}
+.chip.set.ex{background:var(--pink);text-decoration:line-through}
+.chip.set.ex b{display:inline-block;text-decoration:none}
+#fltPop .msg s{background:var(--pink);padding:0 3px}
 #fltPop .msg{color:var(--tx3);font-size:11px}
 #fltPop input[type=text]{width:100%;font-size:11px;margin-bottom:4px}
 #fltPop .ft{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:2px dotted var(--soft)}
@@ -475,10 +479,10 @@ let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
   grid:{film:'thirds',anim:'field',fig:'thirds'},gridOn:{film:true,anim:true,fig:false},hist:{film:[],anim:[],fig:[]},pos:{film:-1,anim:-1,fig:-1},seen:{film:new Set(),anim:new Set(),fig:new Set()},queue:{film:[],anim:[],fig:[]}};
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
-const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],person:null,onePer:false},anim:{kinds:[],region:'',score:0,tags:''},fig:{src:'both',kinds:[],kw:'',dbTag:'',onePer:true}});
+const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false},anim:{kinds:[],kindsEx:[],region:'',score:0,tags:''},fig:{src:'both',kinds:[],kindsEx:[],kw:'',kwEx:'',dbTag:'',dbEx:[],onePer:true}});
 S.f=FDEF();S.legacyAnim=false;
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
-  if(p.f){S.f={film:{...S.f.film,...p.f.film},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
+  if(p.f){const d=FDEF();S.f={film:{...d.film,...p.f.film,ex:{...d.film.ex,...((p.f.film||{}).ex||{})}},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
 for(const t of['film','anim','fig'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
@@ -535,7 +539,8 @@ function pickImages(html){
 async function fgRandom(){
   const f=S.f.film,groups=['genre','year','country','ratio'].filter(k=>f[k].length);
   const srv=groups[0],rest=groups.slice(1);
-  let q='';if(srv)q+='&categories='+f[srv].map(x=>x.id).join(',');if(f.person)q+='&tags='+f.person.id;
+  const exIds=['genre','year','country','ratio'].flatMap(k=>(f.ex&&f.ex[k]||[]).map(x=>x.id));
+  let q='';if(srv)q+='&categories='+f[srv].map(x=>x.id).join(',');if(exIds.length)q+='&categories_exclude='+exIds.join(',');if(f.person)q+='&tags='+f.person.id;
   const per=rest.length?10:1,key=q+'|'+per;
   if(!fg.pages[key]){const {headers}=await getJSON(FG+`posts?per_page=${per}&_fields=id${q}`);
     const tot=parseInt(headers.get('X-WP-Total'));if(tot===0)throw new Error('조건에 맞는 영화가 없음');
@@ -543,7 +548,7 @@ async function fgRandom(){
   for(let tries=0;tries<6;tries++){
     const page=1+rnd(fg.pages[key]);
     let data;try{({data}=await getJSON(FG+`posts?per_page=${per}&page=${page}&_fields=id,link,title,content,categories${q}`))}catch(e){if(tries<5)continue;throw e}
-    const list=data.filter(p=>rest.every(k=>f[k].some(x=>(p.categories||[]).includes(x.id)))&&!(f.onePer&&fg.seenPost.has(p.id)));
+    const list=data.filter(p=>rest.every(k=>f[k].some(x=>(p.categories||[]).includes(x.id)))&&!exIds.some(i=>(p.categories||[]).includes(i))&&!(f.onePer&&fg.seenPost.has(p.id)));
     for(let i=list.length-1;i>0;i--){const j=rnd(i+1);[list[i],list[j]]=[list[j],list[i]]}
     for(const p of list){
       const imgs=pickImages(p.content.rendered).filter(u=>!S.seen.film.has(u));
@@ -583,12 +588,14 @@ async function gsRandom(){
     if(!imgs.length){gs.bad.add(id);continue}
     const tm=html.match(/<title>([^<]*)<\/title>/i),title=dec(tm?tm[1]:'').split('｜')[0].trim()||('#'+id);
     if(f.kinds.length&&!f.kinds.includes(gsKind(title,html)))continue;
+    if(f.kindsEx.length&&f.kindsEx.includes(gsKind(title,html)))continue;
     if(kw&&!title.toLowerCase().includes(kw))continue;
+    if(f.kwEx.trim()&&f.kwEx.toLowerCase().split(/[,\s]+/).filter(Boolean).some(w=>title.toLowerCase().includes(w)))continue;
     gs.seen.add(id);
     const url=imgs[rnd(imgs.length)];
     return {kind:'img',url,title,link:GS+'en/product/'+id,key:url,src:'GOOD SMILE',mfc:'https://myfigurecollection.net/search.v4.php?keywords='+encodeURIComponent(title.replace(/[:：].*$/,''))};
   }
-  throw new Error((f.kinds.length||kw)?'조건에 맞는 피규어를 찾지 못함 · 필터를 줄이거나 다시 시도':'피규어를 불러오지 못함'+(lastErr?' · '+lastErr:''));
+  throw new Error((f.kinds.length||kw||f.kindsEx.length||f.kwEx.trim())?'조건에 맞는 피규어를 찾지 못함 · 필터를 줄이거나 다시 시도':'피규어를 불러오지 못함'+(lastErr?' · '+lastErr:''));
 }
 
 // ---------- DANBOORU (figure photos, general rating only)
@@ -598,7 +605,7 @@ const db={seen:new Set()};
 async function dbRandom(){
   const f=S.f.fig,extra=f.dbTag.trim().replace(/\s+/g,'_');
   const pick=list=>list.filter(p=>p.rating==='g'&&(p.large_file_url||p.file_url)&&/^(jpe?g|png|webp|gif)$/i.test(p.file_ext||'')
-    &&!db.seen.has(p.id)&&(!extra||(' '+(p.tag_string||'')+' ').includes(' '+extra+' ')));
+    &&!db.seen.has(p.id)&&(!extra||(' '+(p.tag_string||'')+' ').includes(' '+extra+' '))&&!(f.dbEx||[]).some(x=>(' '+(p.tag_string||'')+' ').includes(' '+x+' ')));
   let list=[];
   try{const {data}=await getJSONd(DB+`posts.json?random=true&limit=20&tags=${encodeURIComponent(['figure','rating:g',extra].filter(Boolean).join(' '))}`);list=pick(data)}
   catch(e){if(!extra||!/HTTP 4|연결 실패/.test(e.message))throw e;
@@ -622,6 +629,7 @@ async function sbRandom(){
   if(a.region==='west')tl.push('western');else if(a.region==='jp')tl.push('-western');
   if(a.score)tl.push('score:>='+a.score);
   if(a.kinds.length===1)tl.push(a.kinds[0]);else a.kinds.forEach(k=>tl.push('~'+k));
+  (a.kindsEx||[]).forEach(k=>tl.push('-'+k));
   tl.push(...a.tags.trim().split(/\s+/).filter(Boolean));
   const tags=tl.join(' ');
   const {data}=await getJSON(SB+`post.json?limit=8&tags=${encodeURIComponent(tags)}`);
@@ -799,48 +807,52 @@ let fltDirty=false,personT=null,personRes=[];
 function fChange(){fltDirty=true;save();renderRow();renderFlt();if(curPop)placeP(curPop)}
 function applyFilter(){const t=S.tab;S.queue[t]=[];fg.pages={};S.queue[t]=[];next();toast('필터 적용','ok')}
 function fCount(t){const f=S.f[t];
-  if(t==='fig')return (f.src!=='both'?1:0)+f.kinds.length+(f.kw.trim()?1:0)+(f.dbTag.trim()?1:0)+(f.onePer?1:0);
-  if(t==='film')return f.genre.length+f.year.length+f.country.length+f.ratio.length+(f.person?1:0)+(f.onePer?1:0);
-  return f.kinds.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length}
+  if(t==='fig')return (f.src!=='both'?1:0)+f.kinds.length+f.kindsEx.length+(f.kw.trim()?1:0)+(f.kwEx.trim()?1:0)+(f.dbTag.trim()?1:0)+f.dbEx.length+(f.onePer?1:0);
+  if(t==='film')return f.genre.length+f.year.length+f.country.length+f.ratio.length+Object.values(f.ex).reduce((a,v)=>a+v.length,0)+(f.person?1:0)+(f.onePer?1:0);
+  return f.kinds.length+f.kindsEx.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length}
 function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
-  if(t==='film'){for(const k of['genre','year','country','ratio'])f[k].forEach(x=>ch.push([x.name,'c',k,x.id]));
+  if(t==='film'){for(const k of['genre','year','country','ratio']){f[k].forEach(x=>ch.push([x.name,'c',k,x.id]));f.ex[k].forEach(x=>ch.push(['−'+x.name,'cx',k,x.id]))}
     if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
-  else if(t==='fig'){if(f.src!=='both')ch.push([f.src==='gs'?'굿스마일만':'Danbooru만','src']);if(f.dbTag.trim())ch.push([(DBTAGS.find(x=>x[0]===f.dbTag)||[0,f.dbTag])[1],'dbt']);f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
-  else{f.kinds.forEach(k=>ch.push([(KINDS.find(x=>x[0]===k)||[k,k])[1],'k',k]));
+  else if(t==='fig'){if(f.src!=='both')ch.push([f.src==='gs'?'굿스마일만':'Danbooru만','src']);if(f.dbTag.trim())ch.push([(DBTAGS.find(x=>x[0]===f.dbTag)||[0,f.dbTag])[1],'dbt']);f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.dbEx.forEach(k=>ch.push(['−'+(DBTAGS.find(x=>x[0]===k)||[0,k])[1],'dbx',k]));f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
+  else{f.kinds.forEach(k=>ch.push([(KINDS.find(x=>x[0]===k)||[k,k])[1],'k',k]));f.kindsEx.forEach(k=>ch.push(['−'+(KINDS.find(x=>x[0]===k)||[k,k])[1],'kx',k]));
     if(f.region)ch.push([REGIONS.find(x=>x[0]===f.region)[1],'r']);if(f.score)ch.push(['인기 '+f.score+'+','s']);
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
   $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
-    (ch.length?ch.map(c=>`<span class="chip set" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일 · Danbooru'})[t]} 전체에서 랜덤</span>`);
+    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일 · Danbooru'})[t]} 전체에서 랜덤</span>`);
   $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};
 }
 $('#frow').addEventListener('click',e=>{const c=e.target.closest('[data-rm]');if(!c)return;const [ty,a,b]=c.dataset.rm.split('|'),t=S.tab,f=S.f[t];
-  if(ty==='c')f[a]=f[a].filter(x=>String(x.id)!==b);else if(ty==='p')f.person=null;else if(ty==='one')f.onePer=false;
+  if(ty==='c')f[a]=f[a].filter(x=>String(x.id)!==b);else if(ty==='cx')f.ex[a]=f.ex[a].filter(x=>String(x.id)!==b);
+  else if(ty==='kx'||ty==='gkx')f.kindsEx=f.kindsEx.filter(x=>x!==a);else if(ty==='kwx')f.kwEx='';else if(ty==='dbx')f.dbEx=f.dbEx.filter(x=>x!==a);else if(ty==='p')f.person=null;else if(ty==='one')f.onePer=false;
   else if(ty==='k')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='r')f.region='';else if(ty==='s')f.score=0;
   else if(ty==='gk')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='kw')f.kw='';else if(ty==='src')f.src='both';else if(ty==='dbt')f.dbTag='';
   else if(ty==='t')f.tags=f.tags.trim().split(/\s+/).filter(x=>x&&x!==a).join(' ');
   save();renderRow();if(curPop==='flt'){renderFlt();fltDirty=true}else applyFilter()});
-function opts(list,isOn,attr){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
+function opts(list,isOn,attr,isEx){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}${isEx&&isEx(v)?' ex':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
+const HINT='<div class="gb"><span class="msg">한 번 누르면 포함 · 두 번 누르면 <s>제외</s> · 세 번 누르면 해제</span></div>';
 function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){h=`<div class="gb"><span class="msg">${FGC.err?'분류를 불러오지 못함 · 설정 → 연결 테스트 확인':'분류 불러오는 중…'}</span></div>`;
       if(!FGC.err)loadCats().then(()=>{if(curPop==='flt'&&S.tab==='film'){renderFlt();placeP('flt')}},()=>{if(curPop==='flt'){renderFlt()}})}
     else for(const [k,l] of FGROUPS){const g=FGC.groups[k];if(!g)continue;
-      h+=`<div class="gb"><h3><span>${l}</span><span>${f[k].length?f[k].length+'개':''}</span></h3><div class="gr">${opts(g.kids.map(x=>[x.id,x.name]),v=>f[k].some(x=>x.id===v),`data-g="${k}" data-id`)}</div></div>`}
+      h+=`<div class="gb"><h3><span>${l}</span><span>${[f[k].length?f[k].length+'개':'',f.ex[k].length?'제외 '+f.ex[k].length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr">${opts(g.kids.map(x=>[x.id,x.name]),v=>f[k].some(x=>x.id===v),`data-g="${k}" data-id`,v=>f.ex[k].some(x=>x.id===v))}</div></div>`}
+    if(Object.keys(FGC.groups).length)h=HINT+h;
     h+=`<div class="gb"><h3><span>인물 (감독 · 촬영 · 미술 · 의상)</span></h3>${f.person?`<div class="gr"><span class="o on" data-pclr>${esc(f.person.name)} ×</span></div>`:
       `<input type="text" id="fPerson" placeholder="이름 검색 (영문)" autocomplete="off"><div class="gr" id="fPersonRes">${personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join('')}</div>`}</div>`;
     h+=`<div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 영화당 1장</label><a id="fReset">초기화</a></div>`;
     b.innerHTML=h;
   }else if(t==='fig'){const f=S.f.fig;
     const SRCS=[['both','둘 다'],['gs','굿스마일 컴퍼니'],['db','Danbooru']],isCustom=f.dbTag&&!DBTAGS.some(x=>x[0]===f.dbTag);
-    b.innerHTML=`<div class="gb"><h3><span>출처</span></h3><div class="gr">${opts(SRCS,v=>f.src===v,'data-fsrc')}</div></div>
-    <div class="${f.src==='db'?'off':''}"><div class="gb"><h3><span>굿스마일 · 제품 종류 · 하나라도 맞으면</span><span>${f.kinds.length?f.kinds.length+'개':''}</span></h3><div class="gr">${opts(FKINDS,v=>f.kinds.includes(v),'data-fkind')}</div></div>
-    <div class="gb"><h3><span>제품 이름 검색 (영문)</span></h3><input type="text" id="fKw" value="${esc(f.kw)}" placeholder="예: Miku, Frieren" autocomplete="off"></div></div>
-    <div class="${f.src==='gs'?'off':''}"><div class="gb"><h3><span>Danbooru · 추가 조건 하나 (일반 등급만 나옴)</span></h3><div class="gr">${opts(DBTAGS,v=>v===''?!f.dbTag:f.dbTag===v,'data-dbt')}</div>
+    b.innerHTML=HINT+`<div class="gb"><h3><span>출처</span></h3><div class="gr">${opts(SRCS,v=>f.src===v,'data-fsrc')}</div></div>
+    <div class="${f.src==='db'?'off':''}"><div class="gb"><h3><span>굿스마일 · 제품 종류 · 하나라도 맞으면</span><span>${[f.kinds.length?f.kinds.length+'개':'',f.kindsEx.length?'제외 '+f.kindsEx.length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr">${opts(FKINDS,v=>f.kinds.includes(v),'data-fkind',v=>f.kindsEx.includes(v))}</div></div>
+    <div class="gb"><h3><span>제품 이름 검색 (영문)</span></h3><input type="text" id="fKw" value="${esc(f.kw)}" placeholder="예: Miku, Frieren" autocomplete="off"></div>
+    <div class="gb"><h3><span>이름에 들어가면 제외 (영문, 쉼표로 여러 개)</span></h3><input type="text" id="fKwEx" value="${esc(f.kwEx)}" placeholder="예: Doll, Surprise" autocomplete="off"></div></div>
+    <div class="${f.src==='gs'?'off':''}"><div class="gb"><h3><span>Danbooru · 추가 조건 하나 (일반 등급만 나옴)</span></h3><div class="gr">${opts(DBTAGS,v=>v===''?(!f.dbTag&&!f.dbEx.length):f.dbTag===v,'data-dbt',v=>f.dbEx.includes(v))}</div>
     <input type="text" id="fDbTag" value="${isCustom?esc(f.dbTag):''}" placeholder="또는 태그 직접 입력 (예: hatsune_miku)" autocomplete="off" style="margin-top:6px"></div></div>
     <div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 피규어당 1장</label><a id="fReset">초기화</a></div>`;
   }else{const f=S.f.anim;
-    b.innerHTML=`<div class="gb"><h3><span>작화 종류 · 최대 3개, 하나라도 맞으면</span><span>${f.kinds.length?f.kinds.length+'개':''}</span></h3><div class="gr tall">${opts(KINDS,v=>f.kinds.includes(v),'data-kind')}</div></div>
+    b.innerHTML=HINT+`<div class="gb"><h3><span>작화 종류 · 포함은 최대 3개, 하나라도 맞으면</span><span>${[f.kinds.length?f.kinds.length+'개':'',f.kindsEx.length?'제외 '+f.kindsEx.length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr tall">${opts(KINDS,v=>f.kinds.includes(v),'data-kind',v=>f.kindsEx.includes(v))}</div></div>
     <div class="gb"><h3><span>지역</span></h3><div class="gr">${opts(REGIONS,v=>f.region===v,'data-region')}</div></div>
     <div class="gb"><h3><span>인기 (점수)</span></h3><div class="gr">${opts(SCORES,v=>f.score===+v,'data-score')}</div></div>
     <div class="gb"><h3><span>태그 직접 입력 · 띄어쓰기로 여러 개, 앞에 - 붙이면 제외</span></h3><input type="text" id="fTags" value="${esc(f.tags)}" placeholder="예: yutaka_nakamura  -3d_cg" autocomplete="off"></div>
@@ -850,13 +862,15 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='�
 $('#fltPop').addEventListener('click',e=>{const o=e.target.closest('.o,#fReset');if(!o)return;const t=S.tab,f=S.f[t];
   if(o.id==='fReset'){S.f[t]=FDEF()[t];personRes=[];return fChange()}
   if(o.dataset.g){const k=o.dataset.g,id=+o.dataset.id,g=FGC.groups[k].kids.find(x=>x.id===id);
-    f[k]=f[k].some(x=>x.id===id)?f[k].filter(x=>x.id!==id):[...f[k],{id,name:g.name}]}
+    if(f[k].some(x=>x.id===id)){f[k]=f[k].filter(x=>x.id!==id);f.ex[k]=[...f.ex[k],{id,name:g.name}]}
+    else if(f.ex[k].some(x=>x.id===id))f.ex[k]=f.ex[k].filter(x=>x.id!==id);
+    else f[k]=[...f[k],{id,name:g.name}]}
   else if(o.dataset.pid){f.person={id:+o.dataset.pid,name:o.dataset.pname};personRes=[]}
   else if('pclr' in o.dataset)f.person=null;
   else if(o.dataset.fsrc){f.src=o.dataset.fsrc}
-  else if(o.dataset.dbt!==undefined){f.dbTag=o.dataset.dbt}
-  else if(o.dataset.fkind){const k=o.dataset.fkind;f.kinds=f.kinds.includes(k)?f.kinds.filter(x=>x!==k):[...f.kinds,k]}
-  else if(o.dataset.kind){const k=o.dataset.kind;if(f.kinds.includes(k))f.kinds=f.kinds.filter(x=>x!==k);else if(f.kinds.length<3)f.kinds=[...f.kinds,k];else{toast('작화 종류는 3개까지','err');return}}
+  else if(o.dataset.dbt!==undefined){const v=o.dataset.dbt;if(v===''){f.dbTag='';f.dbEx=[]}else if(f.dbTag===v){f.dbTag='';f.dbEx=[...f.dbEx,v]}else if(f.dbEx.includes(v))f.dbEx=f.dbEx.filter(x=>x!==v);else{f.dbTag=v}}
+  else if(o.dataset.fkind){const k=o.dataset.fkind;if(f.kinds.includes(k)){f.kinds=f.kinds.filter(x=>x!==k);f.kindsEx=[...f.kindsEx,k]}else if(f.kindsEx.includes(k))f.kindsEx=f.kindsEx.filter(x=>x!==k);else f.kinds=[...f.kinds,k]}
+  else if(o.dataset.kind){const k=o.dataset.kind;if(f.kinds.includes(k)){f.kinds=f.kinds.filter(x=>x!==k);f.kindsEx=[...f.kindsEx,k]}else if(f.kindsEx.includes(k))f.kindsEx=f.kindsEx.filter(x=>x!==k);else if(f.kinds.length<3)f.kinds=[...f.kinds,k];else{toast('포함은 3개까지 · 두 번 눌러 제외로 쓸 수 있음','err');return}}
   else if(o.dataset.region!==undefined)f.region=o.dataset.region;
   else if(o.dataset.score!==undefined)f.score=+o.dataset.score;
   fChange()});
@@ -865,12 +879,13 @@ $('#fltPop').addEventListener('change',e=>{if(e.target.id==='fOne'){S.f[S.tab].o
 $('#fltPop').addEventListener('input',e=>{
   if(e.target.id==='fTags'){S.f.anim.tags=e.target.value;fltDirty=true;save();renderRow()}
   else if(e.target.id==='fKw'){S.f.fig.kw=e.target.value;fltDirty=true;save();renderRow()}
+  else if(e.target.id==='fKwEx'){S.f.fig.kwEx=e.target.value;fltDirty=true;save();renderRow()}
   else if(e.target.id==='fDbTag'){S.f.fig.dbTag=e.target.value.trim();fltDirty=true;save();renderRow();document.querySelectorAll('#fltPop [data-dbt]').forEach(x=>x.classList.toggle('on',x.dataset.dbt===''?!S.f.fig.dbTag:x.dataset.dbt===S.f.fig.dbTag))}
   else if(e.target.id==='fPerson'){clearTimeout(personT);const q=e.target.value.trim();if(q.length<2){personRes=[];$('#fPersonRes').innerHTML='';return}
     personT=setTimeout(async()=>{try{const {data}=await getJSON(FG+`tags?search=${encodeURIComponent(q)}&per_page=10&orderby=count&order=desc&_fields=id,name`);
       personRes=data.map(x=>({id:x.id,name:dec(x.name)}));const r=$('#fPersonRes');if(r)r.innerHTML=personRes.length?personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join(''):'<span class="msg">찾지 못함</span>';placeP('flt')}
       catch(err){const r=$('#fPersonRes');if(r)r.innerHTML='<span class="msg">검색 실패</span>'}},350)}});
-$('#fltPop').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='fTags'||e.target.id==='fKw'||e.target.id==='fDbTag')){e.preventDefault();closeP()}});
+$('#fltPop').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='fTags'||e.target.id==='fKw'||e.target.id==='fKwEx'||e.target.id==='fDbTag')){e.preventDefault();closeP()}});
 if(S.legacyAnim)loadCats().then(()=>{const a=FGC.groups.genre&&FGC.groups.genre.kids.find(x=>/^animation$/i.test(x.name));
   if(a&&!S.f.film.genre.length){S.f.film.genre=[{id:a.id,name:a.name}];save();renderRow();resetQueues('film')}},()=>{});
 $('#resetBtn').onclick=()=>{fillPop(DEF);toast('기본값으로 채움 · 저장을 눌러 적용')};
