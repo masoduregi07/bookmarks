@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>컷 레퍼런스</title>
@@ -26,7 +27,7 @@ select{appearance:none;-webkit-appearance:none;padding-right:22px;cursor:pointer
 input[type=number]{width:44px}
 input[type=range]{-webkit-appearance:none;appearance:none;width:72px;height:10px;background:#fff;border:2px solid var(--ink)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:16px;background:var(--ink);border:none}
-#app{display:grid;grid-template-rows:auto 1fr;height:100%;padding:6px 10px 10px;gap:10px}
+#app{display:grid;grid-template-rows:auto 1fr;height:100%;height:100dvh;padding:6px 10px 10px;gap:10px}
 .top{display:flex;flex-direction:column}
 .top header{display:flex;align-items:center;gap:8px;padding:6px 6px 0 10px;border-bottom:2px solid var(--ink);min-height:0;
   background:repeating-linear-gradient(0deg,var(--panel) 0 2px,var(--soft) 2px 3px)}
@@ -120,7 +121,7 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .sw input:checked+i::after{left:16px;background:var(--ink)}
 .off{opacity:.35;pointer-events:none}
 .hidden{display:none!important}
-.pop{position:fixed;z-index:15;width:var(--pw,340px);background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
+.pop{position:fixed;z-index:15;width:min(var(--pw,340px),calc(100vw - 16px));background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
   clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
 .pop .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 12px;border-bottom:2px solid var(--ink);font-weight:700}
@@ -270,6 +271,55 @@ button.ic:active{transform:none}
 .calp .th b{position:absolute;right:0;top:0;width:18px;height:18px;background:var(--panel);border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:400;display:none;align-items:center;justify-content:center;cursor:pointer}
 .calp .th a:hover b{display:flex}
 .calp .th a:hover{outline:2px solid var(--yel)}
+/* ---------- responsive / touch (iPad first) */
+html{-webkit-text-size-adjust:100%}
+button,select,.chip,.o,.tabs button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#app{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom))}
+.top header{flex-wrap:nowrap;min-width:0}
+.top header .tabs{min-width:0;flex:0 1 auto;overflow:hidden}
+.top header .tabs button{flex:none;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.top header .ibar{flex:none;margin-left:auto}
+.top header .sp{display:none}
+footer .dv.brk{visibility:hidden}
+footer{row-gap:8px!important}
+footer .grp{flex-wrap:wrap;row-gap:6px}
+#stage{touch-action:pan-y pinch-zoom}
+@media (max-width:1240px){
+  .top footer{justify-content:flex-start!important}
+  footer .dv{flex:0 0 22px!important;min-width:22px;max-width:22px}
+}
+@media (max-width:560px){
+  .top header .tabs button .tl{display:none}
+  .top header .tabs button{padding-left:12px!important;padding-right:12px!important}
+  #fltPop,#setPop,#keyPop{left:8px!important;right:8px}
+}
+@media (max-width:760px){
+  .calp.full .cbody{display:flex;flex-direction:column;overflow:auto}
+  .calp.full .cmain{overflow:visible}
+  .calp.full .cside{border-left:none;border-top:2px solid var(--ink);overflow:visible}
+  .calp.full .d{height:64px}
+  .calp.full .d .tt img{width:22px;height:18px}
+}
+/* touch: bigger targets, no hover-only UI */
+@media (hover:none),(pointer:coarse){
+  button,select,input[type=text],input[type=number]{min-height:36px}
+  button{padding-left:12px;padding-right:12px}
+  .seg button{min-width:40px}
+  .seg.ic button{height:36px;min-width:40px}
+  button.ic{width:42px;height:40px;min-height:40px}
+  button.ic::after{left:12px;right:12px}
+  .chip{height:34px;padding:0 10px}
+  #fltPop .o{padding:6px 10px;line-height:18px}
+  .calp .cmon .nb{width:40px;height:36px}
+  .calp .th b{display:flex;width:26px;height:26px}
+  input[type=range]{height:14px}
+  input[type=range]::-webkit-slider-thumb{width:16px;height:26px}
+  .tipbox{display:none}
+  body.zen #peek{height:56px}
+  body.zen #uiShow{opacity:.85;transform:none;pointer-events:auto;min-height:36px}
+  body.zen .top{margin-top:calc(-1 * var(--th,220px))}
+  #tIn{width:72px}
+}
 </style>
 </head>
 <body>
@@ -283,9 +333,9 @@ button.ic:active{transform:none}
 <div class="top">
 <header>
     <nav class="tabs">
-    <button data-tab="film" class="on"><svg viewBox="0 0 14 14"><path d="M0 1h14v12H0z"/><path fill="#fff" d="M2 4h10v6H2z"/><path class="acc" fill="#fff" d="M3 5h8v4H3z"/><path fill="#fff" d="M2 2h2v1H2zM6 2h2v1H6zM10 2h2v1h-2zM2 11h2v1H2zM6 11h2v1H6zM10 11h2v1h-2z"/></svg>영화</button>
-    <button data-tab="anim"><svg viewBox="0 0 14 14"><path d="M1 1h10v12H1z"/><path fill="#fff" d="M3 3h6v8H3z"/><path class="acc" fill="#fff" d="M4 5h4v5H4z"/><path d="M11 3h2v10H3v-2h8z" opacity=".45"/><path d="M5 4h2v1H5zM4 8h1v1H4zM7 8h1v1H7z"/></svg>애니메이션</button>
-    <button data-tab="fig"><svg viewBox="0 0 14 14"><path d="M5 0h4v1h1v4H9v1H5V5H4V1h1z"/><path d="M4 6h6v1h1v4H9v1H5v-1H3V7h1z"/><path class="acc" fill="#fff" d="M6 2h2v2H6z"/><path d="M2 12h10v2H2z" opacity=".45"/></svg>피규어</button>
+    <button data-tab="film" class="on"><svg viewBox="0 0 14 14"><path d="M0 1h14v12H0z"/><path fill="#fff" d="M2 4h10v6H2z"/><path class="acc" fill="#fff" d="M3 5h8v4H3z"/><path fill="#fff" d="M2 2h2v1H2zM6 2h2v1H6zM10 2h2v1h-2zM2 11h2v1H2zM6 11h2v1H6zM10 11h2v1h-2z"/></svg><span class="tl">영화</span></button>
+    <button data-tab="anim"><svg viewBox="0 0 14 14"><path d="M1 1h10v12H1z"/><path fill="#fff" d="M3 3h6v8H3z"/><path class="acc" fill="#fff" d="M4 5h4v5H4z"/><path d="M11 3h2v10H3v-2h8z" opacity=".45"/><path d="M5 4h2v1H5zM4 8h1v1H4zM7 8h1v1H7z"/></svg><span class="tl">애니메이션</span></button>
+    <button data-tab="fig"><svg viewBox="0 0 14 14"><path d="M5 0h4v1h1v4H9v1H5V5H4V1h1z"/><path d="M4 6h6v1h1v4H9v1H5v-1H3V7h1z"/><path class="acc" fill="#fff" d="M6 2h2v2H6z"/><path d="M2 12h10v2H2z" opacity=".45"/></svg><span class="tl">피규어</span></button>
   </nav>
   <div class="sp"></div>
   <div class="ibar">
@@ -837,16 +887,35 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
   const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
 
-// ---------- tab drag reorder
-(()=>{const nav=document.querySelector('header .tabs');let drag=null;
+// ---------- tab drag reorder (mouse drag / touch long-press)
+(()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
   try{const o=JSON.parse(localStorage.getItem('cutref-tabs')||'[]');o.forEach(t=>{const b=nav.querySelector(`[data-tab="${t}"]`);if(b)nav.appendChild(b)})}catch(e){}
-  nav.querySelectorAll('button').forEach(b=>{b.draggable=true;
-    b.addEventListener('dragstart',e=>{drag=b;b.classList.add('dragging');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',b.dataset.tab)}catch(_){}});
-    b.addEventListener('dragend',()=>{b.classList.remove('dragging');drag=null;
-      try{localStorage.setItem('cutref-tabs',JSON.stringify([...nav.querySelectorAll('button')].map(x=>x.dataset.tab)))}catch(e){}});
-    b.addEventListener('dragover',e=>{if(!drag||drag===b)return;e.preventDefault();const r=b.getBoundingClientRect();
-      nav.insertBefore(drag,e.clientX<r.left+r.width/2?b:b.nextSibling)});
-  });
+  const saveOrder=()=>{try{localStorage.setItem('cutref-tabs',JSON.stringify([...nav.querySelectorAll('button')].map(x=>x.dataset.tab)))}catch(e){}};
+  const begin=()=>{st.on=true;st.b.classList.add('dragging');try{st.b.setPointerCapture(st.id)}catch(e){}if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}};
+  nav.addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-tab]');if(!b||e.button>0)return;
+    st={b,id:e.pointerId,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=='mouse'};
+    if(st.touch)st.t=setTimeout(()=>{if(st)begin()},350)});
+  nav.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;
+    if(!st.on){if(!st.touch&&Math.abs(dx)>6)begin();else if(st.touch&&Math.hypot(dx,dy)>10){clearTimeout(st.t);st=null}return}
+    e.preventDefault();
+    for(const o of nav.querySelectorAll('button[data-tab]')){if(o===st.b)continue;const r=o.getBoundingClientRect();
+      if(e.clientX>r.left&&e.clientX<r.right){nav.insertBefore(st.b,e.clientX<r.left+r.width/2?o:o.nextSibling);break}}});
+  const end=e=>{if(!st||(e&&e.pointerId!==st.id))return;clearTimeout(st.t);
+    if(st.on){st.b.classList.remove('dragging');saveOrder();suppress=true;setTimeout(()=>suppress=false,50)}st=null};
+  nav.addEventListener('pointerup',end);nav.addEventListener('pointercancel',end);
+  nav.addEventListener('click',e=>{if(suppress){e.stopPropagation();e.preventDefault()}},true);
+  nav.addEventListener('contextmenu',e=>e.preventDefault());
+})();
+// ---------- toolbar: hide dividers that land at a line break
+(()=>{const ft=document.querySelector('.top footer');const fix=()=>{const dv=[...ft.querySelectorAll('.dv')];dv.forEach(d=>d.classList.remove('brk'));
+    dv.forEach(d=>{const a=d.previousElementSibling,b=d.nextElementSibling;if(a&&b&&Math.abs(a.offsetTop-b.offsetTop)>4)d.classList.add('brk')})};
+  new ResizeObserver(()=>requestAnimationFrame(fix)).observe(ft);fix()})();
+// ---------- swipe on image (touch): left = next, right = previous
+(()=>{let sw=null;
+  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
+  stage.addEventListener('pointerup',e=>{if(!sw||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y,dt=Date.now()-sw.t;sw=null;
+    if(dt<700&&Math.abs(dx)>60&&Math.abs(dy)<Math.abs(dx)*.6){dx<0?next():prev()}});
+  stage.addEventListener('pointercancel',()=>sw=null);
 })();
 // ---------- tooltip (header icon buttons)
 let tipEl=null;
