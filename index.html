@@ -146,6 +146,15 @@ body.zen #info,body.zen #srcLink{display:none}
 .top header .tabs button:not(.on){background:var(--stage)}
 .top footer{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
 .top header .tabs{margin-bottom:-2px}
+/* toolbar balance */
+footer{column-gap:0!important;justify-content:center}
+footer .grp+.grp{border-left:none!important;padding-left:0!important}
+footer .dv{flex:1 1 0;min-width:16px;max-width:150px;align-self:stretch;display:flex;justify-content:center}
+footer .dv::before{content:"";border-left:2px dotted var(--ink);margin:2px 0}
+footer .keys{flex-basis:100%;margin-top:2px;text-align:center}
+footer input[type=range]{width:60px}
+footer #tmr .seg:not(.ic) button{padding:4px 7px}
+footer .grp>label{margin-right:0}
 </style>
 </head>
 <body>
@@ -182,6 +191,7 @@ body.zen #info,body.zen #srcLink{display:none}
     <button id="prev">◀ 이전</button>
     <button id="next">다음 컷 ▶</button>
   </div>
+  <i class="dv"></i>
   <div class="grp"><label>색</label>
     <div class="seg" id="tone">
       <button data-v="color" class="on">컬러</button>
@@ -191,6 +201,7 @@ body.zen #info,body.zen #srcLink{display:none}
       <button data-v="t5">5톤</button>
     </div>
   </div>
+  <i class="dv"></i>
   <div class="grp"><label>분할</label>
     <label class="sw"><input type="checkbox" id="gridOn"><i></i></label>
     <span id="gridOpts" style="display:flex;align-items:center;gap:6px">
@@ -213,7 +224,9 @@ body.zen #info,body.zen #srcLink{display:none}
     <input id="op" type="range" min="15" max="100" value="60" title="선 불투명도">
     </span>
   </div>
+  <i class="dv"></i>
   <div class="grp"><button id="flip">⇄ 좌우반전</button></div>
+  <i class="dv"></i>
   <div class="grp" id="tmr"><label>타이머</label>
     <input type="text" id="tIn" value="05:00" title="시간 입력 (예: 5 = 5분, 1:30, 90s)" autocomplete="off">
     <div class="seg"><button data-add="300">+5분</button><button data-add="600">+10분</button><button data-add="1800">+30분</button></div>
@@ -223,7 +236,6 @@ body.zen #info,body.zen #srcLink{display:none}
       <button id="tReset" title="리셋"><svg viewBox="0 0 10 10"><path d="M3 0h1v1h1v1h2v1h1v1h1v4H8v1H7v1H3V9H2V8H1V5h2v2h1v1h2V7h1V4H6V3H4v1H3v1H2V4H1V3h1V2h1z"/></svg></button>
     </div>
   </div>
-  <div class="sp"></div>
   <span class="keys">Space/→ 다음 · ← 이전 · G 색 · D 분할 켜기/끄기 · F 반전 · H 숨김 · T 타이머 · , . 프레임</span>
 </footer>
 </div>
