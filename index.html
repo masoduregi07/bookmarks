@@ -87,14 +87,14 @@ input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset
 #srcLink:hover{background:var(--yel)}
 #srcLink b{font-weight:700}
 #srcLink.hidden{display:none}
-#toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:20;pointer-events:none}
+#toasts{position:fixed;left:20px;top:20px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;z-index:20;pointer-events:none}
 .toast{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:5px 12px 5px 10px;font-size:12px;display:flex;align-items:center;gap:8px;animation:tin .12s steps(3)}
 .toast::before{content:"";width:8px;height:8px;background:var(--soft);flex:none}
 .toast.ok::before{background:var(--mint);box-shadow:0 0 0 2px var(--ink)}
 .toast.err::before{background:var(--pink);box-shadow:0 0 0 2px var(--ink)}
 .toast.out{animation:tout .12s steps(3) forwards}
-@keyframes tin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
-@keyframes tout{to{transform:translateY(8px);opacity:0}}
+@keyframes tin{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes tout{to{transform:translateY(-8px);opacity:0}}
 footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 12px}
 .grp{display:flex;align-items:center;gap:6px}
 .grp+.grp{border-left:2px dotted var(--ink);padding-left:14px}
@@ -323,7 +323,12 @@ applyCfg();
 const P=u=>S.proxy?S.proxy+encodeURIComponent(u):u;
 const M=u=>S.mediaProxy&&S.proxy?P(u):u;
 // ---------- toast
-function toast(t,kind=''){const el=document.createElement('div');el.className='toast '+kind;el.textContent=t;
+function placeToasts(){const box=$('#toasts'),top=document.querySelector('.top'),inf=$('#info'),st=$('#stage');
+  const zen=document.body.classList.contains('zen');let x,y;
+  if(!zen&&inf&&inf.offsetParent&&inf.textContent){const r=inf.getBoundingClientRect();x=r.left;y=r.bottom+6}
+  else{const r=(zen?st:top).getBoundingClientRect();x=r.left+(zen?10:0);y=zen?r.top+10:r.bottom+18}
+  box.style.left=x+'px';box.style.top=y+'px'}
+function toast(t,kind=''){placeToasts();const el=document.createElement('div');el.className='toast '+kind;el.textContent=t;
   const box=$('#toasts');box.appendChild(el);while(box.children.length>4)box.firstChild.remove();
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),150)},2400)}
 async function getJSON(u){const r=await fetch(P(u),{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return {data:await r.json(),headers:r.headers}}
