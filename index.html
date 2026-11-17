@@ -77,7 +77,18 @@ input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset
 #info a{color:var(--ink)}
 #timerBig{position:absolute;right:10px;top:10px;font-size:14px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px}
 #timerBig:empty,#info:empty{display:none}
-#load{position:absolute;right:14px;bottom:10px;color:var(--tx3);font-size:11px}
+#srcLink{position:absolute;right:10px;bottom:10px;font-size:11px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px;color:var(--ink);text-decoration:none;display:flex;gap:6px;align-items:center}
+#srcLink:hover{background:var(--yel)}
+#srcLink b{font-weight:700}
+#srcLink.hidden{display:none}
+#toasts{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:20;pointer-events:none}
+.toast{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:5px 12px 5px 10px;font-size:12px;display:flex;align-items:center;gap:8px;animation:tin .12s steps(3)}
+.toast::before{content:"";width:8px;height:8px;background:var(--soft);flex:none}
+.toast.ok::before{background:var(--mint);box-shadow:0 0 0 2px var(--ink)}
+.toast.err::before{background:var(--pink);box-shadow:0 0 0 2px var(--ink)}
+.toast.out{animation:tout .12s steps(3) forwards}
+@keyframes tin{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+@keyframes tout{to{transform:translateY(8px);opacity:0}}
 footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 12px}
 .grp{display:flex;align-items:center;gap:6px}
 .grp+.grp{border-left:2px dotted var(--ink);padding-left:14px}
@@ -97,14 +108,29 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .sw input:checked+i::after{left:16px;background:var(--ink)}
 .off{opacity:.35;pointer-events:none}
 .hidden{display:none!important}
-#setDlg{position:fixed;inset:0;background:#3d3b3726;display:flex;align-items:center;justify-content:center;z-index:9}
-#setDlg .box{background:var(--panel);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:16px;width:min(440px,92vw);line-height:1.7}
-#setDlg .box h2{font-size:12px;font-weight:700;margin-bottom:8px}
-#setDlg .box p{color:var(--tx2);font-size:11px;margin-bottom:10px}
-#setDlg input{width:100%;margin-bottom:12px}
+#setPop{position:fixed;z-index:15;width:340px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
+#setPop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
+  clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
+#setPop .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 12px;border-bottom:2px solid var(--ink);font-weight:700}
+#setPop .hd button{padding:0 6px;box-shadow:none;line-height:14px}
+#setPop section{padding:10px 12px 12px}
+#setPop h3{font-size:11px;color:var(--tx2);font-weight:400;margin-bottom:8px}
+#setPop .row{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:8px;margin-bottom:6px}
+#setPop .row span{color:var(--tx2);font-size:11px}
+#setPop .row input,#setPop .row select{width:100%;min-width:0;font-size:11px}
+#setPop .chk{display:flex;align-items:center;gap:6px;margin:4px 0 8px;cursor:pointer;color:var(--ink)}
+#setPop .st{border:2px dotted var(--soft);padding:6px 8px;margin:8px 0 10px;display:grid;gap:3px;font-size:11px}
+#setPop .st div{display:flex;justify-content:space-between}
+#setPop .st b{font-weight:400;color:var(--tx3)}
+#setPop .st b.ok{color:var(--ink)}#setPop .st b.ok::before{content:"● ";color:#5aa37a}
+#setPop .st b.err{color:var(--ink)}#setPop .st b.err::before{content:"✕ ";color:#d26a82}
+#setPop .btns{display:flex;gap:6px;justify-content:flex-end}
+#setPop .btns .pri{background:var(--ink);color:#fff}
+#setPop .btns .pri:hover{background:#55524c}
+#setBtn.on{background:var(--ink);color:#fff}
 body.zen .top{display:none}
 body.zen #app{grid-template-rows:0 1fr;gap:0}
-body.zen #info{display:none}
+body.zen #info,body.zen #srcLink{display:none}
 
 /* v7 */
 .top{background:none;border:none;box-shadow:none}
@@ -201,31 +227,46 @@ body.zen #info{display:none}
   <svg id="ov"></svg>
   <div id="info" class="mono"></div>
   <div id="timerBig" class="mono"></div>
-  <div id="load" class="mono"></div>
+  <a id="srcLink" class="hidden" target="_blank" rel="noopener noreferrer"></a>
 </main>
 
 </div>
 
-<div id="setDlg" class="hidden"><div class="box">
-  <h2>연결 설정</h2>
-  <p>브라우저가 외부 사이트 요청을 막으면(CORS) 프록시 주소를 넣음. 요청 URL 앞에 그대로 붙음. 비워두면 직접 연결.</p>
-  <input type="text" id="proxy" placeholder="예: https://내-프록시.workers.dev/?url=">
-  <p>이미지는 각 사이트 원본에서 직접 표시됨. 저장·재배포 없음.</p>
-  <div style="display:flex;gap:8px;justify-content:flex-end"><button id="setClose">닫기</button></div>
-</div></div>
+<div id="setPop" class="hidden" role="dialog" aria-label="설정">
+  <div class="hd">설정<button id="setX" title="닫기">×</button></div>
+  <section>
+    <h3>API 연결</h3>
+    <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
+    <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
+    <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
+    <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
+    <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
+    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div></div>
+    <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
+  </section>
+</div>
+<div id="toasts"></div>
 
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
-const FG='https://film-grab.com/wp-json/wp/v2/';
-const SB='https://www.sakugabooru.com/';
-const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,timer:0,onlyAnim:false,tags:'',play:false,proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',
+const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s'};
+let FG,SB;
+const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,timer:0,onlyAnim:false,tags:'',play:false,...DEF,
   grid:{film:'thirds',anim:'field'},gridOn:{film:true,anim:true},hist:{film:[],anim:[]},pos:{film:-1,anim:-1},seen:{film:new Set(),anim:new Set()},queue:{film:[],anim:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','timer','onlyAnim','tags','play','proxy','grid','gridOn'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','timer','onlyAnim','tags','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,timer:S.timer,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,timer:S.timer,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating}))}catch(e){}};
 
+const slash=u=>u&&!u.endsWith('/')?u+'/':u;
+function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
+applyCfg();
 const P=u=>S.proxy?S.proxy+encodeURIComponent(u):u;
+const M=u=>S.mediaProxy&&S.proxy?P(u):u;
+// ---------- toast
+function toast(t,kind=''){const el=document.createElement('div');el.className='toast '+kind;el.textContent=t;
+  const box=$('#toasts');box.appendChild(el);while(box.children.length>4)box.firstChild.remove();
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),150)},2400)}
 async function getJSON(u){const r=await fetch(P(u),{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return {data:await r.json(),headers:r.headers}}
 const rnd=n=>Math.floor(Math.random()*n);
 const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/$/,'')+u:u;
@@ -268,7 +309,7 @@ async function fgRandom(){
 
 // ---------- SAKUGABOORU (Moebooru API)
 async function sbRandom(){
-  const tags=['order:random','rating:s',...S.tags.trim().split(/\s+/).filter(Boolean)].join(' ');
+  const tags=['order:random',...(S.sbRating?['rating:'+S.sbRating]:[]),...S.tags.trim().split(/\s+/).filter(Boolean)].join(' ');
   const {data}=await getJSON(SB+`post.json?limit=8&tags=${encodeURIComponent(tags)}`);
   const list=data.filter(p=>p.file_url&&!S.seen.anim.has(p.id));
   if(!list.length)throw new Error('결과 없음 (태그 확인)');
@@ -282,19 +323,18 @@ const fetching={film:false,anim:false};
 async function fill(tab){
   if(fetching[tab])return;fetching[tab]=true;
   try{while(S.queue[tab].length<2){const it=await(tab==='film'?fgRandom():sbRandom());
-    S.seen[tab].add(it.key);if(it.kind==='img'){const pre=new Image();pre.referrerPolicy='no-referrer';pre.src=it.url}
+    S.seen[tab].add(it.key);if(it.kind==='img'){const pre=new Image();pre.referrerPolicy='no-referrer';pre.src=M(it.url)}
     S.queue[tab].push(it)}}
   catch(e){lastErr[tab]=e.message}finally{fetching[tab]=false}
 }
 const lastErr={film:'',anim:''};
 async function next(){const t=S.tab;
   if(S.pos[t]<S.hist[t].length-1){S.pos[t]++;show();return}
-  if(!S.queue[t].length){setLoad('불러오는 중…');lastErr[t]='';await fill(t);
-    if(!S.queue[t].length){setLoad('');return showErr(lastErr[t]||'불러오기 실패')}}
-  S.hist[t].push(S.queue[t].shift());S.pos[t]=S.hist[t].length-1;show();setLoad('');fill(t);
+  if(!S.queue[t].length){const lt=setTimeout(()=>toast('불러오는 중…'),700);lastErr[t]='';await fill(t);clearTimeout(lt);
+    if(!S.queue[t].length){return showErr(lastErr[t]||'불러오기 실패')}}
+  S.hist[t].push(S.queue[t].shift());S.pos[t]=S.hist[t].length-1;show();fill(t);
 }
 function prev(){const t=S.tab;if(S.pos[t]>0){S.pos[t]--;show()}}
-function setLoad(s){$('#load').textContent=s}
 function resetQueues(tab){S.queue[tab]=[];fill(tab)}
 
 // ---------- render
@@ -302,8 +342,8 @@ const img=$('#img'),vid=$('#vid'),ov=$('#ov'),stage=$('#stage'),msg=$('#msg');
 function media(){return vid.classList.contains('hidden')?img:vid}
 function showErr(e){
   img.classList.add('hidden');vid.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
-  msg.classList.remove('hidden');
-  msg.innerHTML=`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">사이트가 외부 요청을 막았을 수 있음 → 설정에서 프록시 지정.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
+  msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');toast('연결 실패 · '+e,'err');
+  msg.innerHTML=`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">설정 → API 연결에서 연결 테스트로 확인.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
 }
 function show(){
   const t=S.tab,it=S.hist[t][S.pos[t]];resetTimer();
@@ -311,14 +351,15 @@ function show(){
   msg.classList.add('hidden');
   if(it.kind==='vid'){
     img.classList.add('hidden');vid.classList.remove('hidden');
-    vid.src=it.url;vid.onloadedmetadata=()=>{const d=vid.duration||0;
+    vid.src=M(it.url);vid.onloadedmetadata=()=>{const d=vid.duration||0;
       if(!S.play&&d>0.3)vid.currentTime=0.1+Math.random()*(d-0.2);if(S.play)vid.play().catch(()=>{});else vid.pause();drawGrid()};
     vid.onerror=()=>showErr('영상 로드 실패');
   }else{
     vid.classList.add('hidden');vid.pause();vid.removeAttribute('src');img.classList.remove('hidden');
-    img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.src=it.url;
+    img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.src=M(it.url);
   }
-  $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span><a href="${it.link}" target="_blank" rel="noopener noreferrer">원본</a>`;
+  $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;
+  const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${t==='film'?'FILM-GRAB':'SAKUGABOORU'}</b> ↗`;sl.classList.remove('hidden');
   applyView();
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -346,7 +387,7 @@ function drawGrid(){
   const c=S.lc;let s='';
   const L=(a,b,x,y,d)=>s+=`<line x1="${a}" y1="${b}" x2="${x}" y2="${y}" ${d?'stroke-dasharray="4 4"':''}/>`;
   const R=(x,y,ww,hh,d)=>s+=`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" fill="none" ${d?'stroke-dasharray="4 4"':''}/>`;
-  const T=(x,y,t)=>s+=`<text x="${x}" y="${y}" font-size="9" fill="${c}" stroke="none" font-family="IBM Plex Mono">${t}</text>`;
+  const T=(x,y,t)=>s+=`<text x="${x}" y="${y}" font-size="9" fill="${c}" stroke="none" font-family="Galmuri9,monospace">${t}</text>`;
   const cols=f=>f.forEach(p=>L(w*p,0,w*p,h)),rows=f=>f.forEach(p=>L(0,h*p,w,h*p));
   if(mode==='half'){cols([.5]);rows([.5])}
   if(mode==='thirds'){cols([1/3,2/3]);rows([1/3,2/3])}
@@ -366,7 +407,7 @@ new ResizeObserver(drawGrid).observe(stage);
 // ---------- timer
 let tLeft=0,tInt=null;
 function resetTimer(){clearInterval(tInt);$('#timerBig').textContent='';if(!S.timer)return;tLeft=S.timer;showT();
-  tInt=setInterval(()=>{tLeft--;if(tLeft<=0)next();else showT()},1000)}
+  tInt=setInterval(()=>{tLeft--;if(tLeft<=0){toast('시간 종료 → 다음 컷');next()}else showT()},1000)}
 function showT(){$('#timerBig').textContent=`${Math.floor(tLeft/60)}:${String(tLeft%60).padStart(2,'0')}`}
 
 // ---------- events
@@ -387,18 +428,41 @@ $('#onlyAnim').onchange=e=>{S.onlyAnim=e.target.checked;save();resetQueues('film
 let tagT;$('#tags').oninput=e=>{S.tags=e.target.value;save();clearTimeout(tagT);tagT=setTimeout(()=>resetQueues('anim'),600)};
 $('#tags').onkeydown=e=>{if(e.key==='Enter'){S.queue.anim=[];next()}};
 $('#play').onchange=e=>{S.play=e.target.checked;save();if(!vid.classList.contains('hidden')){S.play?vid.play().catch(()=>{}):vid.pause()}};
-$('#setBtn').onclick=()=>{$('#proxy').value=S.proxy;$('#setDlg').classList.remove('hidden')};
-$('#setClose').onclick=()=>{S.proxy=$('#proxy').value.trim();save();$('#setDlg').classList.add('hidden');
-  fg.total={};fg.animCat=undefined;S.queue={film:[],anim:[]};if(S.pos[S.tab]<0)next()};
+const pop=$('#setPop'),sb=$('#setBtn');
+function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl;$('#sbRating').value=c.sbRating}
+function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim(),sbRating:$('#sbRating').value}}
+function placePop(){const r=sb.getBoundingClientRect(),w=340,left=Math.max(8,Math.min(innerWidth-w-8,r.right-w));
+  pop.style.top=(r.bottom+8)+'px';pop.style.left=left+'px';pop.style.setProperty('--caret',(left+w-r.right+r.width/2-5)+'px')}
+function openPop(){fillPop(S);placePop();pop.classList.remove('hidden');sb.classList.add('on')}
+function closePop(){pop.classList.add('hidden');sb.classList.remove('on')}
+sb.onclick=e=>{e.stopPropagation();pop.classList.contains('hidden')?openPop():closePop()};
+$('#setX').onclick=closePop;
+document.addEventListener('mousedown',e=>{if(!pop.classList.contains('hidden')&&!pop.contains(e.target)&&e.target!==sb)closePop()});
+addEventListener('resize',()=>{if(!pop.classList.contains('hidden'))placePop()});
+$('#resetBtn').onclick=()=>{fillPop(DEF);toast('기본값으로 채움 · 저장을 눌러 적용')};
+$('#saveBtn').onclick=()=>{Object.assign(S,readPop());applyCfg();save();
+  fg.total={};fg.animCat=undefined;S.queue={film:[],anim:[]};closePop();toast('설정 저장됨','ok');
+  if(S.pos[S.tab]<0||!msg.classList.contains('hidden'))next();else fill(S.tab)};
+async function ping(url,cfg){const t0=performance.now();
+  const u=cfg.proxy?cfg.proxy+encodeURIComponent(url):url;
+  const r=await fetch(u,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);await r.json();return Math.round(performance.now()-t0)}
+function setSt(id,ok,txt){const b=$(id);b.className=ok===null?'':ok?'ok':'err';b.textContent=txt}
+$('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
+  setSt('#stFG',null,'확인 중…');setSt('#stSB',null,'확인 중…');
+  const [a,b]=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c)]);
+  a.status==='fulfilled'?setSt('#stFG',true,`정상 ${a.value}ms`):setSt('#stFG',false,a.reason.message.replace('Failed to fetch','연결 거부'));
+  b.status==='fulfilled'?setSt('#stSB',true,`정상 ${b.value}ms`):setSt('#stSB',false,b.reason.message.replace('Failed to fetch','연결 거부'));
+  const n=[a,b].filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/2 정상`,n===2?'ok':'err')};
 
 const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&!pop.classList.contains('hidden')){closePop();return}
   if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
-  else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView()}
-  else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView()}
-  else if(k==='f'){S.flip=!S.flip;applyView()}
+  else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백',t2:'2톤',t3:'3톤',t5:'5톤'})[S.tone])}
+  else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
+  else if(k==='f'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
   else if(k==='h')$('#zen').click();
   else if((k===','||k==='.')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(k==='.'?1:-1)/24)}
 });
