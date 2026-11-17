@@ -285,7 +285,7 @@ footer .grp>label{margin-right:0}
     <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
     <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
     <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
-    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div></div>
+    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>DANBOORU <b id="stDB">미확인</b></div></div>
     <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
   </section>
 </div>
@@ -413,7 +413,7 @@ async function gsRandom(){
     const id=(Math.random()<.55&&pool.length>8)?pool[rnd(pool.length)]:1000+rnd(13500);
     if(gs.bad.has(id)||(f.onePer&&gs.seen.has(id)))continue;
     let r;try{r=await getText(GS+'en/product/'+id)}catch(e){lastErr=e.message;continue}
-    if(!r.ok){gs.bad.add(id);gs.pool.delete(id);lastErr='HTTP '+r.status;continue}
+    if(!r.ok){if(r.status===404){gs.bad.add(id);gs.pool.delete(id);lastErr='HTTP 404';continue}throw new Error('굿스마일 연결 실패 · HTTP '+r.status+(r.status===403?' (Worker 허용 목록 확인)':''))}
     const html=r.text;
     for(const m of html.matchAll(/\/product\/image\/(\d+)\//g)){const n=+m[1];if(n!==id&&!gs.bad.has(n))gs.pool.add(n)}
     for(const m of html.matchAll(/\/en\/product\/(\d+)/g)){const n=+m[1];if(n!==id&&!gs.bad.has(n))gs.pool.add(n)}
@@ -473,14 +473,17 @@ async function sbRandom(){
 }
 
 // ---------- queue / prefetch
-const fetching={film:false,anim:false,fig:false};
+const fillP={};
 const SRC={film:fgRandom,anim:sbRandom,fig:figRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE'};
-async function fill(tab){
-  if(fetching[tab])return;fetching[tab]=true;
-  try{while(S.queue[tab].length<2){const it=await SRC[tab]();
-    S.seen[tab].add(it.key);if(it.kind==='img'){const pre=new Image();pre.referrerPolicy='no-referrer';pre.src=M(it.url)}
-    S.queue[tab].push(it)}}
-  catch(e){lastErr[tab]=e.message}finally{fetching[tab]=false}
+function fill(tab){
+  if(fillP[tab])return fillP[tab];
+  fillP[tab]=(async()=>{
+    try{while(S.queue[tab].length<2){const it=await SRC[tab]();
+      S.seen[tab].add(it.key);if(it.kind==='img'){const pre=new Image();pre.referrerPolicy='no-referrer';pre.src=M(it.url)}
+      S.queue[tab].push(it)}}
+    catch(e){lastErr[tab]=e.message.replace('Failed to fetch','연결 거부 (프록시 · 네트워크 확인)')}
+  })().finally(()=>{fillP[tab]=null});
+  return fillP[tab];
 }
 const lastErr={film:'',anim:'',fig:''};
 async function next(){const t=S.tab;
@@ -710,14 +713,13 @@ $('#saveBtn').onclick=()=>{Object.assign(S,readPop());applyCfg();save();
   if(S.pos[S.tab]<0||!msg.classList.contains('hidden'))next();else fill(S.tab)};
 async function ping(url,cfg){const t0=performance.now();
   const u=cfg.proxy?cfg.proxy+encodeURIComponent(url):url;
-  const r=await fetch(u,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);await r.json();return Math.round(performance.now()-t0)}
+  const r=await fetch(u,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status+(r.status===403?' · Worker 허용 목록':''));await r.text();return Math.round(performance.now()-t0)}
 function setSt(id,ok,txt){const b=$(id);b.className=ok===null?'':ok?'ok':'err';b.textContent=txt}
 $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
-  setSt('#stFG',null,'확인 중…');setSt('#stSB',null,'확인 중…');
-  const [a,b]=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c)]);
-  a.status==='fulfilled'?setSt('#stFG',true,`정상 ${a.value}ms`):setSt('#stFG',false,a.reason.message.replace('Failed to fetch','연결 거부'));
-  b.status==='fulfilled'?setSt('#stSB',true,`정상 ${b.value}ms`):setSt('#stSB',false,b.reason.message.replace('Failed to fetch','연결 거부'));
-  const n=[a,b].filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/2 정상`,n===2?'ok':'err')};
+  const ids=['#stFG','#stSB','#stGS','#stDB'];ids.forEach(i=>setSt(i,null,'확인 중…'));
+  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c),ping(DB+'posts.json?limit=1&tags=figure',c)]);
+  res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
+  const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
 
 const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
