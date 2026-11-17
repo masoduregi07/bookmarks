@@ -5,66 +5,116 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <title>컷 레퍼런스</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <style>
-:root{--bg:#f6f6f4;--panel:#ffffff;--stage:#e4e4e1;--line:#e2e2df;--line2:#d2d2ce;--tx:#3a3a38;--tx2:#7c7c78;--tx3:#a5a5a0;--acc:#5a5a57}
+:root{--bg:#efeee9;--panel:#fbfaf6;--stage:#dfded8;--ink:#3d3b37;--soft:#c9c7bf;--tx2:#75736c;--tx3:#a19f97;
+  --shd:#c6c3ba;--pink:#f6c9d3;--yel:#f7e3a1;--mint:#c8e6d4}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);color:var(--tx);font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
-.mono{font-family:"IBM Plex Mono",monospace}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Galmuri11,monospace;font-size:12px;-webkit-font-smoothing:none;font-smooth:never}
+.mono{font-family:Galmuri11,monospace}
 a{color:var(--tx2)}
 button,select,input{font:inherit;color:inherit}
-button{background:none;border:1px solid var(--line2);border-radius:3px;padding:5px 10px;cursor:pointer;white-space:nowrap}
-button:hover{border-color:#a5a5a0;background:#fafaf8}
-button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
-button:disabled{opacity:.4;cursor:default}
-select,input[type=number],input[type=text]{background:var(--panel);border:1px solid var(--line2);border-radius:3px;padding:4px 6px}
-input[type=number]{width:46px}
-input[type=range]{accent-color:#7c7c78;width:70px}
-#app{display:grid;grid-template-rows:auto auto 1fr;height:100%}
-header{background:var(--panel);display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding:10px 16px;border-bottom:1px solid var(--line)}
-header h1{font-size:13px;font-weight:600}
-.tabs{display:flex}
-.tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;padding:6px 12px;color:var(--tx2)}
-.tabs button.on{background:none;color:var(--tx);border-bottom-color:var(--tx)}
+button{background:#fff;border:2px solid var(--ink);border-radius:0;padding:4px 10px;cursor:pointer;white-space:nowrap;box-shadow:2px 2px 0 var(--ink);line-height:16px}
+button:hover{background:var(--yel)}
+button:active{transform:translate(2px,2px);box-shadow:none}
+button.on{background:var(--ink);color:#fff}
+button:disabled{color:var(--tx3);border-color:var(--soft);box-shadow:2px 2px 0 var(--soft);cursor:default;background:#fff}
+select,input[type=number],input[type=text]{background:#fff;border:2px solid var(--ink);border-radius:0;padding:3px 6px;line-height:16px}
+select{appearance:none;-webkit-appearance:none;padding-right:22px;cursor:pointer;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' shape-rendering='crispEdges'%3E%3Cpath fill='%233d3b37' d='M0 0h10v2H8v2H6v2H4V4H2V2H0z'/%3E%3C/svg%3E") no-repeat right 7px center}
+input[type=number]{width:44px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:72px;height:10px;background:#fff;border:2px solid var(--ink)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:16px;background:var(--ink);border:none}
+#app{display:grid;grid-template-rows:auto 1fr;height:100%;padding:10px;gap:10px}
+.top{display:flex;flex-direction:column}
+.top header{display:flex;align-items:center;gap:8px;padding:6px 6px 0 10px;border-bottom:2px solid var(--ink);min-height:44px;
+  background:repeating-linear-gradient(0deg,var(--panel) 0 2px,var(--soft) 2px 3px)}
+.top header h1,.top header .dots{background:var(--panel);padding:2px 6px}
+.top header .dots{padding:4px 6px}
+.top header .sp{flex:1}
+button.sm{padding:1px 8px;box-shadow:1px 1px 0 var(--ink)}
+button.sm:active{transform:translate(1px,1px)}
+.top header .tabs{align-self:flex-end;padding-left:10px;margin-top:0;gap:6px}
+.top header .tabs button{font-weight:700;color:var(--tx2);padding:6px 18px 7px 14px;font-size:13px}
+.top header .tabs button.on{color:var(--ink);padding:8px 22px 9px 18px;background:var(--panel);
+  box-shadow:inset 0 4px 0 var(--pink)}
+.top header .tabs button[data-tab=anim].on{box-shadow:inset 0 4px 0 var(--mint)}
+.top header .tabs svg{width:16px;height:16px}
+.top header{min-height:50px}
+.top header .src{background:var(--panel);padding:2px 8px;margin-bottom:6px}
+.top header h1,.top header .dots,.top header button.sm{margin-bottom:6px}
+
+.top footer{border-top:2px solid var(--ink)}
+.win{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:0 10px 0 0;min-height:40px}
+.bar{display:flex;align-items:center;gap:8px;align-self:stretch;padding:0 12px;border-right:2px solid var(--ink);
+  background:repeating-linear-gradient(0deg,var(--panel) 0 2px,var(--soft) 2px 3px)}
+.dots{display:flex;gap:4px}
+.dots i{width:10px;height:10px;border:2px solid var(--ink)}
+.dots i:nth-child(1){background:var(--pink)}.dots i:nth-child(2){background:var(--yel)}.dots i:nth-child(3){background:var(--mint)}
+header h1{font-size:12px;font-weight:700;background:var(--panel);padding:2px 6px}
+.tabs{display:flex;gap:4px;padding-left:10px;align-items:flex-end;position:relative;z-index:2;margin-bottom:-2px}
+.tabs button{box-shadow:none;border:2px solid var(--ink);border-bottom:none;padding:4px 14px 5px 12px;background:var(--stage);color:var(--tx2);display:flex;align-items:center;gap:6px;
+  clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
+.tabs button:hover{background:var(--yel);color:var(--ink)}
+.tabs button.on{background:var(--panel);color:var(--ink);font-weight:700;padding:6px 16px 7px 14px}
+.tabs button:active{transform:none}
+.tabs svg{width:14px;height:14px;shape-rendering:crispEdges;fill:currentColor}
+.tabs button.on svg .acc{fill:var(--pink)}
+.tabs button[data-tab=anim].on svg .acc{fill:var(--mint)}
 .sp{flex:1}
-.src{display:flex;align-items:center;gap:8px;color:var(--tx2)}
+.src{display:flex;align-items:center;gap:8px;color:var(--tx2);padding:8px 0}
 .src label{display:flex;align-items:center;gap:5px;cursor:pointer}
+input[type=checkbox]:not(#gridOn){-webkit-appearance:none;appearance:none;width:14px;height:14px;border:2px solid var(--ink);background:#fff;cursor:pointer}
+input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset 0 0 0 2px #fff}
 #stage{background:var(--stage);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:0}
 #img,#vid{max-width:100%;max-height:100%;display:block;user-select:none;-webkit-user-drag:none}
 .flip{transform:scaleX(-1)}
 #ov{position:absolute;pointer-events:none}
-#msg{text-align:center;color:var(--tx2);line-height:1.9;max-width:460px;padding:0 20px}
-#msg b{color:var(--tx);font-weight:500}
-#info{position:absolute;left:14px;top:10px;font-size:11px;color:var(--tx3);display:flex;gap:10px;align-items:center}
-#info a{color:var(--tx2);text-decoration:none;border-bottom:1px solid var(--line2)}
-#timerBig{position:absolute;right:14px;top:8px;color:var(--tx2);font-size:13px}
+#msg{text-align:center;color:var(--tx2);line-height:1.9;max-width:460px;padding:14px 20px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
+#msg b{color:var(--ink);font-weight:700}
+#info{position:absolute;left:10px;top:10px;font-size:11px;color:var(--ink);display:flex;gap:8px;align-items:center;background:var(--panel);border:2px solid var(--ink);padding:2px 6px}
+#info a{color:var(--ink)}
+#timerBig{position:absolute;right:10px;top:10px;font-size:14px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px}
+#timerBig:empty,#info:empty{display:none}
 #load{position:absolute;right:14px;bottom:10px;color:var(--tx3);font-size:11px}
-footer{background:var(--panel);display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:8px 16px;border-bottom:1px solid var(--line)}
+footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 12px}
 .grp{display:flex;align-items:center;gap:6px}
-.grp>label{color:var(--tx3);font-size:11px;margin-right:2px}
-.seg{display:flex}
-.seg button{border-radius:0;margin-left:-1px}
-.seg button:first-child{border-radius:3px 0 0 3px;margin-left:0}
-.seg button:last-child{border-radius:0 3px 3px 0}
-#next{padding:7px 18px;font-weight:500;border-color:#8a8a86}
-.keys{color:var(--tx3);font-size:11px}
-.sw{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--tx2);font-size:12px;user-select:none}
+.grp+.grp{border-left:2px dotted var(--ink);padding-left:14px}
+.grp>label{color:var(--tx2);font-size:11px;margin-right:2px}
+.seg{display:flex;box-shadow:2px 2px 0 var(--ink)}
+.seg button{box-shadow:none;margin-left:-2px}
+.seg button:first-child{margin-left:0}
+.seg button:active{transform:none}
+#next{font-weight:700;background:var(--pink)}
+#next:hover{background:var(--yel)}
+.keys{color:var(--tx3);font-size:11px;font-family:Galmuri9,monospace;width:100%}
+.sw{display:inline-flex;align-items:center;cursor:pointer;user-select:none}
 .sw input{display:none}
-.sw i{width:28px;height:16px;border-radius:8px;background:var(--line2);position:relative;transition:background .15s}
-.sw i::after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px #0002}
-.sw input:checked+i{background:var(--acc)}
-.sw input:checked+i::after{left:14px}
-.off{opacity:.4;pointer-events:none}
+.sw i{width:30px;height:16px;border:2px solid var(--ink);background:#fff;position:relative}
+.sw i::after{content:"";position:absolute;left:2px;top:2px;width:8px;height:8px;background:var(--soft)}
+.sw input:checked+i{background:var(--mint)}
+.sw input:checked+i::after{left:16px;background:var(--ink)}
+.off{opacity:.35;pointer-events:none}
 .hidden{display:none!important}
-#setDlg{position:fixed;inset:0;background:#0003;display:flex;align-items:center;justify-content:center;z-index:9}
-#setDlg .box{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:18px;width:min(440px,92vw);line-height:1.7}
-#setDlg .box h2{font-size:13px;font-weight:600;margin-bottom:8px}
-#setDlg .box p{color:var(--tx2);font-size:12px;margin-bottom:10px}
+#setDlg{position:fixed;inset:0;background:#3d3b3726;display:flex;align-items:center;justify-content:center;z-index:9}
+#setDlg .box{background:var(--panel);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);padding:16px;width:min(440px,92vw);line-height:1.7}
+#setDlg .box h2{font-size:12px;font-weight:700;margin-bottom:8px}
+#setDlg .box p{color:var(--tx2);font-size:11px;margin-bottom:10px}
 #setDlg input{width:100%;margin-bottom:12px}
-body.zen header,body.zen footer{display:none}
-body.zen #app{grid-template-rows:0 0 1fr}
+body.zen .top{display:none}
+body.zen #app{grid-template-rows:0 1fr;gap:0}
 body.zen #info{display:none}
+
+/* v7 */
+.top{background:none;border:none;box-shadow:none}
+.top header{background:none!important;border-bottom:none!important;padding:4px 2px 0 0!important}
+.top header .src{background:none;padding:0;margin-bottom:8px}
+.top header .tabs{padding-left:0!important}
+.top header .tabs button{border-width:3px;border-color:var(--ink)}
+.top header .tabs button:not(.on){background:var(--stage)}
+.top footer{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
+.top header .tabs{margin-bottom:-2px}
 </style>
 </head>
 <body>
@@ -75,11 +125,11 @@ body.zen #info{display:none}
 </svg>
 
 <div id="app">
+<div class="top">
 <header>
-  <h1>컷 레퍼런스</h1>
-  <nav class="tabs">
-    <button data-tab="film" class="on">영화</button>
-    <button data-tab="anim">애니메이션 레이아웃</button>
+    <nav class="tabs">
+    <button data-tab="film" class="on"><svg viewBox="0 0 14 14"><path d="M0 1h14v12H0z"/><path fill="#fff" d="M2 4h10v6H2z"/><path class="acc" fill="#fff" d="M3 5h8v4H3z"/><path fill="#fff" d="M2 2h2v1H2zM6 2h2v1H6zM10 2h2v1h-2zM2 11h2v1H2zM6 11h2v1H6zM10 11h2v1h-2z"/></svg>영화</button>
+    <button data-tab="anim"><svg viewBox="0 0 14 14"><path d="M1 1h10v12H1z"/><path fill="#fff" d="M3 3h6v8H3z"/><path class="acc" fill="#fff" d="M4 5h4v5H4z"/><path d="M11 3h2v10H3v-2h8z" opacity=".45"/><path d="M5 4h2v1H5zM4 8h1v1H4zM7 8h1v1H7z"/></svg>애니메이션 레이아웃</button>
   </nav>
   <div class="sp"></div>
   <div class="src" id="srcFilm">
@@ -91,13 +141,15 @@ body.zen #info{display:none}
     <input type="text" id="tags" placeholder="태그 (예: effects, character_acting)" style="width:220px">
     <label><input type="checkbox" id="play"> 영상 재생</label>
   </div>
-  <button id="setBtn">설정</button>
+
+  <button id="zen" class="sm">UI 숨김</button>
+  <button id="setBtn" class="sm">설정</button>
 </header>
 
 <footer>
   <div class="grp">
-    <button id="prev">← 이전</button>
-    <button id="next">다음 컷 →</button>
+    <button id="prev">◀ 이전</button>
+    <button id="next">다음 컷 ▶</button>
   </div>
   <div class="grp"><label>색</label>
     <div class="seg" id="tone">
@@ -130,10 +182,7 @@ body.zen #info{display:none}
     <input id="op" type="range" min="15" max="100" value="60" title="선 불투명도">
     </span>
   </div>
-  <div class="grp"><label>보기</label>
-    <button id="flip">좌우반전</button>
-    <button id="zen">UI 숨김</button>
-  </div>
+  <div class="grp"><button id="flip">⇄ 좌우반전</button></div>
   <div class="grp"><label>타이머</label>
     <select id="timer">
       <option value="0">끔</option><option value="30">30초</option><option value="60">1분</option>
@@ -143,8 +192,9 @@ body.zen #info{display:none}
   <div class="sp"></div>
   <span class="keys">Space/→ 다음 · ← 이전 · G 색 · D 분할 켜기/끄기 · F 반전 · H 숨김 · , . 프레임</span>
 </footer>
+</div>
 
-<main id="stage">
+<main id="stage" class="win">
   <div id="msg"><b>불러오는 중</b></div>
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
