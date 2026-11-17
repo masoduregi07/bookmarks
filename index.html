@@ -77,6 +77,11 @@ input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset
 #info a{color:var(--ink)}
 #timerBig{position:absolute;right:10px;top:10px;font-size:14px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px}
 #timerBig:empty,#info:empty{display:none}
+#timerBig.run{background:var(--mint)}#timerBig.pause{background:var(--yel)}
+#tIn{width:62px;text-align:center;font-variant-numeric:tabular-nums}
+#tmr.run #tIn{background:var(--mint)}#tmr.pause #tIn{background:var(--yel)}
+.seg.ic button{padding:4px 7px;display:flex;align-items:center;height:28px}
+.seg.ic svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges}
 #srcLink{position:absolute;right:10px;bottom:10px;font-size:11px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px;color:var(--ink);text-decoration:none;display:flex;gap:6px;align-items:center}
 #srcLink:hover{background:var(--yel)}
 #srcLink b{font-weight:700}
@@ -209,14 +214,17 @@ body.zen #info,body.zen #srcLink{display:none}
     </span>
   </div>
   <div class="grp"><button id="flip">⇄ 좌우반전</button></div>
-  <div class="grp"><label>타이머</label>
-    <select id="timer">
-      <option value="0">끔</option><option value="30">30초</option><option value="60">1분</option>
-      <option value="120">2분</option><option value="300">5분</option><option value="600">10분</option>
-    </select>
+  <div class="grp" id="tmr"><label>타이머</label>
+    <input type="text" id="tIn" value="05:00" title="시간 입력 (예: 5 = 5분, 1:30, 90s)" autocomplete="off">
+    <div class="seg"><button data-add="300">+5분</button><button data-add="600">+10분</button><button data-add="1800">+30분</button></div>
+    <div class="seg ic">
+      <button id="tPlay" title="재생 (T)"><svg viewBox="0 0 10 10"><path d="M2 1h2v1h2v1h2v1h1v2H8v1H6v1H4v1H2z"/></svg></button>
+      <button id="tPause" title="일시정지 (T)"><svg viewBox="0 0 10 10"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg></button>
+      <button id="tReset" title="리셋"><svg viewBox="0 0 10 10"><path d="M3 0h1v1h1v1h2v1h1v1h1v4H8v1H7v1H3V9H2V8H1V5h2v2h1v1h2V7h1V4H6V3H4v1H3v1H2V4H1V3h1V2h1z"/></svg></button>
+    </div>
   </div>
   <div class="sp"></div>
-  <span class="keys">Space/→ 다음 · ← 이전 · G 색 · D 분할 켜기/끄기 · F 반전 · H 숨김 · , . 프레임</span>
+  <span class="keys">Space/→ 다음 · ← 이전 · G 색 · D 분할 켜기/끄기 · F 반전 · H 숨김 · T 타이머 · , . 프레임</span>
 </footer>
 </div>
 
@@ -252,11 +260,11 @@ body.zen #info,body.zen #srcLink{display:none}
 const $=s=>document.querySelector(s);
 const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s'};
 let FG,SB;
-const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,timer:0,onlyAnim:false,tags:'',play:false,...DEF,
+const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,onlyAnim:false,tags:'',play:false,...DEF,
   grid:{film:'thirds',anim:'field'},gridOn:{film:true,anim:true},hist:{film:[],anim:[]},pos:{film:-1,anim:-1},seen:{film:new Set(),anim:new Set()},queue:{film:[],anim:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','timer','onlyAnim','tags','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','onlyAnim','tags','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,timer:S.timer,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -346,7 +354,7 @@ function showErr(e){
   msg.innerHTML=`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">설정 → API 연결에서 연결 테스트로 확인.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
 }
 function show(){
-  const t=S.tab,it=S.hist[t][S.pos[t]];resetTimer();
+  const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();
   if(!it){msg.classList.remove('hidden');msg.innerHTML='<b>불러오는 중</b>';return}
   msg.classList.add('hidden');
   if(it.kind==='vid'){
@@ -373,7 +381,7 @@ function applyView(){
   document.querySelectorAll('#lc button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.lc));
   $('#flip').classList.toggle('on',S.flip);
   $('#grid').value=S.grid[t];$('#gridOn').checked=S.gridOn[t];$('#gridOpts').classList.toggle('off',!S.gridOn[t]);$('#customBox').classList.toggle('hidden',S.grid[t]!=='custom');
-  $('#op').value=S.op;$('#timer').value=S.timer;$('#onlyAnim').checked=S.onlyAnim;$('#tags').value=S.tags;$('#play').checked=S.play;
+  $('#op').value=S.op;$('#onlyAnim').checked=S.onlyAnim;$('#tags').value=S.tags;$('#play').checked=S.play;
   $('#prev').disabled=S.pos[t]<=0;
   drawGrid();
 }
@@ -405,10 +413,23 @@ img.addEventListener('load',drawGrid);vid.addEventListener('loadeddata',drawGrid
 new ResizeObserver(drawGrid).observe(stage);
 
 // ---------- timer
-let tLeft=0,tInt=null;
-function resetTimer(){clearInterval(tInt);$('#timerBig').textContent='';if(!S.timer)return;tLeft=S.timer;showT();
-  tInt=setInterval(()=>{tLeft--;if(tLeft<=0){toast('시간 종료 → 다음 컷');next()}else showT()},1000)}
-function showT(){$('#timerBig').textContent=`${Math.floor(tLeft/60)}:${String(tLeft%60).padStart(2,'0')}`}
+const fmt=n=>`${String(Math.floor(n/60)).padStart(2,'0')}:${String(n%60).padStart(2,'0')}`;
+function parseT(v){v=v.trim().toLowerCase();if(!v)return null;let m;
+  if(m=v.match(/^(\d+):(\d{1,2})$/))return +m[1]*60+ +m[2];
+  if(m=v.match(/^(\d+(?:\.\d+)?)\s*s$/))return Math.round(+m[1]);
+  if(m=v.match(/^(\d+(?:\.\d+)?)\s*(m|분)?$/))return Math.round(+m[1]*60);
+  return null}
+let tLeft=S.tDur,tInt=null,tState='idle';
+function tRender(){const el=$('#timerBig');$('#tIn').value=fmt(tState==='idle'?S.tDur:tLeft);
+  el.textContent=tState==='idle'?'':fmt(tLeft);el.className='mono '+(tState==='run'?'run':tState==='pause'?'pause':'');
+  $('#tmr').classList.toggle('run',tState==='run');$('#tmr').classList.toggle('pause',tState==='pause');
+  $('#tPlay').disabled=tState==='run';$('#tPause').disabled=tState!=='run';$('#tReset').disabled=tState==='idle'}
+function tTick(){tLeft--;if(tLeft<=0){toast('시간 종료 → 다음 컷','ok');tLeft=S.tDur;next()}tRender()}
+function tPlay(){if(S.tDur<=0)return;if(tState==='idle')tLeft=S.tDur;tState='run';clearInterval(tInt);tInt=setInterval(tTick,1000);tRender()}
+function tPause(){if(tState!=='run')return;clearInterval(tInt);tState='pause';tRender()}
+function tReset(){clearInterval(tInt);tState='idle';tLeft=S.tDur;tRender()}
+function cutTimer(){if(tState!=='idle')tLeft=S.tDur;tRender()}
+function tSet(sec){S.tDur=Math.max(0,Math.min(sec,6*3600));save();tReset()}
 
 // ---------- events
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{S.tab=b.dataset.tab;save();
@@ -423,7 +444,13 @@ $('#op').oninput=e=>{S.op=+e.target.value;save();drawGrid()};
 $('#flip').onclick=()=>{S.flip=!S.flip;applyView()};
 $('#zen').onclick=()=>{document.body.classList.toggle('zen');setTimeout(drawGrid,0)};
 stage.addEventListener('click',()=>{if(document.body.classList.contains('zen')){document.body.classList.remove('zen');setTimeout(drawGrid,0)}});
-$('#timer').onchange=e=>{S.timer=+e.target.value;save();resetTimer()};
+$('#tPlay').onclick=tPlay;$('#tPause').onclick=tPause;$('#tReset').onclick=()=>{tReset();toast('타이머 리셋')};
+$('#tIn').onfocus=e=>{tPause();e.target.select()};
+$('#tIn').onchange=e=>{const v=parseT(e.target.value);if(v===null){toast('시간 형식 오류 (예: 5, 1:30, 90s)','err');tRender();return}tSet(v);toast('타이머 '+fmt(S.tDur))};
+$('#tIn').onkeydown=e=>{if(e.key==='Enter')e.target.blur()};
+document.querySelectorAll('#tmr [data-add]').forEach(b=>b.onclick=()=>{const a=+b.dataset.add;
+  if(tState==='idle')tSet(S.tDur+a);else{S.tDur+=a;tLeft+=a;save();tRender()}toast(b.textContent+' → '+fmt(tState==='idle'?S.tDur:tLeft))});
+tRender();
 $('#onlyAnim').onchange=e=>{S.onlyAnim=e.target.checked;save();resetQueues('film')};
 let tagT;$('#tags').oninput=e=>{S.tags=e.target.value;save();clearTimeout(tagT);tagT=setTimeout(()=>resetQueues('anim'),600)};
 $('#tags').onkeydown=e=>{if(e.key==='Enter'){S.queue.anim=[];next()}};
@@ -464,6 +491,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
   else if(k==='f'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
   else if(k==='h')$('#zen').click();
+  else if(k==='t'){tState==='run'?tPause():tPlay();toast(tState==='run'?'타이머 재생':'타이머 일시정지')}
   else if((k===','||k==='.')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(k==='.'?1:-1)/24)}
 });
 
