@@ -671,7 +671,6 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='�
     <div class="gb"><h3><span>제품 이름 검색 (영문)</span></h3><input type="text" id="fKw" value="${esc(f.kw)}" placeholder="예: Miku, Frieren" autocomplete="off"></div></div>
     <div class="${f.src==='gs'?'off':''}"><div class="gb"><h3><span>Danbooru · 추가 조건 하나 (일반 등급만 나옴)</span></h3><div class="gr">${opts(DBTAGS,v=>v===''?!f.dbTag:f.dbTag===v,'data-dbt')}</div>
     <input type="text" id="fDbTag" value="${isCustom?esc(f.dbTag):''}" placeholder="또는 태그 직접 입력 (예: hatsune_miku)" autocomplete="off" style="margin-top:6px"></div></div>
-    <div class="gb"><span class="msg">MyFigureCollection은 직접 불러올 수 없음 · 컷마다 오른쪽 아래 'MyFigureCollection에서 찾기'로 열기</span></div>
     <div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 피규어당 1장</label><a id="fReset">초기화</a></div>`;
   }else{const f=S.f.anim;
     b.innerHTML=`<div class="gb"><h3><span>작화 종류 · 최대 3개, 하나라도 맞으면</span><span>${f.kinds.length?f.kinds.length+'개':''}</span></h3><div class="gr tall">${opts(KINDS,v=>f.kinds.includes(v),'data-kind')}</div></div>
