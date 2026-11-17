@@ -26,9 +26,9 @@ select{appearance:none;-webkit-appearance:none;padding-right:22px;cursor:pointer
 input[type=number]{width:44px}
 input[type=range]{-webkit-appearance:none;appearance:none;width:72px;height:10px;background:#fff;border:2px solid var(--ink)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:16px;background:var(--ink);border:none}
-#app{display:grid;grid-template-rows:auto 1fr;height:100%;padding:10px;gap:10px}
+#app{display:grid;grid-template-rows:auto 1fr;height:100%;padding:6px 10px 10px;gap:10px}
 .top{display:flex;flex-direction:column}
-.top header{display:flex;align-items:center;gap:8px;padding:6px 6px 0 10px;border-bottom:2px solid var(--ink);min-height:44px;
+.top header{display:flex;align-items:center;gap:8px;padding:6px 6px 0 10px;border-bottom:2px solid var(--ink);min-height:0;
   background:repeating-linear-gradient(0deg,var(--panel) 0 2px,var(--soft) 2px 3px)}
 .top header h1,.top header .dots{background:var(--panel);padding:2px 6px}
 .top header .dots{padding:4px 6px}
@@ -41,7 +41,7 @@ button.sm:active{transform:translate(1px,1px)}
   box-shadow:inset 0 4px 0 var(--pink)}
 .top header .tabs button[data-tab=anim].on{box-shadow:inset 0 4px 0 var(--mint)}
 .top header .tabs svg{width:16px;height:16px}
-.top header{min-height:50px}
+.top header{min-height:0}
 .top header .src{background:var(--panel);padding:2px 8px;margin-bottom:6px}
 .top header h1,.top header .dots,.top header button.sm{margin-bottom:6px}
 
@@ -140,7 +140,7 @@ body.zen #info,body.zen #srcLink{display:none}
 
 /* v7 */
 .top{background:none;border:none;box-shadow:none}
-.top header{background:none!important;border-bottom:none!important;padding:4px 2px 0 0!important}
+.top header{background:none!important;border-bottom:none!important;padding:0 2px 0 0!important}
 .top header .src{background:none;padding:0;margin-bottom:8px}
 .top header .tabs{padding-left:0!important}
 .top header .tabs button{border-width:2px;border-color:var(--ink)}
