@@ -187,6 +187,82 @@ footer .frow{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:
 footer input[type=range]{width:60px}
 footer #tmr .seg:not(.ic) button{padding:4px 7px}
 footer .grp>label{margin-right:0}
+/* header icon buttons (2안) */
+.ibar{display:flex;gap:2px;align-items:center;margin-bottom:4px}
+button.ic{width:30px;height:28px;display:inline-flex;align-items:center;justify-content:center;background:none;border:none;box-shadow:none;padding:0;color:var(--ink);position:relative;cursor:pointer}
+button.ic svg{width:16px;height:16px;fill:currentColor;shape-rendering:crispEdges;flex:none;transition:transform .08s steps(2)}
+button.ic:hover{background:none}
+button.ic::after{content:"";position:absolute;left:7px;right:7px;bottom:2px;height:2px;background:var(--ink);opacity:0;transition:opacity .08s}
+button.ic:hover svg,button.ic:focus-visible svg,button.ic.on svg{transform:translateY(-2px)}
+button.ic:hover::after,button.ic:focus-visible::after,button.ic.on::after{opacity:1}
+button.ic:active svg{transform:translateY(1px)}
+button.ic:active::after{opacity:1;height:3px;bottom:1px}
+button.ic:active{transform:none}
+.tipbox{position:fixed;z-index:60;white-space:nowrap;background:var(--ink);color:#fff;font-size:11px;padding:4px 8px;pointer-events:none;animation:tipd .14s steps(3)}
+.tipbox::before{content:"";position:absolute;top:-5px;left:var(--tx,50%);margin-left:-4px;width:8px;height:5px;background:var(--ink);clip-path:polygon(37% 0,63% 0,63% 40%,100% 40%,100% 100%,0 100%,0 40%,37% 40%)}
+.tipbox small{display:block;color:#cfccc4;font-size:10px;margin-top:2px}
+@keyframes tipd{from{transform:translateY(-6px);opacity:0}}
+/* save button */
+#saveCut{display:inline-flex;align-items:center;gap:6px;--sv-in:#fff}
+#saveCut svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges}
+#saveCut.done{background:var(--mint)}
+#saveCut.done span::after{content:"됨"}
+/* calendar */
+.calp{position:fixed;top:0;right:0;bottom:0;width:440px;max-width:100vw;background:var(--panel);border-left:2px solid var(--ink);box-shadow:-3px 0 0 var(--shd);z-index:50;display:flex;flex-direction:column;font-size:12px;transform:translateX(105%);transition:transform .22s cubic-bezier(.2,.7,.2,1),width .2s,left .2s;visibility:hidden}
+.calp.open{transform:none;visibility:visible}
+.calp.full{width:100vw;border-left:none;box-shadow:none}
+.calp .ch{display:flex;align-items:center;gap:2px;padding:6px 8px 6px 14px;border-bottom:2px solid var(--ink)}
+.calp .ch b{font-size:13px;margin-right:auto}
+.calp .cbody{flex:1;min-height:0;display:flex;flex-direction:column;overflow:auto}
+.calp.full .cbody{display:grid;grid-template-columns:1fr 340px;overflow:hidden}
+.calp .cmain{padding-bottom:6px}
+.calp.full .cmain{overflow:auto}
+.calp .cmon{display:flex;align-items:center;gap:8px;padding:10px 14px 8px}
+.calp .cmon b{font-size:14px;min-width:96px;text-align:center}
+.calp .cmon .nb{width:24px;height:22px;padding:0;box-shadow:none;font-size:10px}
+.calp .cmon #calToday{margin-left:auto;margin-bottom:0}
+.calp .cstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 14px 10px}
+.calp .stat{border:2px solid var(--ink);background:#fff;padding:5px 8px}
+.calp .stat span{color:var(--tx2);font-size:10px;display:block}
+.calp .stat b{font-size:18px}
+.calp .cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 14px}
+.calp .dw{color:var(--tx3);font-size:10px;text-align:center}
+.calp .d{aspect-ratio:1;border:2px solid var(--soft);background:#fff;position:relative;font-size:10px;padding:2px 3px;color:var(--tx2);cursor:pointer;overflow:hidden}
+.calp .d:hover{border-color:var(--ink)}
+.calp .d.l1{background:#e3f1e8}.calp .d.l2{background:#c8e6d4}.calp .d.l3{background:#9fd0b2}.calp .d.l4{background:#6fb08b;color:#fff}
+.calp .d .n{position:absolute;right:3px;bottom:1px;font-weight:700;font-size:11px;color:var(--ink)}
+.calp .d.l4 .n{color:#fff}
+.calp .d.today{border-color:var(--ink)}
+.calp .d.sel{outline:2px solid var(--ink);outline-offset:1px;box-shadow:inset 0 0 0 2px var(--pink)}
+.calp .d.fut{opacity:.35;cursor:default}
+.calp .d.blank{border:none;background:none;cursor:default}
+.calp .d .tt{display:none}
+.calp.full .d{aspect-ratio:auto;height:96px;padding:4px}
+.calp.full .d .tt{display:flex;gap:3px;margin-top:4px}
+.calp.full .d .tt img{width:34px;height:26px;object-fit:cover;border:1px solid var(--ink);background:var(--stage)}
+.calp .cleg{display:flex;align-items:center;gap:3px;color:var(--tx3);font-size:10px;padding:6px 14px 0;justify-content:flex-end}
+.calp .cleg i{width:10px;height:10px;border:1px solid var(--soft);background:#fff}
+.calp i.l1{background:#e3f1e8}.calp i.l2{background:#c8e6d4}.calp i.l3{background:#9fd0b2}.calp i.l4{background:#6fb08b;border-color:#6fb08b}
+.calp .cyear-wrap{display:none;padding:12px 14px}
+.calp.full .cyear-wrap{display:block}
+.calp .cyl{color:var(--tx2);font-size:11px;margin-bottom:4px}
+.calp .cyear{display:grid;grid-auto-flow:column;grid-template-rows:repeat(7,10px);grid-auto-columns:10px;gap:2px;overflow:auto;justify-content:start}
+.calp .cyear i{width:10px;height:10px;border:1px solid var(--soft);background:#fff}
+.calp .cyear i.l1{background:#e3f1e8}.calp .cyear i.l2{background:#c8e6d4}.calp .cyear i.l3{background:#9fd0b2}.calp .cyear i.l4{background:#6fb08b;border-color:#6fb08b}
+.calp .cside{border-top:2px dotted var(--soft);margin-top:10px}
+.calp.full .cside{border-top:none;border-left:2px solid var(--ink);margin-top:0;overflow:auto}
+.calp.full .cside .cstats{display:none}
+.calp .cday{padding:12px 14px}
+.calp .cday h4{font-size:12px;margin-bottom:8px;display:flex;justify-content:space-between;gap:8px}
+.calp .cday h4 small{color:var(--tx3);font-weight:400}
+.calp .cday .empty{color:var(--tx3);font-size:11px}
+.calp .th{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.calp .th a{aspect-ratio:4/3;border:2px solid var(--ink);position:relative;display:block;background:var(--stage);overflow:hidden}
+.calp .th img{width:100%;height:100%;object-fit:cover;display:block}
+.calp .th span{position:absolute;left:0;bottom:0;background:var(--panel);font-size:9px;padding:1px 4px;border-top:2px solid var(--ink);border-right:2px solid var(--ink);color:var(--ink)}
+.calp .th b{position:absolute;right:0;top:0;width:18px;height:18px;background:var(--panel);border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:400;display:none;align-items:center;justify-content:center;cursor:pointer}
+.calp .th a:hover b{display:flex}
+.calp .th a:hover{outline:2px solid var(--yel)}
 </style>
 </head>
 <body>
@@ -205,14 +281,18 @@ footer .grp>label{margin-right:0}
     <button data-tab="fig"><svg viewBox="0 0 14 14"><path d="M5 0h4v1h1v4H9v1H5V5H4V1h1z"/><path d="M4 6h6v1h1v4H9v1H5v-1H3V7h1z"/><path class="acc" fill="#fff" d="M6 2h2v2H6z"/><path d="M2 12h10v2H2z" opacity=".45"/></svg>피규어</button>
   </nav>
   <div class="sp"></div>
-  <button id="keyBtn" class="sm">단축키</button>
-  <button id="zen" class="sm">UI 숨김</button>
-  <button id="setBtn" class="sm">설정</button>
+  <div class="ibar">
+    <button id="calBtn" class="ic" data-tip="연습 기록" data-key="C" aria-label="연습 기록"><svg viewBox="0 0 16 16"><path d="M3 1h2v1h-2zM11 1h2v1h-2zM1 2h14v1h-14zM1 3h14v1h-14zM1 4h1v1h-1zM14 4h1v1h-1zM1 5h1v1h-1zM14 5h1v1h-1zM1 6h1v1h-1zM3 6h2v1h-2zM7 6h2v1h-2zM11 6h2v1h-2zM14 6h1v1h-1zM1 7h1v1h-1zM3 7h2v1h-2zM7 7h2v1h-2zM11 7h2v1h-2zM14 7h1v1h-1zM1 8h1v1h-1zM14 8h1v1h-1zM1 9h1v1h-1zM3 9h2v1h-2zM7 9h2v1h-2zM14 9h1v1h-1zM1 10h1v1h-1zM3 10h2v1h-2zM7 10h2v1h-2zM14 10h1v1h-1zM1 11h1v1h-1zM14 11h1v1h-1zM1 12h14v1h-14z"/></svg></button>
+    <button id="keyBtn" class="ic" data-tip="단축키" data-key="?" aria-label="단축키"><svg viewBox="0 0 16 16"><path d="M0 3h16v1h-16zM0 4h1v1h-1zM15 4h1v1h-1zM0 5h1v1h-1zM2 5h2v1h-2zM5 5h2v1h-2zM8 5h2v1h-2zM11 5h2v1h-2zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM3 7h2v1h-2zM6 7h2v1h-2zM9 7h2v1h-2zM12 7h2v1h-2zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h1v1h-1zM5 9h6v1h-6zM15 9h1v1h-1zM0 10h1v1h-1zM15 10h1v1h-1zM0 11h16v1h-16z"/></svg></button>
+    <button id="zen" class="ic" data-tip="UI 숨김" data-key="H" aria-label="UI 숨김"><svg viewBox="0 0 16 16"><path d="M1 5h1v1h-1zM14 5h1v1h-1zM2 6h1v1h-1zM13 6h1v1h-1zM3 7h2v1h-2zM11 7h2v1h-2zM5 8h6v1h-6zM3 9h1v1h-1zM6 9h1v1h-1zM9 9h1v1h-1zM12 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM9 10h1v1h-1zM13 10h1v1h-1z"/></svg></button>
+    <button id="setBtn" class="ic" data-tip="설정" aria-label="설정"><svg viewBox="0 0 16 16"><path d="M7 1h2v1h-2zM3 2h1v1h-1zM7 2h2v1h-2zM12 2h1v1h-1zM2 3h3v1h-3zM6 3h4v1h-4zM11 3h3v1h-3zM3 4h10v1h-10zM4 5h8v1h-8zM3 6h3v1h-3zM10 6h3v1h-3zM1 7h5v1h-5zM10 7h5v1h-5zM1 8h5v1h-5zM10 8h5v1h-5zM3 9h3v1h-3zM10 9h3v1h-3zM4 10h8v1h-8zM3 11h10v1h-10zM2 12h3v1h-3zM6 12h4v1h-4zM11 12h3v1h-3zM3 13h1v1h-1zM7 13h2v1h-2zM12 13h1v1h-1zM7 14h2v1h-2z"/></svg></button>
+  </div>
 </header>
 
 <footer>
   <div class="grp">
     <button id="prev">◀ 이전</button>
+    <button id="saveCut" title="오늘 연습에 기록 (S)"><svg viewBox="0 0 14 14"><path d="M2 0h10v14l-5-3-5 3z"/><path fill="var(--sv-in,#fff)" d="M6 3h2v2h2v2H8v2H6V7H4V5h2z"/></svg><span>기록</span></button>
     <button id="next">다음 컷 ▶</button>
   </div>
   <i class="dv"></i>
@@ -299,6 +379,9 @@ footer .grp>label{margin-right:0}
     <dt><kbd>D</kbd></dt><dd>분할 켜기 / 끄기</dd>
     <dt><kbd>F</kbd></dt><dd>좌우반전</dd>
     <dt><kbd>H</kbd></dt><dd>UI 숨김</dd>
+    <dt><kbd>S</kbd></dt><dd>지금 컷 기록 / 기록 취소</dd>
+    <dt><kbd>C</kbd></dt><dd>연습 기록 열기 / 닫기</dd>
+    <dt><kbd>?</kbd></dt><dd>단축키</dd>
     <dt><kbd>T</kbd></dt><dd>타이머 재생 / 일시정지</dd>
     <dt><kbd>,</kbd><kbd>.</kbd></dt><dd>영상 한 프레임 앞 / 뒤</dd>
     <dt><kbd>Esc</kbd></dt><dd>미니창 닫기</dd>
@@ -308,6 +391,22 @@ footer .grp>label{margin-right:0}
   <div class="hd"><span id="fltTitle">필터</span><button class="px" title="닫기">×</button></div>
   <section id="fltBody"></section>
 </div>
+<aside id="calP" class="calp" aria-label="연습 기록" aria-hidden="true">
+  <div class="ch"><b>연습 기록</b>
+    <button class="ic" id="calFull" data-tip="전체 화면" ><svg viewBox="0 0 16 16"><path d="M1 1h5v1h-5zM10 1h5v1h-5zM1 2h1v1h-1zM14 2h1v1h-1zM1 3h1v1h-1zM14 3h1v1h-1zM1 4h1v1h-1zM14 4h1v1h-1zM1 5h1v1h-1zM14 5h1v1h-1zM1 10h1v1h-1zM14 10h1v1h-1zM1 11h1v1h-1zM14 11h1v1h-1zM1 12h1v1h-1zM14 12h1v1h-1zM1 13h1v1h-1zM14 13h1v1h-1zM1 14h5v1h-5zM10 14h5v1h-5z"/></svg></button>
+    <button class="ic" id="calX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
+  </div>
+  <div class="cbody">
+    <div class="cmain">
+      <div class="cmon"><button class="nb" id="calPrev">◀</button><b id="calTitle"></b><button class="nb" id="calNext">▶</button><button class="sm" id="calToday">오늘</button></div>
+      <div class="cstats" id="calStats"></div>
+      <div class="cgrid" id="calGrid"></div>
+      <div class="cleg">적음 <i></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> 많음</div>
+      <div class="cyear-wrap"><div class="cyl">최근 1년</div><div class="cyear" id="calYear"></div></div>
+    </div>
+    <div class="cside"><div class="cday" id="calDay"></div></div>
+  </div>
+</aside>
 <div id="toasts"></div>
 
 <script>
@@ -504,11 +603,12 @@ function media(){return vid.classList.contains('hidden')?img:vid}
 function showErr(e){
   img.classList.add('hidden');vid.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
   msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');$('#mfcLink').classList.add('hidden');toast((/조건에 맞는/.test(e)?'결과 없음 · ':'연결 실패 · ')+e,'err');
+  try{syncSaveBtn()}catch(_){}
   const nores=/조건에 맞는/.test(e);
   msg.innerHTML=nores?`<b>결과 없음</b><br>${e}`:`<b>연결 실패</b><br>${e}<br><span style="color:var(--tx3)">설정 → API 연결에서 연결 테스트로 확인.<br>파일을 로컬(file://)로 열었다면 GitHub Pages 등 웹 주소로 열기.</span>`;
 }
 function show(){
-  const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();
+  const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();cutShownAt=Date.now();
   if(!it){msg.classList.remove('hidden');msg.innerHTML='<b>불러오는 중</b>';return}
   msg.classList.add('hidden');
   if(it.kind==='vid'){
@@ -536,7 +636,7 @@ function applyView(){
   $('#flip').classList.toggle('on',S.flip);
   $('#grid').value=S.grid[t];$('#gridOn').checked=S.gridOn[t];$('#gridOpts').classList.toggle('off',!S.gridOn[t]);$('#customBox').classList.toggle('hidden',S.grid[t]!=='custom');
   $('#op').value=S.op;renderRow();
-  $('#prev').disabled=S.pos[t]<=0;
+  $('#prev').disabled=S.pos[t]<=0;if(typeof syncSaveBtn==='function')try{syncSaveBtn()}catch(e){}
   drawGrid();
 }
 function drawGrid(){
@@ -734,9 +834,82 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
       nav.insertBefore(drag,e.clientX<r.left+r.width/2?b:b.nextSibling)});
   });
 })();
+// ---------- tooltip (header icon buttons)
+let tipEl=null;
+function showTip(b){hideTip();if(!b.dataset.tip)return;const r=b.getBoundingClientRect();
+  tipEl=document.createElement('div');tipEl.className='tipbox';tipEl.innerHTML=esc(b.dataset.tip)+(b.dataset.key?`<small>단축키 ${esc(b.dataset.key)}</small>`:'');
+  document.body.appendChild(tipEl);const w=tipEl.offsetWidth,left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2));
+  tipEl.style.left=left+'px';tipEl.style.top=(r.bottom+6)+'px';tipEl.style.setProperty('--tx',(r.left+r.width/2-left)+'px')}
+function hideTip(){if(tipEl){tipEl.remove();tipEl=null}}
+document.addEventListener('mouseover',e=>{const b=e.target.closest('button.ic');if(b&&!b.contains(e.relatedTarget))showTip(b)});
+document.addEventListener('mouseout',e=>{const b=e.target.closest('button.ic');if(b&&!b.contains(e.relatedTarget))hideTip()});
+document.addEventListener('mousedown',hideTip,true);
+
+// ---------- practice log + calendar
+const LOGK='cutref-log';
+let LOG=[];try{LOG=JSON.parse(localStorage.getItem(LOGK)||'[]')}catch(e){}
+const saveLog=()=>{try{localStorage.setItem(LOGK,JSON.stringify(LOG))}catch(e){toast('기록 저장 실패 · 브라우저 저장 공간 확인','err')}};
+const pad=n=>String(n).padStart(2,'0');
+const dkey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const TABNAME={film:'영화',anim:'애니',fig:'피규어'};
+let cutShownAt=Date.now();
+function curItem(){const t=S.tab;return S.hist[t][S.pos[t]]}
+function savedToday(it){const k=dkey(new Date());return it&&LOG.find(r=>r.date===k&&r.url===it.url)}
+function syncSaveBtn(){const it=curItem(),b=$('#saveCut');b.disabled=!it||!msg.classList.contains('hidden');b.classList.toggle('done',!!savedToday(it))}
+function toggleSave(){const it=curItem();if(!it||!msg.classList.contains('hidden'))return;const ex=savedToday(it);
+  if(ex){LOG=LOG.filter(r=>r!==ex);saveLog();toast('기록 취소')}
+  else{const sec=Math.max(0,Math.min(3*3600,Math.round((Date.now()-cutShownAt)/1000)));
+    LOG.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),ts:Date.now(),date:dkey(new Date()),tab:S.tab,src:it.src||SRCNAME[S.tab],title:it.title,link:it.link,url:it.url,kind:it.kind,sec});
+    saveLog();const n=LOG.filter(r=>r.date===dkey(new Date())).length;toast(`오늘 ${n}장째 기록`,'ok')}
+  syncSaveBtn();if(calOpen)renderCal()}
+$('#saveCut').onclick=toggleSave;
+
+let calOpen=false,calFull=false,calMon=new Date(),calSel=dkey(new Date());
+calMon.setDate(1);
+function byDate(){const m={};LOG.forEach(r=>{(m[r.date]=m[r.date]||[]).push(r)});return m}
+const lv=n=>!n?'':n<3?'l1':n<5?'l2':n<8?'l3':'l4';
+const fmtSec=s=>{s=Math.round(s/60);return s<60?`${s}분`:`${Math.floor(s/60)}시간 ${s%60}분`};
+function renderCal(){
+  const m=byDate(),y=calMon.getFullYear(),mo=calMon.getMonth(),today=new Date(),tk=dkey(today);
+  $('#calTitle').textContent=`${y}년 ${mo+1}월`;
+  // stats
+  const days=new Date(y,mo+1,0).getDate();let monTotal=0;
+  for(let d=1;d<=days;d++)monTotal+=(m[`${y}-${pad(mo+1)}-${pad(d)}`]||[]).length;
+  const isCur=y===today.getFullYear()&&mo===today.getMonth(),elapsed=isCur?today.getDate():days;
+  let streak=0;const c=new Date(today);if(!m[dkey(c)])c.setDate(c.getDate()-1);while(m[dkey(c)]){streak++;c.setDate(c.getDate()-1)}
+  $('#calStats').innerHTML=`<div class="stat"><span>${mo+1}월</span><b>${monTotal}</b>장</div><div class="stat"><span>연속 연습</span><b>${streak}</b>일</div><div class="stat"><span>하루 평균</span><b>${(monTotal/Math.max(1,elapsed)).toFixed(1)}</b>장</div>`;
+  // grid
+  let h=['일','월','화','수','목','금','토'].map(d=>`<div class="dw">${d}</div>`).join('');
+  const first=new Date(y,mo,1).getDay();for(let i=0;i<first;i++)h+='<div class="d blank"></div>';
+  for(let d=1;d<=days;d++){const k=`${y}-${pad(mo+1)}-${pad(d)}`,rs=m[k]||[],fut=k>tk;
+    h+=`<div class="d ${lv(rs.length)} ${k===tk?'today':''} ${k===calSel?'sel':''} ${fut?'fut':''}" data-k="${k}">${d}${rs.length?`<span class="n">${rs.length}</span>`:''}<div class="tt">${rs.slice(-3).map(r=>`<img src="${esc(M(r.url))}" referrerpolicy="no-referrer" alt="" loading="lazy">`).join('')}</div></div>`}
+  $('#calGrid').innerHTML=h;
+  // day detail
+  const rs=(m[calSel]||[]).slice().sort((a,b)=>a.ts-b.ts),[sy,sm,sd]=calSel.split('-').map(Number),tot=rs.reduce((a,r)=>a+(r.sec||0),0);
+  $('#calDay').innerHTML=`<div class="cstats" style="padding:0 0 10px">${calFull?$('#calStats').innerHTML:''}</div><h4><span>${sm}월 ${sd}일 · ${rs.length}장</span>${rs.length?`<small>컷을 띄워 둔 시간 ${fmtSec(tot)}</small>`:''}</h4>`+
+    (rs.length?`<div class="th">${rs.map(r=>`<a href="${esc(r.link)}" target="_blank" rel="noopener noreferrer" title="${esc(r.title)}"><img src="${esc(M(r.url))}" referrerpolicy="no-referrer" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>${TABNAME[r.tab]||''}</span><b data-del="${r.id}" title="기록 지우기">×</b></a>`).join('')}</div>`:'<div class="empty">이 날은 기록이 없음</div>');
+  if(!calFull)$('#calDay').querySelector('.cstats').remove();
+  // year
+  if(calFull){let yh='';const end=new Date(today);end.setDate(end.getDate()+(6-end.getDay()));const st=new Date(end);st.setDate(st.getDate()-7*53+1);
+    for(const d=new Date(st);d<=end;d.setDate(d.getDate()+1)){const k=dkey(d),n=(m[k]||[]).length;yh+=`<i class="${lv(n)}" title="${k} · ${n}장" style="${k>tk?'opacity:.3':''}"></i>`}
+    $('#calYear').innerHTML=yh;const yw=$('#calYear');yw.scrollLeft=yw.scrollWidth}
+}
+function openCal(){calOpen=true;if(curPop)closeP();renderCal();$('#calP').classList.add('open');$('#calP').setAttribute('aria-hidden','false');$('#calBtn').classList.add('on')}
+function closeCal(){calOpen=false;$('#calP').classList.remove('open');$('#calP').setAttribute('aria-hidden','true');$('#calBtn').classList.remove('on')}
+$('#calBtn').onclick=()=>calOpen?closeCal():openCal();
+$('#calX').onclick=closeCal;
+$('#calFull').onclick=()=>{calFull=!calFull;$('#calP').classList.toggle('full',calFull);$('#calFull').dataset.tip=calFull?'패널로 줄이기':'전체 화면';hideTip();renderCal()};
+$('#calPrev').onclick=()=>{calMon.setMonth(calMon.getMonth()-1);renderCal()};
+$('#calNext').onclick=()=>{calMon.setMonth(calMon.getMonth()+1);renderCal()};
+$('#calToday').onclick=()=>{calMon=new Date();calMon.setDate(1);calSel=dkey(new Date());renderCal()};
+$('#calGrid').addEventListener('click',e=>{const d=e.target.closest('.d[data-k]');if(!d||d.classList.contains('fut'))return;calSel=d.dataset.k;renderCal()});
+$('#calDay').addEventListener('click',e=>{const x=e.target.closest('[data-del]');if(!x)return;e.preventDefault();e.stopPropagation();
+  LOG=LOG.filter(r=>r.id!==x.dataset.del);saveLog();renderCal();syncSaveBtn();toast('기록 지움')});
+
 const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&curPop){closeP();return}
+  if(e.key==='Escape'&&calOpen){closeCal();return}
   if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
@@ -744,6 +917,9 @@ document.addEventListener('keydown',e=>{
   else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
   else if(k==='f'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
   else if(k==='h')$('#zen').click();
+  else if(k==='s'){toggleSave()}
+  else if(k==='c'){calOpen?closeCal():openCal()}
+  else if(e.key==='?'){curPop==='key'?closeP():openP('key')}
   else if(k==='t'){tState==='run'?tPause():tPlay();toast(tState==='run'?'타이머 재생':'타이머 일시정지')}
   else if((k===','||k==='.')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(k==='.'?1:-1)/24)}
 });
