@@ -8,21 +8,21 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#1c1c1c;--panel:#232323;--line:#333;--line2:#444;--tx:#d8d8d8;--tx2:#8a8a8a;--tx3:#5e5e5e;--acc:#e6e6e6}
+:root{--bg:#f6f6f4;--panel:#ffffff;--stage:#e4e4e1;--line:#e2e2df;--line2:#d2d2ce;--tx:#3a3a38;--tx2:#7c7c78;--tx3:#a5a5a0;--acc:#5a5a57}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--tx);font-family:"IBM Plex Sans KR",system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
 .mono{font-family:"IBM Plex Mono",monospace}
 a{color:var(--tx2)}
 button,select,input{font:inherit;color:inherit}
 button{background:none;border:1px solid var(--line2);border-radius:3px;padding:5px 10px;cursor:pointer;white-space:nowrap}
-button:hover{border-color:#666}
-button.on{background:var(--acc);color:#111;border-color:var(--acc)}
+button:hover{border-color:#a5a5a0;background:#fafaf8}
+button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 button:disabled{opacity:.4;cursor:default}
 select,input[type=number],input[type=text]{background:var(--panel);border:1px solid var(--line2);border-radius:3px;padding:4px 6px}
 input[type=number]{width:46px}
-input[type=range]{accent-color:#aaa;width:70px}
-#app{display:grid;grid-template-rows:auto 1fr auto;height:100%}
-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding:10px 16px;border-bottom:1px solid var(--line)}
+input[type=range]{accent-color:#7c7c78;width:70px}
+#app{display:grid;grid-template-rows:auto auto 1fr;height:100%}
+header{background:var(--panel);display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding:10px 16px;border-bottom:1px solid var(--line)}
 header h1{font-size:13px;font-weight:600}
 .tabs{display:flex}
 .tabs button{border:none;border-bottom:2px solid transparent;border-radius:0;padding:6px 12px;color:var(--tx2)}
@@ -30,7 +30,7 @@ header h1{font-size:13px;font-weight:600}
 .sp{flex:1}
 .src{display:flex;align-items:center;gap:8px;color:var(--tx2)}
 .src label{display:flex;align-items:center;gap:5px;cursor:pointer}
-#stage{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:0}
+#stage{background:var(--stage);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:0}
 #img,#vid{max-width:100%;max-height:100%;display:block;user-select:none;-webkit-user-drag:none}
 .flip{transform:scaleX(-1)}
 #ov{position:absolute;pointer-events:none}
@@ -40,23 +40,30 @@ header h1{font-size:13px;font-weight:600}
 #info a{color:var(--tx2);text-decoration:none;border-bottom:1px solid var(--line2)}
 #timerBig{position:absolute;right:14px;top:8px;color:var(--tx2);font-size:13px}
 #load{position:absolute;right:14px;bottom:10px;color:var(--tx3);font-size:11px}
-footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:10px 16px;border-top:1px solid var(--line)}
+footer{background:var(--panel);display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:8px 16px;border-bottom:1px solid var(--line)}
 .grp{display:flex;align-items:center;gap:6px}
 .grp>label{color:var(--tx3);font-size:11px;margin-right:2px}
 .seg{display:flex}
 .seg button{border-radius:0;margin-left:-1px}
 .seg button:first-child{border-radius:3px 0 0 3px;margin-left:0}
 .seg button:last-child{border-radius:0 3px 3px 0}
-#next{padding:7px 18px;font-weight:500;border-color:#777}
+#next{padding:7px 18px;font-weight:500;border-color:#8a8a86}
 .keys{color:var(--tx3);font-size:11px}
+.sw{display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:var(--tx2);font-size:12px;user-select:none}
+.sw input{display:none}
+.sw i{width:28px;height:16px;border-radius:8px;background:var(--line2);position:relative;transition:background .15s}
+.sw i::after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px #0002}
+.sw input:checked+i{background:var(--acc)}
+.sw input:checked+i::after{left:14px}
+.off{opacity:.4;pointer-events:none}
 .hidden{display:none!important}
-#setDlg{position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;z-index:9}
+#setDlg{position:fixed;inset:0;background:#0003;display:flex;align-items:center;justify-content:center;z-index:9}
 #setDlg .box{background:var(--panel);border:1px solid var(--line2);border-radius:4px;padding:18px;width:min(440px,92vw);line-height:1.7}
 #setDlg .box h2{font-size:13px;font-weight:600;margin-bottom:8px}
 #setDlg .box p{color:var(--tx2);font-size:12px;margin-bottom:10px}
 #setDlg input{width:100%;margin-bottom:12px}
 body.zen header,body.zen footer{display:none}
-body.zen #app{grid-template-rows:0 1fr 0}
+body.zen #app{grid-template-rows:0 0 1fr}
 body.zen #info{display:none}
 </style>
 </head>
@@ -87,16 +94,6 @@ body.zen #info{display:none}
   <button id="setBtn">설정</button>
 </header>
 
-<main id="stage">
-  <div id="msg"><b>불러오는 중</b></div>
-  <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
-  <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
-  <svg id="ov"></svg>
-  <div id="info" class="mono"></div>
-  <div id="timerBig" class="mono"></div>
-  <div id="load" class="mono"></div>
-</main>
-
 <footer>
   <div class="grp">
     <button id="prev">← 이전</button>
@@ -112,8 +109,9 @@ body.zen #info{display:none}
     </div>
   </div>
   <div class="grp"><label>분할</label>
+    <label class="sw"><input type="checkbox" id="gridOn"><i></i></label>
+    <span id="gridOpts" style="display:flex;align-items:center;gap:6px">
     <select id="grid">
-      <option value="none">없음</option>
       <option value="half">2분할</option>
       <option value="thirds">3분할</option>
       <option value="quarters">4분할</option>
@@ -130,6 +128,7 @@ body.zen #info{display:none}
       <button data-v="#ff3b30">빨</button>
     </div>
     <input id="op" type="range" min="15" max="100" value="60" title="선 불투명도">
+    </span>
   </div>
   <div class="grp"><label>보기</label>
     <button id="flip">좌우반전</button>
@@ -142,8 +141,19 @@ body.zen #info{display:none}
     </select>
   </div>
   <div class="sp"></div>
-  <span class="keys">Space/→ 다음 · ← 이전 · G 색 · D 분할 · F 반전 · H 숨김 · , . 프레임</span>
+  <span class="keys">Space/→ 다음 · ← 이전 · G 색 · D 분할 켜기/끄기 · F 반전 · H 숨김 · , . 프레임</span>
 </footer>
+
+<main id="stage">
+  <div id="msg"><b>불러오는 중</b></div>
+  <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
+  <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
+  <svg id="ov"></svg>
+  <div id="info" class="mono"></div>
+  <div id="timerBig" class="mono"></div>
+  <div id="load" class="mono"></div>
+</main>
+
 </div>
 
 <div id="setDlg" class="hidden"><div class="box">
@@ -160,9 +170,10 @@ const $=s=>document.querySelector(s);
 const FG='https://film-grab.com/wp-json/wp/v2/';
 const SB='https://www.sakugabooru.com/';
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,timer:0,onlyAnim:false,tags:'',play:false,proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',
-  grid:{film:'thirds',anim:'field'},hist:{film:[],anim:[]},pos:{film:-1,anim:-1},seen:{film:new Set(),anim:new Set()},queue:{film:[],anim:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','timer','onlyAnim','tags','play','proxy','grid'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,timer:S.timer,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid}))}catch(e){}};
+  grid:{film:'thirds',anim:'field'},gridOn:{film:true,anim:true},hist:{film:[],anim:[]},pos:{film:-1,anim:-1},seen:{film:new Set(),anim:new Set()},queue:{film:[],anim:[]}};
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','timer','onlyAnim','tags','play','proxy','grid','gridOn'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,timer:S.timer,onlyAnim:S.onlyAnim,tags:S.tags,play:S.play,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn}))}catch(e){}};
 
 const P=u=>S.proxy?S.proxy+encodeURIComponent(u):u;
 async function getJSON(u){const r=await fetch(P(u),{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return {data:await r.json(),headers:r.headers}}
@@ -270,7 +281,7 @@ function applyView(){
   document.querySelectorAll('#tone button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.tone));
   document.querySelectorAll('#lc button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.lc));
   $('#flip').classList.toggle('on',S.flip);
-  $('#grid').value=S.grid[t];$('#customBox').classList.toggle('hidden',S.grid[t]!=='custom');
+  $('#grid').value=S.grid[t];$('#gridOn').checked=S.gridOn[t];$('#gridOpts').classList.toggle('off',!S.gridOn[t]);$('#customBox').classList.toggle('hidden',S.grid[t]!=='custom');
   $('#op').value=S.op;$('#timer').value=S.timer;$('#onlyAnim').checked=S.onlyAnim;$('#tags').value=S.tags;$('#play').checked=S.play;
   $('#prev').disabled=S.pos[t]<=0;
   drawGrid();
@@ -281,7 +292,7 @@ function drawGrid(){
   const r=m.getBoundingClientRect(),sr=stage.getBoundingClientRect(),w=r.width,h=r.height;
   Object.assign(ov.style,{left:(r.left-sr.left)+'px',top:(r.top-sr.top)+'px',width:w+'px',height:h+'px'});
   ov.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  const mode=S.grid[S.tab];if(mode==='none')return;
+  const mode=S.grid[S.tab];if(!S.gridOn[S.tab])return;
   const c=S.lc;let s='';
   const L=(a,b,x,y,d)=>s+=`<line x1="${a}" y1="${b}" x2="${x}" y2="${y}" ${d?'stroke-dasharray="4 4"':''}/>`;
   const R=(x,y,ww,hh,d)=>s+=`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" fill="none" ${d?'stroke-dasharray="4 4"':''}/>`;
@@ -315,6 +326,7 @@ $('#next').onclick=next;$('#prev').onclick=prev;
 document.querySelectorAll('#tone button').forEach(b=>b.onclick=()=>{S.tone=b.dataset.v;save();applyView()});
 document.querySelectorAll('#lc button').forEach(b=>b.onclick=()=>{S.lc=b.dataset.v;save();applyView()});
 $('#grid').onchange=e=>{S.grid[S.tab]=e.target.value;save();applyView()};
+$('#gridOn').onchange=e=>{S.gridOn[S.tab]=e.target.checked;save();applyView()};
 $('#gc').oninput=$('#gr').oninput=drawGrid;
 $('#op').oninput=e=>{S.op=+e.target.value;save();drawGrid()};
 $('#flip').onclick=()=>{S.flip=!S.flip;applyView()};
@@ -329,13 +341,13 @@ $('#setBtn').onclick=()=>{$('#proxy').value=S.proxy;$('#setDlg').classList.remov
 $('#setClose').onclick=()=>{S.proxy=$('#proxy').value.trim();save();$('#setDlg').classList.add('hidden');
   fg.total={};fg.animCat=undefined;S.queue={film:[],anim:[]};if(S.pos[S.tab]<0)next()};
 
-const tones=['color','gray','t2','t3','t5'],grids=['none','half','thirds','quarters','golden','diag','custom','field','safe'];
+const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
   if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
   else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView()}
-  else if(k==='d'){const g=S.grid[S.tab];S.grid[S.tab]=grids[(grids.indexOf(g)+1)%grids.length];save();applyView()}
+  else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView()}
   else if(k==='f'){S.flip=!S.flip;applyView()}
   else if(k==='h')$('#zen').click();
   else if((k===','||k==='.')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(k==='.'?1:-1)/24)}
