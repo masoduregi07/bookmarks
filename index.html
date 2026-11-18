@@ -472,8 +472,8 @@ header.tov .tsc{display:flex}
   body[data-tb="2"] .top footer,body[data-tb="3"] .top footer{padding-right:30px!important}
   body[data-tb="3"] .top footer{padding-top:5px!important;padding-bottom:5px!important}
   body[data-tb="3"] .top footer>.grp:first-child{flex:1;flex-wrap:nowrap}
-  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{flex:1;justify-content:center;min-height:28px;padding:0;font-size:0;gap:0}
-  body[data-tb="3"] #prev::before{content:"◀";font-size:12px}body[data-tb="3"] #next::after{content:"▶";font-size:12px}
+  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next,body[data-tb="3"] #flip{flex:1;justify-content:center;min-height:28px;padding:0;gap:0}
+  body[data-tb="3"] #prev .bt,body[data-tb="3"] #next .bt{display:none}body[data-tb="3"] #prev .ar,body[data-tb="3"] #next .ar{font-size:12px}
   body[data-tb="3"] #saveCut span{display:none}
 }
 /* tablets (touch, wider than phones): tighter toolbar box */
@@ -530,14 +530,35 @@ header.tov .tsc{display:flex}
 #flip .ft{margin-left:0}
 #fltPop .fx-tab:active{transform:none} /* no 2px press jump: the tab line stayed/vanished while clicking */
 #fltPop .fx-tab.on{font-weight:700;background:linear-gradient(transparent 58%,var(--yel) 58%,var(--yel) 88%,transparent 88%) no-repeat 8px 0/calc(100% - 16px) 100%,var(--panel)}
-/* phones: 색 sits next to 필터 on the last row instead of taking a row of its own */
+/* phones: 색 (icons) right after 좌우반전 on the first row; 필터 always starts the last row at the left */
 @media (max-width:560px){
-  .top footer>.grp:first-child{order:0}#gGrid{order:1}#tmr{order:2}.top footer>.frow{order:3;flex:0 1 auto}#gTone{order:4}
+  .top footer>.grp:first-child{order:0}#gTone{order:1}#gGrid{order:2}#tmr{order:3}.top footer>.frow{order:4;flex:1 1 100%;justify-content:flex-start}
+  #gTone>label{display:none}
+  #tone .tt{display:none}#tone button .ti{display:block}
+  #tone button{padding-left:7px;padding-right:7px}
+  .top footer>.grp:first-child{column-gap:6px}
+  .top footer>.grp:first-child>button{padding-left:8px;padding-right:8px}
 }
 /* tablets: timer stretches so the second row has no empty tail */
 @media (min-width:561px) and (pointer:coarse){
   #tmr{order:2!important;flex:0 0 auto!important}
   .top footer>.frow{order:3!important;justify-content:flex-end;margin-right:24px}
+}
+/* prev / next: arrow + label as one centered unit */
+#prev,#next{display:inline-flex;align-items:center;justify-content:center;gap:6px}
+#prev .ar,#next .ar{display:inline-block;width:10px;text-align:center;line-height:16px}
+#tone .ti{display:none;width:14px;height:14px;shape-rendering:crispEdges}
+#tone button{display:inline-flex;align-items:center;justify-content:center}
+/* very narrow phones: squeeze button side padding so 이전·기록·다음 컷·반전·색 stay on one row */
+@media (max-width:380px){
+  .top footer>.grp:first-child{column-gap:4px}
+  .top footer>.grp:first-child>button{padding-left:5px;padding-right:5px}
+  #prev,#next{gap:3px}#saveCut{gap:3px}
+  #flip{padding-left:6px!important;padding-right:6px!important}
+  #tone button{padding-left:5px;padding-right:5px}
+  .top footer{column-gap:6px!important}
+  #tone button{min-width:30px;width:30px;padding:0;flex:none}
+  #tone .ti{flex:none}
 }
 </style>
 </head>
@@ -567,17 +588,17 @@ header.tov .tsc{display:flex}
 
 <footer>
   <div class="grp">
-    <button id="prev">◀ 이전</button>
+    <button id="prev"><span class="ar">◀</span><span class="bt">이전</span></button>
     <button id="saveCut" data-tip="오늘 연습에 기록" data-key="S"><svg viewBox="0 0 14 14"><path d="M2 0h10v14l-5-3-5 3z"/><path fill="var(--sv-in,#fff)" d="M6 3h2v2h2v2H8v2H6V7H4V5h2z"/></svg><span>기록</span></button>
-    <button id="next">다음 컷 ▶</button>
+    <button id="next"><span class="bt">다음 컷</span><span class="ar">▶</span></button>
     <button id="flip" data-tip="좌우반전" data-key="F" aria-label="좌우반전"><span class="fi">⇄</span><span class="ft">좌우반전</span></button>
   </div>
   <i class="dv"></i>
   <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" data-tip="라이팅" data-key="G"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
   <div class="grp" id="gTone"><label>색</label>
     <div class="seg" id="tone">
-      <button data-v="color" class="on">컬러</button>
-      <button data-v="gray">흑백</button>
+      <button data-v="color" class="on" aria-label="컬러"><span class="tt">컬러</span><svg class="ti" viewBox="0 0 14 14" aria-hidden="true"><path fill="#3d3b37" d="M0 0h14v14H0z"/><path fill="#f3b6c4" d="M2 2h4v4H2z"/><path fill="#f2d98b" d="M8 2h4v4H8z"/><path fill="#a9dcc0" d="M2 8h4v4H2z"/><path fill="#a9c8ec" d="M8 8h4v4H8z"/></svg></button>
+      <button data-v="gray" aria-label="흑백"><span class="tt">흑백</span><svg class="ti" viewBox="0 0 14 14" aria-hidden="true"><path fill="#3d3b37" d="M0 0h14v14H0z"/><path fill="#ffffff" d="M2 2h4v4H2z"/><path fill="#c6c3ba" d="M8 2h4v4H8z"/><path fill="#8d8a82" d="M2 8h4v4H2z"/><path fill="#3d3b37" d="M8 8h4v4H8z"/></svg></button>
     </div>
   </div>
   <i class="dv"></i>
