@@ -670,9 +670,13 @@ $('#d3Poly').addEventListener('change',e=>{S.d3poly=e.target.checked;d3Set()});
 if(S.sfx===undefined)S.sfx=true;
 const SFX=(()=>{let ac=null;
   const ctx=()=>{if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A()}if(ac.state==='suspended')ac.resume();return ac};
-  return {click(hi){if(!S.sfx)return;const a=ctx();if(!a)return;const t=a.currentTime;
-    const o=a.createOscillator(),og=a.createGain();o.type='triangle';o.frequency.setValueAtTime(hi?1500:1100,t);o.frequency.exponentialRampToValueAtTime(450,t+.045);
-    og.gain.setValueAtTime(.14,t);og.gain.exponentialRampToValueAtTime(.0001,t+.05);o.connect(og).connect(a.destination);o.start(t);o.stop(t+.055)}}})();
+  // green-switch style: sharp click, then heavier bottom-out thock
+  const tone=(a,type,f0,f1,t,dur,g)=>{const o=a.createOscillator(),og=a.createGain();o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);
+    og.gain.setValueAtTime(g,t);og.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(og).connect(a.destination);o.start(t);o.stop(t+dur+.005)};
+  return {click(hi){if(!S.sfx)return;const a=ctx();if(!a)return;const t=a.currentTime,k=hi?1.15:1;
+    tone(a,'square',2100*k,1100*k,t,.012,.05);
+    tone(a,'triangle',1300*k,700*k,t,.018,.1);
+    tone(a,'sine',340*k,160*k,t+.022,.035,.22)}}})();
 document.addEventListener('pointerdown',e=>{if(e.button)return;const el=e.target.closest('button,select,.sw,label.chk,[data-rm],[data-tab],.gr .o,#info,#calGrid .d[data-k]:not(.fut),#calYear [data-k],#fReset,#uiShow');
   if(!el||el.disabled||el.closest('[disabled]'))return;SFX.click(el.matches('#next,.pri,[data-tab]'))},true);
 $('#sfxOn').checked=S.sfx;$('#sfxOn').addEventListener('change',e=>{S.sfx=e.target.checked;save();if(S.sfx)SFX.click()});
