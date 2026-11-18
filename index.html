@@ -472,6 +472,13 @@ header.tov .tsc{display:flex}
   body[data-tb="3"] #prev::before{content:"◀";font-size:12px}body[data-tb="3"] #next::after{content:"▶";font-size:12px}
   body[data-tb="3"] #saveCut span{display:none}
 }
+/* tablets (touch, wider than phones): tighter toolbar box */
+@media (min-width:561px) and (pointer:coarse){
+  .top footer{padding:6px 10px!important;row-gap:6px!important}
+  footer .grp{row-gap:5px}
+  .top footer button,.top footer select,.top footer input[type=text]{min-height:34px}
+  .top footer .seg.ic button{height:34px}
+}
 </style>
 </head>
 <body>
