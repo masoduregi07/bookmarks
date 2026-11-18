@@ -514,14 +514,15 @@ header.tov .tsc{display:flex}
 }
 #fltPop .hd{justify-content:flex-start}#fltPop .hd .px{margin-left:auto}
 #fltSum{margin-left:8px;font-weight:400;font-size:11px;color:var(--tx2)}
+.top footer select{height:28px} /* same height as toolbar buttons */
 /* lamp-button switch (분할 on/off) */
-.lsw .lb{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 8px 0 6px;border:2px solid var(--ink);background:#fff;box-shadow:2px 2px 0 var(--shd);font-size:11px;color:var(--tx2);transition:transform .05s steps(1)}
+.lsw .lb{display:inline-flex;align-items:center;gap:5px;height:28px;padding:0 8px 0 6px;border:2px solid var(--ink);background:#fff;box-shadow:2px 2px 0 var(--shd);font-size:11px;color:var(--tx2);transition:transform .05s steps(1)}
 .lsw .lb i{width:8px;height:8px;border:none;background:var(--soft);outline:2px solid var(--ink);margin:0 2px}
 .lsw .lb i::after{display:none}
 .lsw .lb b{font-weight:400}
 .lsw .t-on,.lsw input:checked+.lb .t-off{display:none}
 .lsw input:checked+.lb .t-on{display:inline;font-weight:700}
-.lsw input:checked+.lb{background:var(--mint);color:var(--ink);box-shadow:none;transform:translate(2px,2px)}
+.lsw input:checked+.lb{background:var(--mint);color:var(--ink);box-shadow:inset 2px 2px 0 rgba(61,59,55,.22)} /* pressed look without moving, stays aligned */
 .lsw input:checked+.lb i{background:#3fbf6f}
 .lsw:hover .lb{background:var(--yel)}.lsw:hover input:checked+.lb{background:var(--mint)}
 @media (hover:none){.lsw:hover .lb{background:#fff}}
