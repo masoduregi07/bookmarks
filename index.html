@@ -87,6 +87,12 @@ input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset
 #c3d:active{cursor:grabbing}
 #img,#vid{max-width:100%;max-height:100%;display:block;user-select:none;-webkit-user-drag:none}
 .flip{transform:scaleX(-1)}
+#img.zoomed{cursor:grab;will-change:transform}
+#img.zoomed:active{cursor:grabbing}
+#zoomUi{position:absolute;left:10px;bottom:10px;z-index:4;display:flex;align-items:center;gap:4px;font-size:11px}
+#zoomUi span{background:var(--panel);border:2px solid var(--ink);padding:1px 6px;line-height:18px}
+#zoomUi button{padding:0 8px;height:22px;line-height:1;font-size:11px}
+body.zen #zoomUi{display:none}
 #ov{position:absolute;pointer-events:none}
 #hg{position:absolute;left:50%;top:50%;width:30px;height:36px;margin:-18px 0 0 -15px;z-index:3;pointer-events:none;color:var(--ink);animation:hgflip 1.8s infinite}
 #hg .sd{fill:var(--tx3)}#hg .s2,#hg .s3{visibility:hidden}
@@ -330,7 +336,7 @@ button,select,.chip,.o,.tabs button{touch-action:manipulation;-webkit-tap-highli
 footer .dv.brk{visibility:hidden}
 footer{row-gap:8px!important}
 footer .grp{flex-wrap:wrap;row-gap:6px}
-#stage{touch-action:pan-y pinch-zoom}
+#stage{touch-action:none}
 @media (max-width:1240px){
   .top footer{justify-content:flex-start!important}
   footer .dv{flex:0 0 22px!important;min-width:22px;max-width:22px}
@@ -458,6 +464,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   <svg id="hg" viewBox="0 0 10 12" shape-rendering="crispEdges" aria-label="불러오는 중"><path fill="currentColor" d="M0 0h10v1H0zM0 11h10v1H0zM1 1h1v2H1zM8 1h1v2H8zM2 3h1v1H2zM7 3h1v1H7zM3 4h1v1H3zM6 4h1v1H6zM3 7h1v1H3zM6 7h1v1H6zM2 8h1v1H2zM7 8h1v1H7zM1 9h1v2H1zM8 9h1v2H8z"/><path class="sd s1" d="M2 1h6v2H2zM3 3h4v1H3zM4 4h2v1H4z"/><path class="sd s2" d="M3 3h4v1H3zM4 4h2v1H4zM4 6h1v2H4zM3 10h4v1H3z"/><path class="sd s3" d="M3 8h4v1H3zM2 9h6v2H2z"/></svg>
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <canvas id="c3d" class="hidden"></canvas>
+  <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
   <div id="info" class="mono"></div>
@@ -765,7 +772,7 @@ async function gameRandom(){const f=S.f.game,pool=GAMES.filter(g=>!f.games.lengt
     const d=await wiki(g[2],`action=query&prop=imageinfo&iiprop=url&iiurlwidth=1800&titles=${encodeURIComponent(title)}`);
     const pg=Object.values((d.query&&d.query.pages)||{})[0],ii=pg&&pg.imageinfo&&pg.imageinfo[0];if(!ii)continue;
     const name=title.replace(/^File:/,'').replace(/\.\w+$/,'').replace(/^Character /,'').replace(/_/g,' ');
-    return {kind:'img',url:ii.thumburl||ii.url,title:`${g[1]} · ${name}`,link:ii.descriptionurl||`https://${g[2]}/wiki/${encodeURIComponent(title)}`,key:g[0]+title,src:g[1]+' 위키'}}
+    return {kind:'img',url:ii.thumburl||ii.url,hd:ii.url,title:`${g[1]} · ${name}`,link:ii.descriptionurl||`https://${g[2]}/wiki/${encodeURIComponent(title)}`,key:g[0]+title,src:g[1]+' 위키'}}
   throw new Error('이미지를 찾지 못함 · 다시 시도')}
 const SRC={film:fgRandom,anim:sbRandom,fig:figRandom,'3d':d3Random,game:gameRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM'};
 function fill(tab){
@@ -802,7 +809,7 @@ function showErr(e){
 }
 function show(){
   const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();cutShownAt=Date.now();
-  msg.classList.add('hidden');if(!it){busy(true,true);return}
+  zoomReset();msg.classList.add('hidden');if(!it){busy(true,true);return}
   busy(true);
   if(it.kind==='3d'){
     img.classList.add('hidden');vid.classList.add('hidden');vid.pause();vid.removeAttribute('src');
@@ -827,7 +834,7 @@ function applyView(){
   const t=S.tab,f=t==='3d'||S.tone==='color'?'':S.tone==='gray'?'grayscale(1)':`url(#${S.tone})`;
   document.body.classList.toggle('t3d',t==='3d');if(window.fixDv)fixDv();$('#d3Light').value=S.d3light;$('#d3Poly').checked=S.d3poly;
   img.style.filter=vid.style.filter=c3d.style.filter=f;
-  img.classList.toggle('flip',S.flip);vid.classList.toggle('flip',S.flip);c3d.classList.toggle('flip',S.flip);
+  img.classList.toggle('flip',S.flip);vid.classList.toggle('flip',S.flip);if(typeof ZM!=='undefined'&&ZM.z>1.01)zoomApply();c3d.classList.toggle('flip',S.flip);
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
   document.querySelectorAll('#tone button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.tone));
   document.querySelectorAll('#lc button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.lc));
@@ -1119,7 +1126,7 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
 
 // ---------- tab drag reorder (mouse drag / touch long-press)
 (()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
-  try{const o=JSON.parse(localStorage.getItem('cutref-tabs')||'[]');o.forEach(t=>{const b=nav.querySelector(`[data-tab="${t}"]`);if(b)nav.appendChild(b)})}catch(e){}
+  try{const o=JSON.parse(localStorage.getItem('cutref-tabs')||'[]');if(o.length){const all=[...nav.querySelectorAll('button[data-tab]')].map(b=>b.dataset.tab);[...o.filter(t=>all.includes(t)),...all.filter(t=>!o.includes(t))].forEach(t=>nav.appendChild(nav.querySelector(`[data-tab="${t}"]`)))}}catch(e){}
   const saveOrder=()=>{try{localStorage.setItem('cutref-tabs',JSON.stringify([...nav.querySelectorAll('button')].map(x=>x.dataset.tab)))}catch(e){}};
   const begin=()=>{st.on=true;const b=st.b,r=b.getBoundingClientRect(),n=nav.getBoundingClientRect();b.classList.remove('holding');
     const g=b.cloneNode(true);g.removeAttribute('data-tab');g.classList.add('tab-ghost');g.classList.remove('holding');g.style.width=r.width+'px';g.style.height=r.height+'px';
@@ -1149,10 +1156,41 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
     const vis=(d,k)=>{let e=d[k];while(e&&!e.offsetParent)e=e[k];return e};
     dv.forEach(d=>{const a=vis(d,'previousElementSibling'),b=vis(d,'nextElementSibling');const c=e=>{const r=e.getBoundingClientRect();return r.top+r.height/2};if(a&&b&&Math.abs(c(a)-c(b))>8)d.classList.add('brk')})};
   window.fixDv=()=>requestAnimationFrame(fix);new ResizeObserver(()=>requestAnimationFrame(fix)).observe(ft);fix()})();
+// ---------- zoom (pinch / wheel / drag / double-tap) for still images
+const ZM={z:1,tx:0,ty:0,used:false};
+function zoomApply(){const on=ZM.z>1.01;img.classList.toggle('zoomed',on);
+  img.style.transform=on||ZM.tx||ZM.ty?`translate(${ZM.tx}px,${ZM.ty}px) scale(${ZM.z})${S.flip?' scaleX(-1)':''}`:'';
+  $('#zoomUi').classList.toggle('hidden',!on||img.classList.contains('hidden'));$('#zoomPct').textContent=Math.round(ZM.z*100)+'%';
+  if(on){const it=curItem();if(it&&it.hd&&img.dataset.hd!==it.hd&&ZM.z>1.4){img.dataset.hd=it.hd;img.src=M(it.hd)}}
+  requestAnimationFrame(drawGrid)}
+function zoomReset(){ZM.z=1;ZM.tx=0;ZM.ty=0;delete img.dataset.hd;zoomApply()}
+function zoomCenter(){const r=stage.getBoundingClientRect();return [r.left+img.offsetLeft+img.offsetWidth/2,r.top+img.offsetTop+img.offsetHeight/2]}
+function zoomClamp(){const mx=img.offsetWidth*(ZM.z-1)/2,my=img.offsetHeight*(ZM.z-1)/2;ZM.tx=Math.max(-mx,Math.min(mx,ZM.tx));ZM.ty=Math.max(-my,Math.min(my,ZM.ty))}
+function zoomAt(z,px,py){z=Math.max(1,Math.min(8,z));const [cx,cy]=zoomCenter();const lx=(px-cx-ZM.tx)/ZM.z,ly=(py-cy-ZM.ty)/ZM.z;
+  ZM.tx=px-cx-z*lx;ZM.ty=py-cy-z*ly;ZM.z=z;if(z<=1.01){ZM.z=1;ZM.tx=0;ZM.ty=0}zoomClamp();zoomApply()}
+(()=>{const ok=e=>S.tab!=='3d'&&!img.classList.contains('hidden')&&(e.target===img||e.target===stage||e.target===ov||ov.contains(e.target));
+  const pts=new Map();let pinch=null,drag=null,lastTap=0;
+  stage.addEventListener('wheel',e=>{if(!ok(e))return;e.preventDefault();zoomAt(ZM.z*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY)},{passive:false});
+  stage.addEventListener('dblclick',e=>{if(!ok(e))return;ZM.z>1.01?zoomReset():zoomAt(2,e.clientX,e.clientY)});
+  stage.addEventListener('pointerdown',e=>{if(!ok(e))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===2){const [a,b]=[...pts.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),z:ZM.z,mx:(a.x+b.x)/2,my:(a.y+b.y)/2};drag=null;ZM.used=true}
+    else if(pts.size===1){if(e.pointerType!=='mouse'){const t=Date.now();if(t-lastTap<300){ZM.z>1.01?zoomReset():zoomAt(2,e.clientX,e.clientY);ZM.used=true;lastTap=0;return}lastTap=t}
+      if(ZM.z>1.01){drag={x:e.clientX,y:e.clientY,tx:ZM.tx,ty:ZM.ty};try{stage.setPointerCapture(e.pointerId)}catch(_){}}}});
+  stage.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pinch&&pts.size>=2){const [a,b]=[...pts.values()],d=Math.hypot(a.x-b.x,a.y-b.y),mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+      ZM.tx+=mx-pinch.mx;ZM.ty+=my-pinch.my;pinch.mx=mx;pinch.my=my;zoomAt(pinch.z*d/pinch.d,mx,my)}
+    else if(drag){ZM.tx=drag.tx+e.clientX-drag.x;ZM.ty=drag.ty+e.clientY-drag.y;zoomClamp();zoomApply()}});
+  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(!pts.size)drag=null};
+  stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
+  document.addEventListener('gesturestart',e=>{if(e.target&&stage.contains(e.target))e.preventDefault()});
+  $('#zoom1').onclick=()=>{const s=img.naturalWidth/img.offsetWidth||1;const [cx,cy]=zoomCenter();zoomAt(Math.max(1,s),cx,cy)};
+  $('#zoomFit').onclick=zoomReset;
+})();
 // ---------- swipe on image (touch): left = next, right = previous
 (()=>{let sw=null;
-  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||S.tab==='3d')return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
+  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||S.tab==='3d'||ZM.z>1.01)return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
   stage.addEventListener('pointerup',e=>{if(!sw||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y,dt=Date.now()-sw.t;sw=null;
+    if(ZM.used||ZM.z>1.01){ZM.used=false;return}
     if(dt<700&&Math.abs(dx)>60&&Math.abs(dy)<Math.abs(dx)*.6){dx<0?next():prev()}});
   stage.addEventListener('pointercancel',()=>sw=null);
 })();
