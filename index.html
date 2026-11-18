@@ -143,7 +143,7 @@ body.t3d .d3only{display:flex!important}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
   clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
 .pop .hd{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 12px;border-bottom:2px solid var(--ink);font-weight:700}
-.pop .hd button{padding:0 6px;box-shadow:none;line-height:14px}
+.pop .hd button{width:24px;height:24px;padding:0;box-shadow:none;line-height:1;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .pop section{padding:10px 12px 12px}
 .pop h3{font-size:11px;color:var(--tx2);font-weight:400;margin-bottom:8px}
 .pop .row{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:8px;margin-bottom:6px}
@@ -340,6 +340,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   .seg button{min-width:40px}
   .seg.ic button{height:36px;min-width:40px}
   button.ic{width:42px;height:40px;min-height:40px}
+  .pop .hd button{width:36px;height:36px;padding:0}
   button.ic::after{left:12px;right:12px}
   .chip{height:34px;padding:0 10px}
   #fltPop .o{padding:7px 9px 5px 10px;line-height:18px}
