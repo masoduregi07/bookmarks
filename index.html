@@ -608,6 +608,24 @@ header.tov .tsc{display:flex}
   body[data-tb="3"] #fltBtn{padding:0 7px}
 }
 @media (max-width:360px){body[data-tb="3"] #fltBtn{font-size:0}body[data-tb="3"] #fltBtn .cnt{font-size:10px}body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{padding:0 4px}}
+#gMini .ml{display:none;order:1}
+/* tablets, minimal toolbar: full labels, and every control stretches so the single row is filled edge to edge */
+@media (min-width:561px) and (pointer:coarse){
+  body[data-tb="3"] .top footer{column-gap:6px!important}
+  body[data-tb="3"] #prev .bt,body[data-tb="3"] #next .bt{display:inline}
+  body[data-tb="3"] #saveCut span{display:inline}
+  body[data-tb="3"] #flip .ft{display:inline}
+  body[data-tb="3"] #tone .tt{display:inline}body[data-tb="3"] #tone button .ti{display:none}
+  body[data-tb="3"] #gMini .ml{display:inline}
+  body[data-tb="3"] .top footer>.grp:first-child{flex:5 1 auto!important}
+  body[data-tb="3"] #gTone{flex:2 1 auto!important}body[data-tb="3"] #tone{flex:1;display:flex}
+  body[data-tb="3"] #gMini{flex:2 1 auto!important}
+  body[data-tb="3"] .top footer>.frow{flex:1 1 auto!important}
+  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next,body[data-tb="3"] #flip,body[data-tb="3"] #tone button,body[data-tb="3"] #gMini .mini,body[data-tb="3"] #fltBtn{
+    flex:1 1 auto;width:auto;min-width:0;padding:0 8px!important;gap:5px;justify-content:center;font-size:12px}
+  body[data-tb="3"] #gMini .mini{display:flex;align-items:center}
+  body[data-tb="3"] #flip .fi{width:16px}
+}
 </style>
 </head>
 <body>
@@ -683,7 +701,7 @@ header.tov .tsc{display:flex}
       <button id="tReset" data-tip="리셋" aria-label="리셋"><svg viewBox="-0.5 0 10 10"><path d="M1 1h2v1h-2zM8 1h1v1h-1zM1 2h2v1h-2zM7 2h2v1h-2zM1 3h2v1h-2zM6 3h3v1h-3zM1 4h2v1h-2zM5 4h4v1h-4zM1 5h2v1h-2zM5 5h4v1h-4zM1 6h2v1h-2zM6 6h3v1h-3zM1 7h2v1h-2zM7 7h2v1h-2zM1 8h2v1h-2zM8 8h1v1h-1z"/></svg></button>
     </div>
   </div>
-  <div class="grp" id="gMini"><button id="miniGrid" class="mini" data-tip="분할" aria-label="분할 설정"><svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" d="M0 0h14v14H0zM2 2v3h3V2zM7 2v3h5V2zM2 7v5h3V7zM7 7v5h5V7z"/></svg></button><button id="miniTmr" class="mini" data-tip="타이머" aria-label="타이머 설정"><svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" d="M4 0h6v1h2v1h1v2h1v6h-1v2h-1v1h-2v1H4v-1H2v-1H1v-2H0V4h1V2h1V1h2zM5 2v1H3v2H2v4h1v2h2v1h4v-1h2V9h1V5h-1V3H9V2z"/><path d="M6 4h2v3h2v2H6z"/></svg></button></div>
+  <div class="grp" id="gMini"><button id="miniGrid" class="mini" data-tip="분할" aria-label="분할 설정"><span class="ml">분할</span><svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" d="M0 0h14v14H0zM2 2v3h3V2zM7 2v3h5V2zM2 7v5h3V7zM7 7v5h5V7z"/></svg></button><button id="miniTmr" class="mini" data-tip="타이머" aria-label="타이머 설정"><span class="ml">타이머</span><svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" d="M4 0h6v1h2v1h1v2h1v6h-1v2h-1v1h-2v1H4v-1H2v-1H1v-2H0V4h1V2h1V1h2zM5 2v1H3v2H2v4h1v2h2v1h4v-1h2V9h1V5h-1V3H9V2z"/><path d="M6 4h2v3h2v2H6z"/></svg></button></div>
   <div class="frow" id="frow"></div>
   <div id="tbDrawer" class="tbd hidden" role="dialog"><div class="hd"><b id="tbdT"></b><button class="ic" id="tbdX" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div><div class="bd" id="tbdBody"></div></div>
 </footer>
