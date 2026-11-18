@@ -468,11 +468,11 @@ header.tov .tsc{display:flex}
   #tbGrip svg{position:absolute;right:3px;bottom:3px;width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
   #tbGrip.drag svg{fill:var(--tx3)}
   body[data-tb="1"] #tmr{display:none!important}
-  body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow):not(#gTone){display:none!important}
+  body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow):not(#gTone):not(#gMini):not(#tbDrawer){display:none!important}
   /* one-row toolbar keeps the 필터 button (chips hidden) */
   body[data-tb="2"] .top footer>.frow,body[data-tb="3"] .top footer>.frow{order:1!important;flex:0 0 auto!important;margin:0!important}
   body[data-tb="2"] #frow>:not(#fltBtn),body[data-tb="3"] #frow>:not(#fltBtn){display:none}
-  body[data-tb="3"] .top footer>.frow{flex:1 1 0!important}body[data-tb="3"] .top footer>.grp:first-child{flex:none!important;column-gap:4px}body[data-tb="3"] #fltBtn{height:30px;min-height:0;padding:0 10px;flex:1;justify-content:center}body[data-tb="3"] #fltBtn .cnt{font-size:10px}
+  body[data-tb="3"] .top footer>.frow{flex:0 0 auto!important}body[data-tb="3"] .top footer>.grp:first-child{flex:none!important;column-gap:4px}body[data-tb="3"] #fltBtn{height:30px;min-height:0;padding:0 10px;flex:none}body[data-tb="3"] #fltBtn .cnt{font-size:10px}
   body[data-tb="2"] .top footer,body[data-tb="3"] .top footer{padding-right:30px!important}
   body[data-tb="3"] .top footer{padding-top:5px!important;padding-bottom:5px!important}
   body[data-tb="3"] .top footer>.grp:first-child{flex:1;flex-wrap:nowrap}
@@ -576,6 +576,38 @@ header.tov .tsc{display:flex}
 .top footer.pinf>.frow{position:absolute;left:8px;bottom:6px;z-index:2;margin:0!important}
 .top footer.pinf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fbh,44px);background:var(--panel);z-index:1;pointer-events:none}
 #tbGrip{z-index:3}
+/* minimal toolbar: 분할 / 타이머 icons open their controls in a mini window that drops down under the toolbar */
+#gMini,#tbDrawer{display:none}
+@media (max-width:560px),(pointer:coarse){
+  body[data-tb="3"] #gMini{display:flex!important;order:0!important;flex:none!important;gap:4px}
+  #gMini .mini{width:30px;height:30px;min-height:0;padding:0;display:flex;align-items:center;justify-content:center}
+  #gMini .mini svg{width:14px;height:14px;fill:currentColor;shape-rendering:crispEdges}
+  #gMini .mini.on{background:var(--ink);color:#fff;box-shadow:none}
+  #tbDrawer{display:block!important;position:absolute;left:6px;top:calc(100% + 4px);z-index:40;min-width:200px;max-width:calc(100vw - 32px);
+    background:var(--panel);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shd);animation:tbdIn .12s steps(3,end)}
+  #tbDrawer.hidden{display:none!important}
+  #tbDrawer .hd{display:flex;align-items:center;height:28px;padding:0 3px 0 10px;border-bottom:2px solid var(--ink);background:var(--yel);font-size:12px}
+  #tbDrawer .hd b{margin-right:auto}
+  #tbDrawer #tbdX{width:22px;height:20px;min-height:0;padding:0;border:none;box-shadow:none;background:none}
+  #tbDrawer #tbdX svg{width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
+  #tbDrawer .bd{padding:8px}
+  #tbDrawer .bd>.grp{display:flex!important;flex-wrap:wrap;gap:6px;align-items:center;margin:0!important;order:0!important}
+  #tbDrawer .bd>.grp>label:first-child{display:none}
+  #tbDrawer #tone,#tbDrawer #lc{display:flex!important}
+  #tbDrawer #lcSw{display:none!important}
+}
+@keyframes tbdIn{from{transform:translateY(-10px);clip-path:inset(0 0 100% 0)}to{transform:none;clip-path:inset(0)}}
+/* phones, minimal toolbar: everything on one row */
+@media (max-width:560px){
+  body[data-tb="3"] .top footer{column-gap:4px!important;padding-left:6px!important;padding-right:26px!important}
+  body[data-tb="3"] .top footer>.grp:first-child{column-gap:3px}
+  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{padding:0 6px}
+  body[data-tb="3"] #flip{padding:0 4px!important}
+  body[data-tb="3"] #tone button,#gMini .mini{width:28px;min-width:28px}
+  body[data-tb="3"] #gMini{gap:3px}
+  body[data-tb="3"] #fltBtn{padding:0 7px}
+}
+@media (max-width:360px){body[data-tb="3"] #fltBtn{font-size:0}body[data-tb="3"] #fltBtn .cnt{font-size:10px}body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{padding:0 4px}}
 </style>
 </head>
 <body>
@@ -651,7 +683,9 @@ header.tov .tsc{display:flex}
       <button id="tReset" data-tip="리셋" aria-label="리셋"><svg viewBox="-0.5 0 10 10"><path d="M1 1h2v1h-2zM8 1h1v1h-1zM1 2h2v1h-2zM7 2h2v1h-2zM1 3h2v1h-2zM6 3h3v1h-3zM1 4h2v1h-2zM5 4h4v1h-4zM1 5h2v1h-2zM5 5h4v1h-4zM1 6h2v1h-2zM6 6h3v1h-3zM1 7h2v1h-2zM7 7h2v1h-2zM1 8h2v1h-2zM8 8h1v1h-1z"/></svg></button>
     </div>
   </div>
+  <div class="grp" id="gMini"><button id="miniGrid" class="mini" data-tip="분할" aria-label="분할 설정"><svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" d="M0 0h14v14H0zM2 2v3h3V2zM7 2v3h5V2zM2 7v5h3V7zM7 7v5h5V7z"/></svg></button><button id="miniTmr" class="mini" data-tip="타이머" aria-label="타이머 설정"><svg viewBox="0 0 14 14" aria-hidden="true"><path fill-rule="evenodd" d="M4 0h6v1h2v1h1v2h1v6h-1v2h-1v1h-2v1H4v-1H2v-1H1v-2H0V4h1V2h1V1h2zM5 2v1H3v2H2v4h1v2h2v1h4v-1h2V9h1V5h-1V3H9V2z"/><path d="M6 4h2v3h2v2H6z"/></svg></button></div>
   <div class="frow" id="frow"></div>
+  <div id="tbDrawer" class="tbd hidden" role="dialog"><div class="hd"><b id="tbdT"></b><button class="ic" id="tbdX" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div><div class="bd" id="tbdBody"></div></div>
 </footer>
 </div>
 
@@ -1385,7 +1419,8 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
 // ---------- touch: drag the toolbar's corner grip up/down to collapse it in steps (double-tap: full ↔ smallest)
 (()=>{const ft=document.querySelector('.top footer'),g=document.createElement('div');g.id='tbGrip';g.setAttribute('aria-label','툴바 크기 조절');
   g.innerHTML='<svg viewBox="0 0 16 16"><path d="M12 2h2v2h-2zM8 6h2v2H8zM12 6h2v2h-2zM4 10h2v2H4zM8 10h2v2H8zM12 10h2v2h-2z"/></svg>';ft.appendChild(g);
-  let lv=0;try{lv=Math.min(3,Math.max(0,+localStorage.getItem('cutref-tb')||0))}catch(e){}
+  let lv=0;try{lv=Math.min(3,Math.max(0,+localStorage.getItem('cutref-tb')||0))}catch(e){}if(lv===2)lv=3; // step 2 retired
+  const STEPS=[0,1,3];
   const set=v=>{v=Math.max(0,Math.min(3,v));if(v===lv&&document.body.dataset.tb==String(v))return;lv=v;document.body.dataset.tb=v;try{localStorage.setItem('cutref-tb',v)}catch(e){}};
   set(lv);document.body.dataset.tb=lv;
   // smooth resize: the toolbar height follows the finger (content clipped), then glides to the nearest step
@@ -1393,27 +1428,40 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
     for(let v=0;v<4;v++){document.body.dataset.tb=v;H.push(ft.getBoundingClientRect().height)}document.body.dataset.tb=cur;return H};
   let anim=null;
   const glide=(from,to,v)=>{clearTimeout(anim);document.body.dataset.tb=Math.min(v,stepFor(from));pinFor(+document.body.dataset.tb);ft.style.overflow='hidden';ft.style.transition='none';ft.style.height=from+'px';
-    ft.getBoundingClientRect();ft.style.transition='height .2s cubic-bezier(.2,.8,.2,1)';ft.style.height=to+'px';
+    ft.getBoundingClientRect();ft.style.transition='height .16s steps(4,end)';ft.style.height=to+'px';
     if(to>=from){document.body.dataset.tb=v;pinFor(v)} // expanding: show the target rows right away so they slide into view
-    anim=setTimeout(()=>{set(v);ft.classList.remove('pinf');ft.style.transition='';ft.style.height='';ft.style.overflow=''},220)};
+    anim=setTimeout(()=>{set(v);ft.classList.remove('pinf');ft.style.transition='';ft.style.height='';ft.style.overflow=''},180)};
   let Hs=[0,0,0,0],PIN=[0,0,0,0];
   // for each step: is 필터 on its own bottom row? (then it gets pinned while resizing) and how tall is that row
   const pinInfo=()=>{const cur=document.body.dataset.tb,fr=document.getElementById('frow');ft.classList.remove('pinf');
     for(let v=0;v<4;v++){document.body.dataset.tb=v;const a=ft.getBoundingClientRect(),b=fr.getBoundingClientRect(),n=ft.querySelector('.grp').getBoundingClientRect();
       PIN[v]=fr.offsetParent&&b.top>n.bottom-2?Math.round(a.bottom-b.top+6):0}document.body.dataset.tb=cur};
   const pinFor=v=>{const h=PIN[v];ft.classList.toggle('pinf',!!h);if(h)ft.style.setProperty('--fbh',h+'px')};
-  const stepFor=h=>{let v=0;for(let k=0;k<4;k++)if(Hs[k]>=h-0.5)v=k;return v}; // most collapsed step whose rows still cover h
+  const stepFor=h=>{let v=0;for(const k of STEPS)if(Hs[k]>=h-0.5)v=k;return v}; // most collapsed step whose rows still cover h
   let st=null,lastTap=0;
   g.addEventListener('pointerdown',e=>{e.preventDefault();clearTimeout(anim);ft.style.transition='';ft.classList.remove('pinf');Hs=tbH();pinInfo();
     st={y:e.clientY,lv,h0:Hs[lv],h:Hs[lv],moved:false,id:e.pointerId};g.classList.add('drag');try{g.setPointerCapture(e.pointerId)}catch(_){}});
   g.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const dy=e.clientY-st.y;if(Math.abs(dy)>4)st.moved=true;if(!st.moved)return;
-    const h=Math.max(Hs[3],Math.min(Hs[0],st.h0+dy));st.h=h;const sv=stepFor(h);document.body.dataset.tb=sv;pinFor(sv);ft.style.overflow='hidden';ft.style.height=h+'px'});
+    const h=Math.max(Hs[3],Math.min(Hs[0],st.h0+Math.round(dy/6)*6));st.h=h;const sv=stepFor(h);document.body.dataset.tb=sv;pinFor(sv);ft.style.overflow='hidden';ft.style.height=h+'px'});
   const end=e=>{if(!st)return;g.classList.remove('drag');const s0=st;st=null;
     if(!s0.moved){ft.style.height='';ft.style.overflow='';ft.classList.remove('pinf');const now=Date.now();
       if(now-lastTap<320){const t=lv?0:3;glide(Hs[lv],Hs[t],t);lastTap=0}else lastTap=now;return}
-    let best=0;for(let k=1;k<4;k++)if(Math.abs(Hs[k]-s0.h)<Math.abs(Hs[best]-s0.h))best=k;
+    let best=0;for(const k of STEPS)if(Math.abs(Hs[k]-s0.h)<Math.abs(Hs[best]-s0.h))best=k;
     glide(s0.h,Hs[best],best)};
   g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
+})();
+// ---------- minimal toolbar: 분할 / 타이머 mini window (moves the real control group in, puts it back on close)
+(()=>{const dr=document.getElementById('tbDrawer'),body=document.getElementById('tbdBody'),T=document.getElementById('tbdT');
+  const G={miniGrid:['gGrid','분할'],miniTmr:['tmr','타이머']};let cur=null,mark=null;
+  const close=()=>{if(!cur)return;const el=document.getElementById(G[cur][0]);mark.parentNode.insertBefore(el,mark);mark.remove();mark=null;
+    document.getElementById(cur).classList.remove('on');cur=null;dr.classList.add('hidden')};
+  const open=id=>{close();const el=document.getElementById(G[id][0]);mark=document.createComment('home');el.before(mark);body.appendChild(el);
+    T.textContent=G[id][1];cur=id;document.getElementById(id).classList.add('on');dr.classList.remove('hidden');dr.style.animation='none';dr.offsetWidth;dr.style.animation=''};
+  Object.keys(G).forEach(id=>document.getElementById(id).onclick=e=>{e.stopPropagation();cur===id?close():open(id)});
+  document.getElementById('tbdX').onclick=close;
+  document.addEventListener('pointerdown',e=>{if(cur&&!e.target.closest('#tbDrawer,#gMini'))close()},true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  new MutationObserver(()=>{if(document.body.dataset.tb!=='3')close()}).observe(document.body,{attributes:true,attributeFilter:['data-tb']});
 })();
 // ---------- tab drag reorder (mouse drag / touch long-press)
 (()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
