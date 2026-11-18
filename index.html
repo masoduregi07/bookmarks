@@ -576,6 +576,7 @@ header.tov .tsc{display:flex}
 .top footer.pinf>.frow{position:absolute;left:8px;bottom:6px;z-index:2;margin:0!important}
 .top footer.pinf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fbh,44px);background:var(--panel);z-index:1;pointer-events:none}
 #tbGrip{z-index:3}
+body.tbwide #tbGrip{display:none!important}body.tbwide .top footer>.frow{margin-right:0!important}
 /* minimal toolbar: 분할 / 타이머 icons open their controls in a mini window that drops down under the toolbar */
 #gMini,#tbDrawer{display:none}
 @media (max-width:560px),(pointer:coarse){
@@ -1469,6 +1470,15 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
 })();
 // ---------- minimal toolbar: 분할 / 타이머 mini window (moves the real control group in, puts it back on close)
+/* wide tablets: when the full (PC) toolbar fits on one row, use it as-is — nothing to collapse */
+(()=>{const ft=document.querySelector('.top footer'),b=document.body,mq=matchMedia('(min-width:561px) and (pointer:coarse)');let saved=null,t;
+  const one=()=>{const c=[...ft.querySelectorAll('button,select,input')].filter(e=>e.offsetParent&&!e.closest('#tbDrawer,#tbGrip')).map(e=>{const r=e.getBoundingClientRect();return r.top+r.height/2});
+    return c.length&&Math.max(...c)-Math.min(...c)<12};
+  const chk=()=>{if(b.classList.contains('tbwide')){b.classList.remove('tbwide');b.dataset.tb=saved}
+    if(!mq.matches)return;saved=b.dataset.tb;b.dataset.tb='0';ft.style.height='';
+    if(one())b.classList.add('tbwide');else b.dataset.tb=saved};
+  chk();addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(chk,150)});
+})();
 (()=>{const dr=document.getElementById('tbDrawer'),body=document.getElementById('tbdBody'),T=document.getElementById('tbdT');
   const G={miniGrid:['gGrid','분할'],miniTmr:['tmr','타이머']};let cur=null,mark=null;
   const close=()=>{if(!cur)return;const el=document.getElementById(G[cur][0]);mark.parentNode.insertBefore(el,mark);mark.remove();mark=null;
