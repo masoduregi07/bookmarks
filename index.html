@@ -351,6 +351,43 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   body.zen .top{margin-top:calc(-1 * var(--th,220px))}
   #tIn{width:72px}
 }
+/* croquis link panel */
+#lnkP .lbody{flex:1;min-height:0;overflow:auto;padding-bottom:14px}
+#lnkP .lk-tools{display:flex;gap:6px;padding:10px 14px 8px;align-items:center}
+#lnkP .lk-tools .sp{flex:1}
+#lnkP .swl{font-size:11px;color:var(--tx2);margin-right:6px}
+#lnkP .lk-cats{display:flex;gap:4px;flex-wrap:wrap;padding:0 14px 10px;border-bottom:2px dotted var(--soft)}
+#lnkP .lk-cats .o{padding:4px 7px 2px 8px;background:#ebe9e2;box-shadow:1px 1px 0 rgba(61,59,55,.18);font-size:11px;line-height:16px;cursor:pointer}
+#lnkP .lk-cats .o:hover{background:var(--yel)}
+#lnkP .lk-cats .o.on{background:var(--ink);color:#fff}
+#lnkP .lk-sec{font-size:11px;color:var(--tx2);padding:12px 14px 6px;display:flex;justify-content:space-between}
+#lnkP .lk-list{display:grid;gap:8px;padding:0 14px}
+#lnkP.full .lk-list{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+#lnkP .card{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:8px}
+#lnkP .fav{width:36px;height:36px;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
+#lnkP .bd{min-width:0}
+#lnkP .nm{font-weight:700;font-size:12px;display:flex;gap:4px;align-items:center}
+#lnkP .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#lnkP .nm .st{border:none;background:none;box-shadow:none;padding:0 2px;color:var(--tx3);font-weight:400;font-size:13px;line-height:16px;min-height:0;min-width:0}
+#lnkP .nm .st.on{color:#d9a400}
+#lnkP .ds{color:var(--tx2);font-size:11px;margin:2px 0 4px}
+#lnkP .tg{display:flex;gap:4px;flex-wrap:wrap}
+#lnkP .tg i{font-style:normal;font-size:10px;padding:0 4px;border:1px solid var(--ink);line-height:14px}
+#lnkP .tg i.me{background:var(--yel)}
+#lnkP .act{display:flex;flex-direction:column;gap:4px;align-items:stretch}
+#lnkP .go{display:inline-flex;align-items:center;justify-content:center;padding:4px 10px;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);color:var(--ink);text-decoration:none;white-space:nowrap;line-height:16px}
+#lnkP .go:hover{background:var(--yel)}
+#lnkP .go:active{transform:translate(2px,2px);box-shadow:none}
+#lnkP .del{padding:0 6px;box-shadow:none;color:var(--tx2)}
+#lnkP .add{display:block;margin:12px 14px 0;border-style:dashed;box-shadow:none;width:calc(100% - 28px);color:var(--tx2);background:none}
+#lnkP .add:hover{background:var(--yel);color:var(--ink)}
+#lnkP .lk-form{margin:12px 14px 0;padding:12px 12px 10px;border:2px solid var(--ink);background:#fff}
+#lnkP .lk-form .fx-row{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:8px;margin-bottom:6px}
+#lnkP .lk-form .fx-l{font-size:11px;color:var(--tx2)}
+#lnkP .lk-form input,#lnkP .lk-form select{width:100%;min-width:0;font-size:11px}
+#lnkP .lk-form .btns{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
+#lnkP .lk-form .pri{background:var(--ink);color:#fff}
+@media (hover:none),(pointer:coarse){#lnkP .go{min-height:36px}#lnkP .del{min-height:28px}#lnkP .lk-cats .o{padding:7px 9px 5px 10px}}
 </style>
 </head>
 <body>
@@ -373,6 +410,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   </nav>
   <div class="ibar">
     <button id="calBtn" class="ic" data-tip="연습 기록" data-key="C" aria-label="연습 기록"><svg viewBox="0 0 16 16"><path d="M3 1h2v1h-2zM11 1h2v1h-2zM1 2h14v1h-14zM1 3h14v1h-14zM1 4h1v1h-1zM14 4h1v1h-1zM1 5h1v1h-1zM14 5h1v1h-1zM1 6h1v1h-1zM3 6h2v1h-2zM7 6h2v1h-2zM11 6h2v1h-2zM14 6h1v1h-1zM1 7h1v1h-1zM3 7h2v1h-2zM7 7h2v1h-2zM11 7h2v1h-2zM14 7h1v1h-1zM1 8h1v1h-1zM14 8h1v1h-1zM1 9h1v1h-1zM3 9h2v1h-2zM7 9h2v1h-2zM14 9h1v1h-1zM1 10h1v1h-1zM3 10h2v1h-2zM7 10h2v1h-2zM14 10h1v1h-1zM1 11h1v1h-1zM14 11h1v1h-1zM1 12h14v1h-14z"/></svg></button>
+    <button id="lnkBtn" class="ic" data-tip="크로키 링크" data-key="L" aria-label="크로키 링크"><svg viewBox="0 0 16 16"><path d="M7 1h2v2H7zM4 4h8v1H4zM3 5h2v1H3zM11 5h2v1h-2zM7 5h2v4H7zM2 6h1v1H2zM13 6h1v1h-1zM6 9h4v1H6zM5 10h2v2H5zM9 10h2v2H9zM4 12h2v2H4zM10 12h2v2h-2zM3 14h2v1H3zM11 14h2v1h-2z"/></svg></button>
     <button id="keyBtn" class="ic" data-tip="단축키" data-key="?" aria-label="단축키"><svg viewBox="0 0 16 16"><path d="M0 3h16v1h-16zM0 4h1v1h-1zM15 4h1v1h-1zM0 5h1v1h-1zM2 5h2v1h-2zM5 5h2v1h-2zM8 5h2v1h-2zM11 5h2v1h-2zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM3 7h2v1h-2zM6 7h2v1h-2zM9 7h2v1h-2zM12 7h2v1h-2zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h1v1h-1zM5 9h6v1h-6zM15 9h1v1h-1zM0 10h1v1h-1zM15 10h1v1h-1zM0 11h16v1h-16z"/></svg></button>
     <button id="zen" class="ic" data-tip="UI 숨김" data-key="H" aria-label="UI 숨김"><svg viewBox="0 0 16 16"><path d="M1 2h14v1h-14zM1 3h14v1h-14zM7 6h2v1h-2zM6 7h4v1h-4zM5 8h2v1h-2zM9 8h2v1h-2zM4 9h2v1h-2zM10 9h2v1h-2zM3 10h2v1h-2zM11 10h2v1h-2zM2 11h2v1h-2zM12 11h2v1h-2z"/></svg></button>
     <button id="setBtn" class="ic" data-tip="설정" aria-label="설정"><svg viewBox="0 0 16 16"><path d="M7 1h2v1h-2zM3 2h1v1h-1zM7 2h2v1h-2zM12 2h1v1h-1zM2 3h3v1h-3zM6 3h4v1h-4zM11 3h3v1h-3zM3 4h10v1h-10zM4 5h8v1h-8zM3 6h3v1h-3zM10 6h3v1h-3zM1 7h5v1h-5zM10 7h5v1h-5zM1 8h5v1h-5zM10 8h5v1h-5zM3 9h3v1h-3zM10 9h3v1h-3zM4 10h8v1h-8zM3 11h10v1h-10zM2 12h3v1h-3zM6 12h4v1h-4zM11 12h3v1h-3zM3 13h1v1h-1zM7 13h2v1h-2zM12 13h1v1h-1zM7 14h2v1h-2z"/></svg></button>
@@ -481,6 +519,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <dt><kbd>H</kbd></dt><dd>UI 숨김</dd>
     <dt><kbd>S</kbd></dt><dd>지금 컷 기록 / 기록 취소</dd>
     <dt><kbd>C</kbd></dt><dd>연습 기록 열기 / 닫기</dd>
+    <dt><kbd>L</kbd></dt><dd>크로키 링크 열기 / 닫기</dd>
     <dt><kbd>?</kbd></dt><dd>단축키</dd>
     <dt><kbd>T</kbd></dt><dd>타이머 재생 / 일시정지</dd>
     <dt><kbd>,</kbd><kbd>.</kbd></dt><dd>영상 한 프레임 앞 / 뒤</dd>
@@ -491,6 +530,13 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   <div class="hd"><span id="fltTitle">필터</span><button class="px" title="닫기">×</button></div>
   <section id="fltBody"></section>
 </div>
+<aside id="lnkP" class="calp" aria-label="크로키 링크" aria-hidden="true">
+  <div class="ch"><b>크로키 링크</b>
+    <button class="ic" id="lnkFull" data-tip="전체 화면"><svg viewBox="0 0 16 16"><path d="M1 1h5v1h-5zM10 1h5v1h-5zM1 2h1v4h-1zM14 2h1v4h-1zM1 10h1v4h-1zM14 10h1v4h-1zM1 14h5v1h-5zM10 14h5v1h-5z"/></svg></button>
+    <button class="ic" id="lnkX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
+  </div>
+  <div class="lbody" id="lnkBody"></div>
+</aside>
 <aside id="calP" class="calp" aria-label="연습 기록" aria-hidden="true">
   <div class="ch"><b>연습 기록</b>
     <button class="ic" id="calIo" data-tip="백업" aria-label="기록 백업" aria-haspopup="true"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 1h11v1h1v1h1v1h1v11H1zM4 2h7v4H4zM8 3h2v2H8zM3 9h10v5H3zM5 11h6v1H5z"/></svg></button>
@@ -1269,7 +1315,7 @@ function renderCal(){
     for(const d=new Date(st);d<=end;d.setDate(d.getDate()+1)){const k=dkey(d),n=(m[k]||[]).length;yh+=`<i class="${lv(n)}" title="${k} · ${n}장" style="${k>tk?'opacity:.3':''}"></i>`}
     $('#calYear').innerHTML=yh;const yw=$('#calYear');yw.scrollLeft=yw.scrollWidth}
 }
-function openCal(){calOpen=true;if(curPop)closeP();renderCal();$('#calP').classList.add('open');$('#calP').setAttribute('aria-hidden','false');$('#calBtn').classList.add('on')}
+function openCal(){if(lnkOpen)closeLnk();calOpen=true;if(curPop)closeP();renderCal();$('#calP').classList.add('open');$('#calP').setAttribute('aria-hidden','false');$('#calBtn').classList.add('on')}
 function closeCal(){closeMenu();calOpen=false;$('#calP').classList.remove('open');$('#calP').setAttribute('aria-hidden','true');$('#calBtn').classList.remove('on')}
 $('#calBtn').onclick=()=>calOpen?closeCal():openCal();
 $('#calX').onclick=closeCal;
@@ -1279,13 +1325,17 @@ function logInfo(){const kb=Math.round(new Blob([localStorage.getItem(LOGK)||'']
 $('#calIo').onclick=e=>{e.stopPropagation();const on=calMenu.classList.toggle('hidden')===false;$('#calIo').classList.toggle('on',on);hideTip();if(on)logInfo()};
 const closeMenu=()=>{calMenu.classList.add('hidden');$('#calIo').classList.remove('on')};
 document.addEventListener('pointerdown',e=>{if(!calMenu.classList.contains('hidden')&&!e.target.closest('#calMenu,#calIo'))closeMenu()},true);
-$('#logExp').onclick=()=>{if(!LOG.length){toast('내보낼 기록이 없음','err');return}
-  const blob=new Blob([JSON.stringify({app:'cutref',v:1,exported:new Date().toISOString(),log:LOG})],{type:'application/json'});
+$('#logExp').onclick=()=>{if(!LOG.length&&!LK.mine.length&&!LK.fav.length){toast('내보낼 기록이 없음','err');return}
+  const blob=new Blob([JSON.stringify({app:'cutref',v:1,exported:new Date().toISOString(),log:LOG,links:{mine:LK.mine,fav:LK.fav}})],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`cutref-기록-${dkey(new Date())}.json`;document.body.appendChild(a);a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);closeMenu();toast(`기록 ${LOG.length}장 내보냄`,'ok')};
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);closeMenu();toast(`기록 ${LOG.length}장`+(LK.mine.length?` · 내 링크 ${LK.mine.length}개`:'')+' 내보냄','ok')};
 $('#logImp').onclick=()=>$('#logFile').click();
 $('#logFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;closeMenu();
-  let list;try{const d=JSON.parse(await file.text());list=Array.isArray(d)?d:d&&d.log}catch(_){}
+  let list,d;try{d=JSON.parse(await file.text());list=Array.isArray(d)?d:d&&d.log}catch(_){}
+  // links (custom links + favorites) merge by URL
+  let ladd=0;if(d&&d.links&&typeof d.links==='object'){const L=d.links,urls=new Set(lnkAll().map(x=>x.u));
+    (Array.isArray(L.mine)?L.mine:[]).forEach(m=>{if(m&&typeof m.n==='string'&&/^https?:\/\//i.test(m.u||'')&&!urls.has(m.u)){LK.mine.push({id:String(m.id||'m'+Date.now().toString(36)+ladd),n:m.n,u:m.u,d:String(m.d||''),c:Array.isArray(m.c)?m.c:['body'],t:[]});urls.add(m.u);ladd++}});
+    (Array.isArray(L.fav)?L.fav:[]).forEach(f=>{if(typeof f==='string'&&!LK.fav.includes(f))LK.fav.push(f)});saveLk();if(lnkOpen)renderLnk()}
   if(!Array.isArray(list)){toast('가져오기 실패 · 컷 레퍼런스 기록 파일이 아님','err');return}
   const ok=r=>r&&typeof r==='object'&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&typeof r.url==='string';
   const ids=new Set(LOG.map(r=>r.id)),keys=new Set(LOG.map(r=>r.date+'|'+r.url));let add=0,dup=0,bad=0;
@@ -1293,7 +1343,7 @@ $('#logFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';
     const x={...r,id:String(r.id||Date.now().toString(36)+Math.random().toString(36).slice(2,6)),ts:+r.ts||Date.parse(r.date)};
     LOG.push(x);ids.add(x.id);keys.add(k);add++}
   LOG.sort((a,b)=>a.ts-b.ts);saveLog();renderCal();syncSaveBtn();
-  toast(`${add}장 가져옴`+(dup?` · 중복 ${dup}장 건너뜀`:'')+(bad?` · 잘못된 항목 ${bad}개`:''),add?'ok':'err')};
+  toast(`${add}장 가져옴`+(ladd?` · 내 링크 ${ladd}개`:'')+(dup?` · 중복 ${dup}장 건너뜀`:'')+(bad?` · 잘못된 항목 ${bad}개`:''),add||ladd?'ok':'err')};
 // tap/click outside the side panel closes it (iPad has no Esc key)
 document.addEventListener('pointerdown',e=>{if(!calOpen||calFull)return;const t=e.target;
   if(t.closest('#calP,#calBtn,#toasts'))return;closeCal()},true);
@@ -1305,10 +1355,67 @@ $('#calGrid').addEventListener('click',e=>{const d=e.target.closest('.d[data-k]'
 $('#calDay').addEventListener('click',e=>{const x=e.target.closest('[data-del]');if(!x)return;e.preventDefault();e.stopPropagation();
   LOG=LOG.filter(r=>r.id!==x.dataset.del);saveLog();renderCal();syncSaveBtn();toast('기록 지움')});
 
+// ---------- croquis link list (side panel)
+const LNKK='cutref-links';
+const LCATS=[['body','전신 포즈'],['hand','손 · 발'],['face','얼굴'],['video','움직임 영상'],['3d','3D 도구']];
+const LCOL=['var(--pink)','var(--yel)','var(--mint)','var(--sky)','var(--lav)','var(--peach)'];
+const LDEF=[
+  {id:'loa',ab:'LA',n:'Line of Action',u:'https://line-of-action.com/',d:'타이머 크로키 · 전신 · 손발 · 얼굴 · 동물',c:['body','hand','face'],t:['무료','타이머','누드 선택']},
+  {id:'qp',ab:'QP',n:'Quickposes',u:'https://quickposes.com/en',d:'전신 · 손 · 얼굴 랜덤 크로키',c:['body','hand','face'],t:['무료','타이머']},
+  {id:'sd',ab:'SD',n:'SketchDaily',u:'https://www.sketchdaily.net/',d:'포즈 · 손발 · 얼굴 · 동물 타이머 연습',c:['body','hand','face'],t:['무료','타이머','누드 선택']},
+  {id:'aic',ab:'MB',n:'Pose Reference (Art in Context)',u:'https://artincontext.org/pose-reference/',d:'머이브리지 동작 사진 · 거장 손 · 얼굴 습작 (퍼블릭 도메인)',c:['body','hand','face'],t:['무료','타이머']},
+  {id:'pm',ab:'PM',n:'Posemaniacs',u:'https://www.posemaniacs.com/',d:'3D 인체 · 근육 포즈 · 30초 드로잉',c:['body','3d'],t:['무료','타이머']},
+  {id:'pma',ab:'P3',n:'PoseMy.Art',u:'https://posemy.art/',d:'웹에서 3D 마네킹 포즈 직접 잡기',c:['3d','body','hand'],t:['무료','3D']},
+  {id:'ads',ab:'AS',n:'AdorkaStock',u:'https://www.adorkastock.com/',d:'포즈 사진 스톡 (구 SenshiStock) · 비누드',c:['body'],t:['무료']},
+  {id:'cc',ab:'CC',n:'Croquis Cafe',u:'https://croquis.cafe/',d:'라이브 모델 크로키 영상 · 연 $36 멤버십',c:['video','body'],t:['유료','영상'],nude:true}];
+let LK={mine:[],fav:[],nude:false,cat:''};try{Object.assign(LK,JSON.parse(localStorage.getItem(LNKK)||'{}'))}catch(e){}
+if(!Array.isArray(LK.mine))LK.mine=[];if(!Array.isArray(LK.fav))LK.fav=[];
+const saveLk=()=>{try{localStorage.setItem(LNKK,JSON.stringify({mine:LK.mine,fav:LK.fav,nude:LK.nude,cat:LK.cat}))}catch(e){toast('링크 저장 실패','err')}};
+let lnkOpen=false,lnkFull=false,lnkForm=false;
+const lnkAll=()=>[...LDEF,...LK.mine.map(x=>({...x,mine:true}))];
+const lnkAb=n=>{const w=n.replace(/[^A-Za-z0-9가-힣 ]/g,' ').trim().split(/\s+/).filter(Boolean);return (w.length>1?w[0][0]+w[1][0]:(w[0]||'?').slice(0,2)).toUpperCase()};
+function lnkCard(x,i){const fav=LK.fav.includes(x.id);
+  return `<div class="card"><div class="fav" style="background:${LCOL[i%LCOL.length]}">${esc(x.ab||lnkAb(x.n))}</div>
+  <div class="bd"><div class="nm"><span>${esc(x.n)}</span><button class="st${fav?' on':''}" data-lstar="${esc(x.id)}" aria-label="즐겨찾기">${fav?'★':'☆'}</button></div>
+  ${x.d?`<div class="ds">${esc(x.d)}</div>`:''}<div class="tg">${(x.t||[]).map(t=>`<i>${esc(t)}</i>`).join('')}${x.mine?'<i class="me">내 링크</i>':''}</div></div>
+  <div class="act"><a class="go" href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">열기 ↗</a>${x.mine?`<button class="del" data-ldel="${esc(x.id)}" aria-label="링크 지우기">×</button>`:''}</div></div>`}
+function renderLnk(){const all=lnkAll(),idx=new Map(all.map((x,i)=>[x.id,i])),vis=all.filter(x=>LK.nude||!x.nude);
+  const cats=LCATS.filter(([k])=>vis.some(x=>(x.c||[]).includes(k)));if(LK.cat&&!cats.some(c=>c[0]===LK.cat))LK.cat='';
+  const list=vis.filter(x=>!LK.cat||(x.c||[]).includes(LK.cat)),fav=list.filter(x=>LK.fav.includes(x.id)),rest=list.filter(x=>!LK.fav.includes(x.id));
+  const sec=(t,l)=>l.length?`<div class="lk-sec"><span>${t}</span><span>${l.length}</span></div><div class="lk-list">${l.map(x=>lnkCard(x,idx.get(x.id))).join('')}</div>`:'';
+  const form=lnkForm?`<form class="lk-form" id="lnkF"><div class="fx-row"><span class="fx-l">이름</span><input type="text" name="n" required placeholder="예: 내 포즈 모음" autocomplete="off"></div>
+    <div class="fx-row"><span class="fx-l">주소</span><input type="text" name="u" required placeholder="https://" autocomplete="off" inputmode="url"></div>
+    <div class="fx-row"><span class="fx-l">설명</span><input type="text" name="d" placeholder="선택" autocomplete="off"></div>
+    <div class="fx-row"><span class="fx-l">분류</span><select name="c">${LCATS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>
+    <div class="btns"><button type="button" id="lnkFx">취소</button><button type="submit" class="pri">추가</button></div></form>`:'<button class="add" id="lnkAdd">+ 내 링크 추가</button>';
+  $('#lnkBody').innerHTML=`<div class="lk-tools"><button id="lnkRnd">🎲 오늘의 사이트</button><span class="sp"></span><label class="sw" title="누드 포함 사이트 보기"><span class="swl">누드 포함</span><input type="checkbox" id="lnkNude"${LK.nude?' checked':''}><i></i></label></div>
+  <div class="lk-cats"><span class="o${LK.cat?'':' on'}" data-lcat="">전체</span>${cats.map(([k,l])=>`<span class="o${LK.cat===k?' on':''}" data-lcat="${k}">${l}</span>`).join('')}</div>
+  ${sec('★ 즐겨찾기',fav)}${sec(LK.cat?nm(LCATS,LK.cat):'전체',rest)}${list.length?'':'<div class="lk-sec"><span>이 분류에 링크가 없음</span></div>'}${form}`;
+  if(lnkForm){const f=$('#lnkF');f.n.value=f.dataset.n||'';f.c.value=LK.cat||'body';f.n.focus()}}
+function openLnk(){if(calOpen)closeCal();if(curPop)closeP();lnkOpen=true;renderLnk();$('#lnkP').classList.add('open');$('#lnkP').setAttribute('aria-hidden','false');$('#lnkBtn').classList.add('on')}
+function closeLnk(){lnkOpen=false;lnkForm=false;$('#lnkP').classList.remove('open');$('#lnkP').setAttribute('aria-hidden','true');$('#lnkBtn').classList.remove('on')}
+$('#lnkBtn').onclick=()=>lnkOpen?closeLnk():openLnk();
+$('#lnkX').onclick=closeLnk;
+$('#lnkFull').onclick=()=>{lnkFull=!lnkFull;$('#lnkP').classList.toggle('full',lnkFull);$('#lnkFull').dataset.tip=lnkFull?'패널로 줄이기':'전체 화면';hideTip()};
+document.addEventListener('pointerdown',e=>{if(!lnkOpen||lnkFull)return;if(e.target.closest('#lnkP,#lnkBtn,#toasts'))return;closeLnk()},true);
+$('#lnkP').addEventListener('click',e=>{const t=e.target;
+  const c=t.closest('[data-lcat]');if(c){LK.cat=c.dataset.lcat;saveLk();renderLnk();return}
+  const s=t.closest('[data-lstar]');if(s){const id=s.dataset.lstar;LK.fav=LK.fav.includes(id)?LK.fav.filter(x=>x!==id):[...LK.fav,id];saveLk();renderLnk();return}
+  const d=t.closest('[data-ldel]');if(d){const x=LK.mine.find(m=>m.id===d.dataset.ldel);LK.mine=LK.mine.filter(m=>m!==x);LK.fav=LK.fav.filter(f=>f!==d.dataset.ldel);saveLk();renderLnk();if(x)toast(`"${x.n}" 지움`);return}
+  if(t.closest('#lnkRnd')){const l=lnkAll().filter(x=>(LK.nude||!x.nude)&&(!LK.cat||(x.c||[]).includes(LK.cat)));if(!l.length)return;const x=l[rnd(l.length)];
+    window.open(x.u,'_blank','noopener');toast('오늘의 사이트 · '+x.n,'ok');return}
+  if(t.closest('#lnkAdd')){lnkForm=true;renderLnk();return}
+  if(t.closest('#lnkFx')){lnkForm=false;renderLnk();return}});
+$('#lnkP').addEventListener('change',e=>{if(e.target.id==='lnkNude'){LK.nude=e.target.checked;saveLk();renderLnk()}});
+$('#lnkP').addEventListener('submit',e=>{e.preventDefault();const f=e.target,n=f.n.value.trim();let u=f.u.value.trim();if(!n||!u)return;
+  if(!/^https?:\/\//i.test(u))u='https://'+u;try{u=new URL(u).href}catch(_){toast('주소 형식 오류','err');return}
+  if(lnkAll().some(x=>x.u===u)){toast('이미 있는 링크','err');return}
+  LK.mine.push({id:'m'+Date.now().toString(36),n,u,d:f.d.value.trim(),c:[f.c.value],t:[]});lnkForm=false;saveLk();renderLnk();toast(`"${n}" 추가`,'ok')});
 const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&curPop){closeP();return}
   if(e.key==='Escape'&&calOpen){closeCal();return}
+  if(e.key==='Escape'&&lnkOpen){closeLnk();return}
   if(e.key==='Escape'&&document.body.classList.contains('zen')){setZen(false);return}
   if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
@@ -1321,6 +1428,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='h')setZen(!document.body.classList.contains('zen'));
   else if(k==='s'){toggleSave()}
   else if(k==='c'){calOpen?closeCal():openCal()}
+  else if(k==='l'){lnkOpen?closeLnk():openLnk()}
   else if(e.key==='?'){curPop==='key'?closeP():openP('key')}
   else if(k==='t'){tState==='run'?tPause():tPlay();toast(tState==='run'?'타이머 재생':'타이머 일시정지')}
   else if((k===','||k==='.')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(k==='.'?1:-1)/24)}
