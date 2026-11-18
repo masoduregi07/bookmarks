@@ -86,6 +86,14 @@ input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset
 #img,#vid{max-width:100%;max-height:100%;display:block;user-select:none;-webkit-user-drag:none}
 .flip{transform:scaleX(-1)}
 #ov{position:absolute;pointer-events:none}
+#hg{position:absolute;left:50%;top:50%;width:30px;height:36px;margin:-18px 0 0 -15px;z-index:3;pointer-events:none;color:var(--ink);animation:hgflip 1.8s infinite}
+#hg .sd{fill:var(--tx3)}#hg .s2,#hg .s3{visibility:hidden}
+#hg .s1{animation:hg1 1.8s steps(1) infinite}#hg .s2{animation:hg2 1.8s steps(1) infinite}#hg .s3{animation:hg3 1.8s steps(1) infinite}
+@keyframes hg1{0%{visibility:visible}33%,100%{visibility:hidden}}
+@keyframes hg2{0%{visibility:hidden}33%{visibility:visible}66%,100%{visibility:hidden}}
+@keyframes hg3{0%,33%{visibility:hidden}66%,100%{visibility:visible}}
+@keyframes hgflip{0%,85%{rotate:0deg}100%{rotate:180deg}}
+@media (prefers-reduced-motion:reduce){#hg,#hg .s1,#hg .s2,#hg .s3{animation:none}#hg .s1{visibility:visible}}
 #msg{text-align:center;color:var(--tx2);line-height:1.9;max-width:460px;padding:14px 20px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
 #msg b{color:var(--ink);font-weight:700}
 #info{position:absolute;left:10px;top:10px;font-size:11px;color:var(--ink);display:flex;gap:8px;align-items:center;background:var(--panel);border:2px solid var(--ink);padding:2px 6px}
@@ -420,7 +428,8 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 </div>
 
 <main id="stage" class="win">
-  <div id="msg"><b>불러오는 중</b></div>
+  <div id="msg" class="hidden"></div>
+  <svg id="hg" viewBox="0 0 10 12" shape-rendering="crispEdges" aria-label="불러오는 중"><path fill="currentColor" d="M0 0h10v1H0zM0 11h10v1H0zM1 1h1v2H1zM8 1h1v2H8zM2 3h1v1H2zM7 3h1v1H7zM3 4h1v1H3zM6 4h1v1H6zM3 7h1v1H3zM6 7h1v1H6zM2 8h1v1H2zM7 8h1v1H7zM1 9h1v2H1zM8 9h1v2H8z"/><path class="sd s1" d="M2 1h6v2H2zM3 3h4v1H3zM4 4h2v1H4z"/><path class="sd s2" d="M3 3h4v1H3zM4 4h2v1H4zM4 6h1v2H4zM3 10h4v1H3z"/><path class="sd s3" d="M3 8h4v1H3zM2 9h6v2H2z"/></svg>
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <canvas id="c3d" class="hidden"></canvas>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
@@ -702,9 +711,11 @@ function fill(tab){
   return fillP[tab];
 }
 const lastErr={film:'',anim:'',fig:'','3d':''};
+let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);busyT=0;h.classList.add('hidden');return}
+  if(now){clearTimeout(busyT);busyT=0;h.classList.remove('hidden')}else if(!busyT&&h.classList.contains('hidden'))busyT=setTimeout(()=>{busyT=0;h.classList.remove('hidden')},300)}
 async function next(){const t=S.tab;
   if(S.pos[t]<S.hist[t].length-1){S.pos[t]++;show();return}
-  if(!S.queue[t].length){const lt=setTimeout(()=>toast('불러오는 중…'),700);lastErr[t]='';await fill(t);clearTimeout(lt);
+  if(!S.queue[t].length){busy(true);lastErr[t]='';await fill(t);
     if(!S.queue[t].length){return showErr(lastErr[t]||'불러오기 실패')}}
   S.hist[t].push(S.queue[t].shift());S.pos[t]=S.hist[t].length-1;show();fill(t);
 }
@@ -715,7 +726,7 @@ function resetQueues(tab){S.queue[tab]=[];fill(tab)}
 const img=$('#img'),vid=$('#vid'),ov=$('#ov'),stage=$('#stage'),msg=$('#msg'),c3d=$('#c3d');
 function media(){return !c3d.classList.contains('hidden')?c3d:vid.classList.contains('hidden')?img:vid}
 function showErr(e){
-  img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
+  busy(false);img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
   msg.classList.remove('hidden');$('#srcLink').classList.add('hidden');toast((/조건에 맞는/.test(e)?'결과 없음 · ':'연결 실패 · ')+e,'err');
   try{syncSaveBtn()}catch(_){}
   const nores=/조건에 맞는/.test(e);
@@ -723,20 +734,20 @@ function showErr(e){
 }
 function show(){
   const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();cutShownAt=Date.now();
-  if(!it){msg.classList.remove('hidden');msg.innerHTML='<b>불러오는 중</b>';return}
-  msg.classList.add('hidden');
+  msg.classList.add('hidden');if(!it){busy(true,true);return}
+  busy(true);
   if(it.kind==='3d'){
     img.classList.add('hidden');vid.classList.add('hidden');vid.pause();vid.removeAttribute('src');
-    m3d().then(async m=>{if(curItem()!==it)return;m.setLight(S.d3light);await m.show(it.state);if(curItem()!==it)return;m.setWire(S.d3poly?'over':'off');c3d.classList.remove('hidden');m.resize();drawGrid()},
+    m3d().then(async m=>{if(curItem()!==it)return;m.setLight(S.d3light);await m.show(it.state);if(curItem()!==it)return;m.setWire(S.d3poly?'over':'off');c3d.classList.remove('hidden');busy(false);m.resize();drawGrid()},
       e=>{if(curItem()===it)showErr('3D 모델을 열 수 없음 · '+(e&&e.message||'WebGL 확인'))});
   }else if(it.kind==='vid'){c3d.classList.add('hidden');
     img.classList.add('hidden');vid.classList.remove('hidden');
-    vid.src=M(it.url);vid.onloadedmetadata=()=>{const d=vid.duration||0;
+    vid.src=M(it.url);vid.onloadedmetadata=()=>{busy(false);const d=vid.duration||0;
       if(!S.play&&d>0.3)vid.currentTime=0.1+Math.random()*(d-0.2);if(S.play)vid.play().catch(()=>{});else vid.pause();drawGrid()};
     vid.onerror=()=>showErr('영상 로드 실패');
   }else{
     vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');img.classList.remove('hidden');
-    img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.src=M(it.url);
+    img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.onload=()=>{if(curItem()===it)busy(false)};img.src=M(it.url);if(img.complete&&img.naturalWidth)busy(false);
   }
   $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;$('#info').classList.remove('gone');
   const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${it.src||SRCNAME[t]}</b> ↗`;sl.classList.remove('hidden');
