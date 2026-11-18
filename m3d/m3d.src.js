@@ -23,10 +23,10 @@ async function loadPart(part) {
     const d = await (await fetch(BASE + 'foot.json')).json();
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.Float32BufferAttribute(d.p, 3)); geo.setIndex(d.i); geo.computeVertexNormals();
-    const m = new THREE.Mesh(geo, clay()); m.material.side = THREE.DoubleSide; g = wrapFit(m);
+    const m = new THREE.Mesh(geo, clay()); m.material.side = THREE.DoubleSide; m.castShadow = m.receiveShadow = true; g = wrapFit(m);
   } else {
     const gl = await new GLTFLoader().loadAsync(BASE + (part === 'hand' ? 'hand.glb' : 'head.glb'));
-    gl.scene.traverse(o => { if (o.isMesh) { o.material = clay(); o.frustumCulled = false; } });
+    gl.scene.traverse(o => { if (o.isMesh) { o.material = clay(); o.frustumCulled = false; o.castShadow = o.receiveShadow = true; } });
     if (part === 'head') gl.scene.rotation.y = 0;
     g = wrapFit(gl.scene);
     if (part === 'hand') { const bones = {}; gl.scene.traverse(o => { if (o.isBone) { bones[o.name] = o; o.userData.rp = o.position.clone(); o.userData.rq = o.quaternion.clone(); } });
@@ -69,7 +69,7 @@ export function setPose(p) {
   };
   (P[p] || P.open)(); render();
 }
-let wireMode = 'off', lightOn = true, lastState = null;
+let wireMode = 'off', lightMode = 'rand', lastState = null, fill;
 const wireMat = new THREE.MeshBasicMaterial({ color: 0x3d3b37, wireframe: true, transparent: true, opacity: .35 });
 export function setWire(on) { wireMode = on === true ? 'only' : on === false ? 'off' : on; applyWire(); render(); }
 function applyWire() { Object.values(cache).forEach(g => g.traverse(o => { if (!o.isMesh || o.userData.isWire) return;
@@ -86,15 +86,34 @@ export async function show(state) {
   controls.target.set(0, 0, 0); camera.lookAt(0, 0, 0); controls.update();
   lastState = state; placeLight(); render();
 }
+// camera-relative rigs: [az (+ = right of view), el, intensity, color]
+export const RIGS = {
+  rembr: { key: [45, 40, 2.6], fill: [-60, 10, .3], hemi: .4 },
+  split: { key: [90, 5, 2.6], fill: [-90, 0, .12], hemi: .3 },
+  rim:   { key: [150, 25, 3.2], rim: [-150, 25, 2.6], fill: [0, 5, .5], hemi: .4 },
+  under: { key: [10, -55, 2.6], hemi: .3 },
+  top:   { key: [0, 85, 2.8], hemi: .35 },
+  warmcool: { key: [50, 30, 2.4, 0xffd2a0], fill: [-70, 10, 1.0, 0x9fc2ff], hemi: .2 },
+};
 function placeLight() {
   const state = lastState; if (!state) return;
-  if (!lightOn) { key.position.copy(camera.position).normalize().multiplyScalar(5).add(new THREE.Vector3(0, 1.2, 0)); key.intensity = 1.1; hemi.intensity = 1.5; rim.visible = false; return }
-  key.intensity = 2.4; hemi.intensity = .75;
+  const mode = lightMode === 'rand' ? (state.rig || 'free') : lightMode;
+  key.color.set(0xffffff); fill.color.set(0xffffff); key.castShadow = mode !== 'off';
+  if (mode === 'off') { key.position.copy(camera.position).normalize().multiplyScalar(5).add(new THREE.Vector3(0, 1.2, 0)); key.intensity = 1.1; hemi.intensity = 1.5; rim.visible = fill.visible = false; return }
+  const r = RIGS[mode];
+  if (r) {
+    const f = camera.position.clone().normalize(), rt = new THREE.Vector3().crossVectors(new THREE.Vector3(0, 1, 0), f).normalize(), u = new THREE.Vector3().crossVectors(f, rt);
+    const put = (L, v) => { if (!v) { L.visible = false; return } L.visible = true; const a = v[0] * Math.PI / 180, e = v[1] * Math.PI / 180;
+      L.position.copy(f).multiplyScalar(Math.cos(e) * Math.cos(a)).addScaledVector(rt, Math.cos(e) * Math.sin(a)).addScaledVector(u, Math.sin(e)).multiplyScalar(5);
+      L.intensity = v[2]; L.color.set(v[3] || 0xffffff) };
+    key.visible = true; put(key, r.key); put(fill, r.fill); put(rim, r.rim); hemi.intensity = r.hemi; return;
+  }
+  fill.visible = false; key.intensity = 2.4; hemi.intensity = .75;
   const la = state.lAz * Math.PI / 180, le = state.lEl * Math.PI / 180;
   key.position.set(Math.cos(le) * Math.sin(la), Math.sin(le), Math.cos(le) * Math.cos(la)).multiplyScalar(5);
   rim.visible = !!state.rim; rim.position.copy(key.position).multiplyScalar(-1).setY(Math.abs(key.position.y) * .4 + 1);
 }
-export function setLight(on) { lightOn = on; placeLight(); render(); }
+export function setLight(m) { lightMode = m === true ? 'rand' : m === false ? 'off' : m; placeLight(); render(); }
 export function randomState(o) {
   const range = { near: [50, 20], wide: [120, 45], all: [180, 80] }[o.range || 'wide'];
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -118,8 +137,12 @@ export function init(canvas, bg, cb) {
   hemi = new THREE.HemisphereLight(0xffffff, 0x8a8478, 0.75); scene.add(hemi);
   key = new THREE.DirectionalLight(0xffffff, 2.4); scene.add(key);
   rim = new THREE.DirectionalLight(0xffffff, 1.4); scene.add(rim);
+  fill = new THREE.DirectionalLight(0xffffff, .3); fill.visible = false; scene.add(fill);
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.bias = -0.0005; key.shadow.normalBias = 0.02;
+  { const c = key.shadow.camera; c.left = c.bottom = -1; c.right = c.top = 1; c.near = .5; c.far = 12; }
   holder = new THREE.Group(); scene.add(holder);
   controls = new OrbitControls(camera, canvas); controls.enableDamping = false; controls.enablePan = false; controls.minDistance = 1.2; controls.maxDistance = 6;
-  controls.addEventListener('change', () => { if (!lightOn) placeLight(); render(); onChange && onChange(); });
+  controls.addEventListener('change', () => { placeLight(); render(); onChange && onChange(); });
   new ResizeObserver(resize).observe(canvas.parentElement); resize();
 }

@@ -369,7 +369,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <button id="next">다음 컷 ▶</button>
   </div>
   <i class="dv"></i>
-  <div class="grp d3only" id="gLight"><label>라이팅</label><label class="sw" title="라이팅 (G)"><input type="checkbox" id="d3Light"><i></i></label></div>
+  <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" title="라이팅 (G)"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
   <div class="grp" id="gTone"><label>색</label>
     <div class="seg" id="tone">
       <button data-v="color" class="on">컬러</button>
@@ -657,9 +657,10 @@ async function sbRandom(){
 // ---------- queue / prefetch
 const fillP={};
 // ---------- 3D model (hand / foot / head), lazy-loaded three.js bundle
-if(S.d3light===undefined)S.d3light=true;if(S.d3poly===undefined)S.d3poly=false;
+if(S.d3light===undefined||S.d3light===true)S.d3light='rand';else if(S.d3light===false)S.d3light='off';if(S.d3poly===undefined)S.d3poly=false;
 const d3Set=()=>{save();applyView();if(M3)M3.then(m=>{m.setLight(S.d3light);m.setWire(S.d3poly?'over':'off')})};
-$('#d3Light').addEventListener('change',e=>{S.d3light=e.target.checked;d3Set()});
+$('#d3Light').addEventListener('change',e=>{S.d3light=e.target.value;d3Set();e.target.blur()});
+const D3LIGHTS=[...$('#d3Light').options].map(o=>[o.value,o.textContent]);
 $('#d3Poly').addEventListener('change',e=>{S.d3poly=e.target.checked;d3Set()});
 const D3PARTS=[['hand','손'],['foot','발'],['head','헤드']],D3POSES=[['open','편 손'],['relax','편히 쉰 손'],['fist','주먹'],['point','가리키기'],['grip','쥐기'],['pinch','집기']],D3RANGE=[['near','정면 근처'],['wide','넓게'],['all','전 방위']];
 const D3CRED={hand:['WebXR Hand · MIT','https://github.com/immersive-web/webxr-input-profiles'],head:['Lee Perry-Smith · CC BY 3.0','https://www.triplegangers.com/'],foot:['MakeHuman · CC0','http://www.makehumancommunity.org/']};
@@ -667,7 +668,7 @@ const nm=(l,v)=>(l.find(x=>x[0]===v)||[v,v])[1];
 async function d3Random(){const f=S.f['3d'],rnd=a=>a[Math.floor(Math.random()*a.length)];
   let parts=(f.parts.length?f.parts:D3PARTS.map(x=>x[0])).filter(x=>!f.partsEx.includes(x));if(!parts.length)throw new Error('조건에 맞는 부위가 없음');
   const part=rnd(parts),pose=part==='hand'?(f.pose||rnd(D3POSES)[0]):'',r={near:[50,20],wide:[120,45],all:[180,80]}[f.range]||[120,45],u=(a,b)=>Math.round(a+Math.random()*(b-a));
-  const st={part,pose,az:u(-r[0],r[0]),el:u(-r[1],r[1]),lAz:u(-130,130),lEl:u(15,70),rim:f.rim},key='3d'+Date.now()+Math.random();
+  const st={part,pose,az:u(-r[0],r[0]),el:u(-r[1],r[1]),lAz:u(-130,130),lEl:u(15,70),rim:f.rim,rig:rnd(['free','free','rembr','split','rim','under','top','warmcool'])},key='3d'+Date.now()+Math.random();
   return {kind:'3d',state:st,url:'',key,title:[nm(D3PARTS,part),pose&&nm(D3POSES,pose),`방위 ${st.az}° · 높이 ${st.el}°`].filter(Boolean).join(' · '),src:D3CRED[part][0],link:D3CRED[part][1]}}
 let M3=null;
 function m3d(){if(!M3)M3=import('./m3d/m3d.js').then(m=>{m.init(c3d,getComputedStyle(document.documentElement).getPropertyValue('--stage').trim()||'#dfded8',()=>{});return m}).catch(e=>{M3=null;throw e});return M3}
@@ -727,7 +728,7 @@ $('#info').addEventListener('click',e=>{e.stopPropagation();$('#info').classList
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function applyView(){
   const t=S.tab,f=t==='3d'||S.tone==='color'?'':S.tone==='gray'?'grayscale(1)':`url(#${S.tone})`;
-  document.body.classList.toggle('t3d',t==='3d');if(window.fixDv)fixDv();$('#d3Light').checked=S.d3light;$('#d3Poly').checked=S.d3poly;
+  document.body.classList.toggle('t3d',t==='3d');if(window.fixDv)fixDv();$('#d3Light').value=S.d3light;$('#d3Poly').checked=S.d3poly;
   img.style.filter=vid.style.filter=c3d.style.filter=f;
   img.classList.toggle('flip',S.flip);vid.classList.toggle('flip',S.flip);c3d.classList.toggle('flip',S.flip);
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
@@ -1073,7 +1074,7 @@ document.addEventListener('keydown',e=>{
   if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
-  else if(k==='g'&&S.tab==='3d'){S.d3light=!S.d3light;d3Set();toast('라이팅 '+(S.d3light?'켜짐':'꺼짐'))}
+  else if(k==='g'&&S.tab==='3d'){{const i=D3LIGHTS.findIndex(x=>x[0]===S.d3light);S.d3light=D3LIGHTS[(i+1)%D3LIGHTS.length][0];d3Set();toast('라이팅: '+nm(D3LIGHTS,S.d3light))}}
   else if(k==='d'&&S.tab==='3d'){S.d3poly=!S.d3poly;d3Set();toast('폴리곤 '+(S.d3poly?'켜짐':'꺼짐'))}
   else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백',t2:'2톤',t3:'3톤',t5:'5톤'})[S.tone])}
   else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
