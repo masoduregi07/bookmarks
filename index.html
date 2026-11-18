@@ -353,12 +353,11 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 }
 /* croquis link panel */
 #lnkP .lbody{flex:1;min-height:0;overflow:auto;padding-bottom:14px}
-#lnkP .lk-nude{margin-right:6px}
+#lnkP .ch{gap:6px}
+#lnkP .ch b{margin-right:0}
+#lnkP .lk-nude{margin:0 auto 0 8px}
+#lnkP .ch #lnkRnd{margin-left:-6px}
 #lnkP .swl{font-size:11px;color:var(--tx2);margin-right:6px;font-weight:400}
-#lnkP .lk-cats{display:flex;gap:4px;flex-wrap:wrap;padding:10px 14px;border-bottom:2px dotted var(--soft)}
-#lnkP .lk-cats .o{padding:4px 7px 2px 8px;background:#ebe9e2;box-shadow:1px 1px 0 rgba(61,59,55,.18);font-size:11px;line-height:16px;cursor:pointer}
-#lnkP .lk-cats .o:hover{background:var(--yel)}
-#lnkP .lk-cats .o.on{background:var(--ink);color:#fff}
 #lnkP .lk-sec{font-size:11px;color:var(--tx2);padding:12px 14px 6px;display:flex;justify-content:space-between}
 #lnkP .lk-list{margin:0 14px;border:2px solid var(--ink);background:#fff;box-shadow:2px 2px 0 var(--shd)}
 #lnkP.full .lbody{width:100%;max-width:760px;margin:0 auto}
@@ -387,8 +386,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 #lnkP .lk-form input,#lnkP .lk-form select{width:100%;min-width:0;font-size:11px}
 #lnkP .lk-form .btns{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
 #lnkP .lk-form .pri{background:var(--ink);color:#fff}
-@media (hover:none),(pointer:coarse){#lnkP .r .lk{padding-top:10px;padding-bottom:10px}#lnkP .r .st{padding:0 12px}#lnkP .lk-cats .o{padding:7px 9px 5px 10px}}
-</style>
+@media (hover:none),(pointer:coarse){#lnkP .r .lk{padding-top:10px;padding-bottom:10px}#lnkP .r .st{padding:0 12px}</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute">
@@ -531,9 +529,10 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   <section id="fltBody"></section>
 </div>
 <aside id="lnkP" class="calp" aria-label="크로키 링크" aria-hidden="true">
-  <div class="ch"><b>크로키 링크</b>
-    <label class="sw lk-nude" title="누드 포함 사이트 보기"><span class="swl">누드 포함</span><input type="checkbox" id="lnkNude"><i></i></label>
+  <div class="ch">
     <button class="ic" id="lnkRnd" data-tip="오늘의 사이트" aria-label="오늘의 사이트"><svg viewBox="0 0 16 16"><path d="M3 1h10v1H3zM2 2h1v1H2zM13 2h1v1h-1zM1 3h1v10H1zM14 3h1v10h-1zM2 13h1v1H2zM13 13h1v1h-1zM3 14h10v1H3zM4 4h2v2H4zM10 4h2v2h-2zM7 7h2v2H7zM4 10h2v2H4zM10 10h2v2h-2z"/></svg></button>
+    <b>크로키 링크</b>
+    <label class="sw lk-nude" title="누드 포함 사이트 보기"><span class="swl">누드 포함</span><input type="checkbox" id="lnkNude"><i></i></label>
     <button class="ic" id="lnkFull" data-tip="전체 화면"><svg viewBox="0 0 16 16"><path d="M1 1h5v1h-5zM10 1h5v1h-5zM1 2h1v4h-1zM14 2h1v4h-1zM1 10h1v4h-1zM14 10h1v4h-1zM1 14h5v1h-5zM10 14h5v1h-5z"/></svg></button>
     <button class="ic" id="lnkX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
   </div>
@@ -1381,18 +1380,17 @@ function lnkCard(x,i){const fav=LK.fav.includes(x.id);
   <span class="tx"><span class="nm">${esc(x.n)}</span><span class="ds">${x.mine?'<span class="me">내 링크</span>':''}${esc(x.d||x.u.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))}</span></span></a>
   <button class="st${fav?' on':''}" data-lstar="${esc(x.id)}" aria-label="즐겨찾기">${fav?'★':'☆'}</button>${x.mine?`<button class="del" data-ldel="${esc(x.id)}" aria-label="링크 지우기">×</button>`:''}</div>`}
 function renderLnk(){const all=lnkAll(),idx=new Map(all.map((x,i)=>[x.id,i])),vis=all.filter(x=>LK.nude||!x.nude);
-  const cats=LCATS.filter(([k])=>vis.some(x=>(x.c||[]).includes(k)));if(LK.cat&&!cats.some(c=>c[0]===LK.cat))LK.cat='';
+  LK.cat='';
   const list=vis.filter(x=>!LK.cat||(x.c||[]).includes(LK.cat)),fav=list.filter(x=>LK.fav.includes(x.id)),rest=list.filter(x=>!LK.fav.includes(x.id));
   const sec=(t,l)=>l.length?`<div class="lk-sec"><span>${t}</span><span>${l.length}</span></div><div class="lk-list">${l.map(x=>lnkCard(x,idx.get(x.id))).join('')}</div>`:'';
   const form=lnkForm?`<form class="lk-form" id="lnkF"><div class="fx-row"><span class="fx-l">이름</span><input type="text" name="n" required placeholder="예: 내 포즈 모음" autocomplete="off"></div>
     <div class="fx-row"><span class="fx-l">주소</span><input type="text" name="u" required placeholder="https://" autocomplete="off" inputmode="url"></div>
     <div class="fx-row"><span class="fx-l">설명</span><input type="text" name="d" placeholder="선택" autocomplete="off"></div>
-    <div class="fx-row"><span class="fx-l">분류</span><select name="c">${LCATS.map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>
     <div class="btns"><button type="button" id="lnkFx">취소</button><button type="submit" class="pri">추가</button></div></form>`:'<button class="add" id="lnkAdd">+ 내 링크 추가</button>';
   $('#lnkNude').checked=LK.nude;
-  $('#lnkBody').innerHTML=`<div class="lk-cats"><span class="o${LK.cat?'':' on'}" data-lcat="">전체</span>${cats.map(([k,l])=>`<span class="o${LK.cat===k?' on':''}" data-lcat="${k}">${l}</span>`).join('')}</div>
+  $('#lnkBody').innerHTML=`
   ${sec('★ 즐겨찾기',fav)}${sec(LK.cat?nm(LCATS,LK.cat):'전체',rest)}${list.length?'':'<div class="lk-sec"><span>이 분류에 링크가 없음</span></div>'}${form}`;
-  if(lnkForm){const f=$('#lnkF');f.n.value=f.dataset.n||'';f.c.value=LK.cat||'body';f.n.focus()}}
+  if(lnkForm){const f=$('#lnkF');f.n.value=f.dataset.n||'';f.n.focus()}}
 function openLnk(){if(calOpen)closeCal();if(curPop)closeP();lnkOpen=true;renderLnk();$('#lnkP').classList.add('open');$('#lnkP').setAttribute('aria-hidden','false');$('#lnkBtn').classList.add('on')}
 function closeLnk(){lnkOpen=false;lnkForm=false;$('#lnkP').classList.remove('open');$('#lnkP').setAttribute('aria-hidden','true');$('#lnkBtn').classList.remove('on')}
 $('#lnkBtn').onclick=()=>lnkOpen?closeLnk():openLnk();
@@ -1400,7 +1398,6 @@ $('#lnkX').onclick=closeLnk;
 $('#lnkFull').onclick=()=>{lnkFull=!lnkFull;$('#lnkP').classList.toggle('full',lnkFull);$('#lnkFull').dataset.tip=lnkFull?'패널로 줄이기':'전체 화면';hideTip()};
 document.addEventListener('pointerdown',e=>{if(!lnkOpen||lnkFull)return;if(e.target.closest('#lnkP,#lnkBtn,#toasts'))return;closeLnk()},true);
 $('#lnkP').addEventListener('click',e=>{const t=e.target;
-  const c=t.closest('[data-lcat]');if(c){LK.cat=c.dataset.lcat;saveLk();renderLnk();return}
   const s=t.closest('[data-lstar]');if(s){const id=s.dataset.lstar;LK.fav=LK.fav.includes(id)?LK.fav.filter(x=>x!==id):[...LK.fav,id];saveLk();renderLnk();return}
   const d=t.closest('[data-ldel]');if(d){const x=LK.mine.find(m=>m.id===d.dataset.ldel);LK.mine=LK.mine.filter(m=>m!==x);LK.fav=LK.fav.filter(f=>f!==d.dataset.ldel);saveLk();renderLnk();if(x)toast(`"${x.n}" 지움`);return}
   if(t.closest('#lnkRnd')){const l=lnkAll().filter(x=>(LK.nude||!x.nude)&&(!LK.cat||(x.c||[]).includes(LK.cat)));if(!l.length)return;const x=l[rnd(l.length)];
@@ -1411,7 +1408,7 @@ $('#lnkP').addEventListener('change',e=>{if(e.target.id==='lnkNude'){LK.nude=e.t
 $('#lnkP').addEventListener('submit',e=>{e.preventDefault();const f=e.target,n=f.n.value.trim();let u=f.u.value.trim();if(!n||!u)return;
   if(!/^https?:\/\//i.test(u))u='https://'+u;try{u=new URL(u).href}catch(_){toast('주소 형식 오류','err');return}
   if(lnkAll().some(x=>x.u===u)){toast('이미 있는 링크','err');return}
-  LK.mine.push({id:'m'+Date.now().toString(36),n,u,d:f.d.value.trim(),c:[f.c.value],t:[]});lnkForm=false;saveLk();renderLnk();toast(`"${n}" 추가`,'ok')});
+  LK.mine.push({id:'m'+Date.now().toString(36),n,u,d:f.d.value.trim(),c:['body'],t:[]});lnkForm=false;saveLk();renderLnk();toast(`"${n}" 추가`,'ok')});
 const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&curPop){closeP();return}
