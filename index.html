@@ -551,6 +551,10 @@ function loadCats(){
       for(let pg=1;pg<=4;pg++){const r=await getJSON(FG+`categories?parent=${c.id}&per_page=100&page=${pg}&orderby=name&_fields=id,name,count`);
         kids.push(...r.data);if(r.data.length<100)break}
       FGC.groups[k]={id:c.id,kids:kids.filter(x=>x.count>0).map(x=>({id:x.id,name:dec(x.name)}))}}
+    // FILM-GRAB keeps decades (1950s, 2010s …) as top-level categories, not under "!Year"
+    if(!FGC.groups.year||!FGC.groups.year.kids.length){const r=await getJSON(FG+'categories?parent=0&per_page=100&_fields=id,name,count');
+      const kids=r.data.filter(x=>x.count>0&&/^\d{4}s$/.test(x.name)).sort((a,b)=>a.name.localeCompare(b.name)).map(x=>({id:x.id,name:x.name}));
+      if(kids.length)FGC.groups.year={id:0,kids}}
   })();
   FGC.ready.catch(()=>{FGC.ready=null;FGC.err=true});
   return FGC.ready;
