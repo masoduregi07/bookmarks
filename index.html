@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow, noarchive">
@@ -27,7 +27,7 @@ select{appearance:none;-webkit-appearance:none;padding-right:22px;cursor:pointer
 input[type=number]{width:44px}
 input[type=range]{-webkit-appearance:none;appearance:none;width:72px;height:10px;background:#fff;border:2px solid var(--ink)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:16px;background:var(--ink);border:none}
-#app{display:grid;grid-template-rows:auto 1fr;height:100%;height:100dvh;padding:6px 10px 10px;gap:10px}
+#app{display:grid;grid-template-rows:auto 1fr;grid-template-columns:minmax(0,1fr);height:100%;height:100dvh;padding:6px 10px 10px;gap:10px}
 .top{display:flex;flex-direction:column}
 .top header{display:flex;align-items:center;gap:8px;padding:0 2px 0 0;min-height:0;flex-wrap:nowrap;min-width:0}
 button.sm{padding:1px 8px;box-shadow:1px 1px 0 var(--shd)}
@@ -399,6 +399,32 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   .pop .hd button.ic,.calp .ch button.ic{width:30px;height:20px;min-height:0}
   .pop .hd button.ic::before,.calp .ch button.ic::before{content:"";position:absolute;inset:-4px 0}
   .pop .hd,.calp .ch{padding-right:0}
+}
+/* narrow / iPad portrait: keep all tabs + header icons on one line */
+@media (max-width:900px){
+  .top header .tabs{gap:3px}
+  .top header .tabs button,.top header .tabs button.on{padding-left:9px!important;padding-right:9px!important}
+  .tabs .wip{display:none}
+  .top header .ibar button.ic{width:34px}
+}
+@media (max-width:800px){
+  .top header .tabs button:not(.on) .tl{display:none}
+}
+/* touch: iOS keeps :hover after a tap — neutralize hover looks */
+@media (hover:none){
+  button:not(.on):not(:disabled):hover{background:#fff}
+  #next:hover{background:var(--pink)}
+  .pop .btns .pri:hover,#lnkP .lk-form .pri:hover{background:var(--ink)}
+  #saveCut.done:hover{background:var(--mint)}
+  .seg button:not(.on):hover{background:#fff}
+  .chip:not(.on):not(.set):hover{background:#fff}.chip.set:hover{background:var(--yel)}
+  #fltPop .o:not(.on):not(.ex):hover{background:#ebe9e2}
+  #fltPop .fx-tab:hover,button.ic:hover,#uiShow:hover,.pop .hd button.ic:hover,.calp .ch button.ic:hover{background:none}
+  button.ic:not(.on):hover svg{transform:none}button.ic:not(.on):hover::after{opacity:0}
+  #lnkP .r:not(:active){background:none}#lnkP .r:not(:active) .nm::after{opacity:0}#lnkP .r:not(:active) .ds{color:var(--tx2)}
+  #lnkP .add:hover{background:none;color:var(--tx2)}
+  #srcLink:hover{background:var(--panel)}
+  .calp .d:hover{border-color:var(--soft)}.calp .d.today:hover{border-color:var(--ink)}
 }
 </style>
 </head>
@@ -776,6 +802,7 @@ const SFX=(()=>{let ac=null;
 document.addEventListener('pointerdown',e=>{if(e.button)return;const el=e.target.closest('button,select,.sw,label.chk,[data-rm],[data-tab],.gr .o,.wk-list .o,#info,#calGrid .d[data-k]:not(.fut),#calYear [data-k],#fReset,#uiShow');
   if(!el||el.disabled||el.closest('[disabled]'))return;SFX.click(el.matches('#next,.pri,[data-tab]'))},true);
 if(S.tSnd===undefined)S.tSnd=true;$('#tSndOn').checked=S.tSnd;$('#tSndOn').addEventListener('change',e=>{S.tSnd=e.target.checked;save();if(S.tSnd)SFX.chime()});
+{const un=()=>{SFX.unlock();removeEventListener('touchend',un,true);removeEventListener('click',un,true)};addEventListener('touchend',un,true);addEventListener('click',un,true)}
 $('#sfxOn').checked=S.sfx;$('#sfxOn').addEventListener('change',e=>{S.sfx=e.target.checked;save();if(S.sfx)SFX.click()});
 const D3PARTS=[['hand','손'],['foot','발'],['head','헤드']],D3POSES=[['open','편 손'],['relax','편히 쉰 손'],['fist','주먹'],['point','가리키기'],['grip','쥐기'],['pinch','집기']],D3RANGE=[['near','정면 근처'],['wide','넓게'],['all','전 방위']];
 const D3CRED={hand:['WebXR Hand · MIT','https://github.com/immersive-web/webxr-input-profiles'],head:['Lee Perry-Smith · CC BY 3.0','https://www.triplegangers.com/'],foot:['MakeHuman · CC0','http://www.makehumancommunity.org/']};
@@ -795,7 +822,7 @@ const GAMES=[['genshin','원신','genshin-impact.fandom.com',{splash:['Character
 const GKINDS=[['','전체'],['splash','스플래시'],['sheet','설정화']];
 const gw={cats:{},files:{}};
 async function wiki(host,q){const u=`https://${host}/api.php?format=json&origin=*&${q}`;
-  try{const r=await fetch(u,{credentials:'omit'});if(r.ok)return await r.json()}catch(e){}
+  if(!(gw.px=gw.px||{})[host])try{const r=await fetch(u,{credentials:'omit'});if(r.ok)return await r.json()}catch(e){gw.px[host]=true}
   try{return (await getJSON(u)).data}catch(e){throw new Error('위키 연결 실패 · '+e.message+(/403/.test(e.message)?' (Worker 허용 목록에 fandom.com · wiki.gg 확인)':''))}}
 async function gameCats(g){const [id,,host,known]=g;if(gw.cats[id])return gw.cats[id];
   if(known){gw.cats[id]=known;return known}
@@ -854,6 +881,7 @@ let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);b
 async function next(){const t=S.tab;
   if(S.pos[t]<S.hist[t].length-1){S.pos[t]++;show();return}
   if(!S.queue[t].length){busy(true);lastErr[t]='';await fill(t);
+    if(S.tab!==t)return; // user switched tabs while this one was loading
     if(!S.queue[t].length){return showErr(lastErr[t]||'불러오기 실패')}}
   S.hist[t].push(S.queue[t].shift());S.pos[t]=S.hist[t].length-1;show();fill(t);
 }
@@ -872,6 +900,9 @@ const ERRK=[
   [/로드 실패/,'불러오기 실패','원본 사이트가 막았을 수 있음 · 다음 컷으로 넘기기.'],
   [/HTTP 503|점검/,'사이트 점검 중','원본 사이트 문제 · 잠시 후 다시 시도하거나 다른 탭 사용.'],
 ];
+// clear the stage (previous tab's media / title) while a new tab loads its first cut
+function blankStage(){img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');ov.innerHTML='';
+  $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');zoomReset()}
 function showErr(e){
   busy(false);img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
   $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.remove('hidden');
@@ -969,7 +1000,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden)tTick()});
 function tSet(sec){S.tDur=Math.max(0,Math.min(sec,6*3600));save();tReset()}
 
 // ---------- events
-document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(curPop)closeP();S.tab=b.dataset.tab;save();
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(curPop)closeP();S.tab=b.dataset.tab;save();if(S.pos[S.tab]<0)blankStage();
   if(S.pos[S.tab]<0)next();else show();applyView()});
 $('#next').onclick=next;$('#prev').onclick=prev;
 document.querySelectorAll('#tone button').forEach(b=>b.onclick=()=>{S.tone=b.dataset.v;save();applyView()});
@@ -1012,7 +1043,7 @@ function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;P.el.classList
 sb.onclick=e=>{e.stopPropagation();curPop==='set'?closeP():openP('set')};
 $('#keyBtn').onclick=e=>{e.stopPropagation();curPop==='key'?closeP():openP('key')};
 document.querySelectorAll('.pop .px').forEach(b=>b.onclick=closeP);
-document.addEventListener('mousedown',e=>{if(!curPop)return;const P=POPS[curPop];
+document.addEventListener('pointerdown',e=>{if(!curPop)return;const P=POPS[curPop];
   if(!P.el.contains(e.target)&&!(P.btn&&P.btn.contains(e.target)))closeP()});
 addEventListener('resize',()=>{if(curPop)placeP(curPop)});
 
