@@ -438,7 +438,7 @@ header.tov .tsc{display:flex}
 /* small screens (phones): compact toolbar */
 @media (max-width:560px){
   #flip .ft{display:none}
-  #flip{padding-left:10px;padding-right:10px}
+  #flip{padding-left:5px;padding-right:5px}
   .top footer{column-gap:14px!important}
   #gGrid{column-gap:6px}
   #gGrid #grid{width:auto;max-width:80px;padding-right:22px}
@@ -468,7 +468,11 @@ header.tov .tsc{display:flex}
   #tbGrip svg{position:absolute;right:3px;bottom:3px;width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
   #tbGrip.drag svg{fill:var(--tx3)}
   body[data-tb="1"] #frow,body[data-tb="1"] #tmr{display:none!important}
-  body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip){display:none!important}
+  body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow){display:none!important}
+  /* one-row toolbar keeps the 필터 button (chips hidden) */
+  body[data-tb="2"] .top footer>.frow,body[data-tb="3"] .top footer>.frow{order:1!important;flex:0 0 auto!important;margin:0!important}
+  body[data-tb="2"] #frow>:not(#fltBtn),body[data-tb="3"] #frow>:not(#fltBtn){display:none}
+  body[data-tb="3"] #fltBtn{font-size:0;min-height:28px;padding:0 10px}body[data-tb="3"] #fltBtn .cnt{font-size:10px}
   body[data-tb="2"] .top footer,body[data-tb="3"] .top footer{padding-right:30px!important}
   body[data-tb="3"] .top footer{padding-top:5px!important;padding-bottom:5px!important}
   body[data-tb="3"] .top footer>.grp:first-child{flex:1;flex-wrap:nowrap}
@@ -495,7 +499,7 @@ header.tov .tsc{display:flex}
   #gGrid #grid{flex:1 1 64px;min-width:64px;width:auto;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #gGrid #gridOpts{flex:1 1 auto}
   #gGrid #op{width:48px}
-  #flip .ft{display:none}#flip{padding-left:10px;padding-right:10px}
+  #flip .ft{display:none}#flip{padding-left:6px;padding-right:6px}
   #tmr .mu{display:none}#tmr .tadd button{padding-left:7px;padding-right:7px;min-width:0}
   #tmr .seg.ic{order:2}#tmr .tadd{order:3}#tmr #tIn{width:60px}
   /* every group stretches so a row has no empty space on the right */
@@ -554,7 +558,7 @@ header.tov .tsc{display:flex}
   .top footer>.grp:first-child{column-gap:4px}
   .top footer>.grp:first-child>button{padding-left:5px;padding-right:5px}
   #prev,#next{gap:3px}#saveCut{gap:3px}
-  #flip{padding-left:6px!important;padding-right:6px!important}
+  #flip{padding-left:4px!important;padding-right:4px!important}
   #tone button{padding-left:5px;padding-right:5px}
   .top footer{column-gap:6px!important}
   #tone button{min-width:30px;width:30px;padding:0;flex:none}
