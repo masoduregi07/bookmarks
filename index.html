@@ -209,6 +209,8 @@ footer .frow{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:
 #fltPop .fx-row.top .fx-l{padding-top:4px}
 #fltPop .fx-l{font-size:12px;color:var(--tx2)}
 #fltPop .fx-row input[type=text]{width:100%}
+#fltPop .fx-one{padding:0 0 10px 14px}
+#fltPop .fx-scroll{max-height:260px;overflow:auto}
 #fltPop .wk-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
 #fltPop .wk-list:empty{display:none}
 #fltPop .wk-list .o i{font-style:normal;color:var(--tx3);font-size:10px;margin-left:5px}
@@ -554,7 +556,7 @@ const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/
 // ---------- FILM-GRAB (WordPress REST)
 const fg={pages:{},seenPost:new Set()};
 const dec=s=>new DOMParser().parseFromString(s||'','text/html').body.textContent;
-const FGROUPS=[['genre','장르',['genre']],['year','연도',['year','years']],['country','국가',['country','countries']],['ratio','화면비',['aspect-ratio','aspect-ratios','aspectratio']]];
+const FGROUPS=[['genre','장르',['genre']],['year','연도',['year','years']],['country','국가',['country','countries']],['ratio','화면비',['aspect','aspect-ratio','aspect-ratios','aspectratio']]];
 const FGC={ready:null,groups:{},err:false};
 function loadCats(){
   if(FGC.ready)return FGC.ready;
@@ -925,18 +927,19 @@ $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
   else if(ty==='t')f.tags=f.tags.trim().split(/\s+/).filter(x=>x&&x!==a).join(' ');
   save();renderRow();if(curPop==='flt'){renderFlt();fltDirty=true}else applyFilter()});
 function opts(list,isOn,attr,isEx){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}${isEx&&isEx(v)?' ex':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
-const app={fTab:'kind'};
+const app={fTab:'kind',fTabFilm:'genre'};
 const HINT='<div class="gb"><span class="msg">한 번 누르면 포함 · 두 번 누르면 <s>제외</s> · 세 번 누르면 해제</span></div>';
 function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){h=`<div class="gb"><span class="msg">${FGC.err?'분류를 불러오지 못함 · 설정 → 연결 테스트 확인':'분류 불러오는 중…'}</span></div>`;
       if(!FGC.err)loadCats().then(()=>{if(curPop==='flt'&&S.tab==='film'){renderFlt();placeP('flt')}},()=>{if(curPop==='flt'){renderFlt()}})}
-    else for(const [k,l] of FGROUPS){const g=FGC.groups[k];if(!g)continue;
-      h+=`<div class="gb"><h3><span>${l}</span><span>${[f[k].length?f[k].length+'개':'',f.ex[k].length?'제외 '+f.ex[k].length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr">${opts(g.kids.map(x=>[x.id,x.name]),v=>f[k].some(x=>x.id===v),`data-g="${k}" data-id`,v=>f.ex[k].some(x=>x.id===v))}</div></div>`}
-    if(Object.keys(FGC.groups).length)h=HINT+h;
-    h+=`<div class="gb"><h3><span>인물 (감독 · 촬영 · 미술 · 의상)</span></h3>${f.person?`<div class="gr"><span class="o on" data-pclr>${esc(f.person.name)} ×</span></div>`:
-      `<input type="text" id="fPerson" placeholder="이름 검색 (영문)" autocomplete="off"><div class="gr" id="fPersonRes">${personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join('')}</div>`}</div>`;
+    else{const ft=FGROUPS.some(g=>g[0]===app.fTabFilm&&FGC.groups[g[0]])||app.fTabFilm==='person'?app.fTabFilm:'genre';
+      const tabs=[...FGROUPS.filter(([k])=>FGC.groups[k]).map(([k,l])=>[k,l,f[k].length+f.ex[k].length]),['person','인물',f.person?1:0]];
+      h=`<div class="fx-tabs">${tabs.map(([k,l,n])=>`<button class="fx-tab${ft===k?' on':''}" data-ftabf="${k}">${l}${n?`<i>${n}</i>`:''}</button>`).join('')}</div>`;
+      if(ft==='person')h+=`<div class="fx-one">${f.person?`<div class="gr"><span class="o on" data-pclr>${esc(f.person.name)} ×</span></div>`:
+        `<input type="text" id="fPerson" placeholder="감독 · 촬영 · 미술 · 의상 이름 (영문)" autocomplete="off"><div class="gr" id="fPersonRes" style="margin-top:6px">${personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join('')}</div>`}</div>`;
+      else{const g=FGC.groups[ft];h+=`<div class="fx-one"><div class="gr tall fx-scroll">${opts(g.kids.map(x=>[x.id,x.name]),v=>f[ft].some(x=>x.id===v),`data-g="${ft}" data-id`,v=>f.ex[ft].some(x=>x.id===v))}</div></div>`}}
     h+=`<div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 영화당 1장</label><a id="fReset">초기화</a></div>`;
     b.innerHTML=h;
   }else if(t==='3d'){const f=S.f['3d'],hand=!f.partsEx.includes('hand')&&(!f.parts.length||f.parts.includes('hand'));
@@ -968,6 +971,7 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='�
   if(ae){const el=document.getElementById(ae);if(el&&el.tagName==='INPUT'){el.focus();try{el.setSelectionRange(sel,sel)}catch(e){}}}
 }
 $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]');if(tb){app.fTab=tb.dataset.ftab;renderFlt();return}
+  const tf=e.target.closest('[data-ftabf]');if(tf){app.fTabFilm=tf.dataset.ftabf;renderFlt();placeP('flt');return}
   const wa=e.target.closest('[data-wkadd]'),wd=e.target.closest('[data-wkdel]');
   if(wa||wd){const f=S.f.anim;f.works=f.works||[];if(wa){if(!f.works.includes(wa.dataset.wkadd))f.works=[...f.works,wa.dataset.wkadd]}else f.works=f.works.filter(x=>x!==wd.dataset.wkdel);
     fChange();const i=$('#fWork');if(i&&wa)i.focus();return}
