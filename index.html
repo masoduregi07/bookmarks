@@ -176,10 +176,12 @@ body.zen.peek .top{margin-top:calc(-1 * var(--th,220px) + 10px)}
 #peek{position:fixed;left:0;right:0;top:0;height:14px;z-index:45;display:none;justify-content:center}
 body.zen #peek{display:flex}
 body.zen.peek #peek{height:60px}
-#uiShow{position:relative;top:14px;height:26px;display:inline-flex;align-items:center;gap:6px;opacity:0;transform:translateY(-10px);transition:opacity .16s,transform .16s;pointer-events:none}
-#uiShow{justify-content:center;padding:0 12px;border:none;background:none;box-shadow:none;color:var(--ink)}
+#uiShow{position:relative;top:0;width:42px;height:26px;display:inline-flex;align-items:flex-start;gap:6px;opacity:0;transform:translateY(-10px);transition:opacity .16s,transform .16s;pointer-events:none}
+#uiShow{justify-content:center;padding:0;border:none;background:none;box-shadow:none;color:var(--ink)}
 #uiShow:hover{background:none;color:var(--ink)}
-#uiShow svg{width:18px;height:18px;fill:currentColor;shape-rendering:crispEdges;filter:drop-shadow(1px 1px 0 var(--panel)) drop-shadow(-1px -1px 0 var(--panel))}
+#uiShow .tb{width:24px;height:15px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--ink);border-top:none}
+#uiShow:hover .tb{background:var(--yel)}
+#uiShow svg{width:10px;height:6px;fill:currentColor;shape-rendering:crispEdges}
 body.zen.peek #uiShow{opacity:1;transform:none;pointer-events:auto}
 body.zen #info,body.zen #srcLink{display:none}
 
@@ -534,7 +536,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <div class="cside"><div class="cday" id="calDay"></div></div>
   </div>
 </aside>
-<div id="peek"><button id="uiShow" aria-label="UI 표시" title="UI 표시 (H)"><svg viewBox="0 0 16 16"><path d="M2 4h12v2H2zM4 6h8v2H4zM6 8h4v2H6z"/></svg></button></div>
+<div id="peek"><button id="uiShow" aria-label="UI 표시" title="UI 표시 (H)"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
 <div id="toasts"></div>
 
 <script>
