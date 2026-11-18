@@ -72,6 +72,7 @@ header h1{font-size:12px;font-weight:700;background:var(--panel);padding:2px 6px
 .tabs button:hover{background:var(--yel);color:var(--ink)}
 .tabs button.on{background:var(--panel);color:var(--ink);font-weight:700;padding:6px 16px 7px 14px}
 .tabs button:active{transform:none}
+.tabs .wip{font-size:11px;font-weight:400;color:var(--tx3)}
 .tabs svg{width:14px;height:14px;shape-rendering:crispEdges;fill:currentColor}
 .tabs button.on svg .acc{fill:var(--pink)}
 .tabs button[data-tab=anim].on svg .acc{fill:var(--mint)}
@@ -394,7 +395,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <button data-tab="fig"><svg viewBox="0 0 14 14"><path d="M5 0h4v1h1v4H9v1H5V5H4V1h1z"/><path d="M4 6h6v1h1v4H9v1H5v-1H3V7h1z"/><path class="acc" fill="#fff" d="M6 2h2v2H6z"/><path d="M2 12h10v2H2z" opacity=".45"/></svg><span class="tl">피규어</span></button>
     <button data-tab="3d"><svg viewBox="0 0 14 14"><path d="M6 0h2v1h2v1h2v1h1v8h-1v1h-2v1H8v1H6v-1H4v-1H2v-1H1V3h1V2h2V1h2z"/><path fill="#fff" d="M6 2h2v1h2v1H8v1H6V4H4V3h2zM3 5h2v1h2v6H6v-1H4v-1H3zM11 5v5h-1v1H8V6h2V5z"/><path class="acc" fill="#fff" d="M6 2h2v1h2v1H8v1H6V4H4V3h2z"/></svg><span class="tl">3D 모델</span></button>
     <button data-tab="game"><svg viewBox="0 0 14 14"><path d="M3 3h8v1h1v1h1v5h-1v1h-2v-1H9V9H5v1H4v1H2v-1H1V5h1V4h1z"/><path class="acc" fill="#fff" d="M3 6h1V5h1v1h1v1H5v1H4V7H3zM9 6h1v1H9zM10 5h1v1h-1zM11 6h1v1h-1zM10 7h1v1h-1z"/></svg><span class="tl">게임</span></button>
-    <button data-tab="photo"><svg viewBox="0 0 14 14"><path d="M6 1h2v1h1v2H8v1H7V3h1V2H6v1H5V2h1zM6 5h2v1h2v1h2v1h1v3H1V8h1V7h2V6h2zM3 8v1h8V8H9V7H5v1z"/><path class="acc" fill="#fff" d="M3 9h8v1H3z"/></svg><span class="tl">패션</span></button>
+    <button data-tab="photo"><svg viewBox="0 0 14 14"><path d="M6 1h2v1h1v2H8v1H7V3h1V2H6v1H5V2h1zM6 5h2v1h2v1h2v1h1v3H1V8h1V7h2V6h2zM3 8v1h8V8H9V7H5v1z"/><path class="acc" fill="#fff" d="M3 9h8v1H3z"/></svg><span class="tl">패션 <small class="wip">(공사중)</small></span></button>
   </nav>
   <div class="sp"></div>
   <div class="ibar">
