@@ -477,7 +477,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
     <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
     <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
-    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>SAFEBOORU <b id="stDB">미확인</b></div></div>
+    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div></div>
     <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
   </section>
 </div>
@@ -533,6 +533,7 @@ const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[]
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
   if(p.f){const d=FDEF();S.f={film:{...d.film,...p.f.film,ex:{...d.film.ex,...((p.f.film||{}).ex||{})}},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})},'3d':{...S.f['3d'],...(p.f['3d']||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
+{const g=S.f.fig;g.src='gs';g.dbTag='';g.dbEx=[]}
 {const f=S.f['3d'];f.parts=[f.parts.find(x=>D3PARTS_ID.includes(x))||'hand'];f.partsEx=[];f.pose='';f.range='wide';f.rim=false;f.wire=false}
 for(const t of['film','anim','fig','3d'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig','3d'].includes(S.tab))S.tab='film';
@@ -553,8 +554,6 @@ function placeToasts(){const box=$('#toasts'),top=document.querySelector('.top')
 function toast(t,kind=''){placeToasts();const el=document.createElement('div');el.className='toast '+kind;el.textContent=t;
   const box=$('#toasts');box.appendChild(el);while(box.children.length>4)box.firstChild.remove();
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),150)},2400)}
-async function getJSONd(u){try{const r=await fetch(u,{credentials:'omit'});if(r.ok)return {data:await r.json(),headers:r.headers}}catch(e){}
-  try{return await getJSON(u)}catch(e){throw new Error('Safebooru 연결 실패 · '+e.message+(/403/.test(e.message)?' (Worker 허용 목록에 safebooru.org 확인)':''))}}
 async function getJSON(u){const r=await fetch(P(u),{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return {data:await r.json(),headers:r.headers}}
 const rnd=n=>Math.floor(Math.random()*n);
 const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/$/,'')+u:u;
@@ -673,23 +672,8 @@ async function gsRandom(){
   throw new Error((f.kinds.length||kw||f.kindsEx.length||f.kwEx.trim())?'조건에 맞는 피규어를 찾지 못함 · 필터를 줄이거나 다시 시도':'피규어를 불러오지 못함'+(lastErr?' · '+lastErr:''));
 }
 
-// ---------- SAFEBOORU.ORG (figure photos; all-ages site, Gelbooru API)
-const DB='https://safebooru.org/';
-const DBTAGS=[['','없음'],['photo_(medium)','실사 사진만'],['from_behind','뒤에서'],['from_side','옆에서'],['from_above','위에서'],['from_below','아래에서']];
-const db={seen:new Set()};
-async function dbRandom(){
-  const f=S.f.fig,extra=f.dbTag.trim().replace(/\s+/g,'_');
-  const tags=['figure',extra,...(f.dbEx||[]).map(x=>'-'+x),'sort:random'].filter(Boolean).join(' ');
-  const {data}=await getJSONd(DB+`index.php?page=dapi&s=post&q=index&json=1&limit=20&tags=${encodeURIComponent(tags)}`);
-  const list=(Array.isArray(data)?data:[]).filter(p=>(p.sample_url||p.file_url)&&/\.(jpe?g|png|webp|gif)$/i.test(p.file_url||'')&&!db.seen.has(p.id));
-  if(!list.length)throw new Error(extra||(f.dbEx||[]).length?'조건에 맞는 피규어를 찾지 못함 · 다시 시도':'피규어를 불러오지 못함');
-  const p=list[0];db.seen.add(p.id);
-  const tl=(p.tags||'').split(' ').filter(t=>t&&!/^(figure|photo|photo_\(medium\)|\d+(girl|boy)s?|solo|highres|absurdres)$/.test(t));
-  const who=(tl[0]||'figure').replace(/_/g,' ').replace(/\s*\(.*\)$/,'');
-  return {kind:'img',url:p.sample_url||p.file_url,title:`#${p.id} ${who}`,link:DB+'index.php?page=post&s=view&id='+p.id,key:'db'+p.id,src:'SAFEBOORU'};
-}
 async function figRandom(){
-  const src=S.f.fig.src,order=src==='gs'?[gsRandom]:src==='db'?[dbRandom]:(Math.random()<.5?[gsRandom,dbRandom]:[dbRandom,gsRandom]);
+  const order=[gsRandom];
   const errs=[];for(const fn of order){try{return await fn()}catch(e){errs.push(e.message)}}throw new Error(errs.join(' / '));
 }
 
@@ -922,7 +906,7 @@ let fltDirty=false,personT=null,personRes=[];
 function fChange(){fltDirty=true;save();renderRow();renderFlt();if(curPop)placeP(curPop)}
 function applyFilter(){const t=S.tab;S.queue[t]=[];fg.pages={};S.queue[t]=[];next();toast('필터 적용','ok')}
 function fCount(t){const f=S.f[t];
-  if(t==='fig')return (f.src!=='both'?1:0)+f.kinds.length+f.kindsEx.length+(f.kw.trim()?1:0)+(f.kwEx.trim()?1:0)+(f.dbTag.trim()?1:0)+f.dbEx.length+(f.onePer?1:0);
+  if(t==='fig')return f.kinds.length+f.kindsEx.length+(f.kw.trim()?1:0)+(f.kwEx.trim()?1:0)+(f.onePer?1:0);
   if(t==='3d')return f.parts.length+f.partsEx.length+(f.pose?1:0)+(f.range!=='wide'?1:0)+(f.rim?1:0)+(f.wire?1:0);
   if(t==='film')return (f.movies||[]).length+f.genre.length+f.year.length+f.country.length+f.ratio.length+Object.values(f.ex).reduce((a,v)=>a+v.length,0)+(f.person?1:0)+(f.onePer?1:0);
   return f.kinds.length+f.kindsEx.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length+(f.artists||[]).length+(f.artistsEx||[]).length+(f.works||[]).length}
@@ -930,7 +914,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
   if(t==='3d'){const cur=f.parts[0]||'hand';$('#frow').innerHTML=`<div class="seg" id="d3seg">${D3PARTS.map(([v,l])=>`<button data-d3p="${v}"${cur===v?' class="on"':''}>${l}</button>`).join('')}</div>`;return}
   if(t==='film'){(f.movies||[]).forEach(m=>ch.push([m.name,'mv',String(m.id)]));const lab=(k,n)=>k==='genre'?(KO_GENRE[n]||n):k==='country'?((KO_CTRY[n]||[n])[0]):n;for(const k of['genre','year','country','ratio']){const seen=new Set();f[k].forEach(x=>{if(seen.has('i'+x.name))return;seen.add('i'+x.name);ch.push([lab(k,x.name),'c',k,x.id])});f.ex[k].forEach(x=>{if(seen.has('e'+x.name))return;seen.add('e'+x.name);ch.push(['−'+lab(k,x.name),'cx',k,x.id])})}
     if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
-  else if(t==='fig'){if(f.src!=='both')ch.push([f.src==='gs'?'굿스마일만':'Safebooru만','src']);if(f.dbTag.trim())ch.push([(DBTAGS.find(x=>x[0]===f.dbTag)||[0,f.dbTag])[1],'dbt']);f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.dbEx.forEach(k=>ch.push(['−'+(DBTAGS.find(x=>x[0]===k)||[0,k])[1],'dbx',k]));f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
+  else if(t==='fig'){f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
   else if(t==='3d'){f.parts.forEach(k=>ch.push([nm(D3PARTS,k),'dp',k]));f.partsEx.forEach(k=>ch.push(['−'+nm(D3PARTS,k),'dpx',k]));
     if(f.pose)ch.push([nm(D3POSES,f.pose),'dpo']);if(f.range!=='wide')ch.push(['각도 '+nm(D3RANGE,f.range),'drg']);if(f.rim)ch.push(['림 조명','drim']);if(f.wire)ch.push(['와이어','dw'])}
   else{f.kinds.forEach(k=>ch.push([(KINDS.find(x=>x[0]===k)||[k,k])[1],'k',k]));f.kindsEx.forEach(k=>ch.push(['−'+(KINDS.find(x=>x[0]===k)||[k,k])[1],'kx',k]));
@@ -938,7 +922,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
     (f.works||[]).forEach(k=>ch.push([wkName(k),'wk',k]));(f.artists||[]).forEach(k=>ch.push([artName(k),'ar',k]));(f.artistsEx||[]).forEach(k=>ch.push(['−'+artName(k),'arx',k]));
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
   $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
-    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일 · Safebooru','3d':'손 · 발 · 헤드'})[t]} 전체에서 랜덤</span>`);
+    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일','3d':'손 · 발 · 헤드'})[t]} 전체에서 랜덤</span>`);
   $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};
 }
 $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
@@ -983,13 +967,10 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='�
     <div class="gb"><h3><span>각도 범위</span></h3><div class="gr">${opts(D3RANGE,v=>f.range===v,'data-drange')}</div></div>
     <div class="ft"><label><input type="checkbox" id="fRim" ${f.rim?'checked':''}> 림 조명</label><label><input type="checkbox" id="fWire" ${f.wire?'checked':''}> 와이어프레임</label><a id="fReset">초기화</a></div>`;
   }else if(t==='fig'){const f=S.f.fig;
-    const SRCS=[['both','둘 다'],['gs','굿스마일 컴퍼니'],['db','Safebooru']],isCustom=f.dbTag&&!DBTAGS.some(x=>x[0]===f.dbTag);
-    b.innerHTML=HINT+`<div class="gb"><h3><span>출처</span></h3><div class="gr">${opts(SRCS,v=>f.src===v,'data-fsrc')}</div></div>
-    <div class="${f.src==='db'?'off':''}"><div class="gb"><h3><span>굿스마일 · 제품 종류 · 하나라도 맞으면</span><span>${[f.kinds.length?f.kinds.length+'개':'',f.kindsEx.length?'제외 '+f.kindsEx.length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr">${opts(FKINDS,v=>f.kinds.includes(v),'data-fkind',v=>f.kindsEx.includes(v))}</div></div>
-    <div class="gb"><h3><span>제품 이름 검색 (영문)</span></h3><input type="text" id="fKw" value="${esc(f.kw)}" placeholder="예: Miku, Frieren" autocomplete="off"></div>
-    <div class="gb"><h3><span>이름에 들어가면 제외 (영문, 쉼표로 여러 개)</span></h3><input type="text" id="fKwEx" value="${esc(f.kwEx)}" placeholder="예: Doll, Surprise" autocomplete="off"></div></div>
-    <div class="${f.src==='gs'?'off':''}"><div class="gb"><h3><span>Safebooru · 추가 조건 하나 (전체 연령 사이트)</span></h3><div class="gr">${opts(DBTAGS,v=>v===''?(!f.dbTag&&!f.dbEx.length):f.dbTag===v,'data-dbt',v=>f.dbEx.includes(v))}</div>
-    <input type="text" id="fDbTag" value="${isCustom?esc(f.dbTag):''}" placeholder="또는 태그 직접 입력 (예: hatsune_miku)" autocomplete="off" style="margin-top:6px"></div></div>
+    const row=(l,h,top)=>`<div class="fx-row${top?' top':''}"><span class="fx-l">${l}</span><div>${h}</div></div>`;
+    b.innerHTML=row('종류',`<div class="gr tall">${opts(FKINDS,v=>f.kinds.includes(v),'data-fkind',v=>f.kindsEx.includes(v))}</div>`,1)
+    +row('이름',`<input type="text" id="fKw" value="${esc(f.kw)}" placeholder="예: Miku, Frieren" autocomplete="off">`)
+    +row('빼기',`<input type="text" id="fKwEx" value="${esc(f.kwEx)}" placeholder="이름에 들어가면 제외 (쉼표로 여러 개)" autocomplete="off">`)+`
     <div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 피규어당 1장</label><a id="fReset">초기화</a></div>`;
   }else{const f=S.f.anim;if(!f.artists)f.artists=[];if(!f.artistsEx)f.artistsEx=[];
     const nTag=f.tags.trim().split(/\s+/).filter(Boolean).length,ft=app.fTab||'kind';
@@ -1026,8 +1007,6 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
     else f[k]=[...f[k],{id,name:g.name}]}
   else if(o.dataset.pid){f.person={id:+o.dataset.pid,name:o.dataset.pname};personRes=[]}
   else if('pclr' in o.dataset)f.person=null;
-  else if(o.dataset.fsrc){f.src=o.dataset.fsrc}
-  else if(o.dataset.dbt!==undefined){const v=o.dataset.dbt;if(v===''){f.dbTag='';f.dbEx=[]}else if(f.dbTag===v){f.dbTag='';f.dbEx=[...f.dbEx,v]}else if(f.dbEx.includes(v))f.dbEx=f.dbEx.filter(x=>x!==v);else{f.dbTag=v}}
   else if(o.dataset.fkind){const k=o.dataset.fkind;if(f.kinds.includes(k)){f.kinds=f.kinds.filter(x=>x!==k);f.kindsEx=[...f.kindsEx,k]}else if(f.kindsEx.includes(k))f.kindsEx=f.kindsEx.filter(x=>x!==k);else f.kinds=[...f.kinds,k]}
   else if(o.dataset.kind){const k=o.dataset.kind;if(f.kinds.includes(k)){f.kinds=f.kinds.filter(x=>x!==k);f.kindsEx=[...f.kindsEx,k]}else if(f.kindsEx.includes(k))f.kindsEx=f.kindsEx.filter(x=>x!==k);else if(f.kinds.length<3)f.kinds=[...f.kinds,k];else{toast('포함은 3개까지 · 두 번 눌러 제외로 쓸 수 있음','err');return}}
   else if(o.dataset.dpart){const k=o.dataset.dpart;if(f.parts.includes(k)){f.parts=f.parts.filter(x=>x!==k);f.partsEx=[...f.partsEx,k]}else if(f.partsEx.includes(k))f.partsEx=f.partsEx.filter(x=>x!==k);else f.parts=[...f.parts,k]}
@@ -1069,13 +1048,12 @@ $('#fltPop').addEventListener('input',e=>{if(e.target.id==='fSearch'){clearTimeo
   if(e.target.id==='fTags'){S.f.anim.tags=e.target.value;fltDirty=true;save();renderRow()}
   else if(e.target.id==='fKw'){S.f.fig.kw=e.target.value;fltDirty=true;save();renderRow()}
   else if(e.target.id==='fKwEx'){S.f.fig.kwEx=e.target.value;fltDirty=true;save();renderRow()}
-  else if(e.target.id==='fDbTag'){S.f.fig.dbTag=e.target.value.trim();fltDirty=true;save();renderRow();document.querySelectorAll('#fltPop [data-dbt]').forEach(x=>x.classList.toggle('on',x.dataset.dbt===''?!S.f.fig.dbTag:x.dataset.dbt===S.f.fig.dbTag))}
   else if(e.target.id==='fPerson'){clearTimeout(personT);const q=e.target.value.trim();if(q.length<2){personRes=[];$('#fPersonRes').innerHTML='';return}
     personT=setTimeout(async()=>{try{const {data}=await getJSON(FG+`tags?search=${encodeURIComponent(q)}&per_page=10&orderby=count&order=desc&_fields=id,name`);
       personRes=data.map(x=>({id:x.id,name:dec(x.name)}));const r=$('#fPersonRes');if(r)r.innerHTML=personRes.length?personRes.map(x=>`<span class="o" data-pid="${x.id}" data-pname="${esc(x.name)}">${esc(x.name)}</span>`).join(''):'<span class="msg">찾지 못함</span>';placeP('flt')}
       catch(err){const r=$('#fPersonRes');if(r)r.innerHTML='<span class="msg">검색 실패</span>'}},350)}});
 $('#fltPop').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='fWork'||e.target.id==='fMovie'||e.target.id==='fSearch')){e.preventDefault();const f=$(e.target.id==='fWork'?'#wkList .o':e.target.id==='fSearch'?'#srList .o':'#mvList .o');if(f)f.click();return}
-  if(e.key==='Enter'&&(e.target.id==='fTags'||e.target.id==='fKw'||e.target.id==='fKwEx'||e.target.id==='fDbTag')){e.preventDefault();closeP()}});
+  if(e.key==='Enter'&&(e.target.id==='fTags'||e.target.id==='fKw'||e.target.id==='fKwEx')){e.preventDefault();closeP()}});
 if(S.legacyAnim)loadCats().then(()=>{const a=FGC.groups.genre&&FGC.groups.genre.kids.find(x=>/^animation$/i.test(x.name));
   if(a&&!S.f.film.genre.length){S.f.film.genre=[{id:a.id,name:a.name}];save();renderRow();resetQueues('film')}},()=>{});
 $('#resetBtn').onclick=()=>{fillPop(DEF);toast('기본값으로 채움 · 저장을 눌러 적용')};
@@ -1087,10 +1065,10 @@ async function ping(url,cfg){const t0=performance.now();
   const r=await fetch(u,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status+(r.status===403?' · Worker 허용 목록':''));await r.text();return Math.round(performance.now()-t0)}
 function setSt(id,ok,txt){const b=$(id);b.className=ok===null?'':ok?'ok':'err';b.textContent=txt}
 $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
-  const ids=['#stFG','#stSB','#stGS','#stDB'];ids.forEach(i=>setSt(i,null,'확인 중…'));
-  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c),(async()=>{const t0=performance.now();const u=DB+'index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=figure';try{const r=await fetch(u,{credentials:'omit'});if(r.ok){await r.text();return Math.round(performance.now()-t0)}}catch(e){}return ping(u,c)})()]);
+  const ids=['#stFG','#stSB','#stGS'];ids.forEach(i=>setSt(i,null,'확인 중…'));
+  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c)]);
   res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
-  const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
+  const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/3 정상`,n===3?'ok':'err')};
 
 // ---------- tab drag reorder (mouse drag / touch long-press)
 (()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
