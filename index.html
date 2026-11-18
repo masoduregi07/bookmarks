@@ -249,6 +249,11 @@ button.ic:active{transform:none}
 .calp.full{width:100vw;border-left:none;box-shadow:none}
 .calp .ch{display:flex;align-items:center;gap:2px;padding:6px 8px 6px 14px;border-bottom:2px solid var(--ink)}
 .calp .ch b{font-size:13px;margin-right:auto}
+.calp .ch{position:relative}
+.calmenu{position:absolute;right:8px;top:100%;margin-top:6px;z-index:3;min-width:200px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:8px;display:grid;gap:6px}
+.calmenu button{display:flex;align-items:center;gap:8px;text-align:left}
+.calmenu button svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges;flex:none}
+.calmenu small{color:var(--tx3);font-size:10px;padding:2px 2px 0;border-top:2px dotted var(--soft);padding-top:6px}
 .calp .cbody{flex:1;min-height:0;display:flex;flex-direction:column;overflow:auto}
 .calp.full .cbody{display:grid;grid-template-columns:1fr 340px;overflow:hidden}
 .calp .cmain{padding-bottom:6px}
@@ -488,7 +493,14 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 </div>
 <aside id="calP" class="calp" aria-label="연습 기록" aria-hidden="true">
   <div class="ch"><b>연습 기록</b>
+    <button class="ic" id="calIo" data-tip="백업" aria-label="기록 백업" aria-haspopup="true"><svg viewBox="0 0 16 16"><path d="M4 2h2v6H4zM2 8h6v1H2zM3 9h4v1H3zM4 10h2v1H4zM10 2h2v1h-2zM9 3h4v1H9zM8 4h6v1H8zM10 5h2v6h-2zM1 13h14v1H1zM1 12h1v1H1zM14 12h1v1h-1z"/></svg></button>
     <button class="ic" id="calFull" data-tip="전체 화면" ><svg viewBox="0 0 16 16"><path d="M1 1h5v1h-5zM10 1h5v1h-5zM1 2h1v1h-1zM14 2h1v1h-1zM1 3h1v1h-1zM14 3h1v1h-1zM1 4h1v1h-1zM14 4h1v1h-1zM1 5h1v1h-1zM14 5h1v1h-1zM1 10h1v1h-1zM14 10h1v1h-1zM1 11h1v1h-1zM14 11h1v1h-1zM1 12h1v1h-1zM14 12h1v1h-1zM1 13h1v1h-1zM14 13h1v1h-1zM1 14h5v1h-5zM10 14h5v1h-5z"/></svg></button>
+    <div class="calmenu hidden" id="calMenu">
+      <button id="logExp"><svg viewBox="0 0 12 12"><path d="M5 0h2v6H5zM3 6h6v1H3zM4 7h4v1H4zM5 8h2v1H5zM0 10h12v2H0z"/></svg>기록 내보내기</button>
+      <button id="logImp"><svg viewBox="0 0 12 12"><path d="M5 1h2v1H5zM4 2h4v1H4zM3 3h6v1H3zM5 4h2v5H5zM0 10h12v2H0z"/></svg>기록 가져오기</button>
+      <small id="logInfo"></small>
+      <input type="file" id="logFile" accept=".json,application/json" hidden>
+    </div>
     <button class="ic" id="calX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
   </div>
   <div class="cbody">
@@ -1258,9 +1270,30 @@ function renderCal(){
     $('#calYear').innerHTML=yh;const yw=$('#calYear');yw.scrollLeft=yw.scrollWidth}
 }
 function openCal(){calOpen=true;if(curPop)closeP();renderCal();$('#calP').classList.add('open');$('#calP').setAttribute('aria-hidden','false');$('#calBtn').classList.add('on')}
-function closeCal(){calOpen=false;$('#calP').classList.remove('open');$('#calP').setAttribute('aria-hidden','true');$('#calBtn').classList.remove('on')}
+function closeCal(){closeMenu();calOpen=false;$('#calP').classList.remove('open');$('#calP').setAttribute('aria-hidden','true');$('#calBtn').classList.remove('on')}
 $('#calBtn').onclick=()=>calOpen?closeCal():openCal();
 $('#calX').onclick=closeCal;
+// ---------- log backup (export / import as JSON)
+const calMenu=$('#calMenu');
+function logInfo(){const kb=Math.round(new Blob([localStorage.getItem(LOGK)||'']).size/1024);$('#logInfo').textContent=`기록 ${LOG.length}장 · 약 ${kb}KB 사용`}
+$('#calIo').onclick=e=>{e.stopPropagation();const on=calMenu.classList.toggle('hidden')===false;$('#calIo').classList.toggle('on',on);hideTip();if(on)logInfo()};
+const closeMenu=()=>{calMenu.classList.add('hidden');$('#calIo').classList.remove('on')};
+document.addEventListener('pointerdown',e=>{if(!calMenu.classList.contains('hidden')&&!e.target.closest('#calMenu,#calIo'))closeMenu()},true);
+$('#logExp').onclick=()=>{if(!LOG.length){toast('내보낼 기록이 없음','err');return}
+  const blob=new Blob([JSON.stringify({app:'cutref',v:1,exported:new Date().toISOString(),log:LOG})],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`cutref-기록-${dkey(new Date())}.json`;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);closeMenu();toast(`기록 ${LOG.length}장 내보냄`,'ok')};
+$('#logImp').onclick=()=>$('#logFile').click();
+$('#logFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;closeMenu();
+  let list;try{const d=JSON.parse(await file.text());list=Array.isArray(d)?d:d&&d.log}catch(_){}
+  if(!Array.isArray(list)){toast('가져오기 실패 · 컷 레퍼런스 기록 파일이 아님','err');return}
+  const ok=r=>r&&typeof r==='object'&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&typeof r.url==='string';
+  const ids=new Set(LOG.map(r=>r.id)),keys=new Set(LOG.map(r=>r.date+'|'+r.url));let add=0,dup=0,bad=0;
+  for(const r of list){if(!ok(r)){bad++;continue}const k=r.date+'|'+r.url;if(ids.has(r.id)||keys.has(k)){dup++;continue}
+    const x={...r,id:String(r.id||Date.now().toString(36)+Math.random().toString(36).slice(2,6)),ts:+r.ts||Date.parse(r.date)};
+    LOG.push(x);ids.add(x.id);keys.add(k);add++}
+  LOG.sort((a,b)=>a.ts-b.ts);saveLog();renderCal();syncSaveBtn();
+  toast(`${add}장 가져옴`+(dup?` · 중복 ${dup}장 건너뜀`:'')+(bad?` · 잘못된 항목 ${bad}개`:''),add?'ok':'err')};
 // tap/click outside the side panel closes it (iPad has no Esc key)
 document.addEventListener('pointerdown',e=>{if(!calOpen||calFull)return;const t=e.target;
   if(t.closest('#calP,#calBtn,#toasts'))return;closeCal()},true);
