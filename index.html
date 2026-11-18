@@ -388,6 +388,18 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 @media (hover:none),(pointer:coarse){#lnkP .r .lk{padding-top:10px;padding-bottom:10px}#lnkP .r .st{padding:0 12px}}
 /* mini window header tints */
 #setPop .hd{background:var(--sky)}#keyPop .hd{background:var(--lav)}#fltPop .hd{background:var(--yel)}#calP .ch{background:var(--mint)}#lnkP .ch{background:var(--pink)}
+/* compact mini window headers: 28px tall, tight right edge */
+.pop .hd,.calp .ch{height:28px;padding:0 3px 0 12px;gap:0}
+#lnkP .ch{gap:0}
+.pop .hd button.ic,.calp .ch button.ic{width:22px;height:20px;min-height:0;min-width:0}
+.pop .hd button.ic::after,.calp .ch button.ic::after{left:3px;right:3px;bottom:-2px}
+.pop .hd button.ic:hover svg,.calp .ch button.ic:hover svg,.calp .ch button.ic.on svg{transform:translateY(-1px)}
+.calp .ch b{font-size:12px}
+@media (hover:none),(pointer:coarse){
+  .pop .hd button.ic,.calp .ch button.ic{width:30px;height:20px;min-height:0}
+  .pop .hd button.ic::before,.calp .ch button.ic::before{content:"";position:absolute;inset:-4px 0}
+  .pop .hd,.calp .ch{padding-right:0}
+}
 </style>
 </head>
 <body>
