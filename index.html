@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <style>
 :root{--bg:#efeee9;--panel:#fbfaf6;--stage:#dfded8;--ink:#3d3b37;--soft:#c9c7bf;--tx2:#75736c;--tx3:#a19f97;
-  --shd:#c6c3ba;--pink:#f6c9d3;--yel:#f7e3a1;--mint:#c8e6d4;--sky:#cddcf0;--lav:#ddd0ee}
+  --shd:#c6c3ba;--pink:#f6c9d3;--yel:#f7e3a1;--mint:#c8e6d4;--sky:#cddcf0;--lav:#ddd0ee;--peach:#f5d6c0}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Galmuri11,monospace;font-size:12px;-webkit-font-smoothing:none;font-smooth:never}
 .mono{font-family:Galmuri11,monospace}
@@ -44,6 +44,7 @@ button.sm:active{transform:translate(1px,1px)}
 .top header .tabs button[data-tab=fig].on{box-shadow:inset 0 4px 0 var(--yel)}
 .top header .tabs button[data-tab="3d"].on{box-shadow:inset 0 4px 0 var(--sky)}
 .top header .tabs button[data-tab="game"].on{box-shadow:inset 0 4px 0 var(--lav)}
+.top header .tabs button[data-tab="photo"].on{box-shadow:inset 0 4px 0 var(--peach)}
 .top header .tabs button.holding{background:var(--yel);transform:translateY(1px);transition:background .3s}
 .top header .tabs button.dragging,.top header .tabs button.dragging:hover{background:transparent;border:2px dashed var(--tx3);border-bottom:none;color:transparent;box-shadow:none;clip-path:none}
 .top header .tabs button.dragging>*{visibility:hidden}
@@ -77,6 +78,7 @@ header h1{font-size:12px;font-weight:700;background:var(--panel);padding:2px 6px
 .tabs button[data-tab=fig].on svg .acc{fill:var(--yel)}
 .tabs button[data-tab="3d"].on svg .acc{fill:var(--sky)}
 .tabs button[data-tab="game"].on svg .acc{fill:var(--lav)}
+.tabs button[data-tab="photo"].on svg .acc{fill:var(--peach)}
 .sp{flex:1}
 .src{display:flex;align-items:center;gap:8px;color:var(--tx2);padding:8px 0}
 .src label{display:flex;align-items:center;gap:5px;cursor:pointer}
@@ -217,8 +219,8 @@ footer .frow{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:
 #fltPop .fx-row.top .fx-l{padding-top:4px}
 #fltPop .fx-l{font-size:12px;color:var(--tx2)}
 #fltPop .fx-row input[type=text]{width:100%}
-.pop input[type=text]{border-color:var(--tx3);outline:none}
-.pop input[type=text]:focus{border-color:var(--ink);box-shadow:inset 0 -4px 0 var(--yel)}
+.pop input[type=text],.pop input[type=password]{border-color:var(--tx3);outline:none}
+.pop input[type=text]:focus,.pop input[type=password]:focus{border-color:var(--ink);box-shadow:inset 0 -4px 0 var(--yel)}
 #fltPop .fx-one{padding:0 0 12px 14px}
 #fltPop #fPersonRes:empty{display:none}
 #fltPop .fx-one>.gr:last-child,#fltPop .fx-row:has(+ .ft) .gr{margin-bottom:3px}
@@ -392,6 +394,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <button data-tab="fig"><svg viewBox="0 0 14 14"><path d="M5 0h4v1h1v4H9v1H5V5H4V1h1z"/><path d="M4 6h6v1h1v4H9v1H5v-1H3V7h1z"/><path class="acc" fill="#fff" d="M6 2h2v2H6z"/><path d="M2 12h10v2H2z" opacity=".45"/></svg><span class="tl">피규어</span></button>
     <button data-tab="3d"><svg viewBox="0 0 14 14"><path d="M6 0h2v1h2v1h2v1h1v8h-1v1h-2v1H8v1H6v-1H4v-1H2v-1H1V3h1V2h2V1h2z"/><path fill="#fff" d="M6 2h2v1h2v1H8v1H6V4H4V3h2zM3 5h2v1h2v6H6v-1H4v-1H3zM11 5v5h-1v1H8V6h2V5z"/><path class="acc" fill="#fff" d="M6 2h2v1h2v1H8v1H6V4H4V3h2z"/></svg><span class="tl">3D 모델</span></button>
     <button data-tab="game"><svg viewBox="0 0 14 14"><path d="M3 3h8v1h1v1h1v5h-1v1h-2v-1H9V9H5v1H4v1H2v-1H1V5h1V4h1z"/><path class="acc" fill="#fff" d="M3 6h1V5h1v1h1v1H5v1H4V7H3zM9 6h1v1H9zM10 5h1v1h-1zM11 6h1v1h-1zM10 7h1v1h-1z"/></svg><span class="tl">게임</span></button>
+    <button data-tab="photo"><svg viewBox="0 0 14 14"><path d="M6 1h2v1h1v2H8v1H7V3h1V2H6v1H5V2h1zM6 5h2v1h2v1h2v1h1v3H1V8h1V7h2V6h2zM3 8v1h8V8H9V7H5v1z"/><path class="acc" fill="#fff" d="M3 9h8v1H3z"/></svg><span class="tl">패션</span></button>
   </nav>
   <div class="sp"></div>
   <div class="ibar">
@@ -486,8 +489,9 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
     <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
     <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
+    <label class="row"><span>UNSPLASH 키</span><input type="password" id="usKey" placeholder="Access Key · 패션 탭" autocomplete="off" spellcheck="false"></label>
     <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
-    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div></div>
+    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>UNSPLASH <b id="stUS">미확인</b></div></div>
     <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
   </section>
 </div>
@@ -534,21 +538,21 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
-const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s'};
+const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s',usKey:''};
 let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
-  grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds',game:'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false,game:false},hist:{film:[],anim:[],fig:[],'3d':[],game:[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1,game:-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set(),game:new Set()},queue:{film:[],anim:[],fig:[],'3d':[],game:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','d3light','d3poly','sfx'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
-const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{src:'both',kinds:[],kindsEx:[],kw:'',kwEx:'',dbTag:'',dbEx:[],onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false,wire:false},game:{games:[],kind:''}});
+  grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds',game:'thirds',photo:'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false,game:false,photo:false},hist:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1,game:-1,photo:-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set(),game:new Set(),photo:new Set()},queue:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]}};
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','d3light','d3poly','sfx'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{src:'both',kinds:[],kindsEx:[],kw:'',kwEx:'',dbTag:'',dbEx:[],onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false,wire:false},game:{games:[],kind:''},photo:{topics:[],orient:'',q:''}});
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
-  if(p.f){const d=FDEF();S.f={film:{...d.film,...p.f.film,ex:{...d.film.ex,...((p.f.film||{}).ex||{})}},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})},'3d':{...S.f['3d'],...(p.f['3d']||{})},game:{...S.f.game,...(p.f.game||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
+  if(p.f){const d=FDEF();S.f={film:{...d.film,...p.f.film,ex:{...d.film.ex,...((p.f.film||{}).ex||{})}},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})},'3d':{...S.f['3d'],...(p.f['3d']||{})},game:{...S.f.game,...(p.f.game||{})},photo:{...S.f.photo,...(p.f.photo||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
 {const g=S.f.fig;g.src='gs';g.dbTag='';g.dbEx=[]}
 {const f=S.f['3d'];f.parts=[f.parts.find(x=>D3PARTS_ID.includes(x))||'hand'];f.partsEx=[];f.pose='';f.range='wide';f.rim=false;f.wire=false}
-for(const t of['film','anim','fig','3d','game'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
-if(!['film','anim','fig','3d','game'].includes(S.tab))S.tab='film';
+for(const t of['film','anim','fig','3d','game','photo'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
+if(!['film','anim','fig','3d','game','photo'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,d3light:S.d3light,d3poly:S.d3poly,sfx:S.sfx}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,d3light:S.d3light,d3poly:S.d3poly,sfx:S.sfx}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -774,7 +778,23 @@ async function gameRandom(){const f=S.f.game,pool=GAMES.filter(g=>!f.games.lengt
     const name=title.replace(/^File:/,'').replace(/\.\w+$/,'').replace(/^Character /,'').replace(/_/g,' ');
     return {kind:'img',url:ii.thumburl||ii.url,hd:ii.url,title:`${g[1]} · ${name}`,link:ii.descriptionurl||`https://${g[2]}/wiki/${encodeURIComponent(title)}`,key:g[0]+title,src:g[1]+' 위키'}}
   throw new Error('이미지를 찾지 못함 · 다시 시도')}
-const SRC={film:fgRandom,anim:sbRandom,fig:figRandom,'3d':d3Random,game:gameRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM'};
+// ---------- Unsplash (fashion)
+const PTOPICS=[['street fashion','스트리트'],['fashion editorial','화보'],['model pose','모델 포즈'],['outfit','코디'],['coat','코트 · 아우터'],['dress','드레스'],['suit','정장'],['hanbok','한복'],['kimono','기모노'],['sneakers','신발'],['jewelry hands','손 · 액세서리'],['hat fashion','모자']];
+const PORIENT=[['','전체'],['portrait','세로'],['landscape','가로']];
+const us={buf:[],sig:''};
+const UTM='utm_source=cutref&utm_medium=referral';
+async function usFetch(path,key){const r=await fetch('https://api.unsplash.com/'+path,{headers:{Authorization:'Client-ID '+key,'Accept-Version':'v1'},credentials:'omit'});
+  if(r.status===401)throw new Error('Unsplash 키가 올바르지 않음 (설정 확인)');if(r.status===403)throw new Error('Unsplash 시간당 요청 한도 초과 · 잠시 후 다시');
+  if(!r.ok)throw new Error('Unsplash HTTP '+r.status);return r.json()}
+async function photoRandom(){if(!S.usKey)throw new Error('설정에서 Unsplash API 키를 넣어야 함');const f=S.f.photo;
+  const sig=JSON.stringify(f);if(us.sig!==sig){us.buf=[];us.sig=sig}
+  for(let t=0;t<3&&!us.buf.length;t++){const pool=f.q?[f.q]:f.topics.length?f.topics:PTOPICS.map(x=>x[0]);const q=pool[rnd(pool.length)];
+    const d=await usFetch(`photos/random?count=20&content_filter=high&query=${encodeURIComponent(q)}${f.orient?'&orientation='+f.orient:''}`,S.usKey);
+    us.buf=(Array.isArray(d)?d:[d]).filter(x=>x&&x.urls&&!S.seen.photo.has('us'+x.id))}
+  const x=us.buf.shift();if(!x)throw new Error('사진을 찾지 못함 · 검색어 확인');
+  const who=(x.user&&x.user.name)||'Unsplash';const desc=(x.alt_description||x.description||'').trim();
+  return {kind:'img',url:x.urls.regular,hd:x.urls.raw+'&w=2600&q=85&fm=jpg',title:(desc?desc.charAt(0).toUpperCase()+desc.slice(1)+' · ':'')+'Photo by '+who,link:x.links.html+(x.links.html.includes('?')?'&':'?')+UTM,key:'us'+x.id,src:who+' · Unsplash'}}
+const SRC={film:fgRandom,anim:sbRandom,fig:figRandom,'3d':d3Random,game:gameRandom,photo:photoRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM',photo:'UNSPLASH'};
 function fill(tab){
   if(fillP[tab])return fillP[tab];
   fillP[tab]=(async()=>{
@@ -785,7 +805,7 @@ function fill(tab){
   })().finally(()=>{fillP[tab]=null});
   return fillP[tab];
 }
-const lastErr={film:'',anim:'',fig:'','3d':'',game:''};
+const lastErr={film:'',anim:'',fig:'','3d':'',game:'',photo:''};
 let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);busyT=0;h.classList.add('hidden');return}
   if(now){clearTimeout(busyT);busyT=0;h.classList.remove('hidden')}else if(!busyT&&h.classList.contains('hidden'))busyT=setTimeout(()=>{busyT=0;h.classList.remove('hidden')},300)}
 async function next(){const t=S.tab;
@@ -920,8 +940,8 @@ tRender();
 const pop=$('#setPop'),sb=$('#setBtn');
 const POPS={set:{el:pop,btn:sb,align:'right'},key:{el:$('#keyPop'),btn:$('#keyBtn'),align:'right'},flt:{el:$('#fltPop'),btn:null,align:'left'}};
 let curPop=null;
-function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl;$('#sbRating').value=c.sbRating}
-function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim(),sbRating:$('#sbRating').value}}
+function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl;$('#sbRating').value=c.sbRating;$('#usKey').value=c.usKey||''}
+function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim(),sbRating:$('#sbRating').value,usKey:$('#usKey').value.trim()}}
 function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const r=P.btn.getBoundingClientRect(),w=el.offsetWidth||340;
   const left=Math.max(8,Math.min(innerWidth-w-8,P.align==='left'?r.left:r.right-w));
   el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
@@ -954,6 +974,7 @@ function applyFilter(){const t=S.tab;S.queue[t]=[];fg.pages={};S.queue[t]=[];nex
 function fCount(t){const f=S.f[t];
   if(t==='fig')return f.kinds.length+f.kindsEx.length+(f.kw.trim()?1:0)+(f.kwEx.trim()?1:0)+(f.onePer?1:0);
   if(t==='game')return f.games.length+(f.kind?1:0);
+  if(t==='photo')return f.topics.length+(f.orient?1:0)+(f.q?1:0);
   if(t==='3d')return f.parts.length+f.partsEx.length+(f.pose?1:0)+(f.range!=='wide'?1:0)+(f.rim?1:0)+(f.wire?1:0);
   if(t==='film')return (f.movies||[]).length+f.genre.length+f.year.length+f.country.length+f.ratio.length+Object.values(f.ex).reduce((a,v)=>a+v.length,0)+(f.person?1:0)+(f.onePer?1:0);
   return (f.mat?1:0)+f.kinds.length+f.kindsEx.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length+(f.artists||[]).length+(f.artistsEx||[]).length+(f.works||[]).length}
@@ -963,6 +984,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
     if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
   else if(t==='fig'){f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
   else if(t==='game'){f.games.forEach(k=>ch.push([nm(GAMES,k),'gm',k]));if(f.kind)ch.push([nm(GKINDS,f.kind),'gkd'])}
+  else if(t==='photo'){if(f.q)ch.push(['“'+f.q+'”','pq']);else f.topics.forEach(k=>ch.push([nm(PTOPICS,k),'pt',k]));if(f.orient)ch.push([nm(PORIENT,f.orient),'po'])}
   else if(t==='3d'){f.parts.forEach(k=>ch.push([nm(D3PARTS,k),'dp',k]));f.partsEx.forEach(k=>ch.push(['−'+nm(D3PARTS,k),'dpx',k]));
     if(f.pose)ch.push([nm(D3POSES,f.pose),'dpo']);if(f.range!=='wide')ch.push(['각도 '+nm(D3RANGE,f.range),'drg']);if(f.rim)ch.push(['림 조명','drim']);if(f.wire)ch.push(['와이어','dw'])}
   else{if(f.mat==='settei')ch.push(['설정화','mat']);f.kinds.forEach(k=>ch.push([(KINDS.find(x=>x[0]===k)||[k,k])[1],'k',k]));f.kindsEx.forEach(k=>ch.push(['−'+(KINDS.find(x=>x[0]===k)||[k,k])[1],'kx',k]));
@@ -970,7 +992,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
     (f.works||[]).forEach(k=>ch.push([wkName(k),'wk',k]));(f.artists||[]).forEach(k=>ch.push([artName(k),'ar',k]));(f.artistsEx||[]).forEach(k=>ch.push(['−'+artName(k),'arx',k]));
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
   $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
-    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일','3d':'손 · 발 · 헤드',game:'게임 6종'})[t]} 전체에서 랜덤</span>`);
+    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일','3d':'손 · 발 · 헤드',game:'게임 6종',photo:'패션 주제'})[t]} 전체에서 랜덤</span>`);
   $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};
 }
 $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
@@ -978,7 +1000,7 @@ $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
   const c=e.target.closest('[data-rm]');if(!c)return;const [ty,a,b]=c.dataset.rm.split('|'),t=S.tab,f=S.f[t];
   if(ty==='c'){const n=(f[a].find(x=>String(x.id)===b)||{}).name;f[a]=f[a].filter(x=>String(x.id)!==b&&!(a==='ratio'&&x.name===n))}else if(ty==='cx'){const n=(f.ex[a].find(x=>String(x.id)===b)||{}).name;f.ex[a]=f.ex[a].filter(x=>String(x.id)!==b&&!(a==='ratio'&&x.name===n))}
   else if(ty==='kx'||ty==='gkx')f.kindsEx=f.kindsEx.filter(x=>x!==a);else if(ty==='kwx')f.kwEx='';else if(ty==='dbx')f.dbEx=f.dbEx.filter(x=>x!==a);else if(ty==='p')f.person=null;else if(ty==='one')f.onePer=false;
-  else if(ty==='k')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='mv')f.movies=f.movies.filter(x=>String(x.id)!==a);else if(ty==='wk')f.works=f.works.filter(x=>x!==a);else if(ty==='ar')f.artists=f.artists.filter(x=>x!==a);else if(ty==='arx')f.artistsEx=f.artistsEx.filter(x=>x!==a);else if(ty==='gm')f.games=f.games.filter(x=>x!==a);else if(ty==='gkd')f.kind='';else if(ty==='mat')f.mat='';else if(ty==='r')f.region='';else if(ty==='s')f.score=0;
+  else if(ty==='k')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='mv')f.movies=f.movies.filter(x=>String(x.id)!==a);else if(ty==='wk')f.works=f.works.filter(x=>x!==a);else if(ty==='ar')f.artists=f.artists.filter(x=>x!==a);else if(ty==='arx')f.artistsEx=f.artistsEx.filter(x=>x!==a);else if(ty==='gm')f.games=f.games.filter(x=>x!==a);else if(ty==='gkd')f.kind='';else if(ty==='pt')f.topics=f.topics.filter(x=>x!==a);else if(ty==='po')f.orient='';else if(ty==='pq')f.q='';else if(ty==='mat')f.mat='';else if(ty==='r')f.region='';else if(ty==='s')f.score=0;
   else if(ty==='gk')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='kw')f.kw='';else if(ty==='src')f.src='both';else if(ty==='dbt')f.dbTag='';
   else if(ty==='dp')f.parts=f.parts.filter(x=>x!==a);else if(ty==='dpx')f.partsEx=f.partsEx.filter(x=>x!==a);else if(ty==='dpo')f.pose='';else if(ty==='drg')f.range='wide';else if(ty==='drim')f.rim=false;
   else if(ty==='dw'){f.wire=false;if(M3)M3.then(m=>m.setWire(false));save();renderRow();if(curPop==='flt')renderFlt();return}
@@ -987,7 +1009,7 @@ $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
 function opts(list,isOn,attr,isEx){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}${isEx&&isEx(v)?' ex':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
 const app={fTab:'kind',fTabFilm:'search'};
 const HINT='<div class="gb"><span class="msg">한 번 누르면 포함 · 두 번 누르면 <s>제외</s> · 세 번 누르면 해제</span></div>';
-function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트'})[t];
+function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){h=`<div class="gb"><span class="msg">${FGC.err?'분류를 불러오지 못함 · 설정 → 연결 테스트 확인':'분류 불러오는 중…'}</span></div>`;
@@ -1012,6 +1034,10 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='�
   }else if(t==='game'){const f=S.f.game,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
     b.innerHTML=row('게임',opts(GAMES.map(g=>[g[0],g[1]]),v=>f.games.includes(v),'data-game'))+row('종류',opts(GKINDS,v=>(f.kind||'')===v,'data-gkind'))
       +`<div class="ft"><span class="wk-msg">이미지 출처 · 각 게임 팬 위키</span><a id="fReset">초기화</a></div>`;
+  }else if(t==='photo'){const f=S.f.photo,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
+    b.innerHTML=`<div class="fx-row"><span class="fx-l">검색</span><div><input type="text" id="pQ" placeholder="영어 검색어 · 비우면 주제에서" value="${esc(f.q)}" autocomplete="off"></div></div>`
+      +row('주제',opts(PTOPICS,v=>f.topics.includes(v),'data-ptopic'))+row('방향',opts(PORIENT,v=>(f.orient||'')===v,'data-porient'))
+      +`<div class="ft"><span class="wk-msg">${S.usKey?'사진 출처 · Unsplash':'설정에서 Unsplash 키를 넣어야 함'}</span><a id="fReset">초기화</a></div>`;
   }else if(t==='3d'){const f=S.f['3d'],hand=!f.partsEx.includes('hand')&&(!f.parts.length||f.parts.includes('hand'));
     b.innerHTML=HINT+`<div class="gb"><h3><span>부위</span><span>${[f.parts.length?f.parts.length+'개':'',f.partsEx.length?'제외 '+f.partsEx.length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr">${opts(D3PARTS,v=>f.parts.includes(v),'data-dpart',v=>f.partsEx.includes(v))}</div></div>
     <div class="${hand?'':'off'}"><div class="gb"><h3><span>손 포즈</span></h3><div class="gr">${opts([['','랜덤'],...D3POSES],v=>f.pose===v,'data-dpose')}</div></div></div>
@@ -1066,11 +1092,14 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
   else if(o.dataset.art){const k=o.dataset.art;if(f.artists.includes(k)){f.artists=f.artists.filter(x=>x!==k);f.artistsEx=[...f.artistsEx,k]}else if(f.artistsEx.includes(k))f.artistsEx=f.artistsEx.filter(x=>x!==k);else f.artists=[...f.artists,k]}
   else if(o.dataset.game){const k=o.dataset.game;f.games=f.games.includes(k)?f.games.filter(x=>x!==k):[...f.games,k]}
   else if(o.dataset.gkind!==undefined)f.kind=o.dataset.gkind;
+  else if(o.dataset.ptopic){const k=o.dataset.ptopic;f.topics=f.topics.includes(k)?f.topics.filter(x=>x!==k):[...f.topics,k]}
+  else if(o.dataset.porient!==undefined)f.orient=o.dataset.porient;
   else if(o.dataset.mat!==undefined)f.mat=o.dataset.mat;
   else if(o.dataset.region!==undefined)f.region=o.dataset.region;
   else if(o.dataset.score!==undefined)f.score=+o.dataset.score;
   fChange()});
-$('#fltPop').addEventListener('change',e=>{if(e.target.id==='fOne'){S.f[S.tab].onePer=e.target.checked;fChange()}
+$('#fltPop').addEventListener('change',e=>{if(e.target.id==='pQ'){S.f.photo.q=e.target.value.trim();fChange()}
+  else if(e.target.id==='fOne'){S.f[S.tab].onePer=e.target.checked;fChange()}
   else if(e.target.id==='fRim'){S.f['3d'].rim=e.target.checked;fChange()}
   else if(e.target.id==='fWire'){S.f['3d'].wire=e.target.checked;save();renderRow();if(M3)M3.then(m=>m.setWire(S.f['3d'].wire))}
   else if(e.target.id==='fPlay'){S.play=e.target.checked;save();if(!vid.classList.contains('hidden')){S.play?vid.play().catch(()=>{}):vid.pause()}}});
@@ -1112,17 +1141,17 @@ if(S.legacyAnim)loadCats().then(()=>{const a=FGC.groups.genre&&FGC.groups.genre.
   if(a&&!S.f.film.genre.length){S.f.film.genre=[{id:a.id,name:a.name}];save();renderRow();resetQueues('film')}},()=>{});
 $('#resetBtn').onclick=()=>{fillPop(DEF);toast('기본값으로 채움 · 저장을 눌러 적용')};
 $('#saveBtn').onclick=()=>{Object.assign(S,readPop());applyCfg();save();
-  fg.pages={};FGC.ready=null;FGC.groups={};S.queue={film:[],anim:[],fig:[]};closePop();toast('설정 저장됨','ok');
+  fg.pages={};FGC.ready=null;FGC.groups={};for(const k in S.queue)S.queue[k]=[];us.buf=[];closePop();toast('설정 저장됨','ok');
   if(S.pos[S.tab]<0||!msg.classList.contains('hidden'))next();else fill(S.tab)};
 async function ping(url,cfg){const t0=performance.now();
   const u=cfg.proxy?cfg.proxy+encodeURIComponent(url):url;
   const r=await fetch(u,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status+(r.status===403?' · Worker 허용 목록':''));await r.text();return Math.round(performance.now()-t0)}
 function setSt(id,ok,txt){const b=$(id);b.className=ok===null?'':ok?'ok':'err';b.textContent=txt}
 $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
-  const ids=['#stFG','#stSB','#stGS'];ids.forEach(i=>setSt(i,null,'확인 중…'));
-  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c)]);
-  res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
-  const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/3 정상`,n===3?'ok':'err')};
+  const ids=['#stFG','#stSB','#stGS','#stUS'];ids.forEach(i=>setSt(i,null,'확인 중…'));
+  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c),c.usKey?usFetch('photos/random?count=1',c.usKey).then(()=>'OK'):Promise.reject(new Error('키 없음'))]);
+  res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,x.value==='OK'?'정상':`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
+  const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
 
 // ---------- tab drag reorder (mouse drag / touch long-press)
 (()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
@@ -1211,7 +1240,7 @@ let LOG=[];try{LOG=JSON.parse(localStorage.getItem(LOGK)||'[]')}catch(e){}
 const saveLog=()=>{try{localStorage.setItem(LOGK,JSON.stringify(LOG))}catch(e){toast('기록 저장 실패 · 브라우저 저장 공간 확인','err')}};
 const pad=n=>String(n).padStart(2,'0');
 const dkey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-const TABNAME={film:'영화',anim:'애니',fig:'피규어','3d':'3D',game:'게임'};
+const TABNAME={film:'영화',anim:'애니',fig:'피규어','3d':'3D',game:'게임',photo:'패션'};
 let cutShownAt=Date.now();
 function curItem(){const t=S.tab;return S.hist[t][S.pos[t]]}
 function savedToday(it){const k=dkey(new Date());return it&&LOG.find(r=>r.date===k&&r.url===it.url)}
