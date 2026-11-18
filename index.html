@@ -531,7 +531,7 @@ function toast(t,kind=''){placeToasts();const el=document.createElement('div');e
   const box=$('#toasts');box.appendChild(el);while(box.children.length>4)box.firstChild.remove();
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),150)},2400)}
 async function getJSONd(u){try{const r=await fetch(u,{credentials:'omit'});if(r.ok)return {data:await r.json(),headers:r.headers}}catch(e){}
-  try{return await getJSON(u)}catch(e){throw new Error('Danbooru 연결 실패 · '+e.message+(/403/.test(e.message)?' (Worker 허용 목록에 donmai.us 확인)':''))}}
+  try{return await getJSON(u)}catch(e){throw new Error('Danbooru 연결 실패 · '+e.message+(/403/.test(e.message)?' (Danbooru 봇 차단에 막힘)':''))}}
 async function getJSON(u){const r=await fetch(P(u),{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return {data:await r.json(),headers:r.headers}}
 const rnd=n=>Math.floor(Math.random()*n);
 const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/$/,'')+u:u;
@@ -606,7 +606,7 @@ async function gsRandom(){
     const id=(Math.random()<.55&&pool.length>8)?pool[rnd(pool.length)]:1000+rnd(13500);
     if(gs.bad.has(id)||(f.onePer&&gs.seen.has(id)))continue;
     let r;try{r=await getText(GS+'en/product/'+id)}catch(e){lastErr=e.message;continue}
-    if(!r.ok){if(r.status===404){gs.bad.add(id);gs.pool.delete(id);lastErr='HTTP 404';continue}throw new Error('굿스마일 연결 실패 · HTTP '+r.status+(r.status===403?' (Worker 허용 목록 확인)':''))}
+    if(!r.ok){if(r.status===404){gs.bad.add(id);gs.pool.delete(id);lastErr='HTTP 404';continue}throw new Error('굿스마일 연결 실패 · HTTP '+r.status+(r.status===503?' (사이트 점검 중일 수 있음)':r.status===403?' (Worker 허용 목록 확인)':''))}
     const html=r.text;
     for(const m of html.matchAll(/\/product\/image\/(\d+)\//g)){const n=+m[1];if(n!==id&&!gs.bad.has(n))gs.pool.add(n)}
     for(const m of html.matchAll(/\/en\/product\/(\d+)/g)){const n=+m[1];if(n!==id&&!gs.bad.has(n))gs.pool.add(n)}
@@ -646,7 +646,7 @@ async function dbRandom(){
 }
 async function figRandom(){
   const src=S.f.fig.src,order=src==='gs'?[gsRandom]:src==='db'?[dbRandom]:(Math.random()<.5?[gsRandom,dbRandom]:[dbRandom,gsRandom]);
-  let err;for(const fn of order){try{return await fn()}catch(e){err=e}}throw err;
+  const errs=[];for(const fn of order){try{return await fn()}catch(e){errs.push(e.message)}}throw new Error(errs.join(' / '));
 }
 
 // ---------- SAKUGABOORU (Moebooru API)
