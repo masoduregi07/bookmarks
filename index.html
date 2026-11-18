@@ -598,7 +598,10 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   #tbDrawer #tone,#tbDrawer #lc{display:flex!important}
   #tbDrawer #lcSw{display:none!important}
 }
-@keyframes tbdIn{from{transform:translateY(-10px);clip-path:inset(0 0 100% 0)}to{transform:none;clip-path:inset(0)}}
+@keyframes tbdIn{from{transform:translateY(-10px);clip-path:inset(-12px -12px 100% -12px)}to{transform:none;clip-path:inset(-12px)}}
+@keyframes tbdOut{from{transform:none;clip-path:inset(-12px)}to{transform:translateY(-10px);clip-path:inset(-12px -12px 100% -12px)}}
+#tbDrawer.out,#fltPop.out{animation:tbdOut .12s steps(3,end) forwards!important;pointer-events:none}
+#fltPop.in{animation:tbdIn .12s steps(3,end)}
 /* phones, minimal toolbar: everything on one row */
 @media (max-width:560px){
   body[data-tb="3"] .top footer{column-gap:4px!important;padding-left:6px!important;padding-right:26px!important}
@@ -1238,8 +1241,10 @@ function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const
   el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
   if(n==='set')fillPop(S);if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
-  P.el.classList.remove('hidden');placeP(n);P.btn.classList.add('on');curPop=n}
-function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;P.el.classList.add('hidden');P.btn&&P.btn.classList.remove('on');curPop=null;
+  clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
+  if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}}
+function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;
+  if(n==='flt'){P.el.classList.remove('in');P.el.classList.add('out');clearTimeout(P.tOut);P.tOut=setTimeout(()=>{P.el.classList.add('hidden');P.el.classList.remove('out')},130)}else P.el.classList.add('hidden');P.btn&&P.btn.classList.remove('on');curPop=null;
   if(n==='flt'){if(fltDirty){fltDirty=false;applyFilter()}else renderRow()}}
 sb.onclick=e=>{e.stopPropagation();curPop==='set'?closeP():openP('set')};
 $('#keyBtn').onclick=e=>{e.stopPropagation();curPop==='key'?closeP():openP('key')};
@@ -1482,15 +1487,16 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
 })();
 (()=>{const dr=document.getElementById('tbDrawer'),body=document.getElementById('tbdBody'),T=document.getElementById('tbdT');
   const G={miniGrid:['gGrid','분할'],miniTmr:['tmr','타이머']};let cur=null,mark=null;
-  const close=()=>{if(!cur)return;const el=document.getElementById(G[cur][0]);mark.parentNode.insertBefore(el,mark);mark.remove();mark=null;
-    document.getElementById(cur).classList.remove('on');cur=null;dr.classList.add('hidden')};
-  const open=id=>{close();const el=document.getElementById(G[id][0]);mark=document.createComment('home');el.before(mark);body.appendChild(el);
+  let tOut=0;const home=()=>{clearTimeout(tOut);if(!mark)return;const el=body.firstElementChild;mark.parentNode.insertBefore(el,mark);mark.remove();mark=null;dr.classList.remove('out');dr.classList.add('hidden')};
+  const close=(quick)=>{if(!cur)return;document.getElementById(cur).classList.remove('on');cur=null;
+    if(quick===true){home();return}dr.classList.add('out');tOut=setTimeout(home,130)}; // slides back up, then the controls go home
+  const open=id=>{close(true);home();const el=document.getElementById(G[id][0]);mark=document.createComment('home');el.before(mark);body.appendChild(el);
     T.textContent=G[id][1];cur=id;document.getElementById(id).classList.add('on');dr.classList.remove('hidden');dr.style.animation='none';dr.offsetWidth;dr.style.animation=''};
   Object.keys(G).forEach(id=>document.getElementById(id).onclick=e=>{e.stopPropagation();cur===id?close():open(id)});
   document.getElementById('tbdX').onclick=close;
   document.addEventListener('pointerdown',e=>{if(cur&&!e.target.closest('#tbDrawer,#gMini'))close()},true);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-  new MutationObserver(()=>{if(document.body.dataset.tb!=='3')close()}).observe(document.body,{attributes:true,attributeFilter:['data-tb']});
+  new MutationObserver(()=>{if(document.body.dataset.tb!=='3')close(true)}).observe(document.body,{attributes:true,attributeFilter:['data-tb']});
 })();
 // ---------- tab drag reorder (mouse drag / touch long-press)
 (()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
