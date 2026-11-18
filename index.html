@@ -129,6 +129,8 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .sw input:checked+i::after{left:16px;background:var(--ink)}
 .off{opacity:.35;pointer-events:none}
 .hidden{display:none!important}
+.d3only,body.t3d #gTone,body.t3d #gGrid{display:none!important}
+body.t3d .d3only{display:flex!important}
 .pop{position:fixed;z-index:15;width:min(var(--pw,340px),calc(100vw - 16px));background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
   clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
@@ -367,7 +369,8 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <button id="next">다음 컷 ▶</button>
   </div>
   <i class="dv"></i>
-  <div class="grp"><label>색</label>
+  <div class="grp d3only" id="gLight"><label>라이팅</label><label class="sw" title="라이팅 (G)"><input type="checkbox" id="d3Light"><i></i></label></div>
+  <div class="grp" id="gTone"><label>색</label>
     <div class="seg" id="tone">
       <button data-v="color" class="on">컬러</button>
       <button data-v="gray">흑백</button>
@@ -377,7 +380,8 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     </div>
   </div>
   <i class="dv"></i>
-  <div class="grp"><label>분할</label>
+  <div class="grp d3only" id="gPoly"><label>폴리곤</label><label class="sw" title="면 + 선 (D)"><input type="checkbox" id="d3Poly"><i></i></label></div>
+  <div class="grp" id="gGrid"><label>분할</label>
     <label class="sw"><input type="checkbox" id="gridOn"><i></i></label>
     <span id="gridOpts" style="display:flex;align-items:center;gap:6px">
     <select id="grid">
@@ -488,7 +492,7 @@ const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'http
 let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
   grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false},hist:{film:[],anim:[],fig:[],'3d':[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set()},queue:{film:[],anim:[],fig:[],'3d':[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','d3light','d3poly'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
 const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false},anim:{kinds:[],kindsEx:[],region:'',score:0,tags:''},fig:{src:'both',kinds:[],kindsEx:[],kw:'',kwEx:'',dbTag:'',dbEx:[],onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false,wire:false}});
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
@@ -497,7 +501,7 @@ try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
 for(const t of['film','anim','fig','3d'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig','3d'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,d3light:S.d3light,d3poly:S.d3poly}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -653,6 +657,10 @@ async function sbRandom(){
 // ---------- queue / prefetch
 const fillP={};
 // ---------- 3D model (hand / foot / head), lazy-loaded three.js bundle
+if(S.d3light===undefined)S.d3light=true;if(S.d3poly===undefined)S.d3poly=false;
+const d3Set=()=>{save();applyView();if(M3)M3.then(m=>{m.setLight(S.d3light);m.setWire(S.d3poly?'over':'off')})};
+$('#d3Light').addEventListener('change',e=>{S.d3light=e.target.checked;d3Set()});
+$('#d3Poly').addEventListener('change',e=>{S.d3poly=e.target.checked;d3Set()});
 const D3PARTS=[['hand','손'],['foot','발'],['head','헤드']],D3POSES=[['open','편 손'],['relax','편히 쉰 손'],['fist','주먹'],['point','가리키기'],['grip','쥐기'],['pinch','집기']],D3RANGE=[['near','정면 근처'],['wide','넓게'],['all','전 방위']];
 const D3CRED={hand:['WebXR Hand · MIT','https://github.com/immersive-web/webxr-input-profiles'],head:['Lee Perry-Smith · CC BY 3.0','https://www.triplegangers.com/'],foot:['MakeHuman · CC0','http://www.makehumancommunity.org/']};
 const nm=(l,v)=>(l.find(x=>x[0]===v)||[v,v])[1];
@@ -700,7 +708,7 @@ function show(){
   msg.classList.add('hidden');
   if(it.kind==='3d'){
     img.classList.add('hidden');vid.classList.add('hidden');vid.pause();vid.removeAttribute('src');
-    m3d().then(async m=>{if(curItem()!==it)return;await m.show(it.state);if(curItem()!==it)return;m.setWire(S.f['3d'].wire);c3d.classList.remove('hidden');m.resize();drawGrid()},
+    m3d().then(async m=>{if(curItem()!==it)return;m.setLight(S.d3light);await m.show(it.state);if(curItem()!==it)return;m.setWire(S.d3poly?'over':'off');c3d.classList.remove('hidden');m.resize();drawGrid()},
       e=>{if(curItem()===it)showErr('3D 모델을 열 수 없음 · '+(e&&e.message||'WebGL 확인'))});
   }else if(it.kind==='vid'){c3d.classList.add('hidden');
     img.classList.add('hidden');vid.classList.remove('hidden');
@@ -718,7 +726,8 @@ function show(){
 $('#info').addEventListener('click',e=>{e.stopPropagation();$('#info').classList.add('gone')});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function applyView(){
-  const t=S.tab,f=S.tone==='color'?'':S.tone==='gray'?'grayscale(1)':`url(#${S.tone})`;
+  const t=S.tab,f=t==='3d'||S.tone==='color'?'':S.tone==='gray'?'grayscale(1)':`url(#${S.tone})`;
+  document.body.classList.toggle('t3d',t==='3d');if(window.fixDv)fixDv();$('#d3Light').checked=S.d3light;$('#d3Poly').checked=S.d3poly;
   img.style.filter=vid.style.filter=c3d.style.filter=f;
   img.classList.toggle('flip',S.flip);vid.classList.toggle('flip',S.flip);c3d.classList.toggle('flip',S.flip);
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
@@ -736,7 +745,7 @@ function drawGrid(){
   const r=m.getBoundingClientRect(),sr=stage.getBoundingClientRect(),w=r.width,h=r.height;
   Object.assign(ov.style,{left:(r.left-sr.left)+'px',top:(r.top-sr.top)+'px',width:w+'px',height:h+'px'});
   ov.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  const mode=S.grid[S.tab];if(!S.gridOn[S.tab])return;
+  const mode=S.grid[S.tab];if(!S.gridOn[S.tab]||S.tab==='3d')return;
   const c=S.lc;let s='';
   const L=(a,b,x,y,d)=>s+=`<line x1="${a}" y1="${b}" x2="${x}" y2="${y}" ${d?'stroke-dasharray="4 4"':''}/>`;
   const R=(x,y,ww,hh,d)=>s+=`<rect x="${x}" y="${y}" width="${ww}" height="${hh}" fill="none" ${d?'stroke-dasharray="4 4"':''}/>`;
@@ -974,8 +983,9 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
 })();
 // ---------- toolbar: hide dividers that land at a line break
 (()=>{const ft=document.querySelector('.top footer');const fix=()=>{const dv=[...ft.querySelectorAll('.dv')];dv.forEach(d=>d.classList.remove('brk'));
-    dv.forEach(d=>{const a=d.previousElementSibling,b=d.nextElementSibling;if(a&&b&&Math.abs(a.offsetTop-b.offsetTop)>4)d.classList.add('brk')})};
-  new ResizeObserver(()=>requestAnimationFrame(fix)).observe(ft);fix()})();
+    const vis=(d,k)=>{let e=d[k];while(e&&!e.offsetParent)e=e[k];return e};
+    dv.forEach(d=>{const a=vis(d,'previousElementSibling'),b=vis(d,'nextElementSibling');const c=e=>{const r=e.getBoundingClientRect();return r.top+r.height/2};if(a&&b&&Math.abs(c(a)-c(b))>8)d.classList.add('brk')})};
+  window.fixDv=()=>requestAnimationFrame(fix);new ResizeObserver(()=>requestAnimationFrame(fix)).observe(ft);fix()})();
 // ---------- swipe on image (touch): left = next, right = previous
 (()=>{let sw=null;
   stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||S.tab==='3d')return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
@@ -1063,6 +1073,8 @@ document.addEventListener('keydown',e=>{
   if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
+  else if(k==='g'&&S.tab==='3d'){S.d3light=!S.d3light;d3Set();toast('라이팅 '+(S.d3light?'켜짐':'꺼짐'))}
+  else if(k==='d'&&S.tab==='3d'){S.d3poly=!S.d3poly;d3Set();toast('폴리곤 '+(S.d3poly?'켜짐':'꺼짐'))}
   else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백',t2:'2톤',t3:'3톤',t5:'5톤'})[S.tone])}
   else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
   else if(k==='f'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}

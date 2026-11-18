@@ -69,20 +69,32 @@ export function setPose(p) {
   };
   (P[p] || P.open)(); render();
 }
-export function setWire(on) { wire = on; Object.values(cache).forEach(g => g.traverse(o => { if (o.isMesh) o.material.wireframe = on; })); render(); }
+let wireMode = 'off', lightOn = true, lastState = null;
+const wireMat = new THREE.MeshBasicMaterial({ color: 0x3d3b37, wireframe: true, transparent: true, opacity: .35 });
+export function setWire(on) { wireMode = on === true ? 'only' : on === false ? 'off' : on; applyWire(); render(); }
+function applyWire() { Object.values(cache).forEach(g => g.traverse(o => { if (!o.isMesh || o.userData.isWire) return;
+  o.material.wireframe = wireMode === 'only'; o.material.flatShading = wireMode === 'flat' || wireMode === 'over'; o.material.needsUpdate = true;
+  if (!o.userData.wire) { const w = o.isSkinnedMesh ? new THREE.SkinnedMesh(o.geometry, wireMat) : new THREE.Mesh(o.geometry, wireMat); if (o.isSkinnedMesh) w.bind(o.skeleton, o.bindMatrix); w.userData.isWire = true; w.frustumCulled = false; w.renderOrder = 1; o.add(w); o.userData.wire = w; }
+  o.userData.wire.visible = wireMode === 'over'; })); }
 
 export async function show(state) {
   const g = await loadPart(state.part);
-  if (cur !== g) { if (cur) holder.remove(cur); holder.add(g); cur = g; setWire(wire); }
+  if (cur !== g) { if (cur) holder.remove(cur); holder.add(g); cur = g; applyWire(); }
   if (state.part === 'hand') setPose(state.pose || 'open');
   const d = 2.15, az = state.az * Math.PI / 180, el = state.el * Math.PI / 180;
   camera.position.set(d * Math.cos(el) * Math.sin(az), d * Math.sin(el), d * Math.cos(el) * Math.cos(az));
   controls.target.set(0, 0, 0); camera.lookAt(0, 0, 0); controls.update();
+  lastState = state; placeLight(); render();
+}
+function placeLight() {
+  const state = lastState; if (!state) return;
+  if (!lightOn) { key.position.copy(camera.position).normalize().multiplyScalar(5).add(new THREE.Vector3(0, 1.2, 0)); key.intensity = 1.1; hemi.intensity = 1.5; rim.visible = false; return }
+  key.intensity = 2.4; hemi.intensity = .75;
   const la = state.lAz * Math.PI / 180, le = state.lEl * Math.PI / 180;
   key.position.set(Math.cos(le) * Math.sin(la), Math.sin(le), Math.cos(le) * Math.cos(la)).multiplyScalar(5);
   rim.visible = !!state.rim; rim.position.copy(key.position).multiplyScalar(-1).setY(Math.abs(key.position.y) * .4 + 1);
-  render();
 }
+export function setLight(on) { lightOn = on; placeLight(); render(); }
 export function randomState(o) {
   const range = { near: [50, 20], wide: [120, 45], all: [180, 80] }[o.range || 'wide'];
   const rnd = (a, b) => a + Math.random() * (b - a);
@@ -108,6 +120,6 @@ export function init(canvas, bg, cb) {
   rim = new THREE.DirectionalLight(0xffffff, 1.4); scene.add(rim);
   holder = new THREE.Group(); scene.add(holder);
   controls = new OrbitControls(camera, canvas); controls.enableDamping = false; controls.enablePan = false; controls.minDistance = 1.2; controls.maxDistance = 6;
-  controls.addEventListener('change', () => { render(); onChange && onChange(); });
+  controls.addEventListener('change', () => { if (!lightOn) placeLight(); render(); onChange && onChange(); });
   new ResizeObserver(resize).observe(canvas.parentElement); resize();
 }
