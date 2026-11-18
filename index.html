@@ -453,6 +453,25 @@ header.tov .tsc{display:flex}
   #tmr .seg.ic button{padding-left:8px;padding-right:8px;min-width:0;width:auto}
   #tmr .seg.ic{order:2}#tmr .tadd{order:3}
 }
+/* phones: tighter toolbar box + collapsible toolbar (corner grip) */
+#tbGrip{display:none}
+@media (max-width:560px){
+  .top footer{padding:6px 8px!important;row-gap:6px!important;column-gap:10px!important;position:relative}
+  footer .grp{row-gap:5px}
+  .top footer button,.top footer select,.top footer input[type=text]{min-height:32px}
+  .top footer .seg.ic button{height:32px}
+  #tbGrip{display:block;position:absolute;right:0;bottom:0;width:40px;height:34px;touch-action:none;cursor:ns-resize;z-index:2;-webkit-tap-highlight-color:transparent}
+  #tbGrip svg{position:absolute;right:3px;bottom:3px;width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
+  #tbGrip.drag svg{fill:var(--tx3)}
+  body[data-tb="1"] #frow,body[data-tb="1"] #tmr{display:none!important}
+  body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip){display:none!important}
+  body[data-tb="2"] .top footer,body[data-tb="3"] .top footer{padding-right:30px!important}
+  body[data-tb="3"] .top footer{padding-top:5px!important;padding-bottom:5px!important}
+  body[data-tb="3"] .top footer>.grp:first-child{flex:1;flex-wrap:nowrap}
+  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{flex:1;justify-content:center;min-height:28px;padding:0;font-size:0;gap:0}
+  body[data-tb="3"] #prev::before{content:"◀";font-size:12px}body[data-tb="3"] #next::after{content:"▶";font-size:12px}
+  body[data-tb="3"] #saveCut span{display:none}
+}
 </style>
 </head>
 <body>
@@ -1264,6 +1283,19 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   const place=()=>{if(mq.matches&&!document.body.classList.contains('t3d')){if(fb.parentElement!==grid)grid.appendChild(fb)}else if(fb.parentElement!==home)home.appendChild(fb)};
   (mq.addEventListener?mq.addEventListener('change',place):mq.addListener(place));place();
   new MutationObserver(place).observe(document.body,{attributes:true,attributeFilter:['class']})})();
+// ---------- phones: drag the toolbar's corner grip up/down to collapse it in steps (double-tap: full ↔ smallest)
+(()=>{const ft=document.querySelector('.top footer'),g=document.createElement('div');g.id='tbGrip';g.setAttribute('aria-label','툴바 크기 조절');
+  g.innerHTML='<svg viewBox="0 0 16 16"><path d="M12 2h2v2h-2zM8 6h2v2H8zM12 6h2v2h-2zM4 10h2v2H4zM8 10h2v2H8zM12 10h2v2h-2z"/></svg>';ft.appendChild(g);
+  let lv=0;try{lv=Math.min(3,Math.max(0,+localStorage.getItem('cutref-tb')||0))}catch(e){}
+  const set=v=>{v=Math.max(0,Math.min(3,v));if(v===lv&&document.body.dataset.tb==String(v))return;lv=v;document.body.dataset.tb=v;try{localStorage.setItem('cutref-tb',v)}catch(e){}};
+  set(lv);document.body.dataset.tb=lv;
+  let st=null,lastTap=0;
+  g.addEventListener('pointerdown',e=>{e.preventDefault();st={y:e.clientY,lv,moved:false,id:e.pointerId};g.classList.add('drag');try{g.setPointerCapture(e.pointerId)}catch(_){}});
+  g.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const dy=e.clientY-st.y;if(Math.abs(dy)>6)st.moved=true;set(st.lv+Math.round(-dy/34))});
+  const end=e=>{if(!st)return;g.classList.remove('drag');
+    if(!st.moved){const now=Date.now();if(now-lastTap<320){set(lv?0:3);lastTap=0}else lastTap=now}st=null};
+  g.addEventListener('pointerup',end);g.addEventListener('pointercancel',end);
+})();
 // ---------- tab drag reorder (mouse drag / touch long-press)
 (()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
   try{const o=JSON.parse(localStorage.getItem('cutref-tabs')||'[]');if(o.length){const all=[...nav.querySelectorAll('button[data-tab]')].map(b=>b.dataset.tab);[...o.filter(t=>all.includes(t)),...all.filter(t=>!o.includes(t))].forEach(t=>nav.appendChild(nav.querySelector(`[data-tab="${t}"]`)))}}catch(e){}
