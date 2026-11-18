@@ -170,7 +170,7 @@ body.zen #info,body.zen #srcLink{display:none}
 footer{column-gap:0!important;justify-content:center}
 footer .dv{flex:1 1 0;min-width:16px;max-width:150px;align-self:stretch;display:flex;justify-content:center}
 footer .dv::before{content:"";border-left:2px dotted var(--tx3);margin:2px 0}
-footer .frow{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px}
+footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px} /* sits at the end of the last row; wraps only when it must */
 .chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px;cursor:pointer;white-space:nowrap;line-height:1}
 .chip:hover{background:var(--yel)}
 .chip.on{background:var(--ink);color:#fff}
@@ -439,7 +439,6 @@ header.tov .tsc{display:flex}
 @media (max-width:560px){
   #flip .ft{display:none}
   #flip{padding-left:10px;padding-right:10px}
-  #gFlip:empty{display:none}
   .top footer{column-gap:14px!important}
   #gGrid{column-gap:6px}
   #gGrid #grid{width:auto;max-width:80px;padding-right:22px}
@@ -485,13 +484,12 @@ header.tov .tsc{display:flex}
   .top footer .seg.ic button{height:34px}
 }
 /* tablets: compact one/two-line toolbar that fills the full width */
-#toneSel,#lcSw{display:none}
+#lcSw{display:none}
 @media (min-width:561px) and (pointer:coarse){
   .top footer{padding:6px 8px!important;column-gap:8px!important;justify-content:flex-start!important}
-  #tmr{margin-right:24px}body[data-tb="1"] #gFlip{margin-right:24px} /* room for the corner grip on the last row */
+  body[data-tb="1"] #gGrid{margin-right:24px} /* room for the corner grip on the last row */
   #gTone>label,#gGrid>label:not(.sw),#tmr>label{display:none}
-  #tone,#lc{display:none!important}
-  #toneSel{display:block;flex:1 1 84px;min-width:84px}
+  #lc{display:none!important}
   #lcSw{display:flex;width:auto;padding:0 8px;gap:5px;align-items:center;justify-content:center;flex:none}
   #lcSw i{width:10px;height:10px;border:2px solid var(--ink);background:var(--lcv,#fff)}
   #gGrid #grid{flex:1 1 64px;min-width:64px;width:auto;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -504,7 +502,6 @@ header.tov .tsc{display:flex}
   .top footer>.grp,.top footer>.frow{flex:1 1 auto}
   .top footer>.grp:first-child{display:flex}.top footer>.grp:first-child>button{flex:1 1 auto;justify-content:center}
   #gTone{display:flex}#gGrid{flex-wrap:nowrap}
-  #gFlip{flex:0 0 auto}
   #tmr{flex:0 0 auto}
   .top footer>.frow{order:1;flex:1 1 72px;margin-top:0;min-width:0;flex-wrap:nowrap}
   #tmr{order:2}
@@ -532,14 +529,19 @@ header.tov .tsc{display:flex}
 #flip .fi{display:inline-flex}#flip .fsv{width:16px;height:16px;fill:currentColor;shape-rendering:crispEdges}#flip .fsv .ax{fill:var(--tx3)}
 #flip .ft{margin-left:0}
 #fltPop .fx-tab:active{transform:none} /* no 2px press jump: the tab line stayed/vanished while clicking */
+#fltPop .fx-tab.on{font-weight:700;background:linear-gradient(transparent 58%,var(--yel) 58%,var(--yel) 88%,transparent 88%) no-repeat 8px 0/calc(100% - 16px) 100%,var(--panel)}
+/* phones: 색 sits next to 필터 on the last row instead of taking a row of its own */
+@media (max-width:560px){
+  .top footer>.grp:first-child{order:0}#gGrid{order:1}#tmr{order:2}.top footer>.frow{order:3;flex:0 1 auto}#gTone{order:4}
+}
+/* tablets: timer stretches so the second row has no empty tail */
+@media (min-width:561px) and (pointer:coarse){
+  #tmr{order:2!important;flex:0 0 auto!important}
+  .top footer>.frow{order:3!important;justify-content:flex-end;margin-right:24px}
+}
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute">
-  <filter id="t2" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="discrete" tableValues="0.12 0.85"/><feFuncG type="discrete" tableValues="0.12 0.85"/><feFuncB type="discrete" tableValues="0.12 0.85"/></feComponentTransfer></filter>
-  <filter id="t3" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="discrete" tableValues="0.1 0.5 0.9"/><feFuncG type="discrete" tableValues="0.1 0.5 0.9"/><feFuncB type="discrete" tableValues="0.1 0.5 0.9"/></feComponentTransfer></filter>
-  <filter id="t5" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="discrete" tableValues="0.05 0.3 0.5 0.7 0.95"/><feFuncG type="discrete" tableValues="0.05 0.3 0.5 0.7 0.95"/><feFuncB type="discrete" tableValues="0.05 0.3 0.5 0.7 0.95"/></feComponentTransfer></filter>
-</svg>
 
 <div id="app">
 <div class="top">
@@ -568,6 +570,7 @@ header.tov .tsc{display:flex}
     <button id="prev">◀ 이전</button>
     <button id="saveCut" data-tip="오늘 연습에 기록" data-key="S"><svg viewBox="0 0 14 14"><path d="M2 0h10v14l-5-3-5 3z"/><path fill="var(--sv-in,#fff)" d="M6 3h2v2h2v2H8v2H6V7H4V5h2z"/></svg><span>기록</span></button>
     <button id="next">다음 컷 ▶</button>
+    <button id="flip" data-tip="좌우반전" data-key="F" aria-label="좌우반전"><span class="fi"><svg class="fsv" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h1v1h-1zM9 3h1v1h-1zM5 4h2v1h-2zM9 4h1v1h-1zM10 4h1v1h-1zM4 5h3v1h-3zM9 5h1v1h-1zM11 5h1v1h-1zM3 6h4v1h-4zM9 6h1v1h-1zM12 6h1v1h-1zM2 7h5v1h-5zM9 7h1v1h-1zM13 7h1v1h-1zM2 8h5v1h-5zM9 8h1v1h-1zM13 8h1v1h-1zM3 9h4v1h-4zM9 9h1v1h-1zM12 9h1v1h-1zM4 10h3v1h-3zM9 10h1v1h-1zM11 10h1v1h-1zM5 11h2v1h-2zM9 11h1v1h-1zM10 11h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1z"/><path class="ax" d="M7 0h2v1H7zM7 1h2v1H7zM7 4h2v1H7zM7 5h2v1H7zM7 10h2v1H7zM7 11h2v1H7zM7 14h2v1H7zM7 15h2v1H7z"/></svg></span><span class="ft">좌우반전</span></button>
   </div>
   <i class="dv"></i>
   <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" data-tip="라이팅" data-key="G"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
@@ -575,9 +578,6 @@ header.tov .tsc{display:flex}
     <div class="seg" id="tone">
       <button data-v="color" class="on">컬러</button>
       <button data-v="gray">흑백</button>
-      <button data-v="t2">2톤</button>
-      <button data-v="t3">3톤</button>
-      <button data-v="t5">5톤</button>
     </div>
   </div>
   <i class="dv"></i>
@@ -604,8 +604,6 @@ header.tov .tsc{display:flex}
     <input id="op" type="range" min="15" max="100" value="60" data-tip="선 불투명도">
     </span>
   </div>
-  <i class="dv"></i>
-  <div class="grp" id="gFlip"><button id="flip" data-tip="좌우반전" data-key="F" aria-label="좌우반전"><span class="fi"><svg class="fsv" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h1v1h-1zM9 3h1v1h-1zM5 4h2v1h-2zM9 4h1v1h-1zM10 4h1v1h-1zM4 5h3v1h-3zM9 5h1v1h-1zM11 5h1v1h-1zM3 6h4v1h-4zM9 6h1v1h-1zM12 6h1v1h-1zM2 7h5v1h-5zM9 7h1v1h-1zM13 7h1v1h-1zM2 8h5v1h-5zM9 8h1v1h-1zM13 8h1v1h-1zM3 9h4v1h-4zM9 9h1v1h-1zM12 9h1v1h-1zM4 10h3v1h-3zM9 10h1v1h-1zM11 10h1v1h-1zM5 11h2v1h-2zM9 11h1v1h-1zM10 11h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1z"/><path class="ax" d="M7 0h2v1H7zM7 1h2v1H7zM7 4h2v1H7zM7 5h2v1H7zM7 10h2v1H7zM7 11h2v1H7zM7 14h2v1H7zM7 15h2v1H7z"/></svg></span><span class="ft">좌우반전</span></button></div>
   <i class="dv"></i>
   <div class="grp" id="tmr"><label>타이머</label>
     <input type="text" id="tIn" value="05:00" data-tip="시간 입력 · 예: 5, 1:30, 90s" autocomplete="off">
@@ -903,12 +901,15 @@ const SFX=(()=>{let ac=null;
     tone(a,'square',2100*k,1100*k,t,.012,.05);
     tone(a,'triangle',1300*k,700*k,t,.018,.1);
     tone(a,'sine',340*k,160*k,t+.022,.035,.22)},
+    // small tabs: short, light tick
+    tick(){if(!S.sfx)return;const a=ctx();if(!a)return;const t=a.currentTime;
+      tone(a,'square',3600,2600,t,.006,.035);tone(a,'triangle',2200,1600,t+.002,.01,.05)},
     unlock(){ctx()},
     // timer end: three rising 8-bit notes, repeated twice
     chime(){const a=ctx();if(!a)return;const t=a.currentTime;
       [0,.6].forEach(o=>[880,1175,1568].forEach((f,i)=>tone(a,'square',f,f*.98,t+o+i*.13,.12,.07)))}}})();
 document.addEventListener('pointerdown',e=>{if(e.button)return;const el=e.target.closest('button,select,.sw,label.chk,[data-rm],[data-tab],.gr .o,.wk-list .o,#info,#calGrid .d[data-k]:not(.fut),#calYear [data-k],#fReset,#uiShow');
-  if(!el||el.disabled||el.closest('[disabled]'))return;SFX.click(el.matches('#next,.pri,[data-tab]'))},true);
+  if(!el||el.disabled||el.closest('[disabled]'))return;el.matches('.fx-tab')?SFX.tick():SFX.click(el.matches('#next,.pri,[data-tab]'))},true);
 if(S.tSnd===undefined)S.tSnd=true;$('#tSndOn').checked=S.tSnd;$('#tSndOn').addEventListener('change',e=>{S.tSnd=e.target.checked;save();if(S.tSnd)SFX.chime()});
 {const un=()=>{SFX.unlock();removeEventListener('touchend',un,true);removeEventListener('click',un,true)};addEventListener('touchend',un,true);addEventListener('click',un,true)}
 $('#sfxOn').checked=S.sfx;$('#sfxOn').addEventListener('change',e=>{S.sfx=e.target.checked;save();if(S.sfx)SFX.click()});
@@ -1043,7 +1044,8 @@ function show(){
 $('#info').addEventListener('click',e=>{e.stopPropagation();$('#info').classList.add('gone')});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function applyView(){
-  const t=S.tab,f=t==='3d'||S.tone==='color'?'':S.tone==='gray'?'grayscale(1)':`url(#${S.tone})`;
+  if(S.tone!=='color'&&S.tone!=='gray')S.tone='color'; // 2/3/5-tone were removed
+  const t=S.tab,f=t==='3d'||S.tone==='color'?'':'grayscale(1)';
   document.body.classList.toggle('t3d',t==='3d');if(window.fixDv)fixDv();$('#d3Light').value=S.d3light;$('#d3Poly').checked=S.d3poly;
   img.style.filter=vid.style.filter=c3d.style.filter=f;
   img.classList.toggle('flip',S.flip);vid.classList.toggle('flip',S.flip);if(typeof ZM!=='undefined'&&ZM.z>1.01)zoomApply();c3d.classList.toggle('flip',S.flip);
@@ -1337,21 +1339,11 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,x.value==='OK'?'정상':`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
   const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
 
-// ---------- small screens: flip button sits at the end of the 분할 group
-(()=>{const mq=matchMedia('(max-width:560px)'),fb=document.getElementById('flip'),home=document.getElementById('gFlip'),grid=document.getElementById('gGrid');
-  // 3D tab hides the 분할 group, so the button goes back to its own group there
-  const place=()=>{if(mq.matches&&!document.body.classList.contains('t3d')){if(fb.parentElement!==grid)grid.appendChild(fb)}else if(fb.parentElement!==home)home.appendChild(fb)};
-  (mq.addEventListener?mq.addEventListener('change',place):mq.addListener(place));place();
-  new MutationObserver(place).observe(document.body,{attributes:true,attributeFilter:['class']})})();
-// ---------- tablets: compact controls (tone dropdown, line-color swatch) mirror the full button sets
+// ---------- tablets: compact line-color swatch mirrors the 흰/검/빨 buttons
 (()=>{const tone=document.getElementById('tone'),lc=document.getElementById('lc');
-  const sel=document.createElement('select');sel.id='toneSel';sel.setAttribute('aria-label','색');
-  [...tone.querySelectorAll('button')].forEach(b=>sel.add(new Option(b.textContent,b.dataset.v)));tone.after(sel);
-  sel.onchange=()=>tone.querySelector(`button[data-v="${sel.value}"]`).click();
   const sw=document.createElement('button');sw.id='lcSw';sw.setAttribute('aria-label','분할선 색');sw.dataset.tip='분할선 색';sw.innerHTML='선<i></i>';lc.after(sw);
   sw.onclick=()=>{const bs=[...lc.querySelectorAll('button')],i=bs.findIndex(b=>b.classList.contains('on'));bs[(i+1)%bs.length].click()};
-  const sync=()=>{const t=tone.querySelector('button.on');if(t)sel.value=t.dataset.v;const l=lc.querySelector('button.on');if(l)sw.style.setProperty('--lcv',l.dataset.v)};
-  new MutationObserver(sync).observe(tone,{subtree:true,attributes:true,attributeFilter:['class']});
+  const sync=()=>{const l=lc.querySelector('button.on');if(l)sw.style.setProperty('--lcv',l.dataset.v)};
   new MutationObserver(sync).observe(lc,{subtree:true,attributes:true,attributeFilter:['class']});sync()})();
 // ---------- phones: drag the toolbar's corner grip up/down to collapse it in steps (double-tap: full ↔ smallest)
 (()=>{const ft=document.querySelector('.top footer'),g=document.createElement('div');g.id='tbGrip';g.setAttribute('aria-label','툴바 크기 조절');
@@ -1606,7 +1598,7 @@ $('#lnkP').addEventListener('submit',e=>{e.preventDefault();const f=e.target,n=f
   if(!/^https?:\/\//i.test(u))u='https://'+u;try{u=new URL(u).href}catch(_){toast('주소 형식 오류','err');return}
   if(lnkAll().some(x=>x.u===u)){toast('이미 있는 링크','err');return}
   LK.mine.push({id:'m'+Date.now().toString(36),n,u,d:f.d.value.trim(),c:['body'],t:[]});lnkForm=false;saveLk();renderLnk();toast(`"${n}" 추가`,'ok')});
-const tones=['color','gray','t2','t3','t5'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
+const tones=['color','gray'],grids=['half','thirds','quarters','golden','diag','custom','field','safe'];
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&curPop){closeP();return}
   if(e.key==='Escape'&&calOpen){closeCal();return}
@@ -1617,7 +1609,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='arrowleft')prev();
   else if(k==='g'&&S.tab==='3d'){{const i=D3LIGHTS.findIndex(x=>x[0]===S.d3light);S.d3light=D3LIGHTS[(i+1)%D3LIGHTS.length][0];d3Set();toast('라이팅: '+nm(D3LIGHTS,S.d3light))}}
   else if(k==='d'&&S.tab==='3d'){S.d3poly=!S.d3poly;d3Set();toast('폴리곤 '+(S.d3poly?'켜짐':'꺼짐'))}
-  else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백',t2:'2톤',t3:'3톤',t5:'5톤'})[S.tone])}
+  else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백'})[S.tone])}
   else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
   else if(k==='f'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
   else if(k==='h')setZen(!document.body.classList.contains('zen'));
