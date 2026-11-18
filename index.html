@@ -512,6 +512,8 @@ header.tov .tsc{display:flex}
   footer .dv{flex:0 0 10px!important;min-width:10px!important;max-width:10px!important}
   #tmr+.frow,.frow{border:none}
 }
+#fltPop .hd{justify-content:flex-start}#fltPop .hd .px{margin-left:auto}
+#fltSum{margin-left:8px;font-weight:400;font-size:11px;color:var(--tx2)}
 </style>
 </head>
 <body>
@@ -653,7 +655,7 @@ header.tov .tsc{display:flex}
   </dl></section>
 </div>
 <div id="fltPop" class="pop hidden" role="dialog" aria-label="필터" style="--pw:380px">
-  <div class="hd"><span id="fltTitle">필터</span><button class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
+  <div class="hd"><span id="fltTitle">필터</span><span id="fltSum"></span><button class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
   <section id="fltBody"></section>
 </div>
 <aside id="lnkP" class="calp" aria-label="크로키 링크" aria-hidden="true">
@@ -1168,7 +1170,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
     (f.works||[]).forEach(k=>ch.push([wkName(k),'wk',k]));(f.artists||[]).forEach(k=>ch.push([artName(k),'ar',k]));(f.artistsEx||[]).forEach(k=>ch.push(['−'+artName(k),'arx',k]));
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
   $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
-    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일','3d':'손 · 발 · 헤드',game:'게임 6종',photo:'패션 주제'})[t]} 전체에서 랜덤</span>`);
+    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):'');
   $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};
 }
 $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
@@ -1184,7 +1186,7 @@ $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
 function opts(list,isOn,attr,isEx){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}${isEx&&isEx(v)?' ex':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
 const app={fTab:'kind',fTabFilm:'search'};
 const HINT='<div class="gb"><span class="msg">한 번 누르면 포함 · 두 번 누르면 <s>제외</s> · 세 번 누르면 해제</span></div>';
-function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진'})[t];
+function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCount(t)?'':'전체에서 랜덤';$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){h=`<div class="gb"><span class="msg">${FGC.err?'분류를 불러오지 못함 · 설정 → 연결 테스트 확인':'분류 불러오는 중…'}</span></div>`;
