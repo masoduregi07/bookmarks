@@ -435,6 +435,10 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 <div id="setPop" class="pop hidden" role="dialog" aria-label="설정">
   <div class="hd">설정<button id="setX" class="px" title="닫기">×</button></div>
   <section>
+    <h3>화면</h3>
+    <label class="chk"><input type="checkbox" id="sfxOn"> 버튼 효과음</label>
+  </section>
+  <section>
     <h3>API 연결</h3>
     <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
     <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
@@ -492,7 +496,7 @@ const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'http
 let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
   grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false},hist:{film:[],anim:[],fig:[],'3d':[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set()},queue:{film:[],anim:[],fig:[],'3d':[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','d3light','d3poly'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','d3light','d3poly','sfx'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
 const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false},anim:{kinds:[],kindsEx:[],region:'',score:0,tags:''},fig:{src:'both',kinds:[],kindsEx:[],kw:'',kwEx:'',dbTag:'',dbEx:[],onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false,wire:false}});
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
@@ -501,7 +505,7 @@ try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
 for(const t of['film','anim','fig','3d'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig','3d'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,d3light:S.d3light,d3poly:S.d3poly}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,d3light:S.d3light,d3poly:S.d3poly,sfx:S.sfx}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -662,6 +666,19 @@ const d3Set=()=>{save();applyView();if(M3)M3.then(m=>{m.setLight(S.d3light);m.se
 $('#d3Light').addEventListener('change',e=>{S.d3light=e.target.value;d3Set();e.target.blur()});
 const D3LIGHTS=[...$('#d3Light').options].map(o=>[o.value,o.textContent]);
 $('#d3Poly').addEventListener('change',e=>{S.d3poly=e.target.checked;d3Set()});
+// ---------- click sound (synthesized, no files)
+if(S.sfx===undefined)S.sfx=true;
+const SFX=(()=>{let ac=null,buf=null;
+  const ctx=()=>{if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A();
+      const n=ac.sampleRate*.03|0;buf=ac.createBuffer(1,n,ac.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,8)}
+    if(ac.state==='suspended')ac.resume();return ac};
+  return {click(hi){if(!S.sfx)return;const a=ctx();if(!a)return;const t=a.currentTime;
+    const s=a.createBufferSource(),bp=a.createBiquadFilter(),g=a.createGain();s.buffer=buf;bp.type='bandpass';bp.frequency.value=hi?4200:3200;bp.Q.value=1.4;g.gain.value=.5;s.connect(bp).connect(g).connect(a.destination);s.start(t);
+    const o=a.createOscillator(),og=a.createGain();o.type='triangle';o.frequency.setValueAtTime(hi?2600:1900,t);o.frequency.exponentialRampToValueAtTime(700,t+.025);
+    og.gain.setValueAtTime(.12,t);og.gain.exponentialRampToValueAtTime(.0001,t+.03);o.connect(og).connect(a.destination);o.start(t);o.stop(t+.035)}}})();
+document.addEventListener('pointerdown',e=>{if(e.button)return;const el=e.target.closest('button,select,.sw,label.chk,[data-rm],[data-tab],.gr .o,#info,#calGrid .d[data-k]:not(.fut),#calYear [data-k],#fReset,#uiShow');
+  if(!el||el.disabled||el.closest('[disabled]'))return;SFX.click(el.matches('#next,.pri,[data-tab]'))},true);
+$('#sfxOn').checked=S.sfx;$('#sfxOn').addEventListener('change',e=>{S.sfx=e.target.checked;save();if(S.sfx)SFX.click()});
 const D3PARTS=[['hand','손'],['foot','발'],['head','헤드']],D3POSES=[['open','편 손'],['relax','편히 쉰 손'],['fist','주먹'],['point','가리키기'],['grip','쥐기'],['pinch','집기']],D3RANGE=[['near','정면 근처'],['wide','넓게'],['all','전 방위']];
 const D3CRED={hand:['WebXR Hand · MIT','https://github.com/immersive-web/webxr-input-profiles'],head:['Lee Perry-Smith · CC BY 3.0','https://www.triplegangers.com/'],foot:['MakeHuman · CC0','http://www.makehumancommunity.org/']};
 const nm=(l,v)=>(l.find(x=>x[0]===v)||[v,v])[1];
