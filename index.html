@@ -528,6 +528,10 @@ header.tov .tsc{display:flex}
 @media (hover:none){.lsw:hover .lb{background:#fff}}
 @media (hover:none),(pointer:coarse){.lsw .lb{height:32px}}
 @media (min-width:561px) and (pointer:coarse){.lsw .lb{height:34px;padding:0 6px 0 4px;gap:4px}}
+#flip{display:inline-flex;align-items:center;gap:6px}
+#flip .fi{display:inline-flex}#flip .fsv{width:16px;height:16px;fill:currentColor;shape-rendering:crispEdges}#flip .fsv .ax{fill:var(--tx3)}
+#flip .ft{margin-left:0}
+#fltPop .fx-tab:active{transform:none} /* no 2px press jump: the tab line stayed/vanished while clicking */
 </style>
 </head>
 <body>
@@ -601,7 +605,7 @@ header.tov .tsc{display:flex}
     </span>
   </div>
   <i class="dv"></i>
-  <div class="grp" id="gFlip"><button id="flip" data-tip="좌우반전" data-key="F" aria-label="좌우반전"><span class="fi">⇄</span><span class="ft"> 좌우반전</span></button></div>
+  <div class="grp" id="gFlip"><button id="flip" data-tip="좌우반전" data-key="F" aria-label="좌우반전"><span class="fi"><svg class="fsv" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3h1v1h-1zM9 3h1v1h-1zM5 4h2v1h-2zM9 4h1v1h-1zM10 4h1v1h-1zM4 5h3v1h-3zM9 5h1v1h-1zM11 5h1v1h-1zM3 6h4v1h-4zM9 6h1v1h-1zM12 6h1v1h-1zM2 7h5v1h-5zM9 7h1v1h-1zM13 7h1v1h-1zM2 8h5v1h-5zM9 8h1v1h-1zM13 8h1v1h-1zM3 9h4v1h-4zM9 9h1v1h-1zM12 9h1v1h-1zM4 10h3v1h-3zM9 10h1v1h-1zM11 10h1v1h-1zM5 11h2v1h-2zM9 11h1v1h-1zM10 11h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1z"/><path class="ax" d="M7 0h2v1H7zM7 1h2v1H7zM7 4h2v1H7zM7 5h2v1H7zM7 10h2v1H7zM7 11h2v1H7zM7 14h2v1H7zM7 15h2v1H7z"/></svg></span><span class="ft">좌우반전</span></button></div>
   <i class="dv"></i>
   <div class="grp" id="tmr"><label>타이머</label>
     <input type="text" id="tIn" value="05:00" data-tip="시간 입력 · 예: 5, 1:30, 90s" autocomplete="off">
