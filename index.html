@@ -544,10 +544,18 @@ header.tov .tsc{display:flex}
   .top footer>.grp:first-child{column-gap:6px}
   .top footer>.grp:first-child>button{padding-left:8px;padding-right:8px}
 }
-/* tablets: timer stretches so the second row has no empty tail */
+/* tablets: 필터 left, 타이머 right */
 @media (min-width:561px) and (pointer:coarse){
-  #tmr{order:2!important;flex:0 0 auto!important}
-  .top footer>.frow{order:3!important;justify-content:flex-end;margin-right:24px}
+  #tmr{order:3!important;flex:0 0 auto!important;margin-right:24px}
+  .top footer>.frow{order:2!important;justify-content:flex-start;margin-right:0}
+  /* 필터 on the left, 타이머 at the right end; one-row layouts put 필터 first */
+  body.tbwide .top footer>.frow,body[data-tb="3"] .top footer>.frow{order:-1!important}
+  body.tbwide #tmr{margin-right:24px}
+  body[data-tb="1"]:not(.tbwide) .top footer>.frow{order:-1!important}
+  body[data-tb="1"]:not(.tbwide) .top footer>#gGrid+.dv{display:none!important} /* timer hidden: no trailing divider */
+  /* two-row tablets: forced break so row 2 is 필터 (left) … 타이머 (right) */
+  body[data-tb="0"]:not(.tbwide):not(.tbchk) .top footer::after{content:"";order:1;flex:0 0 100%;height:0}
+  body[data-tb="0"]:not(.tbwide):not(.tbchk) .top footer>.frow{flex:1 1 auto!important}
 }
 /* prev / next: arrow + label as one centered unit */
 #prev,#next{display:inline-flex;align-items:center;justify-content:center;gap:6px}
@@ -1482,7 +1490,7 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   const one=()=>{const c=[...ft.querySelectorAll('button,select,input')].filter(e=>e.offsetParent&&!e.closest('#tbDrawer,#tbGrip')).map(e=>{const r=e.getBoundingClientRect();return r.top+r.height/2});
     return c.length&&Math.max(...c)-Math.min(...c)<12};
   const chk=()=>{const cur=b.dataset.tb;b.classList.remove('tbwide');
-    if(mq.matches){b.dataset.tb='0';ft.style.height='';if(one())b.classList.add('tbwide');b.dataset.tb=cur}};
+    if(mq.matches){b.classList.add('tbchk');b.dataset.tb='0';ft.style.height='';if(one())b.classList.add('tbwide');b.classList.remove('tbchk');b.dataset.tb=cur}};
   chk();addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(chk,150)});
 })();
 (()=>{const dr=document.getElementById('tbDrawer'),body=document.getElementById('tbdBody'),T=document.getElementById('tbdT');
