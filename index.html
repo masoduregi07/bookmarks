@@ -467,7 +467,7 @@ header.tov .tsc{display:flex}
   #tbGrip{display:block;position:absolute;right:0;bottom:0;width:40px;height:34px;touch-action:none;cursor:ns-resize;z-index:2;-webkit-tap-highlight-color:transparent}
   #tbGrip svg{position:absolute;right:3px;bottom:3px;width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
   #tbGrip.drag svg{fill:var(--tx3)}
-  body[data-tb="1"] #frow,body[data-tb="1"] #tmr{display:none!important}
+  body[data-tb="1"] #tmr{display:none!important}
   body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow):not(#gTone){display:none!important}
   /* one-row toolbar keeps the 필터 button (chips hidden) */
   body[data-tb="2"] .top footer>.frow,body[data-tb="3"] .top footer>.frow{order:1!important;flex:0 0 auto!important;margin:0!important}
@@ -492,7 +492,6 @@ header.tov .tsc{display:flex}
 #lcSw{display:none}
 @media (min-width:561px) and (pointer:coarse){
   .top footer{padding:6px 8px!important;column-gap:8px!important;justify-content:flex-start!important}
-  body[data-tb="1"] #gGrid{margin-right:24px} /* room for the corner grip on the last row */
   #gTone>label,#gGrid>label:not(.sw),#tmr>label{display:none}
   #lc{display:none!important}
   #lcSw{display:flex;width:auto;padding:0 8px;gap:5px;align-items:center;justify-content:center;flex:none}
@@ -573,6 +572,10 @@ header.tov .tsc{display:flex}
   body[data-tb="3"] #tone button{height:30px;min-height:0;min-width:30px;width:30px;padding:0;flex:none}
   body[data-tb="3"] .top footer{column-gap:6px!important}
 }
+/* while the toolbar is being resized, 필터 stays pinned at the bottom-left on a panel band; rows slide under it */
+.top footer.pinf>.frow{position:absolute;left:8px;bottom:6px;z-index:2;margin:0!important}
+.top footer.pinf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:var(--fbh,44px);background:var(--panel);z-index:1;pointer-events:none}
+#tbGrip{z-index:3}
 </style>
 </head>
 <body>
@@ -1389,19 +1392,24 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   const tbH=()=>{const cur=document.body.dataset.tb,H=[];ft.style.height='';
     for(let v=0;v<4;v++){document.body.dataset.tb=v;H.push(ft.getBoundingClientRect().height)}document.body.dataset.tb=cur;return H};
   let anim=null;
-  const glide=(from,to,v)=>{clearTimeout(anim);document.body.dataset.tb=Math.min(v,stepFor(from));ft.style.overflow='hidden';ft.style.transition='none';ft.style.height=from+'px';
+  const glide=(from,to,v)=>{clearTimeout(anim);document.body.dataset.tb=Math.min(v,stepFor(from));pinFor(+document.body.dataset.tb);ft.style.overflow='hidden';ft.style.transition='none';ft.style.height=from+'px';
     ft.getBoundingClientRect();ft.style.transition='height .2s cubic-bezier(.2,.8,.2,1)';ft.style.height=to+'px';
-    if(to>=from)document.body.dataset.tb=v; // expanding: show the target rows right away so they slide into view
-    anim=setTimeout(()=>{set(v);ft.style.transition='';ft.style.height='';ft.style.overflow=''},220)};
-  let Hs=[0,0,0,0];
+    if(to>=from){document.body.dataset.tb=v;pinFor(v)} // expanding: show the target rows right away so they slide into view
+    anim=setTimeout(()=>{set(v);ft.classList.remove('pinf');ft.style.transition='';ft.style.height='';ft.style.overflow=''},220)};
+  let Hs=[0,0,0,0],PIN=[0,0,0,0];
+  // for each step: is 필터 on its own bottom row? (then it gets pinned while resizing) and how tall is that row
+  const pinInfo=()=>{const cur=document.body.dataset.tb,fr=document.getElementById('frow');ft.classList.remove('pinf');
+    for(let v=0;v<4;v++){document.body.dataset.tb=v;const a=ft.getBoundingClientRect(),b=fr.getBoundingClientRect(),n=ft.querySelector('.grp').getBoundingClientRect();
+      PIN[v]=fr.offsetParent&&b.top>n.bottom-2?Math.round(a.bottom-b.top+6):0}document.body.dataset.tb=cur};
+  const pinFor=v=>{const h=PIN[v];ft.classList.toggle('pinf',!!h);if(h)ft.style.setProperty('--fbh',h+'px')};
   const stepFor=h=>{let v=0;for(let k=0;k<4;k++)if(Hs[k]>=h-0.5)v=k;return v}; // most collapsed step whose rows still cover h
   let st=null,lastTap=0;
-  g.addEventListener('pointerdown',e=>{e.preventDefault();clearTimeout(anim);ft.style.transition='';Hs=tbH();
+  g.addEventListener('pointerdown',e=>{e.preventDefault();clearTimeout(anim);ft.style.transition='';ft.classList.remove('pinf');Hs=tbH();pinInfo();
     st={y:e.clientY,lv,h0:Hs[lv],h:Hs[lv],moved:false,id:e.pointerId};g.classList.add('drag');try{g.setPointerCapture(e.pointerId)}catch(_){}});
   g.addEventListener('pointermove',e=>{if(!st||e.pointerId!==st.id)return;const dy=e.clientY-st.y;if(Math.abs(dy)>4)st.moved=true;if(!st.moved)return;
-    const h=Math.max(Hs[3],Math.min(Hs[0],st.h0+dy));st.h=h;document.body.dataset.tb=stepFor(h);ft.style.overflow='hidden';ft.style.height=h+'px'});
+    const h=Math.max(Hs[3],Math.min(Hs[0],st.h0+dy));st.h=h;const sv=stepFor(h);document.body.dataset.tb=sv;pinFor(sv);ft.style.overflow='hidden';ft.style.height=h+'px'});
   const end=e=>{if(!st)return;g.classList.remove('drag');const s0=st;st=null;
-    if(!s0.moved){ft.style.height='';ft.style.overflow='';const now=Date.now();
+    if(!s0.moved){ft.style.height='';ft.style.overflow='';ft.classList.remove('pinf');const now=Date.now();
       if(now-lastTap<320){const t=lv?0:3;glide(Hs[lv],Hs[t],t);lastTap=0}else lastTap=now;return}
     let best=0;for(let k=1;k<4;k++)if(Math.abs(Hs[k]-s0.h)<Math.abs(Hs[best]-s0.h))best=k;
     glide(s0.h,Hs[best],best)};
