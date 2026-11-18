@@ -604,7 +604,7 @@ const KO_CTRY={'U.S.A.':['미국','북미'],'Canada':['캐나다','북미'],'Mex
   'U.K.':['영국','유럽'],'France':['프랑스','유럽'],'Germany':['독일','유럽'],'Italy':['이탈리아','유럽'],'Belgium':['벨기에','유럽'],'Spain':['스페인','유럽'],'Sweden':['스웨덴','유럽'],'Ireland':['아일랜드','유럽'],'Denmark':['덴마크','유럽'],'Switzerland':['스위스','유럽'],'Netherlands':['네덜란드','유럽'],'Russia':['러시아','유럽'],'Poland':['폴란드','유럽'],'Austria':['오스트리아','유럽'],'Czech Republic':['체코','유럽'],'Norway':['노르웨이','유럽'],'Hungary':['헝가리','유럽'],'Luxembourg':['룩셈부르크','유럽'],'Romania':['루마니아','유럽'],'Portugal':['포르투갈','유럽'],'Finland':['핀란드','유럽'],'Slovakia':['슬로바키아','유럽'],'Greece':['그리스','유럽'],'Iceland':['아이슬란드','유럽'],'Monaco':['모나코','유럽'],'Bulgaria':['불가리아','유럽'],'Yugoslavia':['유고슬라비아','유럽'],'Croatia':['크로아티아','유럽'],'Serbia':['세르비아','유럽'],'Lithuania':['리투아니아','유럽'],'Ukraine':['우크라이나','유럽'],'Turkey':['튀르키예','유럽'],
   'Japan':['일본','아시아'],'South Korea':['한국','아시아'],'China':['중국','아시아'],'Hong Kong':['홍콩','아시아'],'Taiwan':['대만','아시아'],'India':['인도','아시아'],'Indonesia':['인도네시아','아시아'],'Thailand':['태국','아시아'],'Singapore':['싱가포르','아시아'],'Malaysia':['말레이시아','아시아'],'Vietnam':['베트남','아시아'],'Cambodia':['캄보디아','아시아'],'Philippines':['필리핀','아시아'],
   'Australia':['호주','그 외'],'New Zealand':['뉴질랜드','그 외'],'Argentina':['아르헨티나','그 외'],'Brazil':['브라질','그 외'],'Chile':['칠레','그 외'],'South Africa':['남아공','그 외'],'Iran':['이란','그 외'],'United Arab Emirates':['아랍에미리트','그 외'],'Qatar':['카타르','그 외'],'Israel':['이스라엘','그 외'],'Egypt':['이집트','그 외'],'Morocco':['모로코','그 외'],'Colombia':['콜롬비아','그 외']};
-const REGIONS_F=['북미','유럽','아시아','그 외'];
+const REGIONS_F=['아시아','북미','유럽','그 외'];
 const RATIO_RULES=[['표준','1.33 · 1.37 (4:3)',v=>v>=1.3&&v<=1.38],['비스타','1.66',v=>v>=1.6&&v<1.7],['비스타','1.78 (16:9)',v=>v>=1.74&&v<1.8],['비스타','1.85',v=>v>=1.84&&v<1.95],
   ['스코프','2.35 · 2.39',v=>v>=2.3&&v<2.45],['스코프','2.00',v=>v>=1.95&&v<2.15],['스코프','2.20 이상',v=>v>=2.15&&(v<2.3||v>=2.45)]];
 function ratioGroups(kids){const out=[];for(const x of kids){const v=x.name.includes(':')&&!/^\d+(\.\d+)?:1$/.test(x.name)?1:parseFloat(x.name);
@@ -1028,7 +1028,8 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='�
         h+=`<div class="fx-one"><input type="text" id="fSearch" placeholder="영화 제목 · 감독 · 촬영 이름 (영문)" autocomplete="off"><div id="srList"></div>${sel?`<div class="fx-sec">고른 것</div><div class="gr">${sel}</div>`:''}${(f.movies||[]).length?'<div class="wk-msg" style="margin-top:8px">영화를 고르면 다른 조건은 쓰지 않음</div>':''}</div>`}
       else if(ft==='genre'){if(G.genre)h+=row('장르',ch('genre',byCount(G.genre.kids),x=>KO_GENRE[x.name]||x.name));if(G.year)h+=row('시대',ch('year',G.year.kids,x=>x.name))}
       else if(ft==='region'&&G.country){const all=byCount(G.country.kids),big=x=>(x.count||0)>5||f.country.some(y=>y.id===x.id)||f.ex.country.some(y=>y.id===x.id);
-        for(const r of REGIONS_F){const l=all.filter(x=>((KO_CTRY[x.name]||[0,'그 외'])[1])===r&&(app.allCtry||big(x)));let x=ch('country',l,y=>(KO_CTRY[y.name]||[y.name])[0]);
+        for(const r of REGIONS_F){const l=all.filter(x=>((KO_CTRY[x.name]||[0,'그 외'])[1])===r&&(app.allCtry||big(x)));let l2=l,fold=0;if(r==='유럽'&&!app.euAll){const sel=y=>f.country.some(z=>z.id===y.id)||f.ex.country.some(z=>z.id===y.id);l2=l.filter((y,i)=>i<6||sel(y));fold=l.length-l2.length}
+          let x=ch('country',l2,y=>(KO_CTRY[y.name]||[y.name])[0]);if(fold)x+=`<span class="o more" data-moreeu>+ ${fold}개국</span>`;
           if(r==='그 외'&&!app.allCtry){const hid=all.filter(y=>!big(y)).length;if(hid)x+=`<span class="o more" data-morectry>+ ${hid}개국</span>`}
           if(x)h+=row(r,x)}}
       else if(ft==='ratio'&&G.ratio){const gs=ratioGroups(G.ratio.kids),st=g=>g.ids.every(i=>f.ratio.some(x=>x.id===i))?' on':g.ids.every(i=>f.ex.ratio.some(x=>x.id===i))?' ex':'';
@@ -1077,6 +1078,7 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
     fChange();const i=$('#fWork');if(i&&wa)i.focus();return}
   const o=e.target.closest('.o,#fReset');if(!o)return;const t=S.tab,f=S.f[t];
   if(o.id==='fReset'){S.f[t]=FDEF()[t];personRes=[];return fChange()}
+  if(o.dataset.moreeu!==undefined){app.euAll=true;renderFlt();placeP('flt');return}
   if(o.dataset.morectry!==undefined){app.allCtry=true;renderFlt();placeP('flt');return}
   if(o.dataset.sp){f.person={id:+o.dataset.sp,name:o.dataset.spname};return fChange()}
   if(o.dataset.rg){const ids=o.dataset.rg.split(',').map(Number),nm=o.dataset.rgname,inc=ids.every(i=>f.ratio.some(x=>x.id===i)),exc=ids.every(i=>f.ex.ratio.some(x=>x.id===i));
