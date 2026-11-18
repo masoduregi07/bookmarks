@@ -454,7 +454,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
     <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
     <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
-    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>DANBOORU <b id="stDB">미확인</b></div></div>
+    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>SAFEBOORU <b id="stDB">미확인</b></div></div>
     <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
   </section>
 </div>
@@ -531,7 +531,7 @@ function toast(t,kind=''){placeToasts();const el=document.createElement('div');e
   const box=$('#toasts');box.appendChild(el);while(box.children.length>4)box.firstChild.remove();
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),150)},2400)}
 async function getJSONd(u){try{const r=await fetch(u,{credentials:'omit'});if(r.ok)return {data:await r.json(),headers:r.headers}}catch(e){}
-  try{return await getJSON(u)}catch(e){throw new Error('Danbooru 연결 실패 · '+e.message+(/403/.test(e.message)?' (Danbooru 봇 차단에 막힘)':''))}}
+  try{return await getJSON(u)}catch(e){throw new Error('Safebooru 연결 실패 · '+e.message+(/403/.test(e.message)?' (Worker 허용 목록에 safebooru.org 확인)':''))}}
 async function getJSON(u){const r=await fetch(P(u),{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return {data:await r.json(),headers:r.headers}}
 const rnd=n=>Math.floor(Math.random()*n);
 const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/$/,'')+u:u;
@@ -630,23 +630,20 @@ async function gsRandom(){
   throw new Error((f.kinds.length||kw||f.kindsEx.length||f.kwEx.trim())?'조건에 맞는 피규어를 찾지 못함 · 필터를 줄이거나 다시 시도':'피규어를 불러오지 못함'+(lastErr?' · '+lastErr:''));
 }
 
-// ---------- DANBOORU (figure photos, general rating only)
-const DB='https://danbooru.donmai.us/';
+// ---------- SAFEBOORU.ORG (figure photos; all-ages site, Gelbooru API)
+const DB='https://safebooru.org/';
 const DBTAGS=[['','없음'],['photo_(medium)','실사 사진만'],['from_behind','뒤에서'],['from_side','옆에서'],['from_above','위에서'],['from_below','아래에서']];
 const db={seen:new Set()};
 async function dbRandom(){
   const f=S.f.fig,extra=f.dbTag.trim().replace(/\s+/g,'_');
-  const pick=list=>list.filter(p=>p.rating==='g'&&(p.large_file_url||p.file_url)&&/^(jpe?g|png|webp|gif)$/i.test(p.file_ext||'')
-    &&!db.seen.has(p.id)&&(!extra||(' '+(p.tag_string||'')+' ').includes(' '+extra+' '))&&!(f.dbEx||[]).some(x=>(' '+(p.tag_string||'')+' ').includes(' '+x+' ')));
-  let list=[];
-  try{const {data}=await getJSONd(DB+`posts.json?random=true&limit=20&tags=${encodeURIComponent(['figure','rating:g',extra].filter(Boolean).join(' '))}`);list=pick(data)}
-  catch(e){if(!extra||!/HTTP 4|연결 실패/.test(e.message))throw e;
-    const {data}=await getJSONd(DB+`posts.json?random=true&limit=100&tags=${encodeURIComponent('figure rating:g')}`);list=pick(data)}
-  if(!list.length)throw new Error(extra?'조건에 맞는 피규어를 찾지 못함 · 다시 시도':'피규어를 불러오지 못함');
+  const tags=['figure',extra,...(f.dbEx||[]).map(x=>'-'+x),'sort:random'].filter(Boolean).join(' ');
+  const {data}=await getJSONd(DB+`index.php?page=dapi&s=post&q=index&json=1&limit=20&tags=${encodeURIComponent(tags)}`);
+  const list=(Array.isArray(data)?data:[]).filter(p=>(p.sample_url||p.file_url)&&/\.(jpe?g|png|webp|gif)$/i.test(p.file_url||'')&&!db.seen.has(p.id));
+  if(!list.length)throw new Error(extra||(f.dbEx||[]).length?'조건에 맞는 피규어를 찾지 못함 · 다시 시도':'피규어를 불러오지 못함');
   const p=list[0];db.seen.add(p.id);
-  const nm=x=>(x||'').split(' ').filter(Boolean)[0]||'';
-  const who=(nm(p.tag_string_character)||nm(p.tag_string_copyright)||'figure').replace(/_/g,' ').replace(/\s*\(.*\)$/,'');
-  return {kind:'img',url:p.large_file_url||p.file_url,title:`#${p.id} ${who}`,link:DB+'posts/'+p.id,key:'db'+p.id,src:'DANBOORU'};
+  const tl=(p.tags||'').split(' ').filter(t=>t&&!/^(figure|photo|photo_\(medium\)|\d+(girl|boy)s?|solo|highres|absurdres)$/.test(t));
+  const who=(tl[0]||'figure').replace(/_/g,' ').replace(/\s*\(.*\)$/,'');
+  return {kind:'img',url:p.sample_url||p.file_url,title:`#${p.id} ${who}`,link:DB+'index.php?page=post&s=view&id='+p.id,key:'db'+p.id,src:'SAFEBOORU'};
 }
 async function figRandom(){
   const src=S.f.fig.src,order=src==='gs'?[gsRandom]:src==='db'?[dbRandom]:(Math.random()<.5?[gsRandom,dbRandom]:[dbRandom,gsRandom]);
@@ -883,14 +880,14 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
   if(t==='3d'){const cur=f.parts[0]||'hand';$('#frow').innerHTML=`<div class="seg" id="d3seg">${D3PARTS.map(([v,l])=>`<button data-d3p="${v}"${cur===v?' class="on"':''}>${l}</button>`).join('')}</div>`;return}
   if(t==='film'){for(const k of['genre','year','country','ratio']){f[k].forEach(x=>ch.push([x.name,'c',k,x.id]));f.ex[k].forEach(x=>ch.push(['−'+x.name,'cx',k,x.id]))}
     if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
-  else if(t==='fig'){if(f.src!=='both')ch.push([f.src==='gs'?'굿스마일만':'Danbooru만','src']);if(f.dbTag.trim())ch.push([(DBTAGS.find(x=>x[0]===f.dbTag)||[0,f.dbTag])[1],'dbt']);f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.dbEx.forEach(k=>ch.push(['−'+(DBTAGS.find(x=>x[0]===k)||[0,k])[1],'dbx',k]));f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
+  else if(t==='fig'){if(f.src!=='both')ch.push([f.src==='gs'?'굿스마일만':'Safebooru만','src']);if(f.dbTag.trim())ch.push([(DBTAGS.find(x=>x[0]===f.dbTag)||[0,f.dbTag])[1],'dbt']);f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.dbEx.forEach(k=>ch.push(['−'+(DBTAGS.find(x=>x[0]===k)||[0,k])[1],'dbx',k]));f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
   else if(t==='3d'){f.parts.forEach(k=>ch.push([nm(D3PARTS,k),'dp',k]));f.partsEx.forEach(k=>ch.push(['−'+nm(D3PARTS,k),'dpx',k]));
     if(f.pose)ch.push([nm(D3POSES,f.pose),'dpo']);if(f.range!=='wide')ch.push(['각도 '+nm(D3RANGE,f.range),'drg']);if(f.rim)ch.push(['림 조명','drim']);if(f.wire)ch.push(['와이어','dw'])}
   else{f.kinds.forEach(k=>ch.push([(KINDS.find(x=>x[0]===k)||[k,k])[1],'k',k]));f.kindsEx.forEach(k=>ch.push(['−'+(KINDS.find(x=>x[0]===k)||[k,k])[1],'kx',k]));
     if(f.region)ch.push([REGIONS.find(x=>x[0]===f.region)[1],'r']);if(f.score)ch.push(['인기 '+f.score+'+','s']);
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
   $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
-    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일 · Danbooru','3d':'손 · 발 · 헤드'})[t]} 전체에서 랜덤</span>`);
+    (ch.length?ch.map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join(''):`<span class="none">${({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'굿스마일 · Safebooru','3d':'손 · 발 · 헤드'})[t]} 전체에서 랜덤</span>`);
   $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};
 }
 $('#frow').addEventListener('click',e=>{const p=e.target.closest('[data-d3p]');
@@ -924,12 +921,12 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltTitle').textContent='�
     <div class="gb"><h3><span>각도 범위</span></h3><div class="gr">${opts(D3RANGE,v=>f.range===v,'data-drange')}</div></div>
     <div class="ft"><label><input type="checkbox" id="fRim" ${f.rim?'checked':''}> 림 조명</label><label><input type="checkbox" id="fWire" ${f.wire?'checked':''}> 와이어프레임</label><a id="fReset">초기화</a></div>`;
   }else if(t==='fig'){const f=S.f.fig;
-    const SRCS=[['both','둘 다'],['gs','굿스마일 컴퍼니'],['db','Danbooru']],isCustom=f.dbTag&&!DBTAGS.some(x=>x[0]===f.dbTag);
+    const SRCS=[['both','둘 다'],['gs','굿스마일 컴퍼니'],['db','Safebooru']],isCustom=f.dbTag&&!DBTAGS.some(x=>x[0]===f.dbTag);
     b.innerHTML=HINT+`<div class="gb"><h3><span>출처</span></h3><div class="gr">${opts(SRCS,v=>f.src===v,'data-fsrc')}</div></div>
     <div class="${f.src==='db'?'off':''}"><div class="gb"><h3><span>굿스마일 · 제품 종류 · 하나라도 맞으면</span><span>${[f.kinds.length?f.kinds.length+'개':'',f.kindsEx.length?'제외 '+f.kindsEx.length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr">${opts(FKINDS,v=>f.kinds.includes(v),'data-fkind',v=>f.kindsEx.includes(v))}</div></div>
     <div class="gb"><h3><span>제품 이름 검색 (영문)</span></h3><input type="text" id="fKw" value="${esc(f.kw)}" placeholder="예: Miku, Frieren" autocomplete="off"></div>
     <div class="gb"><h3><span>이름에 들어가면 제외 (영문, 쉼표로 여러 개)</span></h3><input type="text" id="fKwEx" value="${esc(f.kwEx)}" placeholder="예: Doll, Surprise" autocomplete="off"></div></div>
-    <div class="${f.src==='gs'?'off':''}"><div class="gb"><h3><span>Danbooru · 추가 조건 하나 (일반 등급만 나옴)</span></h3><div class="gr">${opts(DBTAGS,v=>v===''?(!f.dbTag&&!f.dbEx.length):f.dbTag===v,'data-dbt',v=>f.dbEx.includes(v))}</div>
+    <div class="${f.src==='gs'?'off':''}"><div class="gb"><h3><span>Safebooru · 추가 조건 하나 (전체 연령 사이트)</span></h3><div class="gr">${opts(DBTAGS,v=>v===''?(!f.dbTag&&!f.dbEx.length):f.dbTag===v,'data-dbt',v=>f.dbEx.includes(v))}</div>
     <input type="text" id="fDbTag" value="${isCustom?esc(f.dbTag):''}" placeholder="또는 태그 직접 입력 (예: hatsune_miku)" autocomplete="off" style="margin-top:6px"></div></div>
     <div class="ft"><label><input type="checkbox" id="fOne" ${f.onePer?'checked':''}> 피규어당 1장</label><a id="fReset">초기화</a></div>`;
   }else{const f=S.f.anim;
@@ -984,7 +981,7 @@ async function ping(url,cfg){const t0=performance.now();
 function setSt(id,ok,txt){const b=$(id);b.className=ok===null?'':ok?'ok':'err';b.textContent=txt}
 $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
   const ids=['#stFG','#stSB','#stGS','#stDB'];ids.forEach(i=>setSt(i,null,'확인 중…'));
-  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c),(async()=>{const t0=performance.now();try{const r=await fetch(DB+'posts.json?limit=1&tags=figure',{credentials:'omit'});if(r.ok){await r.text();return Math.round(performance.now()-t0)}}catch(e){}return ping(DB+'posts.json?limit=1&tags=figure',c)})()]);
+  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c),(async()=>{const t0=performance.now();const u=DB+'index.php?page=dapi&s=post&q=index&json=1&limit=1&tags=figure';try{const r=await fetch(u,{credentials:'omit'});if(r.ok){await r.text();return Math.round(performance.now()-t0)}}catch(e){}return ping(u,c)})()]);
   res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
   const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
 
