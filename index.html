@@ -492,9 +492,9 @@ header.tov .tsc{display:flex}
   #gTone>label,#gGrid>label:not(.sw),#tmr>label{display:none}
   #tone,#lc{display:none!important}
   #toneSel{display:block;flex:1 1 84px;min-width:84px}
-  #lcSw{display:flex;width:34px;padding:0;align-items:center;justify-content:center;flex:none}
-  #lcSw i{width:14px;height:14px;border:2px solid var(--ink);background:var(--lcv,#fff)}
-  #gGrid #grid{flex:1 1 90px;min-width:90px;width:auto}
+  #lcSw{display:flex;width:auto;padding:0 8px;gap:5px;align-items:center;justify-content:center;flex:none}
+  #lcSw i{width:10px;height:10px;border:2px solid var(--ink);background:var(--lcv,#fff)}
+  #gGrid #grid{flex:1 1 64px;min-width:64px;width:auto;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #gGrid #gridOpts{flex:1 1 auto}
   #gGrid #op{width:48px}
   #flip .ft{display:none}#flip{padding-left:10px;padding-right:10px}
@@ -1330,7 +1330,7 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   const sel=document.createElement('select');sel.id='toneSel';sel.setAttribute('aria-label','색');
   [...tone.querySelectorAll('button')].forEach(b=>sel.add(new Option(b.textContent,b.dataset.v)));tone.after(sel);
   sel.onchange=()=>tone.querySelector(`button[data-v="${sel.value}"]`).click();
-  const sw=document.createElement('button');sw.id='lcSw';sw.setAttribute('aria-label','분할선 색');sw.dataset.tip='분할선 색';sw.innerHTML='<i></i>';lc.after(sw);
+  const sw=document.createElement('button');sw.id='lcSw';sw.setAttribute('aria-label','분할선 색');sw.dataset.tip='분할선 색';sw.innerHTML='선<i></i>';lc.after(sw);
   sw.onclick=()=>{const bs=[...lc.querySelectorAll('button')],i=bs.findIndex(b=>b.classList.contains('on'));bs[(i+1)%bs.length].click()};
   const sync=()=>{const t=tone.querySelector('button.on');if(t)sel.value=t.dataset.v;const l=lc.querySelector('button.on');if(l)sw.style.setProperty('--lcv',l.dataset.v)};
   new MutationObserver(sync).observe(tone,{subtree:true,attributes:true,attributeFilter:['class']});
