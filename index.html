@@ -236,7 +236,7 @@ button.ic:active::after{opacity:1;height:3px;bottom:1px}
 button.ic:active{transform:none}
 .tipbox{position:fixed;z-index:60;white-space:nowrap;background:var(--ink);color:#fff;font-size:11px;padding:4px 8px;pointer-events:none;animation:tipd .14s steps(3)}
 .tipbox::before{content:"";position:absolute;top:-5px;left:var(--tx,50%);margin-left:-4px;width:8px;height:5px;background:var(--ink);clip-path:polygon(37% 0,63% 0,63% 40%,100% 40%,100% 100%,0 100%,0 40%,37% 40%)}
-.tipbox small{display:block;color:#cfccc4;font-size:10px;margin-top:2px}
+.tipbox small{color:#a8a59d;font-size:10px}
 @keyframes tipd{from{transform:translateY(-6px);opacity:0}}
 /* save button */
 #saveCut{display:inline-flex;align-items:center;gap:6px;--sv-in:#fff}
@@ -432,11 +432,11 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 <footer>
   <div class="grp">
     <button id="prev">◀ 이전</button>
-    <button id="saveCut" title="오늘 연습에 기록 (S)"><svg viewBox="0 0 14 14"><path d="M2 0h10v14l-5-3-5 3z"/><path fill="var(--sv-in,#fff)" d="M6 3h2v2h2v2H8v2H6V7H4V5h2z"/></svg><span>기록</span></button>
+    <button id="saveCut" data-tip="오늘 연습에 기록" data-key="S"><svg viewBox="0 0 14 14"><path d="M2 0h10v14l-5-3-5 3z"/><path fill="var(--sv-in,#fff)" d="M6 3h2v2h2v2H8v2H6V7H4V5h2z"/></svg><span>기록</span></button>
     <button id="next">다음 컷 ▶</button>
   </div>
   <i class="dv"></i>
-  <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" title="라이팅 (G)"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
+  <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" data-tip="라이팅" data-key="G"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
   <div class="grp" id="gTone"><label>색</label>
     <div class="seg" id="tone">
       <button data-v="color" class="on">컬러</button>
@@ -447,7 +447,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     </div>
   </div>
   <i class="dv"></i>
-  <div class="grp d3only" id="gPoly"><label>폴리곤</label><label class="sw" title="면 + 선 (D)"><input type="checkbox" id="d3Poly"><i></i></label></div>
+  <div class="grp d3only" id="gPoly"><label>폴리곤</label><label class="sw" data-tip="면 + 선" data-key="D"><input type="checkbox" id="d3Poly"><i></i></label></div>
   <div class="grp" id="gGrid"><label>분할</label>
     <label class="sw"><input type="checkbox" id="gridOn"><i></i></label>
     <span id="gridOpts" style="display:flex;align-items:center;gap:6px">
@@ -467,19 +467,19 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
       <button data-v="#000000">검</button>
       <button data-v="#ff3b30">빨</button>
     </div>
-    <input id="op" type="range" min="15" max="100" value="60" title="선 불투명도">
+    <input id="op" type="range" min="15" max="100" value="60" data-tip="선 불투명도">
     </span>
   </div>
   <i class="dv"></i>
   <div class="grp"><button id="flip">⇄ 좌우반전</button></div>
   <i class="dv"></i>
   <div class="grp" id="tmr"><label>타이머</label>
-    <input type="text" id="tIn" value="05:00" title="시간 입력 (예: 5 = 5분, 1:30, 90s)" autocomplete="off">
+    <input type="text" id="tIn" value="05:00" data-tip="시간 입력 · 예: 5, 1:30, 90s" autocomplete="off">
     <div class="seg"><button data-add="300">+5분</button><button data-add="600">+10분</button><button data-add="1800">+30분</button></div>
     <div class="seg ic">
-      <button id="tPlay" title="재생 (T)"><svg viewBox="0.5 0 10 10"><path d="M2 1h2v1h2v1h2v1h1v2H8v1H6v1H4v1H2z"/></svg></button>
-      <button id="tPause" title="일시정지 (T)"><svg viewBox="0 0 10 10"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg></button>
-      <button id="tReset" title="리셋 (처음으로)"><svg viewBox="-0.5 0 10 10"><path d="M1 1h2v1h-2zM8 1h1v1h-1zM1 2h2v1h-2zM7 2h2v1h-2zM1 3h2v1h-2zM6 3h3v1h-3zM1 4h2v1h-2zM5 4h4v1h-4zM1 5h2v1h-2zM5 5h4v1h-4zM1 6h2v1h-2zM6 6h3v1h-3zM1 7h2v1h-2zM7 7h2v1h-2zM1 8h2v1h-2zM8 8h1v1h-1z"/></svg></button>
+      <button id="tPlay" data-tip="재생" data-key="T" aria-label="재생"><svg viewBox="0.5 0 10 10"><path d="M2 1h2v1h2v1h2v1h1v2H8v1H6v1H4v1H2z"/></svg></button>
+      <button id="tPause" data-tip="일시정지" data-key="T" aria-label="일시정지"><svg viewBox="0 0 10 10"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg></button>
+      <button id="tReset" data-tip="리셋" aria-label="리셋"><svg viewBox="-0.5 0 10 10"><path d="M1 1h2v1h-2zM8 1h1v1h-1zM1 2h2v1h-2zM7 2h2v1h-2zM1 3h2v1h-2zM6 3h3v1h-3zM1 4h2v1h-2zM5 4h4v1h-4zM1 5h2v1h-2zM5 5h4v1h-4zM1 6h2v1h-2zM6 6h3v1h-3zM1 7h2v1h-2zM7 7h2v1h-2zM1 8h2v1h-2zM8 8h1v1h-1z"/></svg></button>
     </div>
   </div>
   <div class="frow" id="frow"></div>
@@ -545,7 +545,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 <aside id="lnkP" class="calp" aria-label="크로키 링크" aria-hidden="true">
   <div class="ch">
     <b>크로키 링크</b>
-    <label class="sw lk-nude" title="누드 포함 사이트 보기"><span class="swl">누드 포함</span><input type="checkbox" id="lnkNude"><i></i></label>
+    <label class="sw lk-nude" data-tip="누드 포함 사이트 보기"><span class="swl">누드 포함</span><input type="checkbox" id="lnkNude"><i></i></label>
     <button class="ic" id="lnkRnd" data-tip="오늘의 사이트" aria-label="오늘의 사이트"><svg viewBox="0 0 16 16"><path d="M3 1h10v1H3zM2 2h1v1H2zM13 2h1v1h-1zM1 3h1v10H1zM14 3h1v10h-1zM2 13h1v1H2zM13 13h1v1h-1zM3 14h10v1H3zM4 4h2v2H4zM10 4h2v2h-2zM7 7h2v2H7zM4 10h2v2H4zM10 10h2v2h-2z"/></svg></button>
     <button class="ic" id="lnkFull" data-tip="전체 화면"><svg viewBox="0 0 16 16"><path d="M1 1h5v1h-5zM10 1h5v1h-5zM1 2h1v4h-1zM14 2h1v4h-1zM1 10h1v4h-1zM14 10h1v4h-1zM1 14h5v1h-5zM10 14h5v1h-5z"/></svg></button>
     <button class="ic" id="lnkX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
@@ -575,7 +575,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
     <div class="cside"><div class="cday" id="calDay"></div></div>
   </div>
 </aside>
-<div id="peek"><button id="uiShow" aria-label="UI 표시" title="UI 표시 (H)"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
+<div id="peek"><button id="uiShow" aria-label="UI 표시" data-tip="UI 표시" data-key="H"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
 <div id="toasts"></div>
 
 <script>
@@ -1271,12 +1271,12 @@ function zoomAt(z,px,py){z=Math.max(1,Math.min(8,z));const [cx,cy]=zoomCenter();
 // ---------- tooltip (header icon buttons)
 let tipEl=null;
 function showTip(b){hideTip();if(!b.dataset.tip)return;const r=b.getBoundingClientRect();
-  tipEl=document.createElement('div');tipEl.className='tipbox';tipEl.innerHTML=esc(b.dataset.tip)+(b.dataset.key?`<small>단축키 ${esc(b.dataset.key)}</small>`:'');
+  tipEl=document.createElement('div');tipEl.className='tipbox';tipEl.innerHTML=esc(b.dataset.tip)+(b.dataset.key?` <small>(${esc(b.dataset.key)})</small>`:'');
   document.body.appendChild(tipEl);const w=tipEl.offsetWidth,left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2));
   tipEl.style.left=left+'px';tipEl.style.top=(r.bottom+6)+'px';tipEl.style.setProperty('--tx',(r.left+r.width/2-left)+'px')}
 function hideTip(){if(tipEl){tipEl.remove();tipEl=null}}
-document.addEventListener('mouseover',e=>{const b=e.target.closest('button.ic');if(b&&!b.contains(e.relatedTarget))showTip(b)});
-document.addEventListener('mouseout',e=>{const b=e.target.closest('button.ic');if(b&&!b.contains(e.relatedTarget))hideTip()});
+document.addEventListener('mouseover',e=>{const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))showTip(b)});
+document.addEventListener('mouseout',e=>{const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))hideTip()});
 document.addEventListener('mousedown',hideTip,true);
 
 // ---------- practice log + calendar
