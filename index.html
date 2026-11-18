@@ -825,7 +825,7 @@ function show(){
     img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.onload=()=>{if(curItem()===it)busy(false)};img.src=M(it.url);if(img.complete&&img.naturalWidth)busy(false);
   }
   $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;$('#info').classList.remove('gone');
-  const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${it.src||SRCNAME[t]}</b> ↗`;sl.classList.remove('hidden');
+  const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${esc(it.src||SRCNAME[t])}</b> ↗`;sl.classList.remove('hidden');
   applyView();
 }
 $('#info').addEventListener('click',e=>{e.stopPropagation();$('#info').classList.add('gone')});
