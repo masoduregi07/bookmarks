@@ -468,15 +468,15 @@ header.tov .tsc{display:flex}
   #tbGrip svg{position:absolute;right:3px;bottom:3px;width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
   #tbGrip.drag svg{fill:var(--tx3)}
   body[data-tb="1"] #frow,body[data-tb="1"] #tmr{display:none!important}
-  body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow){display:none!important}
+  body[data-tb="2"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow),body[data-tb="3"] .top footer>*:not(.grp:first-child):not(#tbGrip):not(.frow):not(#gTone){display:none!important}
   /* one-row toolbar keeps the 필터 button (chips hidden) */
   body[data-tb="2"] .top footer>.frow,body[data-tb="3"] .top footer>.frow{order:1!important;flex:0 0 auto!important;margin:0!important}
   body[data-tb="2"] #frow>:not(#fltBtn),body[data-tb="3"] #frow>:not(#fltBtn){display:none}
-  body[data-tb="3"] .top footer>.frow{flex:1 1 0!important}body[data-tb="3"] .top footer>.grp:first-child{flex:4 1 0!important}body[data-tb="3"] #fltBtn{height:30px;min-height:0;padding:0 10px;flex:1;justify-content:center}body[data-tb="3"] #fltBtn .cnt{font-size:10px}
+  body[data-tb="3"] .top footer>.frow{flex:1 1 0!important}body[data-tb="3"] .top footer>.grp:first-child{flex:none!important;column-gap:4px}body[data-tb="3"] #fltBtn{height:30px;min-height:0;padding:0 10px;flex:1;justify-content:center}body[data-tb="3"] #fltBtn .cnt{font-size:10px}
   body[data-tb="2"] .top footer,body[data-tb="3"] .top footer{padding-right:30px!important}
   body[data-tb="3"] .top footer{padding-top:5px!important;padding-bottom:5px!important}
   body[data-tb="3"] .top footer>.grp:first-child{flex:1;flex-wrap:nowrap}
-  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{flex:1;justify-content:center;height:30px;min-height:0;padding:0;gap:0}
+  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{flex:none;justify-content:center;height:30px;min-height:0;padding:0 8px;gap:0}
   body[data-tb="3"] #flip{flex:none;height:30px;min-height:0;padding:0 5px!important}
   body[data-tb="3"] #prev .bt,body[data-tb="3"] #next .bt{display:none}body[data-tb="3"] #prev .ar,body[data-tb="3"] #next .ar{font-size:12px}
   body[data-tb="3"] #saveCut span{display:none}
@@ -564,6 +564,14 @@ header.tov .tsc{display:flex}
   .top footer{column-gap:6px!important}
   #tone button{min-width:30px;width:30px;padding:0;flex:none}
   #tone .ti{flex:none}
+}
+/* minimal toolbar: 컬러/흑백 icons right after 좌우반전 */
+@media (max-width:560px),(pointer:coarse){
+  body[data-tb="3"] #gTone{display:flex!important;order:0!important;flex:none!important}
+  body[data-tb="3"] #gTone>label{display:none}
+  body[data-tb="3"] #tone .tt{display:none}body[data-tb="3"] #tone button .ti{display:block}
+  body[data-tb="3"] #tone button{height:30px;min-height:0;min-width:30px;width:30px;padding:0;flex:none}
+  body[data-tb="3"] .top footer{column-gap:6px!important}
 }
 </style>
 </head>
