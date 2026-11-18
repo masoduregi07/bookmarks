@@ -446,7 +446,12 @@ header.tov .tsc{display:flex}
   #gGrid #lc button{padding-left:6px;padding-right:6px;min-width:0}
   #gGrid #op{width:40px}
   footer .dv{display:none!important}
-  #tmr .seg:not(.ic){display:none}
+  #tmr .mu{display:none}
+  #tmr{column-gap:6px}
+  #tmr #tIn{width:58px;padding-left:4px;padding-right:4px}
+  #tmr .tadd button{padding-left:6px;padding-right:6px;min-width:0}
+  #tmr .seg.ic button{padding-left:8px;padding-right:8px;min-width:0;width:auto}
+  #tmr .seg.ic{order:2}#tmr .tadd{order:3}
 }
 </style>
 </head>
@@ -525,7 +530,7 @@ header.tov .tsc{display:flex}
   <i class="dv"></i>
   <div class="grp" id="tmr"><label>타이머</label>
     <input type="text" id="tIn" value="05:00" data-tip="시간 입력 · 예: 5, 1:30, 90s" autocomplete="off">
-    <div class="seg"><button data-add="300">+5분</button><button data-add="600">+10분</button><button data-add="1800">+30분</button></div>
+    <div class="seg tadd"><button data-add="300">+5<span class="mu">분</span></button><button data-add="600">+10<span class="mu">분</span></button><button data-add="1800">+30<span class="mu">분</span></button></div>
     <div class="seg ic">
       <button id="tPlay" data-tip="재생" data-key="T" aria-label="재생"><svg viewBox="0.5 0 10 10"><path d="M2 1h2v1h2v1h2v1h1v2H8v1H6v1H4v1H2z"/></svg></button>
       <button id="tPause" data-tip="일시정지" data-key="T" aria-label="일시정지"><svg viewBox="0 0 10 10"><path d="M2 1h2v8H2zM6 1h2v8H6z"/></svg></button>
