@@ -360,24 +360,25 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 #lnkP .lk-cats .o:hover{background:var(--yel)}
 #lnkP .lk-cats .o.on{background:var(--ink);color:#fff}
 #lnkP .lk-sec{font-size:11px;color:var(--tx2);padding:12px 14px 6px;display:flex;justify-content:space-between}
-#lnkP .lk-list{display:grid;gap:8px;padding:0 14px}
-#lnkP.full .lk-list{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
-#lnkP .card{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:8px}
-#lnkP .fav{width:36px;height:36px;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px}
-#lnkP .bd{min-width:0}
-#lnkP .nm{font-weight:700;font-size:12px;display:flex;gap:4px;align-items:center}
-#lnkP .nm span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#lnkP .nm .st{border:none;background:none;box-shadow:none;padding:0 2px;color:var(--tx3);font-weight:400;font-size:13px;line-height:16px;min-height:0;min-width:0}
-#lnkP .nm .st.on{color:#d9a400}
-#lnkP .ds{color:var(--tx2);font-size:11px;margin:2px 0 4px}
-#lnkP .tg{display:flex;gap:4px;flex-wrap:wrap}
-#lnkP .tg i{font-style:normal;font-size:10px;padding:0 4px;border:1px solid var(--ink);line-height:14px}
-#lnkP .tg i.me{background:var(--yel)}
-#lnkP .act{display:flex;flex-direction:column;gap:4px;align-items:stretch}
-#lnkP .go{display:inline-flex;align-items:center;justify-content:center;padding:4px 10px;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);color:var(--ink);text-decoration:none;white-space:nowrap;line-height:16px}
-#lnkP .go:hover{background:var(--yel)}
-#lnkP .go:active{transform:translate(2px,2px);box-shadow:none}
-#lnkP .del{padding:0 6px;box-shadow:none;color:var(--tx2)}
+#lnkP .lk-list{margin:0 14px;border:2px solid var(--ink);background:#fff;box-shadow:2px 2px 0 var(--shd)}
+#lnkP.full .lbody{width:100%;max-width:760px;margin:0 auto}
+#lnkP .r{display:flex;align-items:center;border-top:2px dotted var(--soft);break-inside:avoid;position:relative;transition:background .08s steps(2)}
+#lnkP .lk-list>.r:first-child{border-top:none}
+#lnkP .r .lk{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:7px 4px 7px 10px;color:var(--ink);text-decoration:none}
+#lnkP .r .fav{width:24px;height:24px;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px;flex:none}
+#lnkP .r .tx{min-width:0;display:flex;flex-direction:column;gap:1px}
+#lnkP .r .nm{font-weight:700;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#lnkP .r .nm::after{content:" ↗";font-weight:400;opacity:0;transition:opacity .08s steps(2)}
+#lnkP .r .ds{color:var(--tx2);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#lnkP .r .ds .me{color:var(--ink);background:var(--yel);padding:0 3px;margin-right:4px}
+#lnkP .r:hover,#lnkP .r:focus-within,#lnkP .r:active{background:var(--yel);box-shadow:inset 4px 0 0 var(--ink)}
+#lnkP .r:hover .nm::after,#lnkP .r:focus-within .nm::after{opacity:1}
+#lnkP .r:hover .ds,#lnkP .r:focus-within .ds{color:var(--ink)}
+#lnkP .r .lk:active .fav{transform:translate(1px,1px)}
+#lnkP .r .st,#lnkP .r .del{border:none;background:none;box-shadow:none;padding:0 8px;min-width:0;align-self:stretch;color:var(--tx3);font-size:14px;line-height:1}
+#lnkP .r .st.on{color:#d9a400}
+#lnkP .r .st:hover,#lnkP .r .del:hover{color:var(--ink);background:none}
+#lnkP .r .del{padding:0 10px 0 2px;font-size:12px}
 #lnkP .add{display:block;margin:12px 14px 0;border-style:dashed;box-shadow:none;width:calc(100% - 28px);color:var(--tx2);background:none}
 #lnkP .add:hover{background:var(--yel);color:var(--ink)}
 #lnkP .lk-form{margin:12px 14px 0;padding:12px 12px 10px;border:2px solid var(--ink);background:#fff}
@@ -386,7 +387,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 #lnkP .lk-form input,#lnkP .lk-form select{width:100%;min-width:0;font-size:11px}
 #lnkP .lk-form .btns{display:flex;gap:6px;justify-content:flex-end;margin-top:8px}
 #lnkP .lk-form .pri{background:var(--ink);color:#fff}
-@media (hover:none),(pointer:coarse){#lnkP .go{min-height:36px}#lnkP .del{min-height:28px}#lnkP .lk-cats .o{padding:7px 9px 5px 10px}}
+@media (hover:none),(pointer:coarse){#lnkP .r .lk{padding-top:10px;padding-bottom:10px}#lnkP .r .st{padding:0 12px}#lnkP .lk-cats .o{padding:7px 9px 5px 10px}}
 </style>
 </head>
 <body>
@@ -1376,10 +1377,9 @@ let lnkOpen=false,lnkFull=false,lnkForm=false;
 const lnkAll=()=>[...LDEF,...LK.mine.map(x=>({...x,mine:true}))];
 const lnkAb=n=>{const w=n.replace(/[^A-Za-z0-9가-힣 ]/g,' ').trim().split(/\s+/).filter(Boolean);return (w.length>1?w[0][0]+w[1][0]:(w[0]||'?').slice(0,2)).toUpperCase()};
 function lnkCard(x,i){const fav=LK.fav.includes(x.id);
-  return `<div class="card"><div class="fav" style="background:${LCOL[i%LCOL.length]}">${esc(x.ab||lnkAb(x.n))}</div>
-  <div class="bd"><div class="nm"><span>${esc(x.n)}</span><button class="st${fav?' on':''}" data-lstar="${esc(x.id)}" aria-label="즐겨찾기">${fav?'★':'☆'}</button></div>
-  ${x.d?`<div class="ds">${esc(x.d)}</div>`:''}<div class="tg">${(x.t||[]).map(t=>`<i>${esc(t)}</i>`).join('')}${x.mine?'<i class="me">내 링크</i>':''}</div></div>
-  <div class="act"><a class="go" href="${esc(x.u)}" target="_blank" rel="noopener noreferrer">열기 ↗</a>${x.mine?`<button class="del" data-ldel="${esc(x.id)}" aria-label="링크 지우기">×</button>`:''}</div></div>`}
+  return `<div class="r"><a class="lk" href="${esc(x.u)}" target="_blank" rel="noopener noreferrer" title="${esc(x.u)}"><span class="fav" style="background:${LCOL[i%LCOL.length]}">${esc(x.ab||lnkAb(x.n))}</span>
+  <span class="tx"><span class="nm">${esc(x.n)}</span><span class="ds">${x.mine?'<span class="me">내 링크</span>':''}${esc(x.d||x.u.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,''))}</span></span></a>
+  <button class="st${fav?' on':''}" data-lstar="${esc(x.id)}" aria-label="즐겨찾기">${fav?'★':'☆'}</button>${x.mine?`<button class="del" data-ldel="${esc(x.id)}" aria-label="링크 지우기">×</button>`:''}</div>`}
 function renderLnk(){const all=lnkAll(),idx=new Map(all.map((x,i)=>[x.id,i])),vis=all.filter(x=>LK.nude||!x.nude);
   const cats=LCATS.filter(([k])=>vis.some(x=>(x.c||[]).includes(k)));if(LK.cat&&!cats.some(c=>c[0]===LK.cat))LK.cat='';
   const list=vis.filter(x=>!LK.cat||(x.c||[]).includes(LK.cat)),fav=list.filter(x=>LK.fav.includes(x.id)),rest=list.filter(x=>!LK.fav.includes(x.id));
