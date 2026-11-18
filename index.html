@@ -506,7 +506,7 @@ header.tov .tsc{display:flex}
   #gTone{display:flex}#gGrid{flex-wrap:nowrap}
   #gFlip{flex:0 0 auto}
   #tmr{flex:0 0 auto}
-  .top footer>.frow{order:1;flex:1 1 110px;margin-top:0;min-width:0;flex-wrap:nowrap}
+  .top footer>.frow{order:1;flex:1 1 72px;margin-top:0;min-width:0;flex-wrap:nowrap}
   #tmr{order:2}
   footer .frow .none{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
   footer .dv{flex:0 0 10px!important;min-width:10px!important;max-width:10px!important}
@@ -514,6 +514,19 @@ header.tov .tsc{display:flex}
 }
 #fltPop .hd{justify-content:flex-start}#fltPop .hd .px{margin-left:auto}
 #fltSum{margin-left:8px;font-weight:400;font-size:11px;color:var(--tx2)}
+/* lamp-button switch (분할 on/off) */
+.lsw .lb{display:inline-flex;align-items:center;gap:5px;height:26px;padding:0 8px 0 6px;border:2px solid var(--ink);background:#fff;box-shadow:2px 2px 0 var(--shd);font-size:11px;color:var(--tx2);transition:transform .05s steps(1)}
+.lsw .lb i{width:8px;height:8px;border:none;background:var(--soft);outline:2px solid var(--ink);margin:0 2px}
+.lsw .lb i::after{display:none}
+.lsw .lb b{font-weight:400}
+.lsw .t-on,.lsw input:checked+.lb .t-off{display:none}
+.lsw input:checked+.lb .t-on{display:inline;font-weight:700}
+.lsw input:checked+.lb{background:var(--mint);color:var(--ink);box-shadow:none;transform:translate(2px,2px)}
+.lsw input:checked+.lb i{background:#3fbf6f}
+.lsw:hover .lb{background:var(--yel)}.lsw:hover input:checked+.lb{background:var(--mint)}
+@media (hover:none){.lsw:hover .lb{background:#fff}}
+@media (hover:none),(pointer:coarse){.lsw .lb{height:32px}}
+@media (min-width:561px) and (pointer:coarse){.lsw .lb{height:34px;padding:0 6px 0 4px;gap:4px}}
 </style>
 </head>
 <body>
@@ -565,7 +578,7 @@ header.tov .tsc{display:flex}
   <i class="dv"></i>
   <div class="grp d3only" id="gPoly"><label>폴리곤</label><label class="sw" data-tip="면 + 선" data-key="D"><input type="checkbox" id="d3Poly"><i></i></label></div>
   <div class="grp" id="gGrid"><label>분할</label>
-    <label class="sw"><input type="checkbox" id="gridOn"><i></i></label>
+    <label class="sw lsw" aria-label="분할 켜기 / 끄기"><input type="checkbox" id="gridOn"><span class="lb"><i></i><b class="t-on">ON</b><b class="t-off">OFF</b></span></label>
     <span id="gridOpts" style="display:flex;align-items:center;gap:6px">
     <select id="grid">
       <option value="half">2분할</option>
