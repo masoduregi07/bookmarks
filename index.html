@@ -460,6 +460,11 @@ header.tov .tsc{display:flex}
   footer .grp{row-gap:5px}
   .top footer button,.top footer select,.top footer input[type=text]{min-height:32px}
   .top footer .seg.ic button{height:32px}
+}
+
+/* touch devices (phones + tablets): collapsible toolbar via corner grip */
+@media (max-width:560px),(pointer:coarse){
+  .top footer{position:relative}
   #tbGrip{display:block;position:absolute;right:0;bottom:0;width:40px;height:34px;touch-action:none;cursor:ns-resize;z-index:2;-webkit-tap-highlight-color:transparent}
   #tbGrip svg{position:absolute;right:3px;bottom:3px;width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
   #tbGrip.drag svg{fill:var(--tx3)}
@@ -478,6 +483,34 @@ header.tov .tsc{display:flex}
   footer .grp{row-gap:5px}
   .top footer button,.top footer select,.top footer input[type=text]{min-height:34px}
   .top footer .seg.ic button{height:34px}
+}
+/* tablets: compact one/two-line toolbar that fills the full width */
+#toneSel,#lcSw{display:none}
+@media (min-width:561px) and (pointer:coarse){
+  .top footer{padding:6px 8px!important;column-gap:8px!important;justify-content:flex-start!important}
+  #tmr{margin-right:24px}body[data-tb="1"] #gFlip{margin-right:24px} /* room for the corner grip on the last row */
+  #gTone>label,#gGrid>label:not(.sw),#tmr>label{display:none}
+  #tone,#lc{display:none!important}
+  #toneSel{display:block;flex:1 1 84px;min-width:84px}
+  #lcSw{display:flex;width:34px;padding:0;align-items:center;justify-content:center;flex:none}
+  #lcSw i{width:14px;height:14px;border:2px solid var(--ink);background:var(--lcv,#fff)}
+  #gGrid #grid{flex:1 1 90px;min-width:90px;width:auto}
+  #gGrid #gridOpts{flex:1 1 auto}
+  #gGrid #op{width:48px}
+  #flip .ft{display:none}#flip{padding-left:10px;padding-right:10px}
+  #tmr .mu{display:none}#tmr .tadd button{padding-left:7px;padding-right:7px;min-width:0}
+  #tmr .seg.ic{order:2}#tmr .tadd{order:3}#tmr #tIn{width:60px}
+  /* every group stretches so a row has no empty space on the right */
+  .top footer>.grp,.top footer>.frow{flex:1 1 auto}
+  .top footer>.grp:first-child{display:flex}.top footer>.grp:first-child>button{flex:1 1 auto;justify-content:center}
+  #gTone{display:flex}#gGrid{flex-wrap:nowrap}
+  #gFlip{flex:0 0 auto}
+  #tmr{flex:0 0 auto}
+  .top footer>.frow{order:1;flex:1 1 110px;margin-top:0;min-width:0;flex-wrap:nowrap}
+  #tmr{order:2}
+  footer .frow .none{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+  footer .dv{flex:0 0 10px!important;min-width:10px!important;max-width:10px!important}
+  #tmr+.frow,.frow{border:none}
 }
 </style>
 </head>
@@ -1290,6 +1323,16 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   const place=()=>{if(mq.matches&&!document.body.classList.contains('t3d')){if(fb.parentElement!==grid)grid.appendChild(fb)}else if(fb.parentElement!==home)home.appendChild(fb)};
   (mq.addEventListener?mq.addEventListener('change',place):mq.addListener(place));place();
   new MutationObserver(place).observe(document.body,{attributes:true,attributeFilter:['class']})})();
+// ---------- tablets: compact controls (tone dropdown, line-color swatch) mirror the full button sets
+(()=>{const tone=document.getElementById('tone'),lc=document.getElementById('lc');
+  const sel=document.createElement('select');sel.id='toneSel';sel.setAttribute('aria-label','색');
+  [...tone.querySelectorAll('button')].forEach(b=>sel.add(new Option(b.textContent,b.dataset.v)));tone.after(sel);
+  sel.onchange=()=>tone.querySelector(`button[data-v="${sel.value}"]`).click();
+  const sw=document.createElement('button');sw.id='lcSw';sw.setAttribute('aria-label','분할선 색');sw.dataset.tip='분할선 색';sw.innerHTML='<i></i>';lc.after(sw);
+  sw.onclick=()=>{const bs=[...lc.querySelectorAll('button')],i=bs.findIndex(b=>b.classList.contains('on'));bs[(i+1)%bs.length].click()};
+  const sync=()=>{const t=tone.querySelector('button.on');if(t)sel.value=t.dataset.v;const l=lc.querySelector('button.on');if(l)sw.style.setProperty('--lcv',l.dataset.v)};
+  new MutationObserver(sync).observe(tone,{subtree:true,attributes:true,attributeFilter:['class']});
+  new MutationObserver(sync).observe(lc,{subtree:true,attributes:true,attributeFilter:['class']});sync()})();
 // ---------- phones: drag the toolbar's corner grip up/down to collapse it in steps (double-tap: full ↔ smallest)
 (()=>{const ft=document.querySelector('.top footer'),g=document.createElement('div');g.id='tbGrip';g.setAttribute('aria-label','툴바 크기 조절');
   g.innerHTML='<svg viewBox="0 0 16 16"><path d="M12 2h2v2h-2zM8 6h2v2H8zM12 6h2v2h-2zM4 10h2v2H4zM8 10h2v2H8zM12 10h2v2h-2z"/></svg>';ft.appendChild(g);
