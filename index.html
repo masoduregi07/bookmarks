@@ -188,10 +188,11 @@ body.zen #stTop,body.zen #srcLink{display:none}
 .top header .tabs button:not(.on){background:var(--stage)}
 /* tabs, E2: only the chosen tab is a box; the rest are bare labels split by short gray bars */
 .top header .tabs{gap:0!important}
-.top header .tabs button:not(.on):not(.tab-ghost):not(.dragging){border-color:transparent;background:none!important;clip-path:none;padding:5px 10px 6px;position:relative}
+.top header .tabs button:not(.on):not(.tab-ghost){padding:5px 10px 6px;position:relative} /* same size while dragged, so the strip doesn't jump */
+.top header .tabs button:not(.on):not(.tab-ghost):not(.dragging){border-color:transparent;background:none!important;clip-path:none}
 .top header .tabs button:not(.on):not(.tab-ghost):hover{color:var(--ink);background:none!important}
 .top header .tabs button.on{padding:7px 13px 8px 12px}
-.top header .tabs button:not(.on)+button:not(.on)::before{content:"";position:absolute;left:-1px;top:50%;width:2px;height:10px;margin-top:-5px;background:var(--soft);pointer-events:none}
+.top header .tabs button:not(.on):not(.dragging)+button:not(.on):not(.dragging):not(.tab-ghost)::before{content:"";position:absolute;left:-1px;top:50%;width:2px;height:10px;margin-top:-5px;background:var(--soft);pointer-events:none}
 .top header .tabs button.holding{background:var(--yel)!important}
 .top footer{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
 /* toolbar balance */
