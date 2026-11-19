@@ -57,7 +57,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:0 10p
 .tabs button.on{background:var(--panel);color:var(--ink);font-weight:700;padding:6px 16px 7px 14px}
 .tabs button:active{transform:none}
 .tabs .wip{font-size:11px;font-weight:400;color:var(--tx3)}
-.tabs svg{width:14px;height:14px;shape-rendering:crispEdges;fill:currentColor}
+.tabs svg{width:14px;height:14px;flex:none;shape-rendering:crispEdges;fill:currentColor}
 .tabs button.on svg .acc{fill:var(--pink)}
 .tabs button[data-tab=anim].on svg .acc{fill:var(--mint)}
 .tabs button[data-tab=fig].on svg .acc{fill:var(--yel)}
@@ -194,6 +194,9 @@ body.zen #stTop,body.zen #srcLink{display:none}
 .top header .tabs button.on{padding:7px 13px 8px 12px}
 .top header .tabs button:not(.on):not(.dragging)+button:not(.on):not(.dragging):not(.tab-ghost)::before{content:"";position:absolute;left:-1px;top:50%;width:2px;height:10px;margin-top:-5px;background:var(--soft);pointer-events:none}
 .top header .tabs button.holding{background:var(--yel)!important}
+.tabs button:focus:not(:focus-visible),.tabs button.on:focus-visible{outline:none}
+.top header .tabs button.tab-ghost svg [fill="#fff"]{fill:var(--tx3)}
+.top header .tabs button.tab-ghost{background:var(--yel)!important;color:var(--ink)} /* icon insides stay visible on the yellow ghost */
 .top footer{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
 /* toolbar balance */
 footer{column-gap:0!important;justify-content:center}
@@ -1640,7 +1643,7 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   try{const o=JSON.parse(localStorage.getItem('cutref-tabs')||'[]');if(o.length){const all=[...nav.querySelectorAll('button[data-tab]')].map(b=>b.dataset.tab);[...o.filter(t=>all.includes(t)),...all.filter(t=>!o.includes(t))].forEach(t=>nav.appendChild(nav.querySelector(`[data-tab="${t}"]`)))}}catch(e){}
   const saveOrder=()=>{try{localStorage.setItem('cutref-tabs',JSON.stringify([...nav.querySelectorAll('button')].map(x=>x.dataset.tab)))}catch(e){}};
   const begin=()=>{st.on=true;const b=st.b,r=b.getBoundingClientRect(),n=nav.getBoundingClientRect();b.classList.remove('holding');
-    const g=b.cloneNode(true);g.removeAttribute('data-tab');g.classList.add('tab-ghost');g.classList.remove('holding');g.style.width=r.width+'px';g.style.height=r.height+'px';
+    const g=b.cloneNode(true);g.removeAttribute('data-tab');g.classList.add('tab-ghost');g.classList.remove('holding');g.style.width=r.width+'px';g.style.height=r.height+'px';g.style.padding=getComputedStyle(b).padding;
     st.g=g;st.grab=st.x-r.left;st.gx=r.left-n.left+nav.scrollLeft;st.gy=r.top-n.top;st.ox=st.x;g.style.left=st.gx+'px';g.style.top=st.gy+'px';nav.appendChild(g);
     b.classList.add('dragging');try{b.setPointerCapture(st.id)}catch(e){}if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}};
   const tabs=()=>[...nav.querySelectorAll('button[data-tab]')];
@@ -2030,6 +2033,7 @@ document.addEventListener('keydown',e=>{
   if(e.target.matches('input,select,textarea,[contenteditable]'))return;
   if(e.ctrlKey||e.metaKey||e.altKey)return; // leave Ctrl/Cmd/Alt combos (copy, paste, find, reload…) to the browser
   const k=e.key.toLowerCase();
+  if(/^(arrow|\s)/.test(k)&&document.activeElement&&document.activeElement.matches('button'))document.activeElement.blur(); // a clicked tab/button keeps focus: shortcut keys shouldn't draw its focus ring
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
   else if(k==='g'&&S.tab==='3d'){{const i=D3LIGHTS.findIndex(x=>x[0]===S.d3light);S.d3light=D3LIGHTS[(i+1)%D3LIGHTS.length][0];d3Set();toast('라이팅: '+nm(D3LIGHTS,S.d3light))}}
