@@ -280,6 +280,48 @@ button.ic:active{transform:none}
 .calmenu button svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges;flex:none}
 .calmenu small{color:var(--tx3);font-size:10px;padding:2px 2px 0;border-top:2px dotted var(--soft);padding-top:6px}
 .calp .cbody{flex:1;min-height:0;display:flex;flex-direction:column;overflow:auto}
+/* panel mini tabs: 캘린더 | 보관함 */
+.ptabs{display:flex;border-bottom:2px solid var(--ink);margin:10px 14px 0;flex:none}
+.ptabs button{border:2px solid transparent;border-bottom:none;margin:0 0 -2px;padding:5px 12px;background:none;box-shadow:none;color:var(--tx2);font-size:12px;display:flex;align-items:center;gap:5px}
+.ptabs button:hover{background:none;color:var(--ink)}.ptabs button:active{transform:none}
+.ptabs button.on{border-color:var(--ink);color:var(--ink);font-weight:700;background:linear-gradient(transparent 58%,var(--mint) 58%,var(--mint) 88%,transparent 88%) no-repeat 8px 0/calc(100% - 16px) 100%,var(--panel)}
+.ptabs button i{font-style:normal;font-size:10px;color:var(--tx3);font-weight:400}
+.ptabs svg{width:12px;height:12px;fill:#d26a82;shape-rendering:crispEdges}
+.calp .cbody.hidden,.fbody.hidden{display:none!important}
+/* 보관함 */
+.fbody{flex:1;min-height:0;overflow:auto;padding:10px 14px 14px}
+.fv-fd{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.fv-fd button{height:24px;display:inline-flex;align-items:center;gap:4px;padding:0 8px;border:none;background:#ebe9e2;box-shadow:1px 1px 0 rgba(61,59,55,.18);font-size:11px;color:var(--ink)}
+.fv-fd button.on{background:var(--ink);color:#fff}.fv-fd button i{font-style:normal;color:var(--tx3);font-size:10px}.fv-fd button.on i{color:#ccc}
+.fv-fd button.add{background:none;box-shadow:none;border:2px dashed var(--tx3);color:var(--tx2)}
+.fv-fd button.drop{outline:2px solid var(--pink);outline-offset:1px}
+.fv-tl{display:flex;gap:6px;align-items:center;margin-bottom:10px}.fv-tl .sp{flex:1}
+.fv-tl button{height:26px;padding:0 10px;font-size:11px}.fv-tl select{height:26px;font-size:11px}
+.fv-fe{display:flex;gap:4px}.fv-fe.hidden{display:none}.fv-fe button{box-shadow:none;border-color:var(--tx3);color:var(--tx2)}
+.fv-gr{columns:3;column-gap:8px}.calp.full .fv-gr{columns:6}
+.fv-gr .it{break-inside:avoid;margin-bottom:8px;border:2px solid var(--ink);position:relative;background:var(--stage);cursor:pointer;display:block}
+.fv-gr .it img{display:block;width:100%;height:auto;min-height:40px}
+.fv-gr .it b{position:absolute;left:4px;bottom:4px;background:var(--panel);border:1px solid var(--ink);font-weight:400;font-size:9px;padding:0 4px;max-width:calc(100% - 34px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fv-gr .it .x,.fv-gr .it .f{position:absolute;top:4px;width:20px;height:20px;padding:0;background:var(--panel);border:1px solid var(--ink);box-shadow:none;display:flex;align-items:center;justify-content:center;font-size:10px;line-height:1}
+.fv-gr .it .x{right:4px}.fv-gr .it .f{right:28px}
+.fv-gr .it .x,.fv-gr .it .f{min-width:0!important;min-height:0!important;width:20px!important;height:20px!important}
+@media (max-width:560px){.fv-gr{columns:2}}
+.fv-gr .it .x svg{width:12px;height:12px;fill:#d26a82;shape-rendering:crispEdges}
+@media (hover:hover){.fv-gr .it .f{opacity:0}.fv-gr .it:hover .f{opacity:1}}
+.fv-empty{color:var(--tx3);text-align:center;padding:40px 10px;line-height:1.9}.fv-empty.hidden{display:none}
+.fv-menu{position:fixed;z-index:60;min-width:160px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:6px;display:grid;gap:2px;font-size:12px;animation:tbdIn .12s steps(3,end)}
+.fv-menu.hidden{display:none}
+.fv-menu label{display:flex;align-items:center;gap:6px;height:26px;padding:0 6px;cursor:pointer}.fv-menu label:hover{background:#ebe9e2}
+.fv-menu .nf{border-top:2px dotted var(--soft);margin-top:4px;padding:6px 6px 2px;color:var(--tx2);cursor:pointer}
+.fv-menu small{color:var(--tx3);padding:2px 6px}
+/* stage heart */
+#favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);color:var(--tx3)}
+#favBtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;shape-rendering:crispEdges}
+#favBtn.on{background:var(--pink);color:var(--ink)}#favBtn.on svg{fill:#d26a82;stroke:var(--ink);stroke-width:1}
+#favBtn.beat{animation:favPop .24s steps(3,end)}
+@keyframes favPop{50%{transform:scale(1.25)}}
+#favBtn.hidden,body.zen #favBtn{display:none}
+#zoomUi{left:50px!important}
 .calp.full .cbody{display:grid;grid-template-columns:1fr 340px;overflow:hidden}
 .calp .cmain{padding-bottom:6px}
 .calp.full .cmain{overflow:auto}
@@ -744,6 +786,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <svg id="hg" viewBox="0 0 10 12" shape-rendering="crispEdges" aria-label="불러오는 중"><path fill="currentColor" d="M0 0h10v1H0zM0 11h10v1H0zM1 1h1v2H1zM8 1h1v2H8zM2 3h1v1H2zM7 3h1v1H7zM3 4h1v1H3zM6 4h1v1H6zM3 7h1v1H3zM6 7h1v1H6zM2 8h1v1H2zM7 8h1v1H7zM1 9h1v2H1zM8 9h1v2H8z"/><path class="sd s1" d="M2 1h6v2H2zM3 3h4v1H3zM4 4h2v1H4z"/><path class="sd s2" d="M3 3h4v1H3zM4 4h2v1H4zM4 6h1v2H4zM3 10h4v1H3z"/><path class="sd s3" d="M3 8h4v1H3zM2 9h6v2H2z"/></svg>
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <canvas id="c3d" class="hidden"></canvas>
+  <button id="favBtn" class="hidden" data-tip="보관함에 담기" data-key="B" aria-label="보관함에 담기" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h4v1h1v1h2V4h1V3h4v1h1v5h-1v1h-1v1h-1v1h-1v1H9v1H7v-1H6v-1H5v-1H4v-1H3V9H2V8H1V4h1z"/></svg></button>
   <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
@@ -779,6 +822,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <dt><kbd>F</kbd></dt><dd>좌우반전</dd>
     <dt><kbd>H</kbd></dt><dd>UI 숨김</dd>
     <dt><kbd>S</kbd></dt><dd>지금 컷 기록 / 기록 취소</dd>
+    <dt><kbd>B</kbd></dt><dd>보관함에 담기 / 빼기</dd>
     <dt><kbd>C</kbd></dt><dd>연습 기록 열기 / 닫기</dd>
     <dt><kbd>L</kbd></dt><dd>크로키 링크 열기 / 닫기</dd>
     <dt><kbd>?</kbd></dt><dd>단축키 보기</dd>
@@ -814,6 +858,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     </div>
     <button class="ic" id="calX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
   </div>
+  <div class="ptabs" id="calTabs"><button class="on" data-v="cal">캘린더 <i id="calTabN"></i></button><button data-v="fav"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h4v1h1v1h2V4h1V3h4v1h1v5h-1v1h-1v1h-1v1h-1v1H9v1H7v-1H6v-1H5v-1H4v-1H3V9H2V8H1V4h1z"/></svg>보관함 <i id="favTabN"></i></button></div>
   <div class="cbody">
     <div class="cmain">
       <div class="cmon"><button class="nb" id="calPrev">◀</button><b id="calTitle"></b><button class="nb" id="calNext">▶</button><button class="sm" id="calToday">오늘</button></div>
@@ -824,6 +869,13 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     </div>
     <div class="cside"><div class="cday" id="calDay"></div></div>
   </div>
+  <div class="fbody hidden" id="favBody">
+    <div class="fv-fd" id="favFolders"></div>
+    <div class="fv-tl"><button id="favUp">+ 이미지 올리기</button><input type="file" id="favFile" accept="image/*" multiple hidden><span class="sp"></span><span class="fv-fe hidden" id="favFEdit"><button id="favRen">이름 바꾸기</button><button id="favDelF">폴더 삭제</button></span><select id="favSort"><option value="new">최신순</option><option value="old">오래된순</option></select></div>
+    <div class="fv-gr" id="favGrid"></div>
+    <div class="fv-empty hidden" id="favEmpty">아직 담은 이미지가 없음<br><small>화면 왼쪽 아래 ♥ 를 누르거나 B 키 · 이미지 올리기로 추가</small></div>
+  </div>
+  <div class="fv-menu hidden" id="favMenu"></div>
 </aside>
 <div id="peek"><button id="uiShow" aria-label="UI 표시" data-tip="UI 표시" data-key="H"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
 <div id="toasts"></div>
@@ -851,7 +903,7 @@ const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
 applyCfg();
 const P=u=>S.proxy?S.proxy+encodeURIComponent(u):u;
-const M=u=>S.mediaProxy&&S.proxy&&!/^data:/.test(u)?P(u):u;
+const M=u=>S.mediaProxy&&S.proxy&&!/^(data|blob):/.test(u)?P(u):u;
 // ---------- toast
 new ResizeObserver(()=>placeToasts()).observe($('#stTop'));
 function placeToasts(){const box=$('#toasts'),top=document.querySelector('.top'),inf=$('#info'),st=$('#stage');
@@ -1157,8 +1209,8 @@ function show(){
     img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.onload=()=>{if(curItem()===it)busy(false)};img.src=M(it.url);if(img.complete&&img.naturalWidth)busy(false);
   }
   $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;$('#info').classList.remove('gone');
-  const sl=$('#srcLink');sl.href=it.link;sl.innerHTML=`원본 <b>${esc(it.src||SRCNAME[t])}</b> ↗`;sl.classList.remove('hidden');
-  applyView();
+  const sl=$('#srcLink');if(it.link){sl.href=it.link;sl.innerHTML=`원본 <b>${esc(it.src||SRCNAME[t])}</b> ↗`;sl.classList.remove('hidden')}else sl.classList.add('hidden');
+  applyView();if(window.favReady)favSync();
 }
 $('#info').addEventListener('click',e=>{e.stopPropagation();$('#info').classList.add('gone')});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1684,20 +1736,119 @@ function renderCal(){
     for(const d=new Date(st);d<=end;d.setDate(d.getDate()+1)){const k=dkey(d),n=(m[k]||[]).length;yh+=`<i class="${lv(n)}" title="${k} · ${n}장" style="${k>tk?'opacity:.3':''}"></i>`}
     $('#calYear').innerHTML=yh;const yw=$('#calYear');yw.scrollLeft=yw.scrollWidth}
 }
-function openCal(){if(lnkOpen)closeLnk();calOpen=true;if(curPop)closeP();renderCal();$('#calP').classList.add('open');$('#calP').setAttribute('aria-hidden','false');$('#calBtn').classList.add('on')}
+function openCal(){if(lnkOpen)closeLnk();calOpen=true;if(curPop)closeP();renderCal();if(window.favCount)favCount();if(calView==='fav')favRender();$('#calP').classList.add('open');$('#calP').setAttribute('aria-hidden','false');$('#calBtn').classList.add('on')}
 function closeCal(){closeMenu();calOpen=false;$('#calP').classList.remove('open');$('#calP').setAttribute('aria-hidden','true');$('#calBtn').classList.remove('on')}
 $('#calBtn').onclick=()=>calOpen?closeCal():openCal();
 $('#calX').onclick=closeCal;
+// ---------- 보관함: hearted cuts + uploaded images, kept in this browser (IndexedDB), sorted into folders
+const FAV={items:[],folders:[],cur:'',sort:'new',urls:{}};let favDB=null;
+const favOpen=()=>favDB||(favDB=new Promise((ok,no)=>{const r=indexedDB.open('cutref-fav',1);
+  r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('items',{keyPath:'id'});d.createObjectStore('folders',{keyPath:'id'});d.createObjectStore('blobs')};
+  r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}));
+const favTx=async(st,mode,fn)=>{const d=await favOpen();return new Promise((ok,no)=>{const t=d.transaction(st,mode);const out=fn(t);t.oncomplete=()=>ok(out&&out.result!==undefined?out.result:out);t.onerror=t.onabort=()=>no(t.error)})};
+const favPut=(st,v,k)=>favTx(st,'readwrite',t=>t.objectStore(st).put(v,k)).catch(e=>{toast('보관함 저장 실패 · 저장 공간 확인','err');throw e});
+const favDel=(st,k)=>favTx(st,'readwrite',t=>t.objectStore(st).delete(k));
+const favAll=st=>favTx(st,'readonly',t=>t.objectStore(st).getAll());
+const favNewId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const favKey=it=>it.kind==='3d'?'3d:'+JSON.stringify(it.state||it.title):it.url;
+const favFind=it=>it&&(it.favId?FAV.items.find(x=>x.id===it.favId):FAV.items.find(x=>x.key===favKey(it)));
+async function favLoad(){try{[FAV.items,FAV.folders]=await Promise.all([favAll('items'),favAll('folders')]);FAV.folders.sort((a,b)=>a.ord-b.ord)}catch(e){FAV.items=[];FAV.folders=[]}favSync();favCount();if(calOpen&&calView==='fav')favRender()}
+// image source for a saved item: uploads come from the blob store
+async function favSrc(x){if(!x.blob)return M(thumbOf(x));if(FAV.urls[x.id])return FAV.urls[x.id];
+  const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));return FAV.urls[x.id]=b?URL.createObjectURL(b):''}
+function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on))); // a removed upload can't be re-added from the stage
+  b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.dataset.tip=on?'보관함에서 빼기':'보관함에 담기'}
+function favCount(){$('#favTabN').textContent=FAV.items.length||'';$('#calTabN').textContent=(()=>{const n=LOG.filter(r=>r.date===dkey(new Date())).length;return n?'오늘 '+n:''})()}
+async function favToggle(){let it=curItem();if(!it||!msg.classList.contains('hidden'))return;
+  if(it.kind==='3d'&&!it.url){if(!M3||c3d.classList.contains('hidden'))return;const m=await M3;it.url=m.snapshot(320)}
+  const ex=favFind(it),b=$('#favBtn');
+  if(ex){await favRemove(ex);toast('보관함에서 뺌')}
+  else{const x={id:favNewId(),key:favKey(it),ts:Date.now(),tab:S.tab,src:it.src||SRCNAME[S.tab],title:it.title||'',link:it.link||'',url:it.url,thumb:it.thumb||'',kind:it.kind||'img',state:it.state||null,folders:FAV.cur?[FAV.cur]:[]};
+    await favPut('items',x);FAV.items.push(x);b.classList.remove('beat');b.offsetWidth;b.classList.add('beat');
+    toast(FAV.cur?`보관함 · ${(FAV.folders.find(f=>f.id===FAV.cur)||{}).name}에 담음`:'보관함에 담음','ok')}
+  favSync();favCount();if(calOpen&&calView==='fav')favRender()}
+async function favRemove(x){await favDel('items',x.id);if(x.blob){await favDel('blobs',x.id);if(FAV.urls[x.id]){URL.revokeObjectURL(FAV.urls[x.id]);delete FAV.urls[x.id]}}
+  FAV.items=FAV.items.filter(y=>y!==x)}
+$('#favBtn').onclick=e=>{e.stopPropagation();favToggle()};
+// panel view: 캘린더 | 보관함
+let calView='cal';
+function calShow(v){calView=v;document.querySelectorAll('#calTabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  document.querySelector('#calP .cbody').classList.toggle('hidden',v!=='cal');$('#favBody').classList.toggle('hidden',v!=='fav');if(v==='fav')favRender()}
+$('#calTabs').onclick=e=>{const b=e.target.closest('button');if(b)calShow(b.dataset.v)};
+function favRender(){favCount();const fs=FAV.folders,cnt=id=>FAV.items.filter(x=>x.folders.includes(id)).length;
+  if(FAV.cur&&!fs.some(f=>f.id===FAV.cur))FAV.cur='';
+  $('#favFolders').innerHTML=`<button data-f="" class="${FAV.cur?'':'on'}">전체 <i>${FAV.items.length}</i></button>`+fs.map(f=>`<button data-f="${f.id}" class="${FAV.cur===f.id?'on':''}">${esc(f.name)} <i>${cnt(f.id)}</i></button>`).join('')+'<button class="add" data-add>+ 새 폴더</button>';
+  $('#favFEdit').classList.toggle('hidden',!FAV.cur);
+  let list=FAV.items.filter(x=>!FAV.cur||x.folders.includes(FAV.cur)).sort((a,b)=>FAV.sort==='new'?b.ts-a.ts:a.ts-b.ts);
+  $('#favEmpty').classList.toggle('hidden',list.length>0);
+  $('#favGrid').innerHTML=list.map(x=>`<div class="it" data-id="${x.id}" draggable="true" title="${esc(x.title)}"><img alt="" loading="lazy" referrerpolicy="no-referrer"><button class="f" data-fm aria-label="폴더">▤</button><button class="x" data-rm aria-label="보관함에서 빼기"><svg viewBox="0 0 16 16"><path d="M2 3h4v1h1v1h2V4h1V3h4v1h1v5h-1v1h-1v1h-1v1h-1v1H9v1H7v-1H6v-1H5v-1H4v-1H3V9H2V8H1V4h1z"/></svg></button><b>${esc(x.blob?'업로드':x.src||'')}</b></div>`).join('');
+  $('#favGrid').querySelectorAll('.it').forEach(el=>{const x=FAV.items.find(y=>y.id===el.dataset.id),im=el.querySelector('img');
+    im.onerror=()=>{if(x.thumb&&im.dataset.t!=='u'&&!x.blob){im.dataset.t='u';im.src=M(x.url)}else el.classList.add('broken')};favSrc(x).then(u=>{im.src=u})})}
+$('#favFolders').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.add!==undefined){const n=(prompt('새 폴더 이름')||'').trim().slice(0,40);if(!n)return;
+    const f={id:favNewId(),name:n,ord:FAV.folders.length};await favPut('folders',f);FAV.folders.push(f);FAV.cur=f.id;favRender();return}
+  FAV.cur=b.dataset.f;favRender()};
+$('#favRen').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f)return;const n=(prompt('폴더 이름',f.name)||'').trim().slice(0,40);if(!n)return;f.name=n;await favPut('folders',f);favRender()};
+$('#favDelF').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f||!confirm(`'${f.name}' 폴더를 지울까요? (이미지는 전체에 남음)`))return;
+  await favDel('folders',f.id);FAV.folders=FAV.folders.filter(x=>x!==f);for(const x of FAV.items)if(x.folders.includes(f.id)){x.folders=x.folders.filter(y=>y!==f.id);await favPut('items',x)}FAV.cur='';favRender()};
+$('#favSort').onchange=e=>{FAV.sort=e.target.value;favRender()};
+// open a saved image on the main stage (inserted right after the current cut, so 이전 comes back)
+function favShowItem(x){favSrc(x).then(u=>{const t=S.tab,o={kind:x.kind==='vid'?'vid':'img',url:x.blob?u:(x.kind==='3d'?x.url:x.url),thumb:x.thumb,title:x.title||(x.blob?'업로드 이미지':''),link:x.link,src:x.blob?'업로드':x.src,favId:x.blob?x.id:undefined};
+  S.hist[t].splice(S.pos[t]+1,0,o);S.pos[t]++;show();if(innerWidth<900||calFull)closeCal()})}
+$('#favGrid').onclick=async e=>{const el=e.target.closest('.it');if(!el)return;const x=FAV.items.find(y=>y.id===el.dataset.id);if(!x)return;
+  if(e.target.closest('[data-rm]')){e.stopPropagation();await favRemove(x);favSync();favRender();toast('보관함에서 뺌');return}
+  if(e.target.closest('[data-fm]')){e.stopPropagation();favMenu(x,e.target.closest('[data-fm]'));return}
+  favShowItem(x)};
+// folder picker for one image
+const fm=$('#favMenu');
+function favMenu(x,anchor){const r=anchor.getBoundingClientRect();
+  fm.innerHTML=(FAV.folders.length?FAV.folders.map(f=>`<label><input type="checkbox" data-f="${f.id}" ${x.folders.includes(f.id)?'checked':''}> ${esc(f.name)}</label>`).join(''):'<small>폴더가 없음</small>')+'<div class="nf" data-new>+ 새 폴더</div>';
+  fm.classList.remove('hidden');fm.style.left=Math.min(r.left,innerWidth-fm.offsetWidth-8)+'px';fm.style.top=Math.min(r.bottom+4,innerHeight-fm.offsetHeight-8)+'px';fm.dataset.id=x.id}
+fm.onchange=async e=>{const x=FAV.items.find(y=>y.id===fm.dataset.id),f=e.target.dataset.f;if(!x||!f)return;
+  x.folders=e.target.checked?[...new Set([...x.folders,f])]:x.folders.filter(y=>y!==f);await favPut('items',x);favRender()};
+fm.onclick=async e=>{if(e.target.closest('[data-new]')){const x=FAV.items.find(y=>y.id===fm.dataset.id);const n=(prompt('새 폴더 이름')||'').trim().slice(0,40);if(!n||!x)return;
+  const f={id:favNewId(),name:n,ord:FAV.folders.length};await favPut('folders',f);FAV.folders.push(f);x.folders.push(f.id);await favPut('items',x);fm.classList.add('hidden');favRender()}};
+document.addEventListener('pointerdown',e=>{if(!fm.classList.contains('hidden')&&!e.target.closest('#favMenu,[data-fm]'))fm.classList.add('hidden')},true);
+// drag an image onto a folder chip to file it there
+$('#favGrid').addEventListener('dragstart',e=>{const el=e.target.closest('.it');if(el)e.dataTransfer.setData('text/fav',el.dataset.id)});
+$('#favFolders').addEventListener('dragover',e=>{const b=e.target.closest('button[data-f]');if(b&&b.dataset.f&&e.dataTransfer.types.includes('text/fav')){e.preventDefault();b.classList.add('drop')}});
+$('#favFolders').addEventListener('dragleave',e=>{const b=e.target.closest('button');if(b)b.classList.remove('drop')});
+$('#favFolders').addEventListener('drop',async e=>{const b=e.target.closest('button[data-f]');if(!b||!b.dataset.f)return;e.preventDefault();b.classList.remove('drop');
+  const x=FAV.items.find(y=>y.id===e.dataTransfer.getData('text/fav'));if(!x||x.folders.includes(b.dataset.f))return;x.folders.push(b.dataset.f);await favPut('items',x);favRender();toast(`${b.textContent.replace(/\s*\d+$/,'')}에 넣음`,'ok')});
+// uploads (file picker or dropping files on the panel)
+async function favAddFiles(files){let n=0;for(const f of files){if(!/^image\//.test(f.type))continue;
+  const x={id:favNewId(),key:'up:'+f.name+':'+f.size+':'+f.lastModified,ts:Date.now()+n,tab:S.tab,src:'업로드',title:f.name.replace(/\.[^.]+$/,''),link:'',url:'',thumb:'',kind:'img',blob:true,folders:FAV.cur?[FAV.cur]:[]};
+  if(FAV.items.some(y=>y.key===x.key))continue;
+  try{await favPut('blobs',f,x.id);await favPut('items',x);FAV.items.push(x);n++}catch(_){break}}
+  if(n)toast(`이미지 ${n}장 올림`,'ok');favRender()}
+$('#favUp').onclick=()=>$('#favFile').click();
+$('#favFile').onchange=e=>{const fs=[...e.target.files];e.target.value='';favAddFiles(fs)};
+$('#favBody').addEventListener('dragover',e=>{if(e.dataTransfer.types.includes('Files'))e.preventDefault()});
+$('#favBody').addEventListener('drop',e=>{if(e.dataTransfer.files.length){e.preventDefault();favAddFiles([...e.dataTransfer.files])}});
+// backup: favorites travel in the same JSON as the log (uploads as data URLs)
+async function favExport(){const ups={};for(const x of FAV.items)if(x.blob){const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));
+  if(b)ups[x.id]=await new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>ok('');r.readAsDataURL(b)})}
+  return{items:FAV.items,folders:FAV.folders,uploads:ups}}
+async function favImport(F){if(!F||typeof F!=='object')return 0;let add=0;const fid={};
+  for(const f of Array.isArray(F.folders)?F.folders:[]){if(!f||typeof f.name!=='string')continue;let ex=FAV.folders.find(x=>x.name===f.name);
+    if(!ex){ex={id:favNewId(),name:f.name.slice(0,40),ord:FAV.folders.length};await favPut('folders',ex);FAV.folders.push(ex)}fid[f.id]=ex.id}
+  for(const x of Array.isArray(F.items)?F.items:[]){if(!x||typeof x.key!=='string'||FAV.items.some(y=>y.key===x.key))continue;
+    const y={id:favNewId(),key:x.key,ts:+x.ts||Date.now(),tab:String(x.tab||''),src:String(x.src||''),title:String(x.title||''),link:/^https?:/i.test(x.link||'')?x.link:'',url:/^(https?:|data:image\/)/i.test(x.url||'')?x.url:'',thumb:/^https?:/i.test(x.thumb||'')?x.thumb:'',kind:['img','vid','3d'].includes(x.kind)?x.kind:'img',state:x.state||null,blob:!!x.blob,folders:(x.folders||[]).map(f=>fid[f]).filter(Boolean)};
+    if(y.blob){const du=F.uploads&&F.uploads[x.id];if(typeof du!=='string'||!/^data:image\//.test(du))continue;try{await favPut('blobs',await (await fetch(du)).blob(),y.id)}catch(_){continue}}
+    else if(!y.url)continue;
+    await favPut('items',y);FAV.items.push(y);add++}
+  favSync();favCount();if(calOpen&&calView==='fav')favRender();return add}
+window.favReady=true;favLoad();
 // ---------- log backup (export / import as JSON)
 const calMenu=$('#calMenu');
 function logInfo(){const kb=Math.round(new Blob([localStorage.getItem(LOGK)||'']).size/1024);$('#logInfo').textContent=`기록 ${LOG.length}장 · 약 ${kb}KB 사용`}
 $('#calIo').onclick=e=>{e.stopPropagation();const on=calMenu.classList.toggle('hidden')===false;$('#calIo').classList.toggle('on',on);hideTip();if(on)logInfo()};
 const closeMenu=()=>{calMenu.classList.add('hidden');$('#calIo').classList.remove('on')};
 document.addEventListener('pointerdown',e=>{if(!calMenu.classList.contains('hidden')&&!e.target.closest('#calMenu,#calIo'))closeMenu()},true);
-$('#logExp').onclick=()=>{if(!LOG.length&&!LK.mine.length&&!LK.fav.length){toast('내보낼 기록이 없음','err');return}
-  const blob=new Blob([JSON.stringify({app:'cutref',v:1,exported:new Date().toISOString(),log:LOG,links:{mine:LK.mine,fav:LK.fav}})],{type:'application/json'});
+$('#logExp').onclick=async()=>{if(!LOG.length&&!LK.mine.length&&!LK.fav.length&&!FAV.items.length){toast('내보낼 기록이 없음','err');return}
+  const blob=new Blob([JSON.stringify({app:'cutref',v:1,exported:new Date().toISOString(),log:LOG,links:{mine:LK.mine,fav:LK.fav},fav:await favExport()})],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`cutref-기록-${dkey(new Date())}.json`;document.body.appendChild(a);a.click();
-  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);closeMenu();toast(`기록 ${LOG.length}장`+(LK.mine.length?` · 내 링크 ${LK.mine.length}개`:'')+' 내보냄','ok')};
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);closeMenu();toast(`기록 ${LOG.length}장`+(FAV.items.length?` · 보관함 ${FAV.items.length}장`:'')+(LK.mine.length?` · 내 링크 ${LK.mine.length}개`:'')+' 내보냄','ok')};
 $('#logImp').onclick=()=>$('#logFile').click();
 $('#logFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;closeMenu();
   let list,d;try{d=JSON.parse(await file.text());list=Array.isArray(d)?d:d&&d.log}catch(_){}
@@ -1705,7 +1856,8 @@ $('#logFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';
   let ladd=0;if(d&&d.links&&typeof d.links==='object'){const L=d.links,urls=new Set(lnkAll().map(x=>x.u));
     (Array.isArray(L.mine)?L.mine:[]).forEach(m=>{if(m&&typeof m.n==='string'&&/^https?:\/\//i.test(m.u||'')&&!urls.has(m.u)){LK.mine.push({id:String(m.id||'m'+Date.now().toString(36)+ladd),n:m.n,u:m.u,d:String(m.d||''),c:Array.isArray(m.c)?m.c:['body'],t:[]});urls.add(m.u);ladd++}});
     (Array.isArray(L.fav)?L.fav:[]).forEach(f=>{if(typeof f==='string'&&!LK.fav.includes(f))LK.fav.push(f)});saveLk();if(lnkOpen)renderLnk()}
-  if(!Array.isArray(list)){toast('가져오기 실패 · 컷 레퍼런스 기록 파일이 아님','err');return}
+  const fadd=d&&d.fav?await favImport(d.fav):0;if(fadd)toast(`보관함 ${fadd}장 가져옴`,'ok');
+  if(!Array.isArray(list)){if(!fadd)toast('가져오기 실패 · 컷 레퍼런스 기록 파일이 아님','err');return}
   const ok=r=>r&&typeof r==='object'&&/^\d{4}-\d{2}-\d{2}$/.test(r.date)&&typeof r.url==='string';
   const ids=new Set(LOG.map(r=>r.id)),keys=new Set(LOG.map(r=>r.date+'|'+r.url));let add=0,dup=0,bad=0;
   for(const r of list){if(!ok(r)){bad++;continue}const k=r.date+'|'+r.url;if(ids.has(r.id)||keys.has(k)){dup++;continue}
@@ -1795,6 +1947,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='f'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
   else if(k==='h')setZen(!document.body.classList.contains('zen'));
   else if(k==='s'){toggleSave()}
+  else if(k==='b'){favToggle()}
   else if(k==='c'){calOpen?closeCal():openCal()}
   else if(k==='l'){lnkOpen?closeLnk():openLnk()}
   else if(e.key==='?'){if(curPop==='set'&&$('#keyBtn').getAttribute('aria-expanded')==='true')closeP();else{if(curPop!=='set')openP('set');setTab(0);kbShow(true)}}
