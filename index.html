@@ -332,7 +332,7 @@ button.ic:active{transform:none}
 /* stage heart */
 svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:#e07a95}
 #favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
-#favBtn svg{width:26px;height:24px;filter:drop-shadow(0 0 1px rgba(255,255,255,.9))}
+#favBtn svg{width:26px;height:24px}
 #favBtn:not(.on) .ho{fill:#8e8b83}#favBtn:not(.on) .hf{fill:#cfccc4}
 #favBtn:not(.on):hover .hf{fill:#bdbab1}#favBtn:active{transform:none}
 #favBtn.beat{animation:favPop .24s steps(3,end)}
@@ -385,9 +385,12 @@ svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:
 .calp .th a{aspect-ratio:4/3;border:2px solid var(--ink);position:relative;display:block;background:var(--stage);overflow:hidden}
 .calp .th img{width:100%;height:100%;object-fit:cover;display:block}
 .calp .th span{position:absolute;left:0;bottom:0;background:var(--panel);font-size:9px;padding:1px 4px;border-top:2px solid var(--ink);border-right:2px solid var(--ink);color:var(--ink)}
-.calp .th b{position:absolute;right:0;top:0;width:18px;height:18px;background:var(--panel);border-left:2px solid var(--ink);border-bottom:2px solid var(--ink);font-weight:400;display:none;align-items:center;justify-content:center;cursor:pointer}
-.calp .th a:hover b{display:flex}
-.calp .th a:hover{outline:2px solid var(--yel)}
+.calp .th a{cursor:pointer;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.calp .th a:hover,.calp .th a.sel{outline:2px solid var(--yel)}
+.calp .th a.lift{opacity:.35}
+.calp .th .lgf{position:absolute;right:3px;top:3px;width:9px;height:8px;background:#e07a95;clip-path:polygon(0 12%,12% 0,38% 0,50% 15%,62% 0,88% 0,100% 12%,100% 50%,50% 100%,0 50%)}
+.lgghost{position:fixed;z-index:80;width:72px;aspect-ratio:4/3;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);pointer-events:none;background:var(--stage) center/cover;transform:translate(-50%,-60%) rotate(-4deg)}
+#calTabs button.drop{background:var(--pink)!important}
 /* ---------- responsive / touch (iPad first) */
 html{-webkit-text-size-adjust:100%}
 button,select,.chip,.o,.tabs button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
@@ -426,7 +429,6 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   .chip{height:34px;padding:0 10px}
   #fltPop .o{padding:7px 9px 5px 10px;line-height:18px}
   .calp .cmon .nb{width:40px;height:36px}
-  .calp .th b{display:flex;width:26px;height:26px}
   input[type=range]{height:14px}
   input[type=range]::-webkit-slider-thumb{width:16px;height:26px}
   .tipbox{display:none}
@@ -1743,8 +1745,8 @@ function renderCal(){
   $('#calGrid').innerHTML=h;
   // day detail
   const rs=(m[calSel]||[]).slice().sort((a,b)=>a.ts-b.ts),[sy,sm,sd]=calSel.split('-').map(Number),tot=rs.reduce((a,r)=>a+(r.sec||0),0);
-  $('#calDay').innerHTML=`<div class="cstats" style="padding:0 0 10px">${calFull?$('#calStats').innerHTML:''}</div><h4><span>${sm}월 ${sd}일 · ${rs.length}장</span>${rs.length?`<small>컷을 띄워 둔 시간 ${fmtSec(tot)}</small>`:''}</h4>`+
-    (rs.length?`<div class="th">${rs.map(r=>`<a href="${esc(r.link)}" target="_blank" rel="noopener noreferrer" title="${esc(r.title)}"><img src="${esc(M(thumbOf(r)))}" referrerpolicy="no-referrer" alt="" loading="lazy" onerror="this.style.visibility='hidden'"><span>${TABNAME[r.tab]||''}</span><b data-del="${r.id}" title="기록 지우기">×</b></a>`).join('')}</div>`:'<div class="empty">이 날은 기록이 없음</div>');
+  $('#calDay').innerHTML=`<div class="cstats" style="padding:0 0 10px">${calFull?$('#calStats').innerHTML:''}</div><h4><span>${sm}월 ${sd}일 · ${rs.length}장</span></h4>`+
+    (rs.length?`<div class="th">${rs.map(r=>`<a class="lg" data-id="${r.id}" title="${esc(r.title)}" tabindex="0"><img src="${esc(M(thumbOf(r)))}" referrerpolicy="no-referrer" alt="" loading="lazy" draggable="false" onerror="this.style.visibility='hidden'"><span>${TABNAME[r.tab]||''}</span>${favFindLog(r)?'<i class="lgf"></i>':''}</a>`).join('')}</div>`:'<div class="empty">이 날은 기록이 없음</div>');
   if(!calFull)$('#calDay').querySelector('.cstats').remove();
   // year
   if(calFull){let yh='';const end=new Date(today);end.setDate(end.getDate()+(6-end.getDay()));const st=new Date(end);st.setDate(st.getDate()-7*53+1);
@@ -1781,7 +1783,7 @@ async function favToggle(){let it=curItem();if(!it||!msg.classList.contains('hid
   else{const x={id:favNewId(),key:favKey(it),ts:Date.now(),tab:S.tab,src:it.src||SRCNAME[S.tab],title:it.title||'',link:it.link||'',url:it.url,thumb:it.thumb||'',kind:it.kind||'img',state:it.state||null,folders:FAV.cur?[FAV.cur]:[]};
     await favPut('items',x);FAV.items.push(x);b.classList.remove('beat');b.offsetWidth;b.classList.add('beat');
     toast(FAV.cur?`보관함 · ${(FAV.folders.find(f=>f.id===FAV.cur)||{}).name}에 담음`:'보관함에 담음','ok')}
-  favSync();favCount();if(calOpen&&calView==='fav')favRender()}
+  favSync();favCount();if(calOpen&&calView==='fav')favRender();else if(calOpen)renderCal()}
 async function favRemove(x){await favDel('items',x.id);if(x.blob){await favDel('blobs',x.id);if(FAV.urls[x.id]){URL.revokeObjectURL(FAV.urls[x.id]);delete FAV.urls[x.id]}}
   FAV.items=FAV.items.filter(y=>y!==x)}
 $('#favBtn').onclick=e=>{e.stopPropagation();favToggle()};
@@ -1888,8 +1890,36 @@ $('#calPrev').onclick=()=>{calMon.setMonth(calMon.getMonth()-1);renderCal()};
 $('#calNext').onclick=()=>{calMon.setMonth(calMon.getMonth()+1);renderCal()};
 $('#calToday').onclick=()=>{calMon=new Date();calMon.setDate(1);calSel=dkey(new Date());renderCal()};
 $('#calGrid').addEventListener('click',e=>{const d=e.target.closest('.d[data-k]');if(!d||d.classList.contains('fut'))return;calSel=d.dataset.k;renderCal()});
-$('#calDay').addEventListener('click',e=>{const x=e.target.closest('[data-del]');if(!x)return;e.preventDefault();e.stopPropagation();
-  LOG=LOG.filter(r=>r.id!==x.dataset.del);saveLog();renderCal();syncSaveBtn();toast('기록 지움')});
+// practice-log thumbnails: tap = small menu, long-press + drag onto the 보관함 tab = file it there
+function favFindLog(r){try{return FAV.items.some(x=>x.key===r.url)}catch(_){return false}}
+async function logToFav(id){const r=LOG.find(x=>x.id===id);if(!r)return;if(favFindLog(r)){toast('이미 보관함에 있음');return}
+  const x={id:favNewId(),key:r.url,ts:Date.now(),tab:r.tab,src:r.src||'',title:r.title||'',link:r.link||'',url:r.url,thumb:r.thumb||'',kind:r.kind==='vid'?'vid':'img',state:null,folders:FAV.cur?[FAV.cur]:[]};
+  await favPut('items',x);FAV.items.push(x);favSync();favCount();renderCal();toast('보관함에 담음','ok')}
+const lgm=$('#favMenu');let lgDrag=null,lgNoClick=false;
+function lgMenu(el){const id=el.dataset.id,r=LOG.find(x=>x.id===id);if(!r)return;const rc=el.getBoundingClientRect(),inFav=favFindLog(r);
+  document.querySelectorAll('#calDay .lg.sel').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');
+  lgm.innerHTML=`<label data-a="fav" ${inFav?'style="color:var(--tx3)"':''}>${inFav?'보관함에 있음':'보관함으로'}</label><label data-a="del">삭제</label>`;
+  lgm.dataset.log=id;lgm.classList.remove('hidden');lgm.style.left=Math.min(rc.left,innerWidth-lgm.offsetWidth-8)+'px';lgm.style.top=Math.min(rc.bottom+4,innerHeight-lgm.offsetHeight-8)+'px'}
+lgm.addEventListener('click',async e=>{const a=e.target.closest('[data-a]');if(!a||!lgm.dataset.log)return;const id=lgm.dataset.log;lgm.classList.add('hidden');lgm.dataset.log='';
+  if(a.dataset.a==='fav')await logToFav(id);
+  else{LOG=LOG.filter(r=>r.id!==id);saveLog();renderCal();syncSaveBtn();toast('기록 지움')}});
+document.addEventListener('pointerdown',e=>{if(lgm.dataset.log&&!e.target.closest('#favMenu')){lgm.classList.add('hidden');lgm.dataset.log='';document.querySelectorAll('#calDay .lg.sel').forEach(x=>x.classList.remove('sel'))}},true);
+$('#calDay').addEventListener('click',e=>{const el=e.target.closest('.lg');if(!el)return;e.preventDefault();if(lgNoClick){lgNoClick=false;return}e.stopPropagation();lgMenu(el)});
+$('#calDay').addEventListener('pointerdown',e=>{const el=e.target.closest('.lg');if(!el||e.button)return;
+  const st={el,x:e.clientX,y:e.clientY,id:e.pointerId,t:setTimeout(()=>{st.on=true;el.classList.add('lift');const g=document.createElement('div');g.className='lgghost';
+    g.style.backgroundImage=`url("${el.querySelector('img').src}")`;g.style.left=st.x+'px';g.style.top=st.y+'px';document.body.appendChild(g);st.g=g;
+    if(calView!=='fav')toast('보관함 탭 위에 놓으면 담김');if(navigator.vibrate)navigator.vibrate(15)},380)};lgDrag=st});
+const lgTab=()=>document.querySelector('#calTabs [data-v="fav"]');
+addEventListener('pointermove',e=>{const st=lgDrag;if(!st||e.pointerId!==st.id)return;
+  if(!st.on){if(Math.hypot(e.clientX-st.x,e.clientY-st.y)>8){clearTimeout(st.t);lgDrag=null}return}
+  st.x=e.clientX;st.y=e.clientY;st.g.style.left=st.x+'px';st.g.style.top=st.y+'px';
+  const over=document.elementFromPoint(st.x,st.y);lgTab().classList.toggle('drop',!!(over&&over.closest('#calTabs [data-v="fav"]')))},{passive:true});
+document.addEventListener('touchmove',e=>{if(lgDrag&&lgDrag.on)e.preventDefault()},{passive:false}); // no scrolling while carrying a picture
+const lgEnd=e=>{const st=lgDrag;if(!st||e.pointerId!==st.id)return;clearTimeout(st.t);lgDrag=null;if(!st.on)return;
+  lgNoClick=true;setTimeout(()=>lgNoClick=false,400);st.el.classList.remove('lift');st.g.remove();const t=lgTab(),hit=t.classList.contains('drop');t.classList.remove('drop');
+  if(hit)logToFav(st.el.dataset.id)};
+addEventListener('pointerup',lgEnd);addEventListener('pointercancel',lgEnd);
+$('#calDay').addEventListener('contextmenu',e=>{if(e.target.closest('.lg'))e.preventDefault()});
 
 // ---------- croquis link list (side panel)
 const LNKK='cutref-links';
