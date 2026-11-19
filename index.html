@@ -1783,7 +1783,9 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&calOpen){closeCal();return}
   if(e.key==='Escape'&&lnkOpen){closeLnk();return}
   if(e.key==='Escape'&&document.body.classList.contains('zen')){setZen(false);return}
-  if(e.target.matches('input,select'))return;const k=e.key.toLowerCase();
+  if(e.target.matches('input,select,textarea,[contenteditable]'))return;
+  if(e.ctrlKey||e.metaKey||e.altKey)return; // leave Ctrl/Cmd/Alt combos (copy, paste, find, reload…) to the browser
+  const k=e.key.toLowerCase();
   if(k===' '||k==='arrowright'){e.preventDefault();next()}
   else if(k==='arrowleft')prev();
   else if(k==='g'&&S.tab==='3d'){{const i=D3LIGHTS.findIndex(x=>x[0]===S.d3light);S.d3light=D3LIGHTS[(i+1)%D3LIGHTS.length][0];d3Set();toast('라이팅: '+nm(D3LIGHTS,S.d3light))}}
