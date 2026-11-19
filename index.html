@@ -99,6 +99,9 @@ body.zen #zoomUi{display:none}
 #stTop .frow .more{font-size:11px;color:var(--tx2);background:var(--panel);border:2px solid var(--ink);height:24px;padding:0 6px;display:inline-flex;align-items:center;cursor:pointer}
 #info{position:absolute;right:10px;bottom:10px;z-index:4;max-width:calc(100% - 70px);font-size:11px;color:var(--ink);display:flex;gap:8px;align-items:center;background:var(--panel);border:2px solid var(--ink);padding:2px 6px;white-space:nowrap}
 #info span:last-child{overflow:hidden;text-overflow:ellipsis;min-width:0}
+/* idle: faded box (B); over a dark picture: whole box at 50% (A); hover restores it */
+#info:not(:hover){background:rgba(251,250,246,.55);border-color:rgba(61,59,55,.3);color:rgba(61,59,55,.75)}
+#info.dk:not(:hover){background:var(--panel);border-color:var(--ink);color:var(--ink);opacity:.5}
 #info.lnk:hover{background:var(--yel)}#info:not(.lnk){cursor:default}
 #srcLink{display:none!important} /* the title box is the source link now */
 body.zen #info{display:none}
@@ -1278,7 +1281,7 @@ function show(){
     img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.onload=()=>{if(curItem()===it)busy(false)};img.src=M(it.url);if(img.complete&&img.naturalWidth)busy(false);
   }
   {const inf=$('#info'),src=it.src||SRCNAME[t];inf.innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;inf.classList.remove('gone');
-   inf.classList.toggle('lnk',!!it.link);inf.dataset.link=it.link||'';inf.dataset.src=src||'';if(it.link)inf.dataset.tip='원본 : '+src;else delete inf.dataset.tip}
+   inf.classList.toggle('lnk',!!it.link);inf.dataset.link=it.link||'';requestAnimationFrame(infoTone);inf.dataset.src=src||'';if(it.link)inf.dataset.tip='원본 : '+src;else delete inf.dataset.tip}
   const sl=$('#srcLink');if(it.link){sl.href=it.link;sl.innerHTML=`원본 <b>${esc(it.src||SRCNAME[t])}</b> ↗`;sl.classList.remove('hidden')}else sl.classList.add('hidden');
   applyView();if(window.favReady)favSync();
 }
@@ -1301,7 +1304,19 @@ function applyView(){
   $('#prev').disabled=S.pos[t]<=0;if(typeof syncSaveBtn==='function')try{syncSaveBtn()}catch(e){}
   drawGrid();
 }
-function drawGrid(){
+// is the title box sitting on a dark part of the picture?
+const toneCv=document.createElement('canvas');toneCv.width=toneCv.height=8;
+function infoTone(){const inf=$('#info');if(!inf)return;let dk=false;
+  const m=!vid.hidden&&vid.videoWidth?vid:img.naturalWidth&&!img.hidden?img:null;
+  if(m&&inf.textContent){const a=inf.getBoundingClientRect(),b=m.getBoundingClientRect();
+    const ox=Math.min(a.right,b.right)-Math.max(a.left,b.left),oy=Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top);
+    if(ox>a.width*.3&&oy>a.height*.3){dk=true; // unknown (cross-origin) → treat as dark
+      try{const nw=m.naturalWidth||m.videoWidth,nh=m.naturalHeight||m.videoHeight,sx=nw/b.width,sy=nh/b.height,
+        x=Math.max(0,(Math.max(a.left,b.left)-b.left)*sx),y=Math.max(0,(Math.max(a.top,b.top)-b.top)*sy),w=Math.max(1,ox*sx),h=Math.max(1,oy*sy);
+        const g=toneCv.getContext('2d',{willReadFrequently:true});g.clearRect(0,0,8,8);g.drawImage(m,S.flip?nw-x-w:x,y,w,h,0,0,8,8);
+        const d=g.getImageData(0,0,8,8).data;let L=0;for(let i=0;i<d.length;i+=4)L+=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2];dk=L/64<140}catch(e){}}}
+  inf.classList.toggle('dk',dk)}
+function drawGrid(){requestAnimationFrame(infoTone);
   ov.innerHTML='';const m=media();
   if(m.classList.contains('hidden')||!(m.naturalWidth||m.videoWidth||m===c3d))return;
   const r=m.getBoundingClientRect(),sr=stage.getBoundingClientRect(),w=r.width,h=r.height;
@@ -1712,7 +1727,7 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
   window.fixDv=()=>requestAnimationFrame(fix);new ResizeObserver(()=>requestAnimationFrame(fix)).observe(ft);fix()})();
 // ---------- zoom (pinch / wheel / drag / double-tap) for still images
 const ZM={z:1,tx:0,ty:0,used:false};
-function zoomApply(){const on=ZM.z>1.01;img.classList.toggle('zoomed',on);
+function zoomApply(){requestAnimationFrame(infoTone);const on=ZM.z>1.01;img.classList.toggle('zoomed',on);
   img.style.transform=on||ZM.tx||ZM.ty?`translate(${ZM.tx}px,${ZM.ty}px) scale(${ZM.z})${S.flip?' scaleX(-1)':''}`:'';
   $('#zoomUi').classList.toggle('hidden',!on||img.classList.contains('hidden'));$('#zoomPct').textContent=Math.round(ZM.z*100)+'%';
   if(on){const it=curItem();if(it&&it.hd&&img.dataset.hd!==it.hd&&ZM.z>1.4){img.dataset.hd=it.hd;img.src=M(it.hd)}}
