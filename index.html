@@ -1317,7 +1317,7 @@ function infoTone(){const inf=$('#info');if(!inf)return;let dk=false;
   if(m&&inf.textContent){const a=inf.getBoundingClientRect(),b=m.getBoundingClientRect();
     const ox=Math.min(a.right,b.right)-Math.max(a.left,b.left),oy=Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top);
     if(ox>a.width*.3&&oy>a.height*.3){dk=true; // unknown (cross-origin) → treat as dark
-      try{const nw=m.naturalWidth||m.videoWidth,nh=m.naturalHeight||m.videoHeight,sx=nw/b.width,sy=nh/b.height,
+      const su=m.currentSrc||m.src||'';if(/^(blob:|data:)/.test(su)||new URL(su,location.href).origin===location.origin)try{const nw=m.naturalWidth||m.videoWidth,nh=m.naturalHeight||m.videoHeight,sx=nw/b.width,sy=nh/b.height,
         x=Math.max(0,(Math.max(a.left,b.left)-b.left)*sx),y=Math.max(0,(Math.max(a.top,b.top)-b.top)*sy),w=Math.max(1,ox*sx),h=Math.max(1,oy*sy);
         const g=toneCv.getContext('2d',{willReadFrequently:true});g.clearRect(0,0,8,8);g.drawImage(m,S.flip?nw-x-w:x,y,w,h,0,0,8,8);
         const d=g.getImageData(0,0,8,8).data;let L=0;for(let i=0;i<d.length;i+=4)L+=.2126*d[i]+.7152*d[i+1]+.0722*d[i+2];dk=L/64<140}catch(e){}}}
