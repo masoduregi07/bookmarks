@@ -175,6 +175,13 @@ body.zen #stTop,body.zen #srcLink{display:none}
 footer{column-gap:0!important;justify-content:center}
 footer .dv{flex:1 1 0;min-width:16px;max-width:150px;align-self:stretch;display:flex;justify-content:center}
 footer .dv::before{content:"";border-left:2px dotted var(--tx3);margin:2px 0}
+/* PC: groups packed left with fixed gaps; only 타이머 sits at the right end */
+@media (hover:hover) and (pointer:fine){
+  footer .dv{flex:0 0 28px;max-width:28px}
+  .top footer{justify-content:flex-start!important}
+  .top footer>#gGrid+.dv{flex:1 1 28px;max-width:none}
+  .top footer>#gGrid+.dv::before{display:none}
+}
 footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px} /* sits at the end of the last row; wraps only when it must */
 .chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px;cursor:pointer;white-space:nowrap;line-height:1}
 .chip:hover{background:var(--yel)}
