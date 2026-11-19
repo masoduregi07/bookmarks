@@ -198,6 +198,9 @@ body.zen #stTop,body.zen #srcLink{display:none}
 .top header .tabs button.on{padding:7px 13px 8px 12px}
 .top header .tabs button:not(.on):not(.dragging)+button:not(.on):not(.dragging):not(.tab-ghost)::before{content:"";position:absolute;left:-1px;top:50%;width:2px;height:10px;margin-top:-5px;background:var(--soft);pointer-events:none}
 .top header .tabs button.holding{background:var(--yel)!important}
+.top header .tabs button.lift:is(#_,.lift){position:relative;z-index:6;background:var(--panel)!important;border:2px solid var(--ink)!important;clip-path:none!important;color:var(--ink);box-shadow:3px 3px 0 var(--shd)!important;transition:none;cursor:grabbing}
+.top header .tabs button.lift.settle:is(#_,.settle){transition:transform .15s cubic-bezier(.2,.7,.2,1),box-shadow .15s;box-shadow:none!important}
+.top header .tabs button.lift::before,.top header .tabs button.lift+button::before{display:none!important}
 .tabs button:focus:not(:focus-visible),.tabs button.on:focus-visible{outline:none}
 .top header .tabs button.tab-ghost svg [fill="#fff"]{fill:var(--tx3)}
 .top header .tabs button.tab-ghost{background:var(--yel)!important;color:var(--ink)} /* icon insides stay visible on the yellow ghost */
@@ -1650,12 +1653,12 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
 (()=>{const nav=document.querySelector('header .tabs');let st=null,suppress=false;
   try{const o=JSON.parse(localStorage.getItem('cutref-tabs')||'[]');if(o.length){const all=[...nav.querySelectorAll('button[data-tab]')].map(b=>b.dataset.tab);[...o.filter(t=>all.includes(t)),...all.filter(t=>!o.includes(t))].forEach(t=>nav.appendChild(nav.querySelector(`[data-tab="${t}"]`)))}}catch(e){}
   const saveOrder=()=>{try{localStorage.setItem('cutref-tabs',JSON.stringify([...nav.querySelectorAll('button')].map(x=>x.dataset.tab)))}catch(e){}};
-  const begin=()=>{st.on=true;const b=st.b,r=b.getBoundingClientRect(),n=nav.getBoundingClientRect();b.classList.remove('holding');
-    const g=b.cloneNode(true);g.removeAttribute('data-tab');g.classList.add('tab-ghost');g.classList.remove('holding');g.style.width=r.width+'px';g.style.height=r.height+'px';g.style.padding=getComputedStyle(b).padding;
-    st.g=g;st.grab=st.x-r.left;st.gx=r.left-n.left+nav.scrollLeft;st.gy=r.top-n.top;st.ox=st.x;g.style.left=st.gx+'px';g.style.top=st.gy+'px';nav.appendChild(g);
-    b.classList.add('dragging');try{b.setPointerCapture(st.id)}catch(e){}if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}};
+  // the grabbed tab itself lifts and follows the pointer; the others slide aside (no ghost copy)
+  const begin=()=>{st.on=true;const b=st.b,r=b.getBoundingClientRect();b.classList.remove('holding');st.grab=st.x-r.left;st.tx=0;
+    b.classList.add('lift');try{b.setPointerCapture(st.id)}catch(e){}if(navigator.vibrate)try{navigator.vibrate(10)}catch(e){}};
+  const follow=x=>{const b=st.b,nat=b.getBoundingClientRect().left-st.tx;st.tx=x-st.grab-nat;b.style.transform=`translate(${st.tx}px,-4px)`};
   const tabs=()=>[...nav.querySelectorAll('button[data-tab]')];
-  const move=(ref)=>{const os=tabs().filter(o=>o!==st.b),pr=new Map(os.map(o=>[o,o.getBoundingClientRect().left]));nav.insertBefore(st.b,ref);
+  const move=(ref)=>{const os=tabs().filter(o=>o!==st.b&&!o.classList.contains('lift')),pr=new Map(os.map(o=>[o,o.getBoundingClientRect().left]));nav.insertBefore(st.b,ref);
     os.forEach(o=>{const d=pr.get(o)-o.getBoundingClientRect().left;if(!d)return;o.classList.remove('slide');o.style.transform=`translateX(${d}px)`;o.offsetWidth;o.classList.add('slide');o.style.transform=''})};
   nav.addEventListener('pointerdown',e=>{const b=e.target.closest('button[data-tab]');if(!b||e.button>0)return;
     st={b,id:e.pointerId,x:e.clientX,y:e.clientY,on:false,touch:e.pointerType!=='mouse'};
@@ -1664,13 +1667,13 @@ $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,s
     if(!st.on){if(!st.touch&&Math.abs(dx)>6)begin();else if(st.touch&&Math.hypot(dx,dy)>10){clearTimeout(st.t);st.b.classList.remove('holding');st=null}return}
     e.preventDefault();const nr=nav.getBoundingClientRect();
     if(e.clientX<nr.left+28)nav.scrollLeft-=8;else if(e.clientX>nr.right-28)nav.scrollLeft+=8; // auto-scroll while dragging near edges
-    st.g.style.left=(e.clientX-nr.left+nav.scrollLeft-st.grab)+'px';
     for(const o of tabs()){if(o===st.b)continue;const r=o.getBoundingClientRect();
-      if(e.clientX>r.left&&e.clientX<r.right){const ref=e.clientX<r.left+r.width/2?o:o.nextSibling;if(ref!==st.b&&ref!==st.b.nextSibling)move(ref);break}}});
+      if(e.clientX>r.left&&e.clientX<r.right){const ref=e.clientX<r.left+r.width/2?o:o.nextSibling;if(ref!==st.b&&ref!==st.b.nextSibling)move(ref);break}}
+    follow(e.clientX)});
   const end=e=>{if(!st||(e&&e.pointerId!==st.id))return;clearTimeout(st.t);
     st.b.classList.remove('holding');
-    if(st.on){const b=st.b,g=st.g,r=b.getBoundingClientRect(),n=nav.getBoundingClientRect();g.classList.add('drop');g.style.left=(r.left-n.left+nav.scrollLeft)+'px';g.style.top=(r.top-n.top)+'px';
-      setTimeout(()=>{g.remove();b.classList.remove('dragging')},150);saveOrder();suppress=true;setTimeout(()=>suppress=false,50)}st=null};
+    if(st.on){const b=st.b;b.classList.add('settle');b.style.transform='';   // glide into its new slot
+      setTimeout(()=>{b.classList.remove('lift','settle')},160);saveOrder();suppress=true;setTimeout(()=>suppress=false,50)}st=null};
   nav.addEventListener('pointerup',end);nav.addEventListener('pointercancel',end);
   nav.addEventListener('click',e=>{if(suppress){e.stopPropagation();e.preventDefault()}},true);
   nav.addEventListener('contextmenu',e=>e.preventDefault());
