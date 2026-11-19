@@ -142,6 +142,11 @@ body.t3d .d3only{display:flex!important}
 .pop .hd button:not(.ic){width:24px;height:24px;padding:0;box-shadow:none;line-height:1;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .pop section{padding:10px 12px 12px}
 .pop h3{font-size:11px;color:var(--tx2);font-weight:400;margin-bottom:8px}
+#setPop h3{display:inline-block;font-size:12px;font-weight:700;color:var(--ink);padding:0 4px;margin:0 0 10px -4px;background:linear-gradient(transparent 58%,var(--sky) 58%,var(--sky) 92%,transparent 92%)}
+#setPop section+section{border-top:2px dotted var(--soft);margin:0 12px;padding-left:0;padding-right:0}
+#setPop .kbrow{width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:4px 6px 4px 10px}
+#setPop .kbrow kbd{border:2px solid var(--ink);background:#fff;padding:0 5px;font:inherit;font-size:11px;line-height:14px}
+@media (max-width:560px){#setPop .kbrow{display:none}} /* no keyboard on phones */
 .pop .row{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:8px;margin-bottom:6px}
 .pop .row span{color:var(--tx2);font-size:11px}
 .pop .row input,.pop .row select{width:100%;min-width:0;font-size:11px}
@@ -667,7 +672,6 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <div class="ibar">
     <button id="calBtn" class="ic" data-tip="연습 기록" data-key="C" aria-label="연습 기록"><svg viewBox="0 0 16 16"><path d="M3 1h2v1h-2zM11 1h2v1h-2zM1 2h14v1h-14zM1 3h14v1h-14zM1 4h1v1h-1zM14 4h1v1h-1zM1 5h1v1h-1zM14 5h1v1h-1zM1 6h1v1h-1zM3 6h2v1h-2zM7 6h2v1h-2zM11 6h2v1h-2zM14 6h1v1h-1zM1 7h1v1h-1zM3 7h2v1h-2zM7 7h2v1h-2zM11 7h2v1h-2zM14 7h1v1h-1zM1 8h1v1h-1zM14 8h1v1h-1zM1 9h1v1h-1zM3 9h2v1h-2zM7 9h2v1h-2zM14 9h1v1h-1zM1 10h1v1h-1zM3 10h2v1h-2zM7 10h2v1h-2zM14 10h1v1h-1zM1 11h1v1h-1zM14 11h1v1h-1zM1 12h14v1h-14z"/></svg></button>
     <button id="lnkBtn" class="ic" data-tip="크로키 링크" data-key="L" aria-label="크로키 링크"><svg viewBox="0 0 16 16"><path d="M2 3h7v1h-7zM0 4h10v1h-10zM0 5h2v1h-2zM7 5h7v1h-7zM0 6h1v1h-1zM6 6h10v1h-10zM0 7h1v1h-1zM5 7h2v1h-2zM9 7h2v1h-2zM14 7h2v1h-2zM0 8h2v1h-2zM5 8h2v1h-2zM9 8h2v1h-2zM15 8h1v1h-1zM0 9h10v1h-10zM15 9h1v1h-1zM2 10h7v1h-7zM14 10h2v1h-2zM6 11h10v1h-10zM7 12h7v1h-7z"/></svg></button>
-    <button id="keyBtn" class="ic" data-tip="단축키" data-key="?" aria-label="단축키"><svg viewBox="0 0 16 16"><path d="M0 3h16v1h-16zM0 4h1v1h-1zM15 4h1v1h-1zM0 5h1v1h-1zM2 5h2v1h-2zM5 5h2v1h-2zM8 5h2v1h-2zM11 5h2v1h-2zM15 5h1v1h-1zM0 6h1v1h-1zM15 6h1v1h-1zM0 7h1v1h-1zM3 7h2v1h-2zM6 7h2v1h-2zM9 7h2v1h-2zM12 7h2v1h-2zM15 7h1v1h-1zM0 8h1v1h-1zM15 8h1v1h-1zM0 9h1v1h-1zM5 9h6v1h-6zM15 9h1v1h-1zM0 10h1v1h-1zM15 10h1v1h-1zM0 11h16v1h-16z"/></svg></button>
     <button id="zen" class="ic" data-tip="UI 숨김" data-key="H" aria-label="UI 숨김"><svg viewBox="0 0 16 16"><path d="M1 2h14v1h-14zM1 3h14v1h-14zM7 6h2v1h-2zM6 7h4v1h-4zM5 8h2v1h-2zM9 8h2v1h-2zM4 9h2v1h-2zM10 9h2v1h-2zM3 10h2v1h-2zM11 10h2v1h-2zM2 11h2v1h-2zM12 11h2v1h-2z"/></svg></button>
     <button id="setBtn" class="ic" data-tip="설정" aria-label="설정"><svg viewBox="0 0 16 16"><path d="M7 1h2v1h-2zM3 2h1v1h-1zM7 2h2v1h-2zM12 2h1v1h-1zM2 3h3v1h-3zM6 3h4v1h-4zM11 3h3v1h-3zM3 4h10v1h-10zM4 5h8v1h-8zM3 6h3v1h-3zM10 6h3v1h-3zM1 7h5v1h-5zM10 7h5v1h-5zM1 8h5v1h-5zM10 8h5v1h-5zM3 9h3v1h-3zM10 9h3v1h-3zM4 10h8v1h-8zM3 11h10v1h-10zM2 12h3v1h-3zM6 12h4v1h-4zM11 12h3v1h-3zM3 13h1v1h-1zM7 13h2v1h-2zM12 13h1v1h-1zM7 14h2v1h-2z"/></svg></button>
   </div>
@@ -749,6 +753,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <h3>화면</h3>
     <label class="chk"><input type="checkbox" id="sfxOn"> 버튼 효과음</label>
     <label class="chk"><input type="checkbox" id="tSndOn"> 타이머 종료음</label>
+    <button id="keyBtn" class="kbrow"><span>단축키 보기</span><kbd>?</kbd></button>
   </section>
   <section>
     <h3>API 연결</h3>
@@ -1248,7 +1253,7 @@ document.querySelectorAll('#tmr [data-add]').forEach(b=>b.onclick=()=>{const a=+
 tRender();
 // ---------- popovers (settings / shortcuts / filter)
 const pop=$('#setPop'),sb=$('#setBtn');
-const POPS={set:{el:pop,btn:sb,align:'right'},key:{el:$('#keyPop'),btn:$('#keyBtn'),align:'right'},flt:{el:$('#fltPop'),btn:null,align:'left'}};
+const POPS={set:{el:pop,btn:sb,align:'right'},key:{el:$('#keyPop'),btn:sb,align:'right'},flt:{el:$('#fltPop'),btn:null,align:'left'}};
 let curPop=null;
 function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl;$('#sbRating').value=c.sbRating;$('#usKey').value=c.usKey||''}
 function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim(),sbRating:$('#sbRating').value,usKey:$('#usKey').value.trim()}}
