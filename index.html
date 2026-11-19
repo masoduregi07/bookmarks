@@ -108,10 +108,11 @@ body.zen #zoomUi{display:none}
 #srcLink b{font-weight:700}
 #srcLink.hidden{display:none}
 #toasts{position:fixed;left:20px;top:20px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;z-index:20;pointer-events:none}
-.toast{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:5px 12px 5px 10px;font-size:12px;display:flex;align-items:center;gap:8px;animation:tin .12s steps(3)}
-.toast::before{content:"";width:8px;height:8px;background:var(--soft);flex:none}
-.toast.ok::before{background:var(--mint);box-shadow:0 0 0 2px var(--ink)}
-.toast.err::before{background:var(--pink);box-shadow:0 0 0 2px var(--ink)}
+.toast{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:0 7px 0 0;min-height:22px;font-size:10px;line-height:1.3;display:flex;align-items:center;gap:6px;animation:tin .12s steps(3)}
+.toast::before{content:"";align-self:stretch;width:18px;flex:none;border-right:2px solid var(--ink);background:var(--soft) no-repeat center/8px 8px}
+.toast.ok::before{background-color:var(--mint);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%233d3b37' d='M7 1h1v2H7zM6 3h1v1H6zM5 4h1v1H5zM4 5h1v1H4zM3 6h1v1H3zM2 5h1v1H2zM1 4h1v1H1zM0 3h1v1H0z'/%3E%3C/svg%3E")}
+.toast.err::before{background-color:var(--pink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%233d3b37' d='M3 0h2v5H3zM3 6h2v2H3z'/%3E%3C/svg%3E")}
+.toast:not(.ok):not(.err)::before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8' shape-rendering='crispEdges'%3E%3Cpath fill='%233d3b37' d='M3 0h2v2H3zM3 3h2v5H3z'/%3E%3C/svg%3E")}
 .toast.out{animation:tout .12s steps(3) forwards}
 @keyframes tin{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
 @keyframes tout{to{transform:translateY(-8px);opacity:0}}
@@ -286,7 +287,7 @@ button.ic:active{transform:none}
 .ptabs button:hover{background:none;color:var(--ink)}.ptabs button:active{transform:none}
 .ptabs button.on{border-color:var(--ink);color:var(--ink);font-weight:700;background:linear-gradient(transparent 58%,var(--mint) 58%,var(--mint) 88%,transparent 88%) no-repeat 8px 0/calc(100% - 16px) 100%,var(--panel)}
 .ptabs button i{font-style:normal;font-size:10px;color:var(--tx3);font-weight:400}
-.ptabs svg{width:12px;height:12px;fill:#d26a82;shape-rendering:crispEdges}
+.ptabs svg{width:13px;height:12px}
 .calp .cbody.hidden,.fbody.hidden{display:none!important}
 /* 보관함 */
 .fbody{flex:1;min-height:0;overflow:auto;padding:10px 14px 14px}
@@ -306,7 +307,7 @@ button.ic:active{transform:none}
 .fv-gr .it .x{right:4px}.fv-gr .it .f{right:28px}
 .fv-gr .it .x,.fv-gr .it .f{min-width:0!important;min-height:0!important;width:20px!important;height:20px!important}
 @media (max-width:560px){.fv-gr{columns:2}}
-.fv-gr .it .x svg{width:12px;height:12px;fill:#d26a82;shape-rendering:crispEdges}
+.fv-gr .it .x svg{width:13px;height:12px}
 @media (hover:hover){.fv-gr .it .f{opacity:0}.fv-gr .it:hover .f{opacity:1}}
 .fv-empty{color:var(--tx3);text-align:center;padding:40px 10px;line-height:1.9}.fv-empty.hidden{display:none}
 .fv-menu{position:fixed;z-index:60;min-width:160px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:6px;display:grid;gap:2px;font-size:12px;animation:tbdIn .12s steps(3,end)}
@@ -315,10 +316,11 @@ button.ic:active{transform:none}
 .fv-menu .nf{border-top:2px dotted var(--soft);margin-top:4px;padding:6px 6px 2px;color:var(--tx2);cursor:pointer}
 .fv-menu small{color:var(--tx3);padding:2px 6px}
 /* stage heart */
-#favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important;color:#b9b6ae}
-#favBtn svg{width:22px;height:22px;fill:currentColor;shape-rendering:crispEdges;filter:drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff) drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff)} /* thin white rim keeps it readable on dark cuts */
-#favBtn:hover{color:#9c998f}#favBtn:active{transform:none}
-#favBtn.on{color:#d26a82}#favBtn.on svg{filter:drop-shadow(1px 0 0 var(--ink)) drop-shadow(-1px 0 0 var(--ink)) drop-shadow(0 1px 0 var(--ink)) drop-shadow(0 -1px 0 var(--ink))}
+svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:#e07a95}svg.hrt .hh{fill:#fff}
+#favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
+#favBtn svg{width:26px;height:24px;filter:drop-shadow(0 0 1px rgba(255,255,255,.9))}
+#favBtn:not(.on) .ho{fill:#8e8b83}#favBtn:not(.on) .hf{fill:#cfccc4}#favBtn:not(.on) .hh{fill:#ecebe6}
+#favBtn:not(.on):hover .hf{fill:#bdbab1}#favBtn:active{transform:none}
 #favBtn.beat{animation:favPop .24s steps(3,end)}
 @keyframes favPop{50%{transform:scale(1.3)}}
 #favBtn.hidden,body.zen #favBtn{display:none}
@@ -787,7 +789,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <svg id="hg" viewBox="0 0 10 12" shape-rendering="crispEdges" aria-label="불러오는 중"><path fill="currentColor" d="M0 0h10v1H0zM0 11h10v1H0zM1 1h1v2H1zM8 1h1v2H8zM2 3h1v1H2zM7 3h1v1H7zM3 4h1v1H3zM6 4h1v1H6zM3 7h1v1H3zM6 7h1v1H6zM2 8h1v1H2zM7 8h1v1H7zM1 9h1v2H1zM8 9h1v2H8z"/><path class="sd s1" d="M2 1h6v2H2zM3 3h4v1H3zM4 4h2v1H4z"/><path class="sd s2" d="M3 3h4v1H3zM4 4h2v1H4zM4 6h1v2H4zM3 10h4v1H3z"/><path class="sd s3" d="M3 8h4v1H3zM2 9h6v2H2z"/></svg>
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <canvas id="c3d" class="hidden"></canvas>
-  <button id="favBtn" class="hidden" data-tip="보관함에 담기" data-key="B" aria-label="보관함에 담기" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h4v1h1v1h2V4h1V3h4v1h1v5h-1v1h-1v1h-1v1h-1v1H9v1H7v-1H6v-1H5v-1H4v-1H3V9H2V8H1V4h1z"/></svg></button>
+  <button id="favBtn" class="hidden" data-tip="보관함에 담기" data-key="B" aria-label="보관함에 담기" aria-pressed="false"><svg class="hrt" viewBox="0 0 13 12" aria-hidden="true"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v1H0zM6 2h1v1H6zM12 2h1v1H12zM0 3h1v1H0zM12 3h1v1H12zM0 4h1v1H0zM12 4h1v1H12zM0 5h1v1H0zM12 5h1v1H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h2v1H1zM4 2h2v1H4zM7 2h5v1H7zM1 3h1v1H1zM3 3h9v1H3zM1 4h11v1H1zM1 5h11v1H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/><path class="hh" d="M3 2h1v1H3zM2 3h1v1H2z"/></svg></button>
   <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
@@ -859,7 +861,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     </div>
     <button class="ic" id="calX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
   </div>
-  <div class="ptabs" id="calTabs"><button class="on" data-v="cal">캘린더 <i id="calTabN"></i></button><button data-v="fav"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 3h4v1h1v1h2V4h1V3h4v1h1v5h-1v1h-1v1h-1v1h-1v1H9v1H7v-1H6v-1H5v-1H4v-1H3V9H2V8H1V4h1z"/></svg>보관함 <i id="favTabN"></i></button></div>
+  <div class="ptabs" id="calTabs"><button class="on" data-v="cal">캘린더 <i id="calTabN"></i></button><button data-v="fav"><svg class="hrt" viewBox="0 0 13 12" aria-hidden="true"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v1H0zM6 2h1v1H6zM12 2h1v1H12zM0 3h1v1H0zM12 3h1v1H12zM0 4h1v1H0zM12 4h1v1H12zM0 5h1v1H0zM12 5h1v1H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h2v1H1zM4 2h2v1H4zM7 2h5v1H7zM1 3h1v1H1zM3 3h9v1H3zM1 4h11v1H1zM1 5h11v1H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/><path class="hh" d="M3 2h1v1H3zM2 3h1v1H2z"/></svg>보관함 <i id="favTabN"></i></button></div>
   <div class="cbody">
     <div class="cmain">
       <div class="cmon"><button class="nb" id="calPrev">◀</button><b id="calTitle"></b><button class="nb" id="calNext">▶</button><button class="sm" id="calToday">오늘</button></div>
@@ -1782,7 +1784,7 @@ function favRender(){favCount();const fs=FAV.folders,cnt=id=>FAV.items.filter(x=
   $('#favFEdit').classList.toggle('hidden',!FAV.cur);
   let list=FAV.items.filter(x=>!FAV.cur||x.folders.includes(FAV.cur)).sort((a,b)=>FAV.sort==='new'?b.ts-a.ts:a.ts-b.ts);
   $('#favEmpty').classList.toggle('hidden',list.length>0);
-  $('#favGrid').innerHTML=list.map(x=>`<div class="it" data-id="${x.id}" draggable="true" title="${esc(x.title)}"><img alt="" loading="lazy" referrerpolicy="no-referrer"><button class="f" data-fm aria-label="폴더">▤</button><button class="x" data-rm aria-label="보관함에서 빼기"><svg viewBox="0 0 16 16"><path d="M2 3h4v1h1v1h2V4h1V3h4v1h1v5h-1v1h-1v1h-1v1h-1v1H9v1H7v-1H6v-1H5v-1H4v-1H3V9H2V8H1V4h1z"/></svg></button><b>${esc(x.blob?'업로드':x.src||'')}</b></div>`).join('');
+  $('#favGrid').innerHTML=list.map(x=>`<div class="it" data-id="${x.id}" draggable="true" title="${esc(x.title)}"><img alt="" loading="lazy" referrerpolicy="no-referrer"><button class="f" data-fm aria-label="폴더">▤</button><button class="x" data-rm aria-label="보관함에서 빼기"><svg class="hrt" viewBox="0 0 13 12" aria-hidden="true"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v1H0zM6 2h1v1H6zM12 2h1v1H12zM0 3h1v1H0zM12 3h1v1H12zM0 4h1v1H0zM12 4h1v1H12zM0 5h1v1H0zM12 5h1v1H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h2v1H1zM4 2h2v1H4zM7 2h5v1H7zM1 3h1v1H1zM3 3h9v1H3zM1 4h11v1H1zM1 5h11v1H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/><path class="hh" d="M3 2h1v1H3zM2 3h1v1H2z"/></svg></button><b>${esc(x.blob?'업로드':x.src||'')}</b></div>`).join('');
   $('#favGrid').querySelectorAll('.it').forEach(el=>{const x=FAV.items.find(y=>y.id===el.dataset.id),im=el.querySelector('img');
     im.onerror=()=>{if(x.thumb&&im.dataset.t!=='u'&&!x.blob){im.dataset.t='u';im.src=M(x.url)}else el.classList.add('broken')};favSrc(x).then(u=>{im.src=u})})}
 $('#favFolders').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
