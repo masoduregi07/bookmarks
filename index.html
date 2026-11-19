@@ -332,7 +332,7 @@ button.ic:active{transform:none}
 .fv-menu label.dg{color:#c2546f}.fv-menu label.dg:hover{color:#f3a7ba}
 .fv-menu label.off{color:var(--tx3);cursor:default}.fv-menu label.off:hover{background:none!important;color:var(--tx3)}.fv-menu label.off .hf{fill:#cfccc4}.fv-menu label.off .ho{fill:var(--tx3)!important}
 .fv-menu hr{border:none;border-top:2px dotted var(--soft);margin:2px 0}
-.fv-menu .nf{border-top:2px dotted var(--soft);margin-top:2px;height:24px;display:flex;align-items:center;padding:0 10px 0 7px;color:var(--tx2);cursor:pointer}.fv-menu .nf:hover{background:var(--ink);color:#fff}
+.fv-menu .nf{height:24px;display:flex;align-items:center;padding:0 10px 0 7px;color:var(--tx2);cursor:pointer}.fv-menu .nf:hover{background:var(--ink);color:#fff}
 .fv-menu small{color:var(--tx3);height:22px;display:flex;align-items:center;padding:0 8px}
 @media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 12px 0 9px}} /* finger-sized rows, same snug sides */
 /* stage heart */
@@ -1825,7 +1825,7 @@ $('#favGrid').onclick=async e=>{const el=e.target.closest('.it');if(!el)return;c
 // folder picker for one image
 const fm=$('#favMenu');
 function favMenu(x,anchor){const r=anchor.getBoundingClientRect();
-  fm.innerHTML=(FAV.folders.length?FAV.folders.map(f=>`<label><input type="checkbox" data-f="${f.id}" ${x.folders.includes(f.id)?'checked':''}> ${esc(f.name)}</label>`).join(''):'<small>폴더가 없음</small>')+'<div class="nf" data-new>+ 새 폴더</div>';
+  fm.innerHTML=(FAV.folders.length?FAV.folders.map(f=>`<label><input type="checkbox" data-f="${f.id}" ${x.folders.includes(f.id)?'checked':''}> ${esc(f.name)}</label>`).join(''):'<small>폴더가 없음</small>')+'<hr><div class="nf" data-new>+ 새 폴더</div>';
   fm.classList.remove('hidden');fm.style.left=Math.min(r.left,innerWidth-fm.offsetWidth-8)+'px';fm.style.top=Math.min(r.bottom+4,innerHeight-fm.offsetHeight-8)+'px';fm.dataset.id=x.id}
 fm.onchange=async e=>{const x=FAV.items.find(y=>y.id===fm.dataset.id),f=e.target.dataset.f;if(!x||!f)return;
   x.folders=e.target.checked?[...new Set([...x.folders,f])]:x.folders.filter(y=>y!==f);await favPut('items',x);favRender()};
