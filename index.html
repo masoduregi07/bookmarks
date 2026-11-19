@@ -97,11 +97,15 @@ body.zen #zoomUi{display:none}
 #stTop .frow{display:flex;align-items:center;gap:4px;flex:0 1 auto;flex-wrap:wrap;min-width:0}
 #stTop .chip{height:24px!important;min-height:0!important;padding:0 7px!important;font-size:12px!important;flex:none!important;width:auto!important}
 #stTop .frow .more{font-size:11px;color:var(--tx2);background:var(--panel);border:2px solid var(--ink);height:24px;padding:0 6px;display:inline-flex;align-items:center;cursor:pointer}
-#info{position:static;max-width:100%;font-size:11px;color:var(--ink);display:flex;gap:8px;align-items:center;background:var(--panel);border:2px solid var(--ink);padding:2px 6px}
+#info{position:absolute;right:10px;bottom:10px;z-index:4;max-width:calc(100% - 70px);font-size:11px;color:var(--ink);display:flex;gap:8px;align-items:center;background:var(--panel);border:2px solid var(--ink);padding:2px 6px;white-space:nowrap}
+#info span:last-child{overflow:hidden;text-overflow:ellipsis;min-width:0}
+#info.lnk:hover{background:var(--yel)}#info:not(.lnk){cursor:default}
+#srcLink{display:none!important} /* the title box is the source link now */
+body.zen #info{display:none}
 #info a{color:var(--ink)}
 #timerBig{position:absolute;right:10px;top:10px;font-size:14px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px}
 #timerBig:empty,#info:empty,#info.gone{display:none}
-#info{cursor:pointer;user-select:none;-webkit-user-select:none}
+#info{cursor:pointer;user-select:none;-webkit-user-select:none}#info:focus{outline:none}
 #timerBig.run{background:var(--mint)}#timerBig.pause{background:var(--yel)}
 #tIn{width:62px;text-align:center;font-variant-numeric:tabular-nums}
 #tmr.run #tIn{background:var(--mint)}#tmr.pause #tIn{background:var(--yel)}
@@ -300,6 +304,7 @@ button.ic:active{transform:none}
 .tipbox{position:fixed;z-index:60;white-space:nowrap;background:var(--ink);color:#fff;font-size:11px;padding:4px 8px;pointer-events:none;animation:tipd .14s steps(3)}
 .tipbox::before{content:"";position:absolute;top:-5px;left:var(--tx,50%);margin-left:-4px;width:8px;height:5px;background:var(--ink);clip-path:polygon(37% 0,63% 0,63% 40%,100% 40%,100% 100%,0 100%,0 40%,37% 40%)}
 .tipbox small{color:#a8a59d;font-size:10px}
+.tipbox.up::before{top:auto;bottom:-5px;transform:scaleY(-1)}
 @keyframes tipd{from{transform:translateY(-6px);opacity:0}}
 /* save button */
 #saveCut{display:inline-flex;align-items:center;gap:6px;--sv-in:#fff}
@@ -365,7 +370,7 @@ button.ic:active{transform:none}
 .fv-ask button:hover{background:#55524c}
 .fv-cf{align-items:center}.fv-cf span{font-size:12px;line-height:1;padding:0 8px 0 6px;white-space:nowrap}.fv-cf span small{color:var(--tx3);font-size:11px;margin-left:4px}
 .fv-cf button.dg{background:#c2546f;border-color:var(--ink)}.fv-cf button.dg:hover{background:#a8445c}
-.fv-cf button.no{background:#fff;color:var(--ink)}.fv-cf button.no:hover{background:#ebe9e2}
+.fv-cf button.no{background:#fff;color:var(--ink)}.fv-cf button.go{background:var(--ink)}.fv-cf button{min-width:34px}.fv-cf button.no:hover{background:#ebe9e2}
 @media (hover:none),(pointer:coarse){.fv-ask input,.fv-ask button{height:32px;font-size:14px}.fv-ask input{width:170px}}
 @media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 12px 0 9px}} /* finger-sized rows, same snug sides */
 /* stage heart */
@@ -849,7 +854,8 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
-  <div id="stTop"><div class="frow" id="frow"></div><div id="info" class="mono"></div></div>
+  <div id="stTop"><div class="frow" id="frow"></div></div>
+  <div id="info" class="mono" role="link" tabindex="0"></div>
   <div id="timerBig" class="mono"></div>
   <a id="srcLink" class="hidden" target="_blank" rel="noopener noreferrer"></a>
 </main>
@@ -934,10 +940,12 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <div class="fv-gr" id="favGrid"></div>
     <div class="fv-empty hidden" id="favEmpty">아직 담은 이미지가 없음<br><small>화면 왼쪽 아래 ♥ 를 누르거나 B 키 · 이미지 올리기로 추가</small></div>
   </div>
+</aside>
+<!-- floating mini windows live outside the sliding panels (a transformed parent would offset position:fixed) -->
   <div class="fv-menu hidden" id="favMenu"></div>
   <div class="fv-ask fv-cf hidden" id="favCf"><span id="favCfT"></span><button class="dg" id="favCfOk">삭제</button><button class="no" id="favCfNo">취소</button></div>
   <form class="fv-ask hidden" id="favAsk" autocomplete="off"><input id="favAskIn" maxlength="40" spellcheck="false"><button id="favAskOk" type="submit">만들기</button></form>
-</aside>
+
 <div id="peek"><button id="uiShow" aria-label="UI 표시" data-tip="UI 표시" data-key="H"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
 <div id="toasts"></div>
 
@@ -1269,11 +1277,14 @@ function show(){
     vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');img.classList.remove('hidden');
     img.onerror=()=>showErr('이미지 로드 실패 (핫링크 차단 가능)');img.onload=()=>{if(curItem()===it)busy(false)};img.src=M(it.url);if(img.complete&&img.naturalWidth)busy(false);
   }
-  $('#info').innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;$('#info').classList.remove('gone');
+  {const inf=$('#info'),src=it.src||SRCNAME[t];inf.innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;inf.classList.remove('gone');
+   inf.classList.toggle('lnk',!!it.link);inf.dataset.link=it.link||'';inf.dataset.src=src||'';if(it.link)inf.dataset.tip='원본 : '+src;else delete inf.dataset.tip}
   const sl=$('#srcLink');if(it.link){sl.href=it.link;sl.innerHTML=`원본 <b>${esc(it.src||SRCNAME[t])}</b> ↗`;sl.classList.remove('hidden')}else sl.classList.add('hidden');
   applyView();if(window.favReady)favSync();
 }
-$('#info').addEventListener('click',e=>{e.stopPropagation();$('#info').classList.add('gone')});
+$('#info').addEventListener('click',async e=>{e.stopPropagation();const inf=$('#info'),u=inf.dataset.link;if(!u)return;hideTip();
+  if(await askYes(inf,`원본 홈페이지로 이동할까요?<small>${esc(inf.dataset.src)}</small>`,'Y',{no:'N',kind:'go'}))window.open(u,'_blank','noopener,noreferrer')});
+$('#info').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#info').click()}});
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function applyView(){
   if(S.tone!=='color'&&S.tone!=='gray')S.tone='color'; // 2/3/5-tone were removed
@@ -1742,7 +1753,8 @@ let tipEl=null;
 function showTip(b){hideTip();if(!b.dataset.tip)return;const r=b.getBoundingClientRect();
   tipEl=document.createElement('div');tipEl.className='tipbox';tipEl.innerHTML=esc(b.dataset.tip)+(b.dataset.key?` <small>(${esc(b.dataset.key)})</small>`:'');
   document.body.appendChild(tipEl);const w=tipEl.offsetWidth,left=Math.max(6,Math.min(innerWidth-w-6,r.left+r.width/2-w/2));
-  tipEl.style.left=left+'px';tipEl.style.top=(r.bottom+6)+'px';tipEl.style.setProperty('--tx',(r.left+r.width/2-left)+'px')}
+  const h=tipEl.offsetHeight,up=r.bottom+6+h>innerHeight-4;tipEl.classList.toggle('up',up); // near the bottom edge: show above
+  tipEl.style.left=left+'px';tipEl.style.top=(up?r.top-6-h:r.bottom+6)+'px';tipEl.style.setProperty('--tx',(r.left+r.width/2-left)+'px')}
 function hideTip(){if(tipEl){tipEl.remove();tipEl=null}}
 document.addEventListener('mouseover',e=>{const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))showTip(b)});
 document.addEventListener('mouseout',e=>{const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))hideTip()});
@@ -1873,12 +1885,12 @@ function askName(anchor,{value='',ph='새 폴더 이름',ok='만들기'}={}){if(
 $('#favAsk').onsubmit=e=>{e.preventDefault();const v=$('#favAskIn').value.trim().slice(0,40);if(askDone)askDone(v||null)};
 $('#favAskIn').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(askDone)askDone(null)}});
 document.addEventListener('pointerdown',e=>{if(askDone&&!e.target.closest('#favAsk,#favCf'))askDone(null)},true);
-function askYes(anchor,html,ok='삭제'){if(askDone)askDone(null);const f=$('#favCf');$('#favCfT').innerHTML=html;$('#favCfOk').textContent=ok;f.classList.remove('hidden');
-  const r=anchor.getBoundingClientRect();f.style.left=Math.max(8,Math.min(r.left,innerWidth-f.offsetWidth-8))+'px';f.style.top=Math.min(r.bottom+4,innerHeight-f.offsetHeight-8)+'px';
+function askYes(anchor,html,ok='삭제',{no='취소',kind='del'}={}){if(askDone)askDone(null);const f=$('#favCf');$('#favCfT').innerHTML=html;$('#favCfOk').textContent=ok;$('#favCfNo').textContent=no;$('#favCfOk').className=kind==='del'?'dg':'go';f.classList.remove('hidden');
+  const r=anchor.getBoundingClientRect(),h=f.offsetHeight,w=f.offsetWidth;f.style.left=Math.max(8,Math.min(r.right-w>8&&r.left+w>innerWidth-8?r.right-w:r.left,innerWidth-w-8))+'px';f.style.top=(r.bottom+4+h>innerHeight-8?Math.max(8,r.top-h-4):r.bottom+4)+'px';
   setTimeout(()=>$('#favCfNo').focus(),30);
   return new Promise(res=>{askDone=v=>{askDone=null;f.classList.add('hidden');res(!!v)}})}
 $('#favCfOk').onclick=()=>{if(askDone)askDone(true)};$('#favCfNo').onclick=()=>{if(askDone)askDone(null)};
-$('#favCf').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(askDone)askDone(null)}});
+$('#favCf').addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='escape'||k==='n'){e.stopPropagation();e.preventDefault();if(askDone)askDone(null)}else if(k==='y'){e.stopPropagation();e.preventDefault();if(askDone)askDone(true)}});
 const fm=$('#favMenu');
 function favMenu(x,anchor){const r=anchor.getBoundingClientRect();
   fm.innerHTML=(FAV.folders.length?FAV.folders.map(f=>`<label><input type="checkbox" data-f="${f.id}" ${x.folders.includes(f.id)?'checked':''}> ${esc(f.name)}</label>`).join(''):'<small>폴더가 없음</small>')+'<hr><div class="nf" data-new>+ 새 폴더</div>';
@@ -1946,7 +1958,7 @@ $('#logFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';
   toast(`${add}장 가져옴`+(ladd?` · 내 링크 ${ladd}개`:'')+(dup?` · 중복 ${dup}장 건너뜀`:'')+(bad?` · 잘못된 항목 ${bad}개`:''),add||ladd?'ok':'err')};
 // tap/click outside the side panel closes it (iPad has no Esc key)
 document.addEventListener('pointerdown',e=>{if(!calOpen||calFull)return;const t=e.target;
-  if(t.closest('#calP,#calBtn,#toasts'))return;closeCal()},true);
+  if(t.closest('#calP,#calBtn,#toasts,#favMenu,#favCf,#favAsk'))return;closeCal()},true);
 $('#calFull').onclick=()=>{calFull=!calFull;$('#calP').classList.toggle('full',calFull);$('#calFull').dataset.tip=calFull?'패널로 줄이기':'전체 화면';hideTip();renderCal()};
 $('#calPrev').onclick=()=>{calMon.setMonth(calMon.getMonth()-1);renderCal()};
 $('#calNext').onclick=()=>{calMon.setMonth(calMon.getMonth()+1);renderCal()};
