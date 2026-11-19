@@ -334,6 +334,13 @@ button.ic:active{transform:none}
 .fv-menu hr{border:none;border-top:2px dotted var(--soft);margin:2px 0}
 .fv-menu .nf{height:24px;display:flex;align-items:center;padding:0 10px 0 7px;color:var(--tx2);cursor:pointer}.fv-menu .nf:hover{background:var(--ink);color:#fff}
 .fv-menu small{color:var(--tx3);height:22px;display:flex;align-items:center;padding:0 8px}
+.fv-ask{position:fixed;z-index:61;display:flex;gap:2px;padding:2px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);animation:tbdIn .12s steps(3,end)}
+.fv-ask.hidden{display:none}
+.fv-ask input{width:150px;height:24px;padding:0 7px;border:2px solid var(--ink);background:#fff;font:inherit;font-size:12px;outline:none;border-radius:0;box-shadow:none}
+.fv-ask input:focus{box-shadow:inset 0 -3px 0 var(--yel)}
+.fv-ask button{height:24px;min-height:0;padding:0 10px;font-size:12px;background:var(--ink);color:#fff;border:2px solid var(--ink);box-shadow:none}
+.fv-ask button:hover{background:#55524c}
+@media (hover:none),(pointer:coarse){.fv-ask input,.fv-ask button{height:32px;font-size:14px}.fv-ask input{width:170px}}
 @media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 12px 0 9px}} /* finger-sized rows, same snug sides */
 /* stage heart */
 svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:#e07a95}
@@ -898,6 +905,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <div class="fv-empty hidden" id="favEmpty">아직 담은 이미지가 없음<br><small>화면 왼쪽 아래 ♥ 를 누르거나 B 키 · 이미지 올리기로 추가</small></div>
   </div>
   <div class="fv-menu hidden" id="favMenu"></div>
+  <form class="fv-ask hidden" id="favAsk" autocomplete="off"><input id="favAskIn" maxlength="40" spellcheck="false"><button id="favAskOk" type="submit">만들기</button></form>
 </aside>
 <div id="peek"><button id="uiShow" aria-label="UI 표시" data-tip="UI 표시" data-key="H"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
 <div id="toasts"></div>
@@ -1808,10 +1816,10 @@ function favRender(){favCount();const fs=FAV.folders,cnt=id=>FAV.items.filter(x=
   $('#favGrid').querySelectorAll('.it').forEach(el=>{const x=FAV.items.find(y=>y.id===el.dataset.id),im=el.querySelector('img');
     im.onerror=()=>{if(x.thumb&&im.dataset.t!=='u'&&!x.blob){im.dataset.t='u';im.src=M(x.url)}else el.classList.add('broken')};favSrc(x).then(u=>{im.src=u})})}
 $('#favFolders').onclick=async e=>{const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.add!==undefined){const n=(prompt('새 폴더 이름')||'').trim().slice(0,40);if(!n)return;
+  if(b.dataset.add!==undefined){const n=await askName(b);if(!n)return;
     const f={id:favNewId(),name:n,ord:FAV.folders.length};await favPut('folders',f);FAV.folders.push(f);FAV.cur=f.id;favRender();return}
   FAV.cur=b.dataset.f;favRender()};
-$('#favRen').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f)return;const n=(prompt('폴더 이름',f.name)||'').trim().slice(0,40);if(!n)return;f.name=n;await favPut('folders',f);favRender()};
+$('#favRen').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f)return;const n=await askName($('#favRen'),{value:f.name,ph:'폴더 이름',ok:'바꾸기'});if(!n)return;f.name=n;await favPut('folders',f);favRender()};
 $('#favDelF').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f||!confirm(`'${f.name}' 폴더를 지울까요? (이미지는 전체에 남음)`))return;
   await favDel('folders',f.id);FAV.folders=FAV.folders.filter(x=>x!==f);for(const x of FAV.items)if(x.folders.includes(f.id)){x.folders=x.folders.filter(y=>y!==f.id);await favPut('items',x)}FAV.cur='';favRender()};
 $('#favSort').onchange=e=>{FAV.sort=e.target.value;favRender()};
@@ -1823,13 +1831,23 @@ $('#favGrid').onclick=async e=>{const el=e.target.closest('.it');if(!el)return;c
   if(e.target.closest('[data-fm]')){e.stopPropagation();favMenu(x,e.target.closest('[data-fm]'));return}
   favShowItem(x)};
 // folder picker for one image
+// small name box in place of the browser prompt (Enter = ok, Esc / outside = cancel)
+let askDone=null;
+function askName(anchor,{value='',ph='새 폴더 이름',ok='만들기'}={}){if(askDone)askDone(null);const f=$('#favAsk'),i=$('#favAskIn');
+  i.value=value;i.placeholder=ph;$('#favAskOk').textContent=ok;f.classList.remove('hidden');
+  const r=anchor.getBoundingClientRect();f.style.left=Math.max(8,Math.min(r.left,innerWidth-f.offsetWidth-8))+'px';f.style.top=Math.min(r.bottom+4,innerHeight-f.offsetHeight-8)+'px';
+  setTimeout(()=>{i.focus();i.select()},30);
+  return new Promise(res=>{askDone=v=>{askDone=null;f.classList.add('hidden');res(v)}})}
+$('#favAsk').onsubmit=e=>{e.preventDefault();const v=$('#favAskIn').value.trim().slice(0,40);if(askDone)askDone(v||null)};
+$('#favAskIn').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(askDone)askDone(null)}});
+document.addEventListener('pointerdown',e=>{if(askDone&&!e.target.closest('#favAsk'))askDone(null)},true);
 const fm=$('#favMenu');
 function favMenu(x,anchor){const r=anchor.getBoundingClientRect();
   fm.innerHTML=(FAV.folders.length?FAV.folders.map(f=>`<label><input type="checkbox" data-f="${f.id}" ${x.folders.includes(f.id)?'checked':''}> ${esc(f.name)}</label>`).join(''):'<small>폴더가 없음</small>')+'<hr><div class="nf" data-new>+ 새 폴더</div>';
   fm.classList.remove('hidden');fm.style.left=Math.min(r.left,innerWidth-fm.offsetWidth-8)+'px';fm.style.top=Math.min(r.bottom+4,innerHeight-fm.offsetHeight-8)+'px';fm.dataset.id=x.id}
 fm.onchange=async e=>{const x=FAV.items.find(y=>y.id===fm.dataset.id),f=e.target.dataset.f;if(!x||!f)return;
   x.folders=e.target.checked?[...new Set([...x.folders,f])]:x.folders.filter(y=>y!==f);await favPut('items',x);favRender()};
-fm.onclick=async e=>{if(e.target.closest('[data-new]')){const x=FAV.items.find(y=>y.id===fm.dataset.id);const n=(prompt('새 폴더 이름')||'').trim().slice(0,40);if(!n||!x)return;
+fm.onclick=async e=>{if(e.target.closest('[data-new]')){const x=FAV.items.find(y=>y.id===fm.dataset.id);const anc=e.target.closest('[data-new]').getBoundingClientRect();fm.classList.add('hidden');const n=await askName({getBoundingClientRect:()=>anc});if(!n||!x)return;
   const f={id:favNewId(),name:n,ord:FAV.folders.length};await favPut('folders',f);FAV.folders.push(f);x.folders.push(f.id);await favPut('items',x);fm.classList.add('hidden');favRender()}};
 document.addEventListener('pointerdown',e=>{if(!fm.classList.contains('hidden')&&!e.target.closest('#favMenu,[data-fm]'))fm.classList.add('hidden')},true);
 // drag an image onto a folder chip to file it there
