@@ -326,10 +326,15 @@ button.ic:active{transform:none}
 .fv-empty{color:var(--tx3);text-align:center;padding:40px 10px;line-height:1.9}.fv-empty.hidden{display:none}
 .fv-menu{position:fixed;z-index:60;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:2px;display:grid;gap:0;font-size:12px;line-height:1;animation:tbdIn .12s steps(3,end)}
 .fv-menu.hidden{display:none}
-.fv-menu label{display:flex;align-items:center;gap:6px;height:22px;padding:0 8px;cursor:pointer;color:var(--ink);white-space:nowrap}.fv-menu label:hover{background:#ebe9e2}
-.fv-menu .nf{border-top:2px dotted var(--soft);margin-top:2px;height:22px;display:flex;align-items:center;padding:0 8px;color:var(--tx2);cursor:pointer}
+.fv-menu label{display:flex;align-items:center;gap:8px;height:24px;padding:0 10px 0 7px;cursor:pointer;color:var(--ink);white-space:nowrap}
+.fv-menu label svg{flex:none;width:13px;height:12px;shape-rendering:crispEdges}.fv-menu label svg.ic8{width:11px;height:11px}
+.fv-menu label:hover{background:var(--ink)!important;color:#fff}.fv-menu label:hover .hrt .ho{fill:#fff}
+.fv-menu label.dg{color:#c2546f}.fv-menu label.dg:hover{color:#f3a7ba}
+.fv-menu label.off{color:var(--tx3);cursor:default}.fv-menu label.off:hover{background:none!important;color:var(--tx3)}.fv-menu label.off .hf{fill:#cfccc4}.fv-menu label.off .ho{fill:var(--tx3)!important}
+.fv-menu hr{border:none;border-top:2px dotted var(--soft);margin:2px 0}
+.fv-menu .nf{border-top:2px dotted var(--soft);margin-top:2px;height:24px;display:flex;align-items:center;padding:0 10px 0 7px;color:var(--tx2);cursor:pointer}.fv-menu .nf:hover{background:var(--ink);color:#fff}
 .fv-menu small{color:var(--tx3);height:22px;display:flex;align-items:center;padding:0 8px}
-@media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 10px}} /* finger-sized rows, same snug sides */
+@media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 12px 0 9px}} /* finger-sized rows, same snug sides */
 /* stage heart */
 svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:#e07a95}
 #favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
@@ -1899,9 +1904,10 @@ async function logToFav(id){const r=LOG.find(x=>x.id===id);if(!r)return;if(favFi
 const lgm=$('#favMenu');let lgDrag=null,lgNoClick=false;
 function lgMenu(el){const id=el.dataset.id,r=LOG.find(x=>x.id===id);if(!r)return;const rc=el.getBoundingClientRect(),inFav=favFindLog(r);
   document.querySelectorAll('#calDay .lg.sel').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');
-  lgm.innerHTML=`<label data-a="fav" ${inFav?'style="color:var(--tx3)"':''}>${inFav?'보관함에 있음':'보관함으로'}</label><label data-a="src" ${r.link?'':'style="color:var(--tx3)"'}>원본 열기 ↗</label><label data-a="del">삭제</label>`;
+  lgm.innerHTML=`<label data-a="fav" class="${inFav?'off':''}"><svg class="hrt" viewBox="0 0 13 12"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v4H0zM6 2h1v1H6zM12 2h1v4H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h5v1H1zM7 2h5v1H7zM1 3h11v3H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/></svg>${inFav?'보관함에 있음':'보관함으로'}</label><label data-a="src" class="${r.link?'':'off'}"><svg class="ic8" viewBox="0 0 8 8"><path fill="currentColor" d="M3 0h5v5H7V2H6v1H5v1H4v1H3v1H2v1H1v1H0V7h1V6h1V5h1V4h1V3h1V2h1V1H3z"/></svg>원본 열기</label><hr><label data-a="del" class="dg"><svg class="ic8" viewBox="0 0 8 9"><path fill="currentColor" d="M3 0h2v1h3v1H0V1h3zM1 3h6v6H1zM2 4v4h1V4zM5 4v4h1V4z"/></svg>삭제</label>`;
   lgm.dataset.log=id;lgm.classList.remove('hidden');lgm.style.left=Math.min(rc.left,innerWidth-lgm.offsetWidth-8)+'px';lgm.style.top=Math.min(rc.bottom+4,innerHeight-lgm.offsetHeight-8)+'px'}
 lgm.addEventListener('click',async e=>{const a=e.target.closest('[data-a]');if(!a||!lgm.dataset.log)return;const id=lgm.dataset.log;lgm.classList.add('hidden');lgm.dataset.log='';
+  if(a.classList.contains('off'))return;
   if(a.dataset.a==='fav')await logToFav(id);
   else if(a.dataset.a==='src'){const r=LOG.find(x=>x.id===id);if(r&&r.link)window.open(r.link,'_blank','noopener,noreferrer');else toast('원본 링크가 없음','err')}
   else{LOG=LOG.filter(r=>r.id!==id);saveLog();renderCal();syncSaveBtn();toast('기록 지움')}});
