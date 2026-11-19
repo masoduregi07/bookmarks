@@ -132,7 +132,8 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .sw input:checked+i::after{left:16px;background:var(--ink)}
 .off{opacity:.35;pointer-events:none}
 .hidden{display:none!important}
-.d3only,body.t3d #gTone,body.t3d #gGrid{display:none!important}
+.d3only,body.t3d #gGrid,body.t3d #tone,body.t3d #gTone>label{display:none!important} /* 3D keeps 좌우반전 */
+body.t3d #gTone{flex:0 0 auto!important}body.t3d #miniGrid{display:none!important}body.t3d .rbr{display:none!important} /* 3D has no 분할 */
 body.t3d .d3only{display:flex!important}
 .pop{position:fixed;z-index:15;width:min(var(--pw,340px),calc(100vw - 16px));background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
@@ -1311,7 +1312,7 @@ function fitChips(){const fr=$('#frow'),m=fr.querySelector('.more');if(!m)return
   const b=$('#fltBtn').getBoundingClientRect(),lim=b.top+b.height*2+8;
   for(let i=cs.length-1;i>=0&&fr.getBoundingClientRect().bottom>lim;i--){cs[i].style.display='none';hid++;upd()}
   if(fr.getBoundingClientRect().bottom>lim)m.style.display='none'}
-{let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(fitChips,120)})}
+{let t,w=0;new ResizeObserver(()=>{const nw=$('#stage').clientWidth;if(nw===w)return;w=nw;clearTimeout(t);t=setTimeout(fitChips,120)}).observe($('#stage'))}
 $('#frow').addEventListener('click',e=>{if(e.target.closest('[data-more]')){e.stopPropagation();curPop==='flt'?closeP():openP('flt');return}const p=e.target.closest('[data-d3p]');
   if(p){const f=S.f['3d'];if(f.parts[0]===p.dataset.d3p&&S.pos['3d']>=0)return;f.parts=[p.dataset.d3p];save();renderRow();S.queue['3d']=[];next();return}
   const c=e.target.closest('[data-rm]');if(!c)return;const [ty,a,b]=c.dataset.rm.split('|'),t=S.tab,f=S.f[t];
