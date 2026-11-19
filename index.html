@@ -142,11 +142,14 @@ body.t3d .d3only{display:flex!important}
 .pop .hd button:not(.ic){width:24px;height:24px;padding:0;box-shadow:none;line-height:1;display:inline-flex;align-items:center;justify-content:center;flex:none}
 .pop section{padding:10px 12px 12px}
 .pop h3{font-size:11px;color:var(--tx2);font-weight:400;margin-bottom:8px}
-#setPop h3{display:inline-block;font-size:12px;font-weight:700;color:var(--ink);padding:0 4px;margin:0 0 10px -4px;background:linear-gradient(transparent 58%,var(--sky) 58%,var(--sky) 92%,transparent 92%)}
-#setPop section+section{border-top:2px dotted var(--soft);margin:0 12px;padding-left:0;padding-right:0}
+#setTabs{margin:10px 12px 0!important}
+#setPop section{padding-top:12px}
 #setPop .kbrow{width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:4px 6px 4px 10px}
 #setPop .kbrow kbd{border:2px solid var(--ink);background:#fff;padding:0 5px;font:inherit;font-size:11px;line-height:14px}
-@media (max-width:560px){#setPop .kbrow{display:none}} /* no keyboard on phones */
+#kbBox{margin-top:6px;border:2px dotted var(--soft);padding:10px 10px 10px 6px;animation:tbdIn .12s steps(3,end)}
+#kbBox.hidden{display:none}
+#keyBtn kbd{transition:none}#keyBtn[aria-expanded="true"]{background:var(--ink);color:#fff}#keyBtn[aria-expanded="true"] kbd{color:var(--ink)}
+@media (max-width:560px){#setPop .kbrow,#kbBox{display:none!important}} /* no keyboard on phones */
 .pop .row{display:grid;grid-template-columns:92px 1fr;align-items:center;gap:8px;margin-bottom:6px}
 .pop .row span{color:var(--tx2);font-size:11px}
 .pop .row input,.pop .row select{width:100%;min-width:0;font-size:11px}
@@ -202,11 +205,11 @@ footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:c
 #fltPop .gb h3{display:flex;justify-content:space-between;margin-bottom:6px}
 #fltPop .gr{display:flex;flex-wrap:wrap;gap:4px;max-height:96px;overflow:auto;padding:1px}
 #fltPop .gr.tall{max-height:none}
-#fltPop .fx-tabs{display:flex;border-bottom:2px solid var(--ink);margin:0 0 16px}
-#fltPop .fx-tab{border:2px solid transparent;border-bottom:none;margin:0 0 -2px;padding:5px 12px;background:none;box-shadow:none;color:var(--tx2);font-size:12px;display:flex;align-items:center;gap:4px}
-#fltPop .fx-tab:hover{color:var(--ink);background:none}
-#fltPop .fx-tab.on{border-color:var(--ink);background:var(--panel);color:var(--ink)}
-#fltPop .fx-tab i{font-style:normal;font-size:10px;line-height:14px;min-width:14px;padding:0 3px;background:var(--yel);border:1px solid var(--ink);color:var(--ink);text-align:center}
+:is(#fltPop,#setPop) .fx-tabs{display:flex;border-bottom:2px solid var(--ink);margin:0 0 16px}
+:is(#fltPop,#setPop) .fx-tab{border:2px solid transparent;border-bottom:none;margin:0 0 -2px;padding:5px 12px;background:none;box-shadow:none;color:var(--tx2);font-size:12px;display:flex;align-items:center;gap:4px}
+:is(#fltPop,#setPop) .fx-tab:hover{color:var(--ink);background:none}
+:is(#fltPop,#setPop) .fx-tab.on{border-color:var(--ink);background:var(--panel);color:var(--ink)}
+:is(#fltPop,#setPop) .fx-tab i{font-style:normal;font-size:10px;line-height:14px;min-width:14px;padding:0 3px;background:var(--yel);border:1px solid var(--ink);color:var(--ink);text-align:center}
 #fltPop .fx-row{display:grid;grid-template-columns:52px 1fr;align-items:center;column-gap:8px;padding:0 0 12px 14px}
 #fltPop .fx-row.top{align-items:start}
 #fltPop .fx-row.top .fx-l{padding-top:4px}
@@ -234,10 +237,10 @@ footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:c
 #fltPop .ft{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:2px dotted var(--soft)}
 #fltPop .ft label{display:flex;align-items:center;gap:6px;cursor:pointer}
 #fltPop .ft a{color:var(--tx2);cursor:pointer;font-size:11px}
-#keyPop dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:12px}
-#keyPop dt{display:flex;gap:3px;justify-content:flex-end}
-#keyPop kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border:2px solid var(--ink);background:#fff;box-shadow:1px 1px 0 var(--shd);font:inherit;font-size:11px}
-#keyPop dd{color:var(--tx2)}
+#kbBox dl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:12px}
+#kbBox dt{display:flex;gap:3px;justify-content:flex-end}
+#kbBox kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border:2px solid var(--ink);background:#fff;box-shadow:1px 1px 0 var(--shd);font:inherit;font-size:11px}
+#kbBox dd{color:var(--tx2)}
 footer input[type=range]{width:60px}
 footer #tmr .seg:not(.ic) button{padding:4px 7px}
 footer .grp>label{margin-right:0}
@@ -437,7 +440,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   .seg button:not(.on):hover{background:#fff}
   .chip:not(.on):not(.set):hover{background:#fff}.chip.set:hover{background:var(--yel)}
   #fltPop .o:not(.on):not(.ex):hover{background:#ebe9e2}
-  #fltPop .fx-tab:hover,button.ic:hover,#uiShow:hover,.pop .hd button.ic:hover,.calp .ch button.ic:hover{background:none}
+  :is(#fltPop,#setPop) .fx-tab:hover,button.ic:hover,#uiShow:hover,.pop .hd button.ic:hover,.calp .ch button.ic:hover{background:none}
   button.ic:not(.on):hover svg{transform:none}button.ic:not(.on):hover::after{opacity:0}
   #lnkP .r:not(:active){background:none}#lnkP .r:not(:active) .nm::after{opacity:0}#lnkP .r:not(:active) .ds{color:var(--tx2)}
   #lnkP .add:hover{background:none;color:var(--tx2)}
@@ -550,8 +553,8 @@ header.tov .tsc{display:flex}
 #flip{display:inline-flex;align-items:center;gap:6px}
 #flip .fi{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;line-height:16px}
 #flip .ft{margin-left:0}
-#fltPop .fx-tab:active{transform:none} /* no 2px press jump: the tab line stayed/vanished while clicking */
-#fltPop .fx-tab.on{font-weight:700;background:linear-gradient(transparent 58%,var(--yel) 58%,var(--yel) 88%,transparent 88%) no-repeat 8px 0/calc(100% - 16px) 100%,var(--panel)}
+:is(#fltPop,#setPop) .fx-tab:active{transform:none} /* no 2px press jump: the tab line stayed/vanished while clicking */
+:is(#fltPop,#setPop) .fx-tab.on{font-weight:700;background:linear-gradient(transparent 58%,var(--yel) 58%,var(--yel) 88%,transparent 88%) no-repeat 8px 0/calc(100% - 16px) 100%,var(--panel)}
 /* phones: 색 (icons) right after 좌우반전 on the first row; 필터 always starts the last row at the left */
 @media (max-width:560px){
   .top footer>.grp:first-child{order:0}#gTone{order:1}#gGrid{order:2}#tmr{order:3}.top footer>.frow{order:4;flex:1 1 100%;justify-content:flex-start}
@@ -622,7 +625,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 }
 @keyframes tbdIn{from{transform:translateY(-10px);clip-path:inset(-12px -12px 100% -12px)}to{transform:none;clip-path:inset(-12px)}}
 @keyframes tbdOut{from{transform:none;clip-path:inset(-12px)}to{transform:translateY(-10px);clip-path:inset(-12px -12px 100% -12px)}}
-#tbDrawer.out,#fltPop.out{animation:tbdOut .12s steps(3,end) forwards!important;pointer-events:none}
+#tbDrawer.out,#fltPop.out,#kbBox.out{animation:tbdOut .12s steps(3,end) forwards!important;pointer-events:none}
 #fltPop.in{animation:tbdIn .12s steps(3,end)}
 /* phones, minimal toolbar: everything on one row */
 @media (max-width:560px){
@@ -749,27 +752,12 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 
 <div id="setPop" class="pop hidden" role="dialog" aria-label="설정">
   <div class="hd">설정<button id="setX" class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
-  <section>
-    <h3>화면</h3>
+  <div class="fx-tabs" id="setTabs"><button class="fx-tab on" data-pane="0">화면</button><button class="fx-tab" data-pane="1">API 연결</button></div>
+  <section data-pane="0">
     <label class="chk"><input type="checkbox" id="sfxOn"> 버튼 효과음</label>
     <label class="chk"><input type="checkbox" id="tSndOn"> 타이머 종료음</label>
-    <button id="keyBtn" class="kbrow"><span>단축키 보기</span><kbd>?</kbd></button>
-  </section>
-  <section>
-    <h3>API 연결</h3>
-    <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
-    <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
-    <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
-    <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
-    <label class="row"><span>UNSPLASH 키</span><input type="password" id="usKey" placeholder="Access Key · 패션 탭" autocomplete="off" spellcheck="false"></label>
-    <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
-    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>UNSPLASH <b id="stUS">미확인</b></div></div>
-    <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
-  </section>
-</div>
-<div id="keyPop" class="pop hidden" role="dialog" aria-label="단축키" style="--pw:250px">
-  <div class="hd">단축키<button class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
-  <section><dl>
+    <button id="keyBtn" class="kbrow" aria-expanded="false"><span>단축키 보기</span><kbd>?</kbd></button>
+    <div id="kbBox" class="hidden"><dl>
     <dt><kbd>Space</kbd><kbd>→</kbd></dt><dd>다음 컷</dd>
     <dt><kbd>←</kbd></dt><dd>이전 컷</dd>
     <dt><kbd>G</kbd></dt><dd>색 모드 바꾸기</dd>
@@ -779,11 +767,22 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <dt><kbd>S</kbd></dt><dd>지금 컷 기록 / 기록 취소</dd>
     <dt><kbd>C</kbd></dt><dd>연습 기록 열기 / 닫기</dd>
     <dt><kbd>L</kbd></dt><dd>크로키 링크 열기 / 닫기</dd>
-    <dt><kbd>?</kbd></dt><dd>단축키</dd>
+    <dt><kbd>?</kbd></dt><dd>단축키 보기</dd>
     <dt><kbd>T</kbd></dt><dd>타이머 재생 / 일시정지</dd>
     <dt><kbd>,</kbd><kbd>.</kbd></dt><dd>영상 한 프레임 앞 / 뒤</dd>
     <dt><kbd>Esc</kbd></dt><dd>미니창 닫기</dd>
-  </dl></section>
+  </dl></div>
+  </section>
+  <section data-pane="1" class="hidden">
+    <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
+    <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
+    <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
+    <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
+    <label class="row"><span>UNSPLASH 키</span><input type="password" id="usKey" placeholder="Access Key · 패션 탭" autocomplete="off" spellcheck="false"></label>
+    <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
+    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>UNSPLASH <b id="stUS">미확인</b></div></div>
+    <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
+  </section>
 </div>
 <div id="fltPop" class="pop hidden" role="dialog" aria-label="필터" style="--pw:380px">
   <div class="hd"><span id="fltTitle">필터</span><span id="fltSum"></span><button class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
@@ -1253,7 +1252,7 @@ document.querySelectorAll('#tmr [data-add]').forEach(b=>b.onclick=()=>{const a=+
 tRender();
 // ---------- popovers (settings / shortcuts / filter)
 const pop=$('#setPop'),sb=$('#setBtn');
-const POPS={set:{el:pop,btn:sb,align:'right'},key:{el:$('#keyPop'),btn:sb,align:'right'},flt:{el:$('#fltPop'),btn:null,align:'left'}};
+const POPS={set:{el:pop,btn:sb,align:'right'},flt:{el:$('#fltPop'),btn:null,align:'left'}};
 let curPop=null;
 function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl;$('#sbRating').value=c.sbRating;$('#usKey').value=c.usKey||''}
 function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim(),sbRating:$('#sbRating').value,usKey:$('#usKey').value.trim()}}
@@ -1262,14 +1261,19 @@ function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const
   el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
   el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
-  if(n==='set')fillPop(S);if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
+  if(n==='set'){fillPop(S);$('#kbBox').classList.add('hidden');$('#keyBtn').setAttribute('aria-expanded','false')}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
   clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
   if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}}
 function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;
   if(n==='flt'){P.el.classList.remove('in');P.el.classList.add('out');clearTimeout(P.tOut);P.tOut=setTimeout(()=>{P.el.classList.add('hidden');P.el.classList.remove('out')},130)}else P.el.classList.add('hidden');P.btn&&P.btn.classList.remove('on');curPop=null;
   if(n==='flt'){if(fltDirty){fltDirty=false;applyFilter()}else renderRow()}}
 sb.onclick=e=>{e.stopPropagation();curPop==='set'?closeP():openP('set')};
-$('#keyBtn').onclick=e=>{e.stopPropagation();curPop==='key'?closeP():openP('key')};
+// settings mini tabs + shortcut list sliding open under its button
+const setTab=n=>{document.querySelectorAll('#setTabs .fx-tab').forEach(b=>b.classList.toggle('on',b.dataset.pane==n));document.querySelectorAll('#setPop section[data-pane]').forEach(x=>x.classList.toggle('hidden',x.dataset.pane!=n))};
+$('#setTabs').onclick=e=>{const b=e.target.closest('.fx-tab');if(b)setTab(b.dataset.pane)};
+let kbT=0;const kbShow=on=>{const bx=$('#kbBox'),b=$('#keyBtn');clearTimeout(kbT);b.setAttribute('aria-expanded',on);
+  if(on){bx.classList.remove('hidden','out')}else if(!bx.classList.contains('hidden')){bx.classList.add('out');kbT=setTimeout(()=>{bx.classList.add('hidden');bx.classList.remove('out')},130)}};
+$('#keyBtn').onclick=e=>{e.stopPropagation();kbShow($('#keyBtn').getAttribute('aria-expanded')!=='true')};
 document.querySelectorAll('.pop .px').forEach(b=>b.onclick=closeP);
 document.addEventListener('pointerdown',e=>{if(!curPop)return;const P=POPS[curPop];
   if(!P.el.contains(e.target)&&!(P.btn&&P.btn.contains(e.target)))closeP()});
@@ -1787,7 +1791,7 @@ document.addEventListener('keydown',e=>{
   else if(k==='s'){toggleSave()}
   else if(k==='c'){calOpen?closeCal():openCal()}
   else if(k==='l'){lnkOpen?closeLnk():openLnk()}
-  else if(e.key==='?'){curPop==='key'?closeP():openP('key')}
+  else if(e.key==='?'){if(curPop==='set'&&$('#keyBtn').getAttribute('aria-expanded')==='true')closeP();else{if(curPop!=='set')openP('set');setTab(0);kbShow(true)}}
   else if(k==='t'){tState==='run'?tPause():tPlay();toast(tState==='run'?'타이머 재생':'타이머 일시정지')}
   else if((k===','||k==='.')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(k==='.'?1:-1)/24)}
 });
