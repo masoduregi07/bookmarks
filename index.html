@@ -340,6 +340,9 @@ button.ic:active{transform:none}
 .fv-ask input:focus{box-shadow:inset 0 -3px 0 var(--yel)}
 .fv-ask button{height:24px;min-height:0;padding:0 10px;font-size:12px;background:var(--ink);color:#fff;border:2px solid var(--ink);box-shadow:none}
 .fv-ask button:hover{background:#55524c}
+.fv-cf{align-items:center}.fv-cf span{font-size:12px;line-height:1;padding:0 8px 0 6px;white-space:nowrap}.fv-cf span small{color:var(--tx3);font-size:11px;margin-left:4px}
+.fv-cf button.dg{background:#c2546f;border-color:var(--ink)}.fv-cf button.dg:hover{background:#a8445c}
+.fv-cf button.no{background:#fff;color:var(--ink)}.fv-cf button.no:hover{background:#ebe9e2}
 @media (hover:none),(pointer:coarse){.fv-ask input,.fv-ask button{height:32px;font-size:14px}.fv-ask input{width:170px}}
 @media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 12px 0 9px}} /* finger-sized rows, same snug sides */
 /* stage heart */
@@ -905,6 +908,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <div class="fv-empty hidden" id="favEmpty">아직 담은 이미지가 없음<br><small>화면 왼쪽 아래 ♥ 를 누르거나 B 키 · 이미지 올리기로 추가</small></div>
   </div>
   <div class="fv-menu hidden" id="favMenu"></div>
+  <div class="fv-ask fv-cf hidden" id="favCf"><span id="favCfT"></span><button class="dg" id="favCfOk">삭제</button><button class="no" id="favCfNo">취소</button></div>
   <form class="fv-ask hidden" id="favAsk" autocomplete="off"><input id="favAskIn" maxlength="40" spellcheck="false"><button id="favAskOk" type="submit">만들기</button></form>
 </aside>
 <div id="peek"><button id="uiShow" aria-label="UI 표시" data-tip="UI 표시" data-key="H"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
@@ -1820,7 +1824,7 @@ $('#favFolders').onclick=async e=>{const b=e.target.closest('button');if(!b)retu
     const f={id:favNewId(),name:n,ord:FAV.folders.length};await favPut('folders',f);FAV.folders.push(f);FAV.cur=f.id;favRender();return}
   FAV.cur=b.dataset.f;favRender()};
 $('#favRen').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f)return;const n=await askName($('#favRen'),{value:f.name,ph:'폴더 이름',ok:'바꾸기'});if(!n)return;f.name=n;await favPut('folders',f);favRender()};
-$('#favDelF').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f||!confirm(`'${f.name}' 폴더를 지울까요? (이미지는 전체에 남음)`))return;
+$('#favDelF').onclick=async()=>{const f=FAV.folders.find(x=>x.id===FAV.cur);if(!f||!await askYes($('#favDelF'),`'${esc(f.name)}' 폴더 삭제<small>이미지는 전체에 남음</small>`))return;
   await favDel('folders',f.id);FAV.folders=FAV.folders.filter(x=>x!==f);for(const x of FAV.items)if(x.folders.includes(f.id)){x.folders=x.folders.filter(y=>y!==f.id);await favPut('items',x)}FAV.cur='';favRender()};
 $('#favSort').onchange=e=>{FAV.sort=e.target.value;favRender()};
 // open a saved image on the main stage (inserted right after the current cut, so 이전 comes back)
@@ -1840,7 +1844,13 @@ function askName(anchor,{value='',ph='새 폴더 이름',ok='만들기'}={}){if(
   return new Promise(res=>{askDone=v=>{askDone=null;f.classList.add('hidden');res(v)}})}
 $('#favAsk').onsubmit=e=>{e.preventDefault();const v=$('#favAskIn').value.trim().slice(0,40);if(askDone)askDone(v||null)};
 $('#favAskIn').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(askDone)askDone(null)}});
-document.addEventListener('pointerdown',e=>{if(askDone&&!e.target.closest('#favAsk'))askDone(null)},true);
+document.addEventListener('pointerdown',e=>{if(askDone&&!e.target.closest('#favAsk,#favCf'))askDone(null)},true);
+function askYes(anchor,html,ok='삭제'){if(askDone)askDone(null);const f=$('#favCf');$('#favCfT').innerHTML=html;$('#favCfOk').textContent=ok;f.classList.remove('hidden');
+  const r=anchor.getBoundingClientRect();f.style.left=Math.max(8,Math.min(r.left,innerWidth-f.offsetWidth-8))+'px';f.style.top=Math.min(r.bottom+4,innerHeight-f.offsetHeight-8)+'px';
+  setTimeout(()=>$('#favCfNo').focus(),30);
+  return new Promise(res=>{askDone=v=>{askDone=null;f.classList.add('hidden');res(!!v)}})}
+$('#favCfOk').onclick=()=>{if(askDone)askDone(true)};$('#favCfNo').onclick=()=>{if(askDone)askDone(null)};
+$('#favCf').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(askDone)askDone(null)}});
 const fm=$('#favMenu');
 function favMenu(x,anchor){const r=anchor.getBoundingClientRect();
   fm.innerHTML=(FAV.folders.length?FAV.folders.map(f=>`<label><input type="checkbox" data-f="${f.id}" ${x.folders.includes(f.id)?'checked':''}> ${esc(f.name)}</label>`).join(''):'<small>폴더가 없음</small>')+'<hr><div class="nf" data-new>+ 새 폴더</div>';
