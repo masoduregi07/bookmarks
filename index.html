@@ -176,7 +176,7 @@ footer{column-gap:0!important;justify-content:center}
 footer .dv{flex:1 1 0;min-width:16px;max-width:150px;align-self:stretch;display:flex;justify-content:center}
 footer .dv::before{content:"";border-left:2px dotted var(--tx3);margin:2px 0}
 /* PC: groups packed left with fixed gaps; only 타이머 sits at the right end */
-@media (hover:hover) and (pointer:fine){
+@media not all and (pointer:coarse){
   footer .dv{flex:0 0 28px;max-width:28px}
   .top footer{justify-content:flex-start!important}
   .top footer>#gGrid+.dv{flex:1 1 28px;max-width:none}
