@@ -942,7 +942,7 @@ const M=u=>S.mediaProxy&&S.proxy&&!/^(data|blob):/.test(u)?P(u):u;
 new ResizeObserver(()=>placeToasts()).observe($('#stTop'));
 function placeToasts(){const box=$('#toasts'),top=document.querySelector('.top'),inf=$('#info'),st=$('#stage');
   const zen=document.body.classList.contains('zen');let x,y;
-  if(!zen&&inf&&inf.offsetParent){const r=$('#stTop').getBoundingClientRect();x=r.left;y=r.bottom+6}
+  const stt=$('#stTop');if(!zen&&stt&&stt.getBoundingClientRect().height){const r=stt.getBoundingClientRect();x=r.left;y=r.bottom+6} // always below 필터 / 제목
   else{const r=(zen?st:top).getBoundingClientRect();x=r.left+(zen?10:0);y=zen?r.top+10:r.bottom+18}
   box.style.left=x+'px';box.style.top=y+'px';box.style.maxWidth=(innerWidth-x-12)+'px'}
 function toast(t,kind=''){placeToasts();const el=document.createElement('div');el.className='toast '+kind;el.textContent=t;
@@ -1803,12 +1803,12 @@ async function favToggle(){let it=curItem();if(!it||!msg.classList.contains('hid
     toast(FAV.cur?`보관함 · ${(FAV.folders.find(f=>f.id===FAV.cur)||{}).name}에 담음`:'보관함에 담음','ok')}
   favSync();favCount();if(calOpen&&calView==='fav')favRender();else if(calOpen)renderCal()}
 async function favRemove(x){await favDel('items',x.id);if(x.blob){await favDel('blobs',x.id);if(FAV.urls[x.id]){URL.revokeObjectURL(FAV.urls[x.id]);delete FAV.urls[x.id]}}
-  FAV.items=FAV.items.filter(y=>y!==x)}
+  FAV.items=FAV.items.filter(y=>y!==x);if(calOpen&&calView==='cal')renderCal()}
 $('#favBtn').onclick=e=>{e.stopPropagation();favToggle()};
 // panel view: 캘린더 | 보관함
 let calView='cal';
 function calShow(v){calView=v;document.querySelectorAll('#calTabs button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  document.querySelector('#calP .cbody').classList.toggle('hidden',v!=='cal');$('#favBody').classList.toggle('hidden',v!=='fav');if(v==='fav')favRender()}
+  document.querySelector('#calP .cbody').classList.toggle('hidden',v!=='cal');$('#favBody').classList.toggle('hidden',v!=='fav');if(v==='fav')favRender();else renderCal()} // calendar hearts follow 보관함 changes
 $('#calTabs').onclick=e=>{const b=e.target.closest('button');if(b)calShow(b.dataset.v)};
 function favRender(){favCount();const fs=FAV.folders,cnt=id=>FAV.items.filter(x=>x.folders.includes(id)).length;
   if(FAV.cur&&!fs.some(f=>f.id===FAV.cur))FAV.cur='';
@@ -1831,7 +1831,7 @@ $('#favSort').onchange=e=>{FAV.sort=e.target.value;favRender()};
 function favShowItem(x){favSrc(x).then(u=>{const t=S.tab,o={kind:x.kind==='vid'?'vid':'img',url:x.blob?u:(x.kind==='3d'?x.url:x.url),thumb:x.thumb,title:x.title||(x.blob?'업로드 이미지':''),link:x.link,src:x.blob?'업로드':x.src,favId:x.blob?x.id:undefined};
   S.hist[t].splice(S.pos[t]+1,0,o);S.pos[t]++;show();if(innerWidth<900||calFull)closeCal()})}
 $('#favGrid').onclick=async e=>{const el=e.target.closest('.it');if(!el)return;const x=FAV.items.find(y=>y.id===el.dataset.id);if(!x)return;
-  if(e.target.closest('[data-rm]')){e.stopPropagation();await favRemove(x);favSync();favRender();toast('보관함에서 뺌');return}
+  if(e.target.closest('[data-rm]')){e.stopPropagation();await favRemove(x);favSync();favRender();renderCal();toast('보관함에서 뺌');return}
   if(e.target.closest('[data-fm]')){e.stopPropagation();favMenu(x,e.target.closest('[data-fm]'));return}
   favShowItem(x)};
 // folder picker for one image
