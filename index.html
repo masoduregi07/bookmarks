@@ -247,6 +247,20 @@ footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:c
 #kbBox kbd{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border:2px solid var(--ink);background:#fff;box-shadow:1px 1px 0 var(--shd);font:inherit;font-size:11px}
 #kbBox dd{color:var(--tx2)}
 footer input[type=range]{width:60px}
+/* 선 불투명도: tick-marked slider with a % readout (fill follows the thumb via --p) */
+.opw{display:inline-flex;align-items:center;gap:6px;flex:none}
+#opPct{font-size:11px;min-width:30px;color:var(--ink)}
+#gGrid #op{-webkit-appearance:none;appearance:none;width:96px!important;height:22px!important;min-height:0;border:none;cursor:pointer;
+  --t:linear-gradient(var(--ink),var(--ink));
+  background:
+    var(--t) no-repeat 0 4px/2px 4px, var(--t) no-repeat 25% 4px/2px 4px, var(--t) no-repeat 50% 4px/2px 4px, var(--t) no-repeat 75% 4px/2px 4px, var(--t) no-repeat 100% 4px/2px 4px,
+    var(--t) no-repeat 0 11px/calc(6px + (100% - 12px) * var(--p,.53)) 4px,
+    var(--t) no-repeat 0 10px/100% 1px, var(--t) no-repeat 0 15px/100% 1px, var(--t) no-repeat 0 10px/1px 6px, var(--t) no-repeat 100% 10px/1px 6px,
+    linear-gradient(#e4e2dc,#e4e2dc) no-repeat 0 11px/100% 4px}
+#gGrid #op::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:20px;background:var(--panel);border:2px solid var(--ink);box-shadow:1px 1px 0 var(--shd);margin-top:0}
+#gGrid #op::-moz-range-thumb{width:8px;height:16px;background:var(--panel);border:2px solid var(--ink);border-radius:0;box-shadow:1px 1px 0 var(--shd)}
+#gGrid #op::-moz-range-track{background:none}
+@media (max-width:560px){#gGrid #op{width:52px!important}#opPct{display:none}} /* phones: keep 분할 on one row */
 footer #tmr .seg:not(.ic) button{padding:4px 7px}
 footer .grp>label{margin-right:0}
 /* header icon buttons (2안) */
@@ -513,7 +527,6 @@ header.tov .tsc{display:flex}
   #gGrid{column-gap:6px}
   #gGrid #grid{width:auto;max-width:80px;padding-right:22px}
   #gGrid #lc button{padding-left:6px;padding-right:6px;min-width:0}
-  #gGrid #op{width:40px}
   footer .dv{display:none!important}
   #tmr .mu{display:none}
   #tmr{column-gap:6px}
@@ -567,7 +580,6 @@ header.tov .tsc{display:flex}
   #lcSw i{width:10px;height:10px;border:2px solid var(--ink);background:var(--lcv,#fff)}
   #gGrid #grid{flex:1 1 64px;min-width:64px;width:auto;max-width:100px; /* never wider than its longest label (사용자 N×M) */ white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #gGrid #gridOpts{flex:1 1 auto}
-  #gGrid #op{width:48px}
   #flip .ft{display:none}#flip{padding-left:6px;padding-right:6px}
   #tmr .mu{display:none}#tmr .tadd button{padding-left:7px;padding-right:7px;min-width:0}
   #tmr .seg.ic{order:2}#tmr .tadd{order:3}#tmr #tIn{width:60px}
@@ -765,7 +777,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
       <button data-v="#000000">검</button>
       <button data-v="#ff3b30">빨</button>
     </div>
-    <input id="op" type="range" min="15" max="100" value="60" data-tip="선 불투명도">
+    <span class="opw"><input id="op" type="range" min="15" max="100" value="60" data-tip="선 불투명도" aria-label="선 불투명도"><span id="opPct">60%</span></span>
     </span>
   </div>
   <i class="dv"></i>
@@ -1227,7 +1239,7 @@ function applyView(){
   document.querySelectorAll('#lc button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.lc));
   $('#flip').classList.toggle('on',S.flip);
   $('#grid').value=S.grid[t];$('#gridOn').checked=S.gridOn[t];$('#gridOpts').classList.toggle('off',!S.gridOn[t]);$('#customBox').classList.toggle('hidden',S.grid[t]!=='custom');
-  $('#op').value=S.op;renderRow();
+  $('#op').value=S.op;opPaint();renderRow();
   $('#prev').disabled=S.pos[t]<=0;if(typeof syncSaveBtn==='function')try{syncSaveBtn()}catch(e){}
   drawGrid();
 }
@@ -1291,7 +1303,8 @@ document.querySelectorAll('#lc button').forEach(b=>b.onclick=()=>{S.lc=b.dataset
 $('#grid').onchange=e=>{S.grid[S.tab]=e.target.value;save();applyView()};
 $('#gridOn').onchange=e=>{S.gridOn[S.tab]=e.target.checked;save();applyView()};
 $('#gc').oninput=$('#gr').oninput=drawGrid;
-$('#op').oninput=e=>{S.op=+e.target.value;save();drawGrid()};
+function opPaint(){const o=$('#op');o.style.setProperty('--p',(o.value-o.min)/(o.max-o.min));$('#opPct').textContent=o.value+'%'}
+$('#op').oninput=e=>{S.op=+e.target.value;opPaint();save();drawGrid()};
 $('#flip').onclick=()=>{S.flip=!S.flip;applyView()};
 const setTh=()=>{const t=document.querySelector('.top');if(t&&!document.body.classList.contains('zen'))document.documentElement.style.setProperty('--th',(t.offsetHeight+10)+'px')};
 function setZen(on){if(on){setTh();hideTip();if(curPop)closeP()}document.body.classList.toggle('zen',on);document.body.classList.remove('peek');
