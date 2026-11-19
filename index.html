@@ -324,11 +324,12 @@ button.ic:active{transform:none}
 .fv-gr .it .x svg{width:13px;height:12px}
 @media (hover:hover){.fv-gr .it .f{opacity:0}.fv-gr .it:hover .f{opacity:1}}
 .fv-empty{color:var(--tx3);text-align:center;padding:40px 10px;line-height:1.9}.fv-empty.hidden{display:none}
-.fv-menu{position:fixed;z-index:60;min-width:160px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:6px;display:grid;gap:2px;font-size:12px;animation:tbdIn .12s steps(3,end)}
+.fv-menu{position:fixed;z-index:60;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:2px;display:grid;gap:0;font-size:12px;line-height:1;animation:tbdIn .12s steps(3,end)}
 .fv-menu.hidden{display:none}
-.fv-menu label{display:flex;align-items:center;gap:6px;height:26px;padding:0 6px;cursor:pointer}.fv-menu label:hover{background:#ebe9e2}
-.fv-menu .nf{border-top:2px dotted var(--soft);margin-top:4px;padding:6px 6px 2px;color:var(--tx2);cursor:pointer}
-.fv-menu small{color:var(--tx3);padding:2px 6px}
+.fv-menu label{display:flex;align-items:center;gap:6px;height:22px;padding:0 8px;cursor:pointer;color:var(--ink);white-space:nowrap}.fv-menu label:hover{background:#ebe9e2}
+.fv-menu .nf{border-top:2px dotted var(--soft);margin-top:2px;height:22px;display:flex;align-items:center;padding:0 8px;color:var(--tx2);cursor:pointer}
+.fv-menu small{color:var(--tx3);height:22px;display:flex;align-items:center;padding:0 8px}
+@media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 10px}} /* finger-sized rows, same snug sides */
 /* stage heart */
 svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:#e07a95}
 #favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
