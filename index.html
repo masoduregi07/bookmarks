@@ -1395,7 +1395,7 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
     else f[k]=[...f[k],{id,name:g.name}]}
   else if('pclr' in o.dataset)f.person=null;
   else if(o.dataset.fkind){const k=o.dataset.fkind;if(f.kinds.includes(k)){f.kinds=f.kinds.filter(x=>x!==k);f.kindsEx=[...f.kindsEx,k]}else if(f.kindsEx.includes(k))f.kindsEx=f.kindsEx.filter(x=>x!==k);else f.kinds=[...f.kinds,k]}
-  else if(o.dataset.kind){const k=o.dataset.kind;if(f.kinds.includes(k)){f.kinds=f.kinds.filter(x=>x!==k);f.kindsEx=[...f.kindsEx,k]}else if(f.kindsEx.includes(k))f.kindsEx=f.kindsEx.filter(x=>x!==k);else if(f.kinds.length<3)f.kinds=[...f.kinds,k];else{toast('포함은 3개까지 · 두 번 눌러 제외로 쓸 수 있음','err');return}}
+  else if(o.dataset.kind){const k=o.dataset.kind;if(f.kinds.includes(k)){f.kinds=f.kinds.filter(x=>x!==k);f.kindsEx=[...f.kindsEx,k]}else if(f.kindsEx.includes(k))f.kindsEx=f.kindsEx.filter(x=>x!==k);else if(f.kinds.length<3)f.kinds=[...f.kinds,k];else{return}}
   else if(o.dataset.dpart){const k=o.dataset.dpart;if(f.parts.includes(k)){f.parts=f.parts.filter(x=>x!==k);f.partsEx=[...f.partsEx,k]}else if(f.partsEx.includes(k))f.partsEx=f.partsEx.filter(x=>x!==k);else f.parts=[...f.parts,k]}
   else if(o.dataset.dpose!==undefined)f.pose=o.dataset.dpose;
   else if(o.dataset.drange)f.range=o.dataset.drange;
