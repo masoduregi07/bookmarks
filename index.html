@@ -162,6 +162,24 @@ body.t3d .d3only{display:flex!important}
 #setPop section{padding-top:12px}
 #setPop .kbrow{width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:6px;padding:4px 6px 4px 10px}
 #setPop .kbrow kbd{border:2px solid var(--ink);background:#fff;padding:0 5px;font:inherit;font-size:11px;line-height:14px}
+/* shortcut editor (설정 › 단축키) */
+#kcSec{font-size:12px}
+#kcList .kr{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px 8px;padding:3px 0;border-bottom:1px dotted var(--soft)}
+#kcList .kr:last-child{border-bottom:none}
+#kcList .kr>span{color:var(--tx2)}
+#kcList .ks{display:flex;gap:3px;align-items:center}
+#kcList kbd{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border:2px solid var(--ink);background:#fff;box-shadow:1px 1px 0 var(--shd);font:inherit;font-size:11px;cursor:pointer;user-select:none;-webkit-user-select:none}
+#kcList kbd:hover{background:var(--yel)}
+#kcList kbd.add{border-style:dashed;border-color:var(--soft);color:var(--tx3);box-shadow:none;background:none}
+#kcList kbd.add:hover{border-color:var(--ink);color:var(--ink)}
+#kcList kbd.rec{background:var(--yel);cursor:default}
+#kcList .warn{grid-column:1/-1;font-size:11px;background:#fff;border:2px solid var(--ink);padding:4px 4px 4px 7px;display:flex;gap:8px;align-items:center;justify-content:space-between}
+#kcList .warn b{font-weight:400;background:var(--yel);padding:0 3px}
+#kcList .warn span:last-child{display:flex;gap:4px;flex:none}
+#kcList .warn button{padding:1px 7px;font-size:11px}
+#kcSec .kcft{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font-size:11px;color:var(--tx3)}
+#kcSec .kcft button{font-size:11px;padding:3px 8px;flex:none}
+@media (max-width:560px){#setPop #setTabs .kbtab{display:none}} /* phones: no keyboard. iPad keeps it (external keyboard) */
 #kbBox{margin-top:6px;border:2px dotted var(--soft);padding:10px 10px 10px 6px;animation:tbdIn .12s steps(3,end)}
 #kbBox.hidden{display:none}
 #keyBtn kbd{transition:none}#keyBtn[aria-expanded="true"]{background:var(--ink);color:#fff}#keyBtn[aria-expanded="true"] kbd{color:var(--ink)}
@@ -876,7 +894,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 
 <div id="setPop" class="pop hidden" role="dialog" aria-label="설정">
   <div class="hd">설정<button id="setX" class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
-  <div class="fx-tabs" id="setTabs"><button class="fx-tab on" data-pane="1">API 연결</button><button class="fx-tab" data-pane="0">화면</button></div>
+  <div class="fx-tabs" id="setTabs"><button class="fx-tab on" data-pane="1">API 연결</button><button class="fx-tab" data-pane="0">화면</button><button class="fx-tab kbtab" data-pane="2">단축키</button></div>
   <section data-pane="1">
     <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
     <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
@@ -890,24 +908,9 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <section data-pane="0" class="hidden">
     <label class="chk"><input type="checkbox" id="sfxOn"> 버튼 효과음</label>
     <label class="chk"><input type="checkbox" id="tSndOn"> 타이머 종료음</label>
-    <button id="keyBtn" class="kbrow" aria-expanded="false"><span>단축키 보기</span><kbd>?</kbd></button>
-    <div id="kbBox" class="hidden"><dl>
-    <dt><kbd>Space</kbd><kbd>→</kbd></dt><dd>다음 컷</dd>
-    <dt><kbd>←</kbd></dt><dd>이전 컷</dd>
-    <dt><kbd>G</kbd></dt><dd>색 모드 바꾸기</dd>
-    <dt><kbd>D</kbd></dt><dd>분할 켜기 / 끄기</dd>
-    <dt><kbd>F</kbd></dt><dd>좌우반전</dd>
-    <dt><kbd>H</kbd></dt><dd>UI 숨김</dd>
-    <dt><kbd>S</kbd></dt><dd>지금 컷 기록 / 기록 취소</dd>
-    <dt><kbd>B</kbd></dt><dd>보관함에 담기 / 빼기</dd>
-    <dt><kbd>C</kbd></dt><dd>연습 기록 열기 / 닫기</dd>
-    <dt><kbd>L</kbd></dt><dd>크로키 링크 열기 / 닫기</dd>
-    <dt><kbd>?</kbd></dt><dd>단축키 보기</dd>
-    <dt><kbd>T</kbd></dt><dd>타이머 재생 / 일시정지</dd>
-    <dt><kbd>,</kbd><kbd>.</kbd></dt><dd>영상 한 프레임 앞 / 뒤</dd>
-    <dt><kbd>Esc</kbd></dt><dd>미니창 닫기</dd>
-  </dl></div>
   </section>
+  <section data-pane="2" class="hidden" id="kcSec"><div id="kcList"></div>
+    <div class="kcft"><span>칸을 누르고 새 키 입력 · ⌫ 지우기</span><button id="kcReset">모두 기본값</button></div></section>
 </div>
 <div id="fltPop" class="pop hidden" role="dialog" aria-label="필터" style="--pw:380px">
   <div class="hd"><span id="fltTitle">필터</span><span id="fltSum"></span><button class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
@@ -1415,7 +1418,7 @@ function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const
   el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
   el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
-  if(n==='set'){fillPop(S);setTab(1);$('#kbBox').classList.add('hidden');$('#keyBtn').setAttribute('aria-expanded','false')}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
+  if(n==='set'){fillPop(S);setTab(1);kcStop()}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
   clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
   if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}}
 function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;
@@ -1425,9 +1428,46 @@ sb.onclick=e=>{e.stopPropagation();curPop==='set'?closeP():openP('set')};
 // settings mini tabs + shortcut list sliding open under its button
 const setTab=n=>{document.querySelectorAll('#setTabs .fx-tab').forEach(b=>b.classList.toggle('on',b.dataset.pane==n));document.querySelectorAll('#setPop section[data-pane]').forEach(x=>x.classList.toggle('hidden',x.dataset.pane!=n))};
 $('#setTabs').onclick=e=>{const b=e.target.closest('.fx-tab');if(b)setTab(b.dataset.pane)};
-let kbT=0;const kbShow=on=>{const bx=$('#kbBox'),b=$('#keyBtn');clearTimeout(kbT);b.setAttribute('aria-expanded',on);
-  if(on){bx.classList.remove('hidden','out')}else if(!bx.classList.contains('hidden')){bx.classList.add('out');kbT=setTimeout(()=>{bx.classList.add('hidden');bx.classList.remove('out')},130)}};
-$('#keyBtn').onclick=e=>{e.stopPropagation();kbShow($('#keyBtn').getAttribute('aria-expanded')!=='true')};
+// ---- custom shortcuts ----
+const KACT=[['next','다음 컷',[' ','arrowright']],['prev','이전 컷',['arrowleft']],['save','지금 컷 기록 / 취소',['s']],['fav','보관함에 담기 / 빼기',['b']],
+  ['tone','색 모드 바꾸기',['g']],['grid','분할 켜기 / 끄기',['d']],['flip','좌우반전',['f']],['zen','UI 숨김',['h']],
+  ['cal','연습 기록 열기 / 닫기',['c']],['lnk','크로키 링크 열기 / 닫기',['l']],['timer','타이머 재생 / 일시정지',['t']],
+  ['fprev','영상 한 프레임 뒤로',[',']],['fnext','영상 한 프레임 앞으로',['.']],['keys','단축키 설정 열기',['?']]];
+const KDEF=Object.fromEntries(KACT.map(a=>[a[0],a[2]]));
+let KEYS={...KDEF};try{const o=JSON.parse(localStorage.getItem('cutref-keys')||'{}');for(const k in o)if(k in KDEF&&Array.isArray(o[k]))KEYS[k]=o[k].slice(0,2)}catch(_){}
+const saveKeys=()=>{const o={};for(const k in KEYS)if(KEYS[k].join()!==KDEF[k].join())o[k]=KEYS[k];try{localStorage.setItem('cutref-keys',JSON.stringify(o))}catch(_){}};
+// key from an event; Korean IME gives jamo, so fall back to the physical letter/digit
+const keyOf=e=>{let k=e.key;if(!k)return'';if(k.length===1&&!/[\x20-\x7e]/.test(k)&&/^(Key[A-Z]|Digit\d)$/.test(e.code))k=e.code.slice(-1);return k.length===1?k.toLowerCase():k.toLowerCase()};
+const keyName=k=>({' ':'Space',arrowright:'→',arrowleft:'←',arrowup:'↑',arrowdown:'↓',backspace:'⌫',delete:'Del',pageup:'PgUp',pagedown:'PgDn',home:'Home',end:'End'})[k]||(k.length===1?k.toUpperCase():k[0].toUpperCase()+k.slice(1));
+const keyAct=k=>{for(const a in KEYS)if(KEYS[a].includes(k))return a;return null};
+const KHINT={saveCut:'save',flip:'flip',tPlay:'timer',tPause:'timer',favBtn:'fav',uiShow:'zen'};
+const syncKeyHints=()=>{for(const id in KHINT){const el=document.getElementById(id);if(!el)continue;const k=KEYS[KHINT[id]][0];if(k)el.dataset.key=keyName(k);else delete el.dataset.key}};
+let kcRec=null,kcWarn=null; // kcRec={a,i}: recording slot i of action a; kcWarn={a,i,k,o}: key k already used by o
+const kcStop=()=>{kcRec=null;kcWarn=null;renderKeys()};
+function renderKeys(){const L=$('#kcList');if(!L)return;L.innerHTML=KACT.map(([a,lb])=>{const ks=KEYS[a];let h='';
+  for(let i=0;i<2;i++){if(kcRec&&kcRec.a===a&&kcRec.i===i)h+=`<kbd class="rec">키를 누르세요…</kbd>`;
+    else if(ks[i]!==undefined)h+=`<kbd data-a="${a}" data-i="${i}" tabindex="0" title="눌러서 바꾸기">${esc(keyName(ks[i]))}</kbd>`;
+    else if(i===ks.length&&!(kcRec&&kcRec.a===a))h+=`<kbd class="add" data-a="${a}" data-i="${i}" tabindex="0" title="키 추가">+</kbd>`}
+  const w=kcWarn&&kcWarn.a===a?`<div class="warn"><span><b>${esc(keyName(kcWarn.k))}</b>는 ‘${esc(KACT.find(x=>x[0]===kcWarn.o)[1])}’에 쓰는 중</span><span><button data-kc="swap">바꾸기</button><button data-kc="no">취소</button></span></div>`:'';
+  return `<div class="kr"><span>${lb}</span><div class="ks">${h}</div>${w}</div>`}).join('');syncKeyHints()}
+const kcSet=(a,i,k)=>{const ks=KEYS[a].slice();ks[i]=k;KEYS[a]=[...new Set(ks.filter(x=>x!==undefined))];saveKeys()};
+$('#kcList').addEventListener('click',e=>{const kb=e.target.closest('kbd[data-a]'),b=e.target.closest('button[data-kc]');
+  if(b){if(b.dataset.kc==='swap'){const w=kcWarn,old=KEYS[w.a][w.i]; // true swap: the other action takes this slot's old key
+    KEYS[w.o]=KEYS[w.o].map(x=>x===w.k?old:x).filter(x=>x!==undefined&&!KEYS[w.a].filter((_,j)=>j!==w.i).includes(x));kcSet(w.a,w.i,w.k);toast(`${keyName(w.k)} → ${KACT.find(x=>x[0]===w.a)[1]}`,'ok')}kcStop();return}
+  if(kb){kcWarn=null;kcRec={a:kb.dataset.a,i:+kb.dataset.i};renderKeys()}});
+$('#kcList').addEventListener('keydown',e=>{if(!kcRec&&(e.key==='Enter'||e.key===' ')&&e.target.matches('kbd[data-a]')){e.preventDefault();e.stopPropagation();e.target.click()}});
+$('#kcReset').onclick=()=>{KEYS={...KDEF};saveKeys();kcStop();toast('단축키를 기본값으로 되돌림','ok')};
+// while recording, the next key is captured before any other handler
+window.addEventListener('keydown',e=>{if(!kcRec)return;e.preventDefault();e.stopImmediatePropagation();
+  const k=keyOf(e);if(['shift','control','alt','meta','capslock','process','unidentified','dead'].includes(k))return;
+  if(k==='escape'){kcStop();return}
+  const {a,i}=kcRec;
+  if(k==='delete'||k==='backspace'){if(KEYS[a][i]!==undefined){KEYS[a]=KEYS[a].filter((_,j)=>j!==i);saveKeys()}kcStop();return}
+  if(e.ctrlKey||e.metaKey||e.altKey||['tab','enter'].includes(k)||/^f\d+$/.test(k)){toast('쓸 수 없는 키','err');return}
+  const o=keyAct(k);kcRec=null;
+  if(o&&o!==a){kcWarn={a,i,k,o};renderKeys();return}
+  if(o!==a||KEYS[a][i]!==k)kcSet(a,i,k);kcStop()},true);
+renderKeys();
 document.querySelectorAll('.pop .px').forEach(b=>b.onclick=closeP);
 document.addEventListener('pointerdown',e=>{if(!curPop)return;const P=POPS[curPop];
   if(!P.el.contains(e.target)&&!(P.btn&&P.btn.contains(e.target)))closeP()});
@@ -2080,25 +2120,26 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&calOpen){closeCal();return}
   if(e.key==='Escape'&&lnkOpen){closeLnk();return}
   if(e.key==='Escape'&&document.body.classList.contains('zen')){setZen(false);return}
-  if(e.target.matches('input,select,textarea,[contenteditable]'))return;
+  if(e.target.matches&&e.target.matches('input,select,textarea,[contenteditable]'))return;
   if(e.ctrlKey||e.metaKey||e.altKey)return; // leave Ctrl/Cmd/Alt combos (copy, paste, find, reload…) to the browser
-  const k=e.key.toLowerCase();
+  const k=keyOf(e),act=keyAct(k);
   if(/^(arrow|\s)/.test(k)&&document.activeElement&&document.activeElement.matches('button'))document.activeElement.blur(); // a clicked tab/button keeps focus: shortcut keys shouldn't draw its focus ring
-  if(k===' '||k==='arrowright'){e.preventDefault();next()}
-  else if(k==='arrowleft')prev();
-  else if(k==='g'&&S.tab==='3d'){{const i=D3LIGHTS.findIndex(x=>x[0]===S.d3light);S.d3light=D3LIGHTS[(i+1)%D3LIGHTS.length][0];d3Set();toast('라이팅: '+nm(D3LIGHTS,S.d3light))}}
-  else if(k==='d'&&S.tab==='3d'){S.d3poly=!S.d3poly;d3Set();toast('폴리곤 '+(S.d3poly?'켜짐':'꺼짐'))}
-  else if(k==='g'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백'})[S.tone])}
-  else if(k==='d'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
-  else if(k==='f'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
-  else if(k==='h')setZen(!document.body.classList.contains('zen'));
-  else if(k==='s'){toggleSave()}
-  else if(k==='b'){favToggle()}
-  else if(k==='c'){calOpen?closeCal():openCal()}
-  else if(k==='l'){lnkOpen?closeLnk():openLnk()}
-  else if(e.key==='?'){if(curPop==='set'&&$('#keyBtn').getAttribute('aria-expanded')==='true')closeP();else{if(curPop!=='set')openP('set');setTab(0);kbShow(true)}}
-  else if(k==='t'){tState==='run'?tPause():tPlay();toast(tState==='run'?'타이머 재생':'타이머 일시정지')}
-  else if((k===','||k==='.')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(k==='.'?1:-1)/24)}
+  if(!act)return;
+  if(act==='next'){e.preventDefault();next()}
+  else if(act==='prev'){e.preventDefault();prev()}
+  else if(act==='tone'&&S.tab==='3d'){{const i=D3LIGHTS.findIndex(x=>x[0]===S.d3light);S.d3light=D3LIGHTS[(i+1)%D3LIGHTS.length][0];d3Set();toast('라이팅: '+nm(D3LIGHTS,S.d3light))}}
+  else if(act==='grid'&&S.tab==='3d'){S.d3poly=!S.d3poly;d3Set();toast('폴리곤 '+(S.d3poly?'켜짐':'꺼짐'))}
+  else if(act==='tone'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백'})[S.tone])}
+  else if(act==='grid'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
+  else if(act==='flip'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
+  else if(act==='zen')setZen(!document.body.classList.contains('zen'));
+  else if(act==='save'){toggleSave()}
+  else if(act==='fav'){favToggle()}
+  else if(act==='cal'){calOpen?closeCal():openCal()}
+  else if(act==='lnk'){lnkOpen?closeLnk():openLnk()}
+  else if(act==='keys'){if(curPop==='set'&&!$('#kcSec').classList.contains('hidden'))closeP();else{if(curPop!=='set')openP('set');setTab(2)}}
+  else if(act==='timer'){tState==='run'?tPause():tPlay();toast(tState==='run'?'타이머 재생':'타이머 일시정지')}
+  else if((act==='fprev'||act==='fnext')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(act==='fnext'?1:-1)/24)}
 });
 
 applyView();next();setTimeout(()=>fill(S.tab==='film'?'anim':'film'),1500);
