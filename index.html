@@ -186,6 +186,13 @@ body.zen.peek #uiShow{opacity:1;transform:none;pointer-events:auto}
 body.zen #stTop,body.zen #srcLink{display:none}
 
 .top header .tabs button:not(.on){background:var(--stage)}
+/* tabs, E2: only the chosen tab is a box; the rest are bare labels split by short gray bars */
+.top header .tabs{gap:0!important}
+.top header .tabs button:not(.on):not(.tab-ghost):not(.dragging){border-color:transparent;background:none!important;clip-path:none;padding:5px 10px 6px;position:relative}
+.top header .tabs button:not(.on):not(.tab-ghost):hover{color:var(--ink);background:none!important}
+.top header .tabs button.on{padding:7px 13px 8px 12px}
+.top header .tabs button:not(.on)+button:not(.on)::before{content:"";position:absolute;left:-1px;top:50%;width:2px;height:10px;margin-top:-5px;background:var(--soft);pointer-events:none}
+.top header .tabs button.holding{background:var(--yel)!important}
 .top footer{background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
 /* toolbar balance */
 footer{column-gap:0!important;justify-content:center}
@@ -425,7 +432,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 }
 @media (max-width:560px){
   .top header .tabs button .tl{display:none}
-  .top header .tabs button{padding-left:12px!important;padding-right:12px!important}
+  html .top header .tabs button{padding-left:6px!important;padding-right:6px!important}html .top header .tabs button.on{padding-left:8px!important;padding-right:8px!important} /* phones: icon tabs, tight */
   #fltPop,#setPop,#keyPop{left:8px!important;right:8px}
 }
 @media (max-width:760px){
@@ -507,7 +514,6 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 }
 /* narrow / iPad portrait: keep all tabs + header icons on one line */
 @media (max-width:900px){
-  .top header .tabs{gap:3px}
   .top header .tabs button,.top header .tabs button.on{padding-left:9px!important;padding-right:9px!important}
   .tabs .wip{display:none}
   .top header .ibar button.ic{width:34px}
