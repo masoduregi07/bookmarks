@@ -174,10 +174,12 @@ body.zen.peek .top{margin-top:calc(-1 * var(--th,220px) + 10px)}
 #peek{position:fixed;left:0;right:0;top:0;height:14px;z-index:45;display:none;justify-content:center}
 body.zen #peek{display:flex}
 body.zen.peek #peek{height:60px}
-#uiShow{position:relative;top:0;width:42px;height:26px;display:inline-flex;align-items:flex-start;gap:6px;opacity:0;transform:translateY(-10px);transition:opacity .16s,transform .16s;pointer-events:none}
+#uiShow{position:relative;top:0;width:44px;height:calc(var(--fb,10px) + 20px);display:inline-flex;align-items:flex-start;opacity:0;transform:translateY(-10px);transition:opacity .28s,transform .28s cubic-bezier(.2,.7,.2,1);pointer-events:none}
 #uiShow{justify-content:center;padding:0;border:none;background:none;box-shadow:none;color:var(--ink)}
 #uiShow:hover{background:none;color:var(--ink)}
-#uiShow .tb{width:24px;height:15px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--ink);border-top:none}
+/* the tab continues the toolbar outline: same 2px border + 2px shadow, and it covers the toolbar's bottom line where it joins */
+#uiShow .tb{position:relative;top:var(--fb,10px);width:34px;height:16px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:var(--panel);border:2px solid var(--ink);border-top:none;box-shadow:2px 2px 0 var(--shd)}
+#uiShow .tb::before{content:"";position:absolute;left:0;right:0;top:-2px;height:2px;background:inherit}
 #uiShow:hover .tb{background:var(--yel)}
 #uiShow svg{width:10px;height:6px;fill:currentColor;shape-rendering:crispEdges}
 body.zen.peek #uiShow{opacity:1;transform:none;pointer-events:auto}
@@ -449,8 +451,9 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
   input[type=range]::-webkit-slider-thumb{width:16px;height:26px}
   .tipbox{display:none}
   body.zen #peek{height:56px}
-  body.zen #uiShow{opacity:.85;transform:none;pointer-events:auto;min-height:36px}
-  body.zen .top{margin-top:calc(-1 * var(--th,220px))}
+  body.zen #uiShow{opacity:1;transform:none;pointer-events:auto}
+  body.zen .top{margin-top:calc(-1 * var(--th,220px) + 10px)} /* touch: toolbar edge stays peeking so the tab has something to hang from */
+  #uiShow .tb{width:44px;height:22px}
   #tIn{width:72px}
 }
 /* croquis link panel */
@@ -1326,9 +1329,10 @@ $('#gc').oninput=$('#gr').oninput=drawGrid;
 function opPaint(){const o=$('#op');o.style.setProperty('--p',(o.value-o.min)/(o.max-o.min));$('#opPct').textContent=o.value+'%'}
 $('#op').oninput=e=>{S.op=+e.target.value;opPaint();save();drawGrid()};
 $('#flip').onclick=()=>{S.flip=!S.flip;applyView()};
-const setTh=()=>{const t=document.querySelector('.top');if(t&&!document.body.classList.contains('zen'))document.documentElement.style.setProperty('--th',(t.offsetHeight+10)+'px')};
+const setTh=()=>{const t=document.querySelector('.top');if(t&&!document.body.classList.contains('zen')){const th=t.offsetHeight+10,fb=document.querySelector('.top footer').getBoundingClientRect().bottom;
+  document.documentElement.style.setProperty('--th',th+'px');document.documentElement.style.setProperty('--fb',(fb-th+10-2)+'px')}}; // --fb: where the toolbar's bottom edge sits while peeking
 function setZen(on){if(on){setTh();hideTip();if(curPop)closeP()}document.body.classList.toggle('zen',on);document.body.classList.remove('peek');
-  setTimeout(()=>toast(on?'UI 숨김 · 화면 위쪽 끝에 마우스를 올리면 다시 표시':'UI 표시'),300)}
+  setTimeout(()=>toast(on?(matchMedia('(hover:none),(pointer:coarse)').matches?'UI 숨김 · 위쪽 ▼ 탭을 누르면 다시 표시':'UI 숨김 · 화면 위쪽 끝에 마우스를 올리면 다시 표시'):'UI 표시'),300)}
 $('#zen').onclick=()=>setZen(true);
 $('#uiShow').onclick=()=>setZen(false);
 $('#peek').addEventListener('mouseenter',()=>document.body.classList.add('peek'));
