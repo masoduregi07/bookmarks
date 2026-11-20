@@ -377,6 +377,10 @@ button.ic:active{transform:none}
 .fv-gr .it .x,.fv-gr .it .f{min-width:0!important;min-height:0!important;width:20px!important;height:20px!important}
 @media (max-width:560px){.fv-gr{columns:2}}
 .fv-gr .it .x svg{width:13px;height:12px}
+/* 보관함 cut: no source label; small 16px heart / folder chips with a soft panel backing, no border */
+.fv-gr .it b{display:none}
+.fv-gr .it .x,.fv-gr .it .f{top:3px;width:16px!important;height:16px!important;border:none;background:rgba(251,250,246,.85);font-size:9px}
+.fv-gr .it .x{right:3px}.fv-gr .it .f{right:21px}
 @media (hover:hover){.fv-gr .it .f{opacity:0}.fv-gr .it:hover .f{opacity:1}}
 .fv-empty{color:var(--tx3);text-align:center;padding:40px 10px;line-height:1.9}.fv-empty.hidden{display:none}
 .fv-menu{position:fixed;z-index:60;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:2px;display:grid;gap:0;font-size:12px;line-height:1;animation:tbdIn .12s steps(3,end)}
