@@ -956,10 +956,10 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 @media (hover:none){.calp .d:hover{box-shadow:none}.calp .d.today:hover{box-shadow:inset 0 0 0 2px var(--ink)}}
 
 /* ---------- 연습 기록 panel: the 연습 기록 | 보관함 tabs are the header row (V1) */
-#calP .ch{height:30px;padding:0 3px 0 8px!important;align-items:flex-end;gap:0}
-#calP .ch>.ic{align-self:flex-end;margin-bottom:0} /* icon centers sit on the tab text center line */
+#calP .ch{padding-left:8px!important;gap:0} /* same 28px header as every mini window; only the tabs are placed */
+
 #calP .ch #calTabs{margin:0 auto 0 0;padding:0;border:none;gap:0;align-self:stretch;align-items:flex-end}
-#calP .ch #calTabs button{height:24px;padding:0 10px 2px!important;margin:0 0 -2px;border:2px solid transparent;border-bottom:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;line-height:1;font-size:12px;font-weight:400;color:var(--tx2);background:none!important;box-shadow:none!important;position:relative}
+#calP .ch #calTabs button{height:calc(100% + 2px);padding:0 10px 4px!important;margin:0 0 -2px;border:2px solid transparent;border-bottom:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;line-height:1;font-size:12px;font-weight:400;color:var(--tx2);background:none!important;box-shadow:none!important;position:relative}
 #calP .ch #calTabs button+button::before{content:"";position:absolute;left:-1px;top:50%;margin-top:-5px;width:2px;height:10px;background:rgba(61,59,55,.25)}
 #calP .ch #calTabs button.on::before,#calP .ch #calTabs button.on+button::before{display:none}
 #calP .ch #calTabs button.on{border-color:var(--ink);background:var(--panel)!important;color:var(--ink);font-weight:700;
