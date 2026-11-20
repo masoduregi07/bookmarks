@@ -148,7 +148,7 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 body.t3d #gTone{flex:0 0 auto!important}body.t3d #miniGrid{display:none!important}body.t3d .rbr{display:none!important} /* 3D has no 분할 */
 body.t3d .d3only{display:flex!important}
 body.t3d #gLight{margin-right:6px}
-@media (min-width:561px) and (pointer:coarse){body.t3d #gLight{margin-right:-2px}body.t3d #gLight>select{flex:1 1 auto;min-width:0}body.t3d #gPoly{flex:0 0 auto}} /* tablets: the group stretches, so the select fills it and 좌우반전 stays right beside it */ /* 라이팅 and 좌우반전 sit in different groups: keep the same 6px gap as inside a group */
+@media (min-width:561px) and (pointer:coarse){body.t3d #gLight{margin-right:-2px;flex:0 0 auto!important}body.t3d #gPoly{flex:0 0 auto!important}} /* tablets: 라이팅 group stays its own size; 이전·기록·다음 take the spare width */ /* 라이팅 and 좌우반전 sit in different groups: keep the same 6px gap as inside a group */
 .pop{position:fixed;z-index:15;width:min(var(--pw,340px),calc(100vw - 16px));background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
   clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
@@ -2343,6 +2343,14 @@ document.addEventListener('keydown',e=>{
   else if((act==='fprev'||act==='fnext')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(act==='fnext'?1:-1)/24)}
 });
 
+// UI rule: a select box is exactly as wide as its longest option (+ its own padding / arrow), never stretched to fill a row
+const fitCv=document.createElement('canvas').getContext('2d');
+function fitSelect(el){const cs=getComputedStyle(el);fitCv.font=`${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  const w=Math.max(...[...el.options].map(o=>fitCv.measureText(o.textContent).width));
+  const pad=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+parseFloat(cs.borderLeftWidth)+parseFloat(cs.borderRightWidth);
+  el.style.flex='none';el.style.width=Math.ceil(w+pad+2)+'px'}
+const fitSelects=()=>document.querySelectorAll('#d3Light,#grid,#favSort').forEach(fitSelect);
+fitSelects();(document.fonts&&document.fonts.ready||Promise.resolve()).then(fitSelects);addEventListener('resize',()=>requestAnimationFrame(fitSelects));
 applyView();next();setTimeout(()=>fill(S.tab==='film'?'anim':'film'),1500);
 })();
 </script>
