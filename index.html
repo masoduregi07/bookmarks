@@ -458,6 +458,7 @@ svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:
 #calTabs button.drop{background:var(--pink)!important}
 /* ---------- responsive / touch (iPad first) */
 html{-webkit-text-size-adjust:100%}
+html,body{overscroll-behavior:none;touch-action:manipulation} /* iPad: no rubber-band bounce or double-tap page zoom */
 button,select,.chip,.o,.tabs button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 #app{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom))}
 .top header .tabs button{flex:none;touch-action:pan-x;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
@@ -1000,6 +1001,11 @@ function toast(t,kind=''){placeToasts();const el=document.createElement('div');e
   setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),150)},2400)}
 async function getJSON(u){const r=await fetch(P(u),{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);return {data:await r.json(),headers:r.headers}}
 const rnd=n=>Math.floor(Math.random()*n);
+// network failure text differs per browser: Chrome "Failed to fetch", Safari/iPad "Load failed", Firefox "NetworkError…"
+// Safari may wipe this site's storage (기록 · 보관함 · 링크) after ~7 days unused: ask once to keep it (granted more readily from the home screen)
+const keepStore=(()=>{let asked=false;return()=>{if(asked)return;asked=true;try{const s=navigator.storage;if(s&&s.persist)s.persisted().then(p=>p||s.persist()).catch(()=>{})}catch(e){}}})();
+const TOUCH=()=>matchMedia('(hover:none),(pointer:coarse)').matches;
+const netMsg=(m,ko)=>String(m||'').replace(/Failed to fetch|Load failed|NetworkError[^·]*/i,ko);
 const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/$/,'')+u:u;
 
 // ---------- FILM-GRAB (WordPress REST)
@@ -1148,7 +1154,7 @@ $('#d3Poly').addEventListener('change',e=>{S.d3poly=e.target.checked;d3Set()});
 // ---------- click sound (synthesized, no files)
 if(S.sfx===undefined)S.sfx=true;
 const SFX=(()=>{let ac=null;
-  const ctx=()=>{if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A()}if(ac.state==='suspended')ac.resume();return ac};
+  const ctx=()=>{if(!ac){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ac=new A()}if(ac.state!=='running')ac.resume().catch(()=>{});return ac}; // iPad: 'interrupted' after the app was in the background
   // green-switch style: sharp click, then heavier bottom-out thock
   const tone=(a,type,f0,f1,t,dur,g)=>{const o=a.createOscillator(),og=a.createGain();o.type=type;o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);
     og.gain.setValueAtTime(g,t);og.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(og).connect(a.destination);o.start(t);o.stop(t+dur+.005)};
@@ -1177,6 +1183,9 @@ async function d3Random(){const f=S.f['3d'],rnd=a=>a[Math.floor(Math.random()*a.
   const st={part,pose,az:u(-r[0],r[0]),el:u(-r[1],r[1]),lAz:u(-130,130),lEl:u(15,70),rim:f.rim,rig:rnd(['free','free','rembr','split','rim','under','top','warmcool'])},key='3d'+Date.now()+Math.random();
   return {kind:'3d',state:st,url:'',key,title:[nm(D3PARTS,part),pose&&nm(D3POSES,pose),`방위 ${st.az}° · 높이 ${st.el}°`].filter(Boolean).join(' · '),src:D3CRED[part][0],link:D3CRED[part][1]}}
 let M3=null;
+// iPad drops the WebGL context when the app goes to the background; the scene only draws on demand, so redraw on return
+{const redraw=()=>{if(M3&&S.tab==='3d')M3.then(m=>m.resize()).catch(()=>{})};
+  $('#c3d').addEventListener('webglcontextrestored',redraw);document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(redraw,60)});addEventListener('pageshow',redraw)}
 function m3d(){if(!M3)M3=import('./m3d/m3d.js').then(m=>{m.init(c3d,getComputedStyle(document.documentElement).getPropertyValue('--stage').trim()||'#dfded8',()=>{});return m}).catch(e=>{M3=null;throw e});return M3}
 // ---------- GAME ART (Fandom wikis, MediaWiki API)
 const GAMES=[['genshin','원신','genshin-impact.fandom.com',{splash:['Character Full Wish Artwork'],sheet:['Character Concept Art'],extra:['Character Birthday Artwork']}],
@@ -1187,7 +1196,7 @@ const GKINDS=[['','전체'],['splash','스플래시'],['sheet','설정화']];
 const gw={cats:{},files:{}};
 async function wiki(host,q){const u=`https://${host}/api.php?format=json&origin=*&${q}`;
   if(!(gw.px=gw.px||{})[host])try{const r=await fetch(u,{credentials:'omit'});if(r.ok)return await r.json()}catch(e){gw.px[host]=true}
-  try{return (await getJSON(u)).data}catch(e){throw new Error('위키 연결 실패 · '+e.message+(/403/.test(e.message)?' (Worker 허용 목록에 fandom.com · wiki.gg 확인)':''))}}
+  try{return (await getJSON(u)).data}catch(e){throw new Error('위키 연결 실패 · '+netMsg(e.message,'연결 거부')+(/403/.test(e.message)?' (Worker 허용 목록에 fandom.com · wiki.gg 확인)':''))}}
 async function gameCats(g){const [id,,host,known]=g;if(gw.cats[id])return gw.cats[id];
   if(known){gw.cats[id]=known;return known}
   // unknown wiki: find file categories whose name looks like artwork
@@ -1235,16 +1244,17 @@ function fill(tab){
     try{while(S.queue[tab].length<2){const it=await SRC[tab]();
       S.seen[tab].add(it.key);if(it.kind==='img'){const pre=new Image();pre.referrerPolicy='no-referrer';pre.src=M(it.url)}
       S.queue[tab].push(it)}}
-    catch(e){lastErr[tab]=e.message.replace('Failed to fetch','연결 거부 (프록시 · 네트워크 확인)')}
+    catch(e){lastErr[tab]=netMsg(e.message,'연결 거부 (프록시 · 네트워크 확인)')}
   })().finally(()=>{fillP[tab]=null});
   return fillP[tab];
 }
 const lastErr={film:'',anim:'',fig:'','3d':'',game:'',photo:''};
 let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);busyT=0;h.classList.add('hidden');return}
   if(now){clearTimeout(busyT);busyT=0;h.classList.remove('hidden')}else if(!busyT&&h.classList.contains('hidden'))busyT=setTimeout(()=>{busyT=0;h.classList.remove('hidden')},300)}
+let nextWait=null; // one pending load per tab: repeated taps while loading don't skip cuts
 async function next(){const t=S.tab;
   if(S.pos[t]<S.hist[t].length-1){S.pos[t]++;show();return}
-  if(!S.queue[t].length){busy(true);lastErr[t]='';await fill(t);
+  if(!S.queue[t].length){if(nextWait===t)return;nextWait=t;busy(true);lastErr[t]='';try{await fill(t)}finally{if(nextWait===t)nextWait=null}
     if(S.tab!==t)return; // user switched tabs while this one was loading
     if(!S.queue[t].length){return showErr(lastErr[t]||'불러오기 실패')}}
   S.hist[t].push(S.queue[t].shift());S.pos[t]=S.hist[t].length-1;show();fill(t);
@@ -1319,7 +1329,7 @@ function applyView(){
 // is the title box sitting on a dark part of the picture?
 const toneCv=document.createElement('canvas');toneCv.width=toneCv.height=8;
 function infoTone(){const inf=$('#info');if(!inf)return;let dk=false;
-  const m=!vid.hidden&&vid.videoWidth?vid:img.naturalWidth&&!img.hidden?img:null;
+  const m=!vid.classList.contains('hidden')&&vid.videoWidth?vid:img.naturalWidth&&!img.classList.contains('hidden')?img:null;
   if(m&&inf.textContent){const a=inf.getBoundingClientRect(),b=m.getBoundingClientRect();
     const ox=Math.min(a.right,b.right)-Math.max(a.left,b.left),oy=Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top);
     if(ox>a.width*.3&&oy>a.height*.3){dk=true; // unknown (cross-origin) → treat as dark
@@ -1582,16 +1592,16 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCou
       +row('태그',`<input type="text" id="fTags" value="${esc(f.tags)}" placeholder="예: yutaka_nakamura  -3d_cg" autocomplete="off">`);
     b.innerHTML=`<div class="fx-tabs">${TABS.map(([k,l,n])=>`<button class="fx-tab${ft===k?' on':''}" data-ftab="${k}">${l}${n?`<i>${n}</i>`:''}</button>`).join('')}</div>${body}
     <div class="ft"><label><input type="checkbox" id="fPlay" ${S.play?'checked':''}> 영상 재생</label><a id="fReset">초기화</a></div>`}
-  if(ae){const el=document.getElementById(ae);if(el&&el.tagName==='INPUT'){el.focus();try{el.setSelectionRange(sel,sel)}catch(e){}}}
+  if(ae&&!TOUCH()){const el=document.getElementById(ae);if(el&&el.tagName==='INPUT'){el.focus();try{el.setSelectionRange(sel,sel)}catch(e){}}}
 }
 $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]');if(tb){app.fTab=tb.dataset.ftab;renderFlt();return}
   const tf=e.target.closest('[data-ftabf]');if(tf){app.fTabFilm=tf.dataset.ftabf;renderFlt();placeP('flt');return}
   const ma=e.target.closest('[data-mvadd]'),md=e.target.closest('[data-mvdel]');
   if(ma||md){const f=S.f.film;f.movies=f.movies||[];if(ma){const id=+ma.dataset.mvadd;if(!f.movies.some(x=>x.id===id))f.movies=[...f.movies,{id,name:ma.dataset.mvname}]}else f.movies=f.movies.filter(x=>x.id!==+md.dataset.mvdel);
-    fChange();const i=$('#fSearch');if(i&&ma)i.focus();return}
+    fChange();const i=$('#fSearch');if(i&&ma&&!TOUCH())i.focus();return}
   const wa=e.target.closest('[data-wkadd]'),wd=e.target.closest('[data-wkdel]');
   if(wa||wd){const f=S.f.anim;f.works=f.works||[];if(wa){if(!f.works.includes(wa.dataset.wkadd))f.works=[...f.works,wa.dataset.wkadd]}else f.works=f.works.filter(x=>x!==wd.dataset.wkdel);
-    fChange();const i=$('#fWork');if(i&&wa)i.focus();return}
+    fChange();const i=$('#fWork');if(i&&wa&&!TOUCH())i.focus();return}
   const o=e.target.closest('.o,#fReset');if(!o)return;const t=S.tab,f=S.f[t];
   if(o.id==='fReset'){S.f[t]=FDEF()[t];return fChange()}
   if(o.dataset.moreeu!==undefined){app.euAll=true;renderFlt();placeP('flt');return}
@@ -1631,14 +1641,14 @@ async function srSearch(q){const box=$('#srList');if(!box)return;q=q.trim();if(q
   const ms=mv.status==='fulfilled'?mv.value.data:[],ps=pp.status==='fulfilled'?pp.value.data:[];
   let h='';if(ms.length)h+=`<div class="fx-sec">영화</div><div class="wk-list" style="margin:0">${ms.map(x=>`<span class="o" data-mvadd="${x.id}" data-mvname="${esc(dec(x.title.rendered))}">${esc(dec(x.title.rendered))}</span>`).join('')}</div>`;
   if(ps.length)h+=`<div class="fx-sec">인물</div><div class="wk-list" style="margin:0">${ps.map(x=>`<span class="o" data-sp="${x.id}" data-spname="${esc(dec(x.name))}">${esc(dec(x.name))}</span>`).join('')}</div>`;
-  $('#srList').innerHTML=h||`<div class="wk-msg" style="margin-top:8px">${mv.status==='rejected'&&pp.status==='rejected'?'검색 실패 · '+esc(mv.reason.message):'찾지 못함'}</div>`}
+  $('#srList').innerHTML=h||`<div class="wk-msg" style="margin-top:8px">${mv.status==='rejected'&&pp.status==='rejected'?'검색 실패 · '+esc(netMsg(mv.reason.message,'연결 거부')):'찾지 못함'}</div>`}
 let wkT=0,wkSeq=0;
 async function wkSearch(q){const box=$('#wkList');if(!box)return;q=q.trim().toLowerCase().replace(/\s+/g,'_');if(q.length<2){box.innerHTML='';return}
   const my=++wkSeq;box.innerHTML='<span class="wk-msg">찾는 중…</span>';
   try{const {data}=await getJSON(SB+`tag.json?name=${encodeURIComponent(q)}&type=3&order=count&limit=10`);if(my!==wkSeq||!$('#wkList'))return;
     const l=(Array.isArray(data)?data:[]).filter(x=>x.count>0);
     $('#wkList').innerHTML=l.length?l.map(x=>`<span class="o" data-wkadd="${esc(x.name)}">${esc(wkName(x.name))}<i>${x.count}</i></span>`).join(''):'<span class="wk-msg">맞는 작품이 없음</span>'}
-  catch(e){if(my===wkSeq&&$('#wkList'))$('#wkList').innerHTML='<span class="wk-msg">검색 실패 · '+esc(e.message)+'</span>'}}
+  catch(e){if(my===wkSeq&&$('#wkList'))$('#wkList').innerHTML='<span class="wk-msg">검색 실패 · '+esc(netMsg(e.message,'연결 거부'))+'</span>'}}
 $('#fltPop').addEventListener('input',e=>{if(e.target.id==='fSearch'){clearTimeout(srT);const v=e.target.value;srT=setTimeout(()=>srSearch(v),300);return}
   if(e.target.id==='fWork'){clearTimeout(wkT);const v=e.target.value;wkT=setTimeout(()=>wkSearch(v),250);return}
   if(e.target.id==='fTags'){S.f.anim.tags=e.target.value;fltDirty=true;save();renderRow()}
@@ -1659,7 +1669,7 @@ function setSt(id,ok,txt){const b=$(id);b.className=ok===null?'':ok?'ok':'err';b
 $('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
   const ids=['#stFG','#stSB','#stGS','#stUS'];ids.forEach(i=>setSt(i,null,'확인 중…'));
   const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c),c.usKey?usFetch('photos/random?count=1',c.usKey).then(()=>'OK'):Promise.reject(new Error('키 없음'))]);
-  res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,x.value==='OK'?'정상':`정상 ${x.value}ms`):setSt(ids[i],false,x.reason.message.replace('Failed to fetch','연결 거부')));
+  res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,x.value==='OK'?'정상':`정상 ${x.value}ms`):setSt(ids[i],false,netMsg(x.reason.message,'연결 거부')));
   const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
 
 // ---------- tablets: compact line-color swatch mirrors the 흰/검/빨 buttons
@@ -1787,20 +1797,26 @@ function zoomClamp(){const mx=img.offsetWidth*(ZM.z-1)/2,my=img.offsetHeight*(ZM
 function zoomAt(z,px,py){z=Math.max(1,Math.min(8,z));const [cx,cy]=zoomCenter();const lx=(px-cx-ZM.tx)/ZM.z,ly=(py-cy-ZM.ty)/ZM.z;
   ZM.tx=px-cx-z*lx;ZM.ty=py-cy-z*ly;ZM.z=z;if(z<=1.01){ZM.z=1;ZM.tx=0;ZM.ty=0}zoomClamp();zoomApply()}
 (()=>{const ok=e=>S.tab!=='3d'&&!img.classList.contains('hidden')&&(e.target===img||e.target===stage||e.target===ov||ov.contains(e.target));
-  const pts=new Map();let pinch=null,drag=null,lastTap=0;
+  // touch double-tap = two short, still taps close together (a quick swipe right after a tap must not count)
+  const pts=new Map();let pinch=null,drag=null,tap=null,lastTap=null,touchAt=0;
   stage.addEventListener('wheel',e=>{if(!ok(e))return;e.preventDefault();zoomAt(ZM.z*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0018)),e.clientX,e.clientY)},{passive:false});
-  stage.addEventListener('dblclick',e=>{if(!ok(e))return;ZM.z>1.01?zoomReset():zoomAt(2,e.clientX,e.clientY)});
-  stage.addEventListener('pointerdown',e=>{if(!ok(e))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-    if(pts.size===2){const [a,b]=[...pts.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),z:ZM.z,mx:(a.x+b.x)/2,my:(a.y+b.y)/2};drag=null;ZM.used=true}
-    else if(pts.size===1){if(e.pointerType!=='mouse'){const t=Date.now();if(t-lastTap<300){ZM.z>1.01?zoomReset():zoomAt(2,e.clientX,e.clientY);ZM.used=true;lastTap=0;return}lastTap=t}
+  stage.addEventListener('dblclick',e=>{if(!ok(e)||Date.now()-touchAt<800)return;ZM.z>1.01?zoomReset():zoomAt(2,e.clientX,e.clientY)}); // touch handles its own double-tap
+  stage.addEventListener('pointerdown',e=>{if(!ok(e))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(e.pointerType!=='mouse')touchAt=Date.now();
+    if(pts.size===2){const [a,b]=[...pts.values()];pinch={d:Math.hypot(a.x-b.x,a.y-b.y),z:ZM.z,mx:(a.x+b.x)/2,my:(a.y+b.y)/2};drag=null;tap=null;lastTap=null;ZM.used=true}
+    else if(pts.size===1){tap=e.pointerType!=='mouse'?{id:e.pointerId,x:e.clientX,y:e.clientY,t:Date.now()}:null;
       if(ZM.z>1.01){drag={x:e.clientX,y:e.clientY,tx:ZM.tx,ty:ZM.ty};try{stage.setPointerCapture(e.pointerId)}catch(_){}}}});
+  stage.addEventListener('pointerup',e=>{const t=tap;tap=null;if(!t||t.id!==e.pointerId)return;const now=Date.now();
+    if(now-t.t>250||Math.hypot(e.clientX-t.x,e.clientY-t.y)>12){lastTap=null;return} // not a tap (held or moved)
+    if(lastTap&&now-lastTap.t<320&&Math.hypot(e.clientX-lastTap.x,e.clientY-lastTap.y)<40){lastTap=null;ZM.z>1.01?zoomReset():zoomAt(2,e.clientX,e.clientY);ZM.used=true}
+    else lastTap={x:e.clientX,y:e.clientY,t:now}});
   stage.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(pinch&&pts.size>=2){const [a,b]=[...pts.values()],d=Math.hypot(a.x-b.x,a.y-b.y),mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
       ZM.tx+=mx-pinch.mx;ZM.ty+=my-pinch.my;pinch.mx=mx;pinch.my=my;zoomAt(pinch.z*d/pinch.d,mx,my)}
     else if(drag){ZM.tx=drag.tx+e.clientX-drag.x;ZM.ty=drag.ty+e.clientY-drag.y;zoomClamp();zoomApply()}});
   const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(!pts.size)drag=null};
   stage.addEventListener('pointerup',up);stage.addEventListener('pointercancel',up);
-  document.addEventListener('gesturestart',e=>{if(e.target&&stage.contains(e.target))e.preventDefault()});
+  // iPad Safari ignores maximum-scale: block page pinch-zoom everywhere (the stage has its own zoom)
+  document.addEventListener('gesturestart',e=>e.preventDefault());
   $('#zoom1').onclick=()=>{const s=img.naturalWidth/img.offsetWidth||1;const [cx,cy]=zoomCenter();zoomAt(Math.max(1,s),cx,cy)};
   $('#zoomFit').onclick=zoomReset;
 })();
@@ -1827,7 +1843,7 @@ document.addEventListener('mousedown',hideTip,true);
 // ---------- practice log + calendar
 const LOGK='cutref-log';
 let LOG=[];try{LOG=JSON.parse(localStorage.getItem(LOGK)||'[]')}catch(e){}
-const saveLog=()=>{try{localStorage.setItem(LOGK,JSON.stringify(LOG))}catch(e){toast('기록 저장 실패 · 브라우저 저장 공간 확인','err')}};
+const saveLog=()=>{keepStore();try{localStorage.setItem(LOGK,JSON.stringify(LOG))}catch(e){toast('기록 저장 실패 · 브라우저 저장 공간 확인','err')}};
 const pad=n=>String(n).padStart(2,'0');
 const dkey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const TABNAME={film:'영화',anim:'애니',fig:'피규어','3d':'3D',game:'게임',photo:'패션'};
@@ -1885,7 +1901,7 @@ const favOpen=()=>favDB||(favDB=new Promise((ok,no)=>{const r=indexedDB.open('cu
   r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('items',{keyPath:'id'});d.createObjectStore('folders',{keyPath:'id'});d.createObjectStore('blobs')};
   r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}));
 const favTx=async(st,mode,fn)=>{const d=await favOpen();return new Promise((ok,no)=>{const t=d.transaction(st,mode);const out=fn(t);t.oncomplete=()=>ok(out&&out.result!==undefined?out.result:out);t.onerror=t.onabort=()=>no(t.error)})};
-const favPut=(st,v,k)=>favTx(st,'readwrite',t=>t.objectStore(st).put(v,k)).catch(e=>{toast('보관함 저장 실패 · 저장 공간 확인','err');throw e});
+const favPut=(st,v,k)=>(keepStore(),favTx)(st,'readwrite',t=>t.objectStore(st).put(v,k)).catch(e=>{toast('보관함 저장 실패 · 저장 공간 확인','err');throw e});
 const favDel=(st,k)=>favTx(st,'readwrite',t=>t.objectStore(st).delete(k));
 const favAll=st=>favTx(st,'readonly',t=>t.objectStore(st).getAll());
 const favNewId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
@@ -1944,7 +1960,7 @@ let askDone=null;
 function askName(anchor,{value='',ph='새 폴더 이름',ok='만들기'}={}){if(askDone)askDone(null);const f=$('#favAsk'),i=$('#favAskIn');
   i.value=value;i.placeholder=ph;$('#favAskOk').textContent=ok;f.classList.remove('hidden');
   const r=anchor.getBoundingClientRect();f.style.left=Math.max(8,Math.min(r.left,innerWidth-f.offsetWidth-8))+'px';f.style.top=Math.min(r.bottom+4,innerHeight-f.offsetHeight-8)+'px';
-  setTimeout(()=>{i.focus();i.select()},30);
+  i.focus();i.select(); // same tick as the tap: iPad only opens the keyboard for a focus inside the gesture
   return new Promise(res=>{askDone=v=>{askDone=null;f.classList.add('hidden');res(v)}})}
 $('#favAsk').onsubmit=e=>{e.preventDefault();const v=$('#favAskIn').value.trim().slice(0,40);if(askDone)askDone(v||null)};
 $('#favAskIn').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(askDone)askDone(null)}});
