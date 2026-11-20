@@ -332,7 +332,7 @@ button.ic:active{transform:none}
 @keyframes tipd{from{transform:translateY(-6px);opacity:0}}
 /* save button */
 #saveCut{display:inline-flex;align-items:center;gap:6px;--sv-in:#fff}
-#saveCut svg{width:9px;height:11px;fill:currentColor;shape-rendering:crispEdges;flex:none}
+#saveCut svg{width:13px;height:13px;fill:currentColor;flex:none}
 #saveCut.done{background:var(--mint)}
 #saveCut.done span::after{content:"됨"}
 /* calendar */
@@ -950,7 +950,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 <footer>
   <div class="grp">
     <button id="prev"><svg class="ar" viewBox="0 0 6 11" aria-hidden="true"><path d="M5 0h1v1h-1zM4 1h2v1h-2zM3 2h3v1h-3zM2 3h4v1h-4zM1 4h5v1h-5zM0 5h6v1h-6zM1 6h5v1h-5zM2 7h4v1h-4zM3 8h3v1h-3zM4 9h2v1h-2zM5 10h1v1h-1z"/></svg><span class="bt">이전</span></button>
-    <button id="saveCut" data-tip="오늘 연습에 기록" data-key="S"><svg viewBox="0 0 9 11"><path d="M0 0h9v11H7v-1H6V9H3v1H2v1H0z"/><path fill="var(--sv-in,#fff)" d="M4 2h1v1h1v1H5v1H4V4H3V3h1z"/></svg><span>기록</span></button>
+    <button id="saveCut" data-tip="오늘 연습에 기록" data-key="S"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M230.14,70.54,185.46,25.85a20,20,0,0,0-28.29,0L33.86,149.17A19.85,19.85,0,0,0,28,163.31V208a20,20,0,0,0,20,20H92.69a19.86,19.86,0,0,0,14.14-5.86L230.14,98.82a20,20,0,0,0,0-28.28ZM91,204H52V165l84-84,39,39ZM192,103,153,64l18.34-18.34,39,39Z"/></svg><span>기록</span></button>
     <button id="next"><span class="bt">다음 컷</span><svg class="ar" viewBox="0 0 6 11" aria-hidden="true"><path d="M0 0h1v1H0zM0 1h2v1H0zM0 2h3v1H0zM0 3h4v1H0zM0 4h5v1H0zM0 5h6v1H0zM0 6h5v1H0zM0 7h4v1H0zM0 8h3v1H0zM0 9h2v1H0zM0 10h1v1H0z"/></svg></button>
   </div>
   <i class="dv"></i>
@@ -1048,8 +1048,8 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <div class="ch">
     <b>크로키 링크</b>
     <label class="sw lk-nude" data-tip="누드 포함 사이트 보기"><span class="swl">누드 포함</span><input type="checkbox" id="lnkNude"><i></i></label>
-    <button class="ic" id="lnkRnd" data-tip="오늘의 사이트" aria-label="오늘의 사이트"><svg viewBox="0 0 16 16"><path d="M3 1h10v1H3zM2 2h1v1H2zM13 2h1v1h-1zM1 3h1v10H1zM14 3h1v10h-1zM2 13h1v1H2zM13 13h1v1h-1zM3 14h10v1H3zM4 4h2v2H4zM10 4h2v2h-2zM7 7h2v2H7zM4 10h2v2H4zM10 10h2v2h-2z"/></svg></button>
-    <button class="ic" id="lnkFull" data-tip="전체 화면"><svg viewBox="0 0 16 16"><path d="M1 1h5v1h-5zM10 1h5v1h-5zM1 2h1v4h-1zM14 2h1v4h-1zM1 10h1v4h-1zM14 10h1v4h-1zM1 14h5v1h-5zM10 14h5v1h-5z"/></svg></button>
+    <button class="ic" id="lnkRnd" data-tip="오늘의 사이트" aria-label="오늘의 사이트"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M192,28H64A36,36,0,0,0,28,64V192a36,36,0,0,0,36,36H192a36,36,0,0,0,36-36V64A36,36,0,0,0,192,28Zm12,164a12,12,0,0,1-12,12H64a12,12,0,0,1-12-12V64A12,12,0,0,1,64,52H192a12,12,0,0,1,12,12ZM104,88A16,16,0,1,1,88,72,16,16,0,0,1,104,88Zm40,40a16,16,0,1,1-16-16A16,16,0,0,1,144,128Zm40-40a16,16,0,1,1-16-16A16,16,0,0,1,184,88Zm-80,80a16,16,0,1,1-16-16A16,16,0,0,1,104,168Zm80,0a16,16,0,1,1-16-16A16,16,0,0,1,184,168Z"/></svg></button>
+    <button class="ic" id="lnkFull" data-tip="전체 화면"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M220,48V88a12,12,0,0,1-24,0V60H168a12,12,0,0,1,0-24h40A12,12,0,0,1,220,48ZM88,196H60V168a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H88a12,12,0,0,0,0-24Zm120-40a12,12,0,0,0-12,12v28H168a12,12,0,0,0,0,24h40a12,12,0,0,0,12-12V168A12,12,0,0,0,208,156ZM88,36H48A12,12,0,0,0,36,48V88a12,12,0,0,0,24,0V60H88a12,12,0,0,0,0-24Z"/></svg></button>
     <button class="ic" id="lnkX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
   </div>
   <div class="lbody" id="lnkBody"></div>
@@ -1057,7 +1057,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 <aside id="calP" class="calp" aria-label="연습 기록" aria-hidden="true">
   <div class="ch"><b>연습 기록</b>
     <button class="ic" id="calIo" data-tip="백업" aria-label="기록 백업" aria-haspopup="true"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 1h11v1h1v1h1v1h1v11H1zM4 2h7v4H4zM8 3h2v2H8zM3 9h10v5H3zM5 11h6v1H5z"/></svg></button>
-    <button class="ic" id="calFull" data-tip="전체 화면" ><svg viewBox="0 0 16 16"><path d="M1 1h5v1h-5zM10 1h5v1h-5zM1 2h1v1h-1zM14 2h1v1h-1zM1 3h1v1h-1zM14 3h1v1h-1zM1 4h1v1h-1zM14 4h1v1h-1zM1 5h1v1h-1zM14 5h1v1h-1zM1 10h1v1h-1zM14 10h1v1h-1zM1 11h1v1h-1zM14 11h1v1h-1zM1 12h1v1h-1zM14 12h1v1h-1zM1 13h1v1h-1zM14 13h1v1h-1zM1 14h5v1h-5zM10 14h5v1h-5z"/></svg></button>
+    <button class="ic" id="calFull" data-tip="전체 화면" ><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M220,48V88a12,12,0,0,1-24,0V60H168a12,12,0,0,1,0-24h40A12,12,0,0,1,220,48ZM88,196H60V168a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H88a12,12,0,0,0,0-24Zm120-40a12,12,0,0,0-12,12v28H168a12,12,0,0,0,0,24h40a12,12,0,0,0,12-12V168A12,12,0,0,0,208,156ZM88,36H48A12,12,0,0,0,36,48V88a12,12,0,0,0,24,0V60H88a12,12,0,0,0,0-24Z"/></svg></button>
     <div class="calmenu hidden" id="calMenu">
       <button id="logExp"><svg viewBox="0 0 12 12"><path d="M5 0h2v6H5zM3 6h6v1H3zM4 7h4v1H4zM5 8h2v1H5zM0 10h12v2H0z"/></svg>기록 내보내기</button>
       <button id="logImp"><svg viewBox="0 0 12 12"><path d="M5 1h2v1H5zM4 2h4v1H4zM3 3h6v1H3zM5 4h2v5H5zM0 10h12v2H0z"/></svg>기록 가져오기</button>
@@ -1136,6 +1136,8 @@ const rnd=n=>Math.floor(Math.random()*n);
 // network failure text differs per browser: Chrome "Failed to fetch", Safari/iPad "Load failed", Firefox "NetworkError…"
 // Safari may wipe this site's storage (기록 · 보관함 · 링크) after ~7 days unused: ask once to keep it (granted more readily from the home screen)
 const keepStore=(()=>{let asked=false;return()=>{if(asked)return;asked=true;try{const s=navigator.storage;if(s&&s.persist)s.persisted().then(p=>p||s.persist()).catch(()=>{})}catch(e){}}})();
+// Phosphor Bold corners-out / corners-in: 전체 화면 button shows what pressing it will do
+const FULL_I=['<path d="M220,48V88a12,12,0,0,1-24,0V60H168a12,12,0,0,1,0-24h40A12,12,0,0,1,220,48ZM88,196H60V168a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H88a12,12,0,0,0,0-24Zm120-40a12,12,0,0,0-12,12v28H168a12,12,0,0,0,0,24h40a12,12,0,0,0,12-12V168A12,12,0,0,0,208,156ZM88,36H48A12,12,0,0,0,36,48V88a12,12,0,0,0,24,0V60H88a12,12,0,0,0,0-24Z"/>','<path d="M148,96V48a12,12,0,0,1,24,0V84h36a12,12,0,0,1,0,24H160A12,12,0,0,1,148,96ZM96,148H48a12,12,0,0,0,0,24H84v36a12,12,0,0,0,24,0V160A12,12,0,0,0,96,148Zm112,0H160a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V172h36a12,12,0,0,0,0-24ZM96,36A12,12,0,0,0,84,48V84H48a12,12,0,0,0,0,24H96a12,12,0,0,0,12-12V48A12,12,0,0,0,96,36Z"/>'],fullIcon=(b,on)=>{b.querySelector('svg').innerHTML=FULL_I[on?1:0]};
 const TOUCH=()=>matchMedia('(hover:none),(pointer:coarse)').matches;
 const netMsg=(m,ko)=>String(m||'').replace(/Failed to fetch|Load failed|NetworkError[^·]*/i,ko);
 const abs=u=>!u?u:u.startsWith('//')?'https:'+u:u.startsWith('/')?SB.replace(/\/$/,'')+u:u;
@@ -2259,7 +2261,7 @@ $('#logFile').onchange=async e=>{const file=e.target.files[0];e.target.value='';
 // tap/click outside the side panel closes it (iPad has no Esc key)
 document.addEventListener('pointerdown',e=>{if(!calOpen||calFull)return;const t=e.target;
   if(t.closest('#calP,#calBtn,#toasts,#favMenu,#favCf,#favAsk'))return;closeCal()},true);
-$('#calFull').onclick=()=>{calFull=!calFull;$('#calP').classList.toggle('full',calFull);$('#calFull').dataset.tip=calFull?'패널로 줄이기':'전체 화면';hideTip();renderCal()};
+$('#calFull').onclick=()=>{calFull=!calFull;$('#calP').classList.toggle('full',calFull);$('#calFull').dataset.tip=calFull?'패널로 줄이기':'전체 화면';fullIcon($('#calFull'),calFull);hideTip();renderCal()};
 $('#calPrev').onclick=()=>{calMon.setMonth(calMon.getMonth()-1);renderCal()};
 $('#calNext').onclick=()=>{calMon.setMonth(calMon.getMonth()+1);renderCal()};
 $('#calToday').onclick=()=>{calMon=new Date();calMon.setDate(1);calSel=dkey(new Date());renderCal()};
@@ -2337,7 +2339,7 @@ function openLnk(){if(calOpen)closeCal();if(curPop)closeP();lnkOpen=true;renderL
 function closeLnk(){lnkOpen=false;lnkForm=false;$('#lnkP').classList.remove('open');$('#lnkP').setAttribute('aria-hidden','true');$('#lnkBtn').classList.remove('on')}
 $('#lnkBtn').onclick=()=>lnkOpen?closeLnk():openLnk();
 $('#lnkX').onclick=closeLnk;
-$('#lnkFull').onclick=()=>{lnkFull=!lnkFull;$('#lnkP').classList.toggle('full',lnkFull);$('#lnkFull').dataset.tip=lnkFull?'패널로 줄이기':'전체 화면';hideTip()};
+$('#lnkFull').onclick=()=>{lnkFull=!lnkFull;$('#lnkP').classList.toggle('full',lnkFull);$('#lnkFull').dataset.tip=lnkFull?'패널로 줄이기':'전체 화면';fullIcon($('#lnkFull'),lnkFull);hideTip()};
 document.addEventListener('pointerdown',e=>{if(!lnkOpen||lnkFull)return;if(e.target.closest('#lnkP,#lnkBtn,#toasts'))return;closeLnk()},true);
 $('#lnkP').addEventListener('click',e=>{const t=e.target;
   const s=t.closest('[data-lstar]');if(s){const id=s.dataset.lstar;LK.fav=LK.fav.includes(id)?LK.fav.filter(x=>x!==id):[...LK.fav,id];saveLk();renderLnk();return}
