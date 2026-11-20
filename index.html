@@ -886,6 +886,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .src .o.add:hover{border-color:var(--ink);color:var(--ink)}
 
 /* ---------- UI rule: every box fits its text — no padding beyond what the 12px font needs, nothing stretched to fill a row */
+/* ---------- UI rule: text, digits and icons inside a box sit dead center (measure the ink: Galmuri sits high and carries a right bearing; use native sizes 9/11px, line-height:1) */
 @media (hover:none),(pointer:coarse){
   button,select,input[type=text],input[type=number]{min-height:30px}
   button{padding-left:10px;padding-right:10px}
@@ -997,7 +998,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 /* 패션 연결 카드: 1·2·3 steps (each box fits its text) + service list (same list look as 설정 › API 연결) */
 .cn .steps{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;margin-bottom:10px}
 .cn .steps>span{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 6px 0 2px;border:2px solid var(--soft);background:#fff;font-size:11px;white-space:nowrap}
-#msg.cn .steps b{width:14px;height:14px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-size:10px;font-weight:700}
+#msg.cn .steps b{width:15px;height:14px;padding:2px 0 0 1px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-size:11px;line-height:1;font-weight:700} /* Galmuri11 native 11px; digit ink is 7×10 and sits 1px high, ½px left: 15px wide + this padding puts it dead center */
 .cn .steps em{font-style:normal;position:relative;top:2px} /* Galmuri ink sits high in the 22px box: center it on the number square */
 .cn .steps>i{width:8px;border-top:2px dotted var(--tx2)}
 .cn .sl{border:2px solid var(--ink);background:#fff}
