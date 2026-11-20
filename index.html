@@ -1414,7 +1414,9 @@ function m3d(){if(!M3)M3=import('./m3d/m3d.js').then(m=>{m.init(c3d,getComputedS
 const GAMES=[['genshin','원신','genshin-impact.fandom.com',{splash:['Character Full Wish Artwork'],sheet:['Character Concept Art'],extra:['Character Birthday Artwork']}],
   ['hsr','붕괴: 스타레일','honkai-star-rail.fandom.com',{splash:['Character Splash Art'],sheet:['Character Reference Sheet'],extra:['Chinese New Year Artwork']}],
   ['wuwa','명조','wutheringwaves.fandom.com',null],['r1999','리버스: 1999','reverse1999.fandom.com',{splash:['Arcanist Garments'],sheet:[],extra:[]}],
-  ['ak','명일방주','arknights.wiki.gg',{splash:['Operator skins'],sheet:[],extra:[]}],['akef','명일방주: 엔드필드','endfield.wiki.gg',null]];
+  ['ak','명일방주','arknights.wiki.gg',{splash:['Operator skins'],sheet:[],extra:[]}],['akef','명일방주: 엔드필드','endfield.wiki.gg',null],
+  // 앙스타: 분류 대신 파일 이름 규칙으로 고름 (카드 원화 = "… Frameless (Bloomed).png", 스토리 CG = "… CG.png")
+  ['enst','앙상블 스타즈!!','ensemble-stars.fandom.com',{splash:[/ Frameless( Bloomed)?\.(png|jpe?g)$/i],sheet:[],extra:[/ CG\.(png|jpe?g)$/i]}]];
 const GKINDS=[['','전체'],['splash','스플래시'],['sheet','설정화']];
 const gw={cats:{},files:{}};
 async function wiki(host,q){const u=`https://${host}/api.php?format=json&origin=*&${q}`;
@@ -1430,6 +1432,11 @@ async function gameCats(g){const [id,,host,known]=g;if(gw.cats[id])return gw.cat
     cont=d.continue&&d.continue.accontinue;if(!cont)break}
   if(!out.splash.length&&!out.sheet.length&&!out.extra.length)throw new Error('이 위키에서 일러스트 분류를 찾지 못함');
   gw.cats[id]=out;return out}
+// name-pattern pools: sample random files (500 a call) and keep the ones whose names match
+async function rxFiles(host,re,fresh){const k=host+'|'+re,p=gw.files[k]||(gw.files[k]=[]);
+  for(let i=0;i<4&&p.filter(fresh).length<3;i++){const d=await wiki(host,'action=query&list=random&rnnamespace=6&rnlimit=500');
+    for(const x of (d.query&&d.query.random)||[])if(re.test(x.title)&&!p.includes(x.title))p.push(x.title)}
+  return p}
 async function catFiles(host,cat){const k=host+'|'+cat;if(gw.files[k])return gw.files[k];let list=[],cont='';
   for(let i=0;i<4;i++){const d=await wiki(host,`action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:'+cat)}&cmtype=file&cmlimit=500${cont?'&cmcontinue='+encodeURIComponent(cont):''}`);
     list.push(...((d.query&&d.query.categorymembers)||[]).map(x=>x.title));cont=d.continue&&d.continue.cmcontinue;if(!cont)break}
@@ -1437,7 +1444,7 @@ async function catFiles(host,cat){const k=host+'|'+cat;if(gw.files[k])return gw.
 async function gameRandom(){const f=S.f.game,pool=GAMES.filter(g=>!f.games.length||f.games.includes(g[0]));const g=pool[rnd(pool.length)];
   const cats=await gameCats(g),kinds=f.kind?[f.kind]:['splash','sheet','extra'];const cl=kinds.flatMap(k=>cats[k]||[]);
   if(!cl.length)throw new Error('조건에 맞는 분류가 없음 · '+g[1]);
-  for(let t=0;t<5;t++){const cat=cl[rnd(cl.length)],files=(await catFiles(g[2],cat)).filter(x=>/\.(png|jpe?g|webp)$/i.test(x)&&!S.seen.game.has(g[0]+x));if(!files.length)continue;
+  for(let t=0;t<5;t++){const cat=cl[rnd(cl.length)],fresh=x=>/\.(png|jpe?g|webp)$/i.test(x)&&!S.seen.game.has(g[0]+x),files=(await (cat instanceof RegExp?rxFiles(g[2],cat,fresh):catFiles(g[2],cat))).filter(fresh);if(!files.length)continue;
     const title=files[rnd(files.length)];
     const d=await wiki(g[2],`action=query&prop=imageinfo&iiprop=url&iiurlwidth=1800&titles=${encodeURIComponent(title)}`);
     const pg=Object.values((d.query&&d.query.pages)||{})[0],ii=pg&&pg.imageinfo&&pg.imageinfo[0];if(!ii)continue;
