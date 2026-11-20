@@ -147,8 +147,11 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .d3only,body.t3d #gGrid,body.t3d #tone,body.t3d #gTone>label{display:none!important} /* 3D keeps 좌우반전 */
 body.t3d #gTone{flex:0 0 auto!important}body.t3d #miniGrid{display:none!important}body.t3d .rbr{display:none!important} /* 3D has no 분할 */
 body.t3d .d3only{display:flex!important}
-body.t3d #gLight{margin-right:6px}
-@media (min-width:561px) and (pointer:coarse){body.t3d #gLight{margin-right:-2px;flex:0 0 auto!important}body.t3d #gPoly{flex:0 0 auto!important}} /* tablets: 라이팅 group stays its own size; 이전·기록·다음 take the spare width */ /* 라이팅 and 좌우반전 sit in different groups: keep the same 6px gap as inside a group */
+/* 3D toolbar order: 이전·기록·다음 | 좌우반전 · 라이팅 [선택] [ON] | 폴리곤 [ON] … */
+body.t3d .top footer>*{order:20!important}
+body.t3d .top footer>.grp:first-child{order:1!important}body.t3d .top footer>.grp:first-child+.dv{order:2!important}
+body.t3d #gTone{order:3!important;margin-right:6px}body.t3d #gLight{order:4!important}
+@media (min-width:561px) and (pointer:coarse){body.t3d #gTone{margin-right:-2px}body.t3d[data-tb]:not(.tbwide):not(.tbchk) .rbr+.dv{display:flex!important}body.t3d #gLight{flex:0 0 auto!important}body.t3d #gPoly{flex:0 0 auto!important}} /* tablets: 라이팅 group stays its own size; 이전·기록·다음 take the spare width */ /* 라이팅 and 좌우반전 sit in different groups: keep the same 6px gap as inside a group */
 .pop{position:fixed;z-index:15;width:min(var(--pw,340px),calc(100vw - 16px));background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
   clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
@@ -954,7 +957,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <button id="next"><span class="bt">다음 컷</span><svg class="ar" viewBox="0 0 6 11" aria-hidden="true"><path d="M0 0h1v1H0zM0 1h2v1H0zM0 2h3v1H0zM0 3h4v1H0zM0 4h5v1H0zM0 5h6v1H0zM0 6h5v1H0zM0 7h4v1H0zM0 8h3v1H0zM0 9h2v1H0zM0 10h1v1H0z"/></svg></button>
   </div>
   <i class="dv"></i>
-  <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" aria-label="라이팅"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
+  <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" aria-label="라이팅"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option></select><label class="sw lsw" aria-label="라이팅 켜기 / 끄기"><input type="checkbox" id="d3LightOn"><span class="lb"><i></i><b class="t-on">ON</b><b class="t-off">OFF</b></span></label></div>
   <div class="grp" id="gTone"><label>색</label>
     <div class="seg" id="tone">
       <button data-v="color" class="on" aria-label="컬러"><span class="tt">컬러</span><svg class="ti" viewBox="0 0 14 14" aria-hidden="true"><path fill="#3d3b37" d="M0 0h14v14H0z"/><path fill="#f3b6c4" d="M2 2h4v4H2z"/><path fill="#f2d98b" d="M8 2h4v4H8z"/><path fill="#a9dcc0" d="M2 8h4v4H2z"/><path fill="#a9c8ec" d="M8 8h4v4H8z"/></svg></button>
@@ -964,7 +967,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   </div>
   <i class="rbr"></i>
   <i class="dv"></i>
-  <div class="grp d3only" id="gPoly"><label>폴리곤</label><label class="sw" data-tip="면 + 선" data-key="D"><input type="checkbox" id="d3Poly"><i></i></label></div>
+  <div class="grp d3only" id="gPoly"><label>폴리곤</label><label class="sw lsw" aria-label="폴리곤 켜기 / 끄기"><input type="checkbox" id="d3Poly"><span class="lb"><i></i><b class="t-on">ON</b><b class="t-off">OFF</b></span></label></div>
   <div class="grp" id="gGrid"><label>분할</label>
     <label class="sw lsw" aria-label="분할 켜기 / 끄기"><input type="checkbox" id="gridOn"><span class="lb"><i></i><b class="t-on">ON</b><b class="t-off">OFF</b></span></label>
     <span id="gridOpts" style="display:flex;align-items:center;gap:6px">
@@ -1101,7 +1104,7 @@ const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'http
 let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
   grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds',game:'thirds',photo:'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false,game:false,photo:false},hist:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1,game:-1,photo:-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set(),game:new Set(),photo:new Set()},queue:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3lightLast','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
 const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{kinds:[],kindsEx:[],kw:'',kwEx:'',onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false},game:{games:[],kind:''},photo:{topics:[],orient:'',q:'',off:[]}});
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
@@ -1111,7 +1114,7 @@ for(const k of['src','dbTag','dbEx'])delete S.f.fig[k];delete S.f['3d'].wire;
 for(const t of['film','anim','fig','3d','game','photo'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig','3d','game','photo'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,pxKey:S.pxKey,d3light:S.d3light,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,pxKey:S.pxKey,d3light:S.d3light,d3lightLast:S.d3lightLast,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -1282,7 +1285,9 @@ const fillP={};
 // ---------- 3D model (hand / foot / head), lazy-loaded three.js bundle
 if(S.d3light===undefined||S.d3light===true)S.d3light='rand';else if(S.d3light===false)S.d3light='off';if(S.d3poly===undefined)S.d3poly=false;
 const d3Set=()=>{save();applyView();if(M3)M3.then(m=>{m.setLight(S.d3light);m.setWire(S.d3poly?'over':'off')})};
-$('#d3Light').addEventListener('change',e=>{S.d3light=e.target.value;d3Set();e.target.blur()});
+$('#d3Light').addEventListener('change',e=>{S.d3light=S.d3lightLast=e.target.value;d3Set();e.target.blur()});
+// 라이팅 ON/OFF: same lamp switch as 분할; OFF keeps the chosen rig for the next ON
+$('#d3LightOn').addEventListener('change',e=>{S.d3light=e.target.checked?(S.d3lightLast||'rand'):'off';d3Set()});
 const D3LIGHTS=[...$('#d3Light').options].map(o=>[o.value,o.textContent]);
 $('#d3Poly').addEventListener('change',e=>{S.d3poly=e.target.checked;d3Set()});
 // ---------- click sound (synthesized, no files)
@@ -1467,7 +1472,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 function applyView(){
   if(S.tone!=='color'&&S.tone!=='gray')S.tone='color'; // 2/3/5-tone were removed
   const t=S.tab,f=t==='3d'||S.tone==='color'?'':'grayscale(1)';
-  document.body.classList.toggle('t3d',t==='3d');if(window.fixDv)fixDv();$('#d3Light').value=S.d3light;$('#d3Poly').checked=S.d3poly;
+  document.body.classList.toggle('t3d',t==='3d');if(window.fixDv)fixDv();if(S.d3light!=='off')S.d3lightLast=S.d3light;$('#d3Light').value=S.d3lightLast||'rand';$('#d3LightOn').checked=S.d3light!=='off';$('#d3Light').classList.toggle('off',S.d3light==='off');$('#d3Poly').checked=S.d3poly;
   img.style.filter=vid.style.filter=c3d.style.filter=f;
   img.classList.toggle('flip',S.flip);vid.classList.toggle('flip',S.flip);if(typeof ZM!=='undefined'&&ZM.z>1.01)zoomApply();c3d.classList.toggle('flip',S.flip);
   document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
@@ -2366,7 +2371,7 @@ document.addEventListener('keydown',e=>{
   if(!act)return;
   if(act==='next'){e.preventDefault();next()}
   else if(act==='prev'){e.preventDefault();prev()}
-  else if(act==='tone'&&S.tab==='3d'){{const i=D3LIGHTS.findIndex(x=>x[0]===S.d3light);S.d3light=D3LIGHTS[(i+1)%D3LIGHTS.length][0];d3Set();toast('라이팅: '+nm(D3LIGHTS,S.d3light))}}
+  else if(act==='tone'&&S.tab==='3d'){{const L=[...D3LIGHTS,['off','꺼짐']],i=L.findIndex(x=>x[0]===S.d3light);S.d3light=L[(i+1)%L.length][0];d3Set();toast('라이팅: '+nm(L,S.d3light))}}
   else if(act==='grid'&&S.tab==='3d'){S.d3poly=!S.d3poly;d3Set();toast('폴리곤 '+(S.d3poly?'켜짐':'꺼짐'))}
   else if(act==='tone'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백'})[S.tone])}
   else if(act==='grid'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
