@@ -147,6 +147,8 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .d3only,body.t3d #gGrid,body.t3d #tone,body.t3d #gTone>label{display:none!important} /* 3D keeps 좌우반전 */
 body.t3d #gTone{flex:0 0 auto!important}body.t3d #miniGrid{display:none!important}body.t3d .rbr{display:none!important} /* 3D has no 분할 */
 body.t3d .d3only{display:flex!important}
+body.t3d #gLight{margin-right:6px}
+@media (min-width:561px) and (pointer:coarse){body.t3d #gLight{margin-right:-2px}body.t3d #gLight>select{flex:1 1 auto;min-width:0}body.t3d #gPoly{flex:0 0 auto}} /* tablets: the group stretches, so the select fills it and 좌우반전 stays right beside it */ /* 라이팅 and 좌우반전 sit in different groups: keep the same 6px gap as inside a group */
 .pop{position:fixed;z-index:15;width:min(var(--pw,340px),calc(100vw - 16px));background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
   clip-path:polygon(40% 0,60% 0,60% 34%,80% 34%,80% 67%,100% 67%,100% 100%,0 100%,0 67%,20% 67%,20% 34%,40% 34%)}
@@ -916,7 +918,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <button id="next"><span class="bt">다음 컷</span><span class="ar">▶</span></button>
   </div>
   <i class="dv"></i>
-  <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" data-tip="라이팅"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
+  <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" aria-label="라이팅"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
   <div class="grp" id="gTone"><label>색</label>
     <div class="seg" id="tone">
       <button data-v="color" class="on" aria-label="컬러"><span class="tt">컬러</span><svg class="ti" viewBox="0 0 14 14" aria-hidden="true"><path fill="#3d3b37" d="M0 0h14v14H0z"/><path fill="#f3b6c4" d="M2 2h4v4H2z"/><path fill="#f2d98b" d="M8 2h4v4H8z"/><path fill="#a9dcc0" d="M2 8h4v4H2z"/><path fill="#a9c8ec" d="M8 8h4v4H8z"/></svg></button>
