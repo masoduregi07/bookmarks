@@ -998,6 +998,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 .cn .steps{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px;margin-bottom:10px}
 .cn .steps>span{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 6px 0 2px;border:2px solid var(--soft);background:#fff;font-size:11px;white-space:nowrap}
 #msg.cn .steps b{width:14px;height:14px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-size:10px;font-weight:700}
+.cn .steps em{font-style:normal;position:relative;top:2px} /* Galmuri ink sits high in the 22px box: center it on the number square */
 .cn .steps>i{width:8px;border-top:2px dotted var(--tx2)}
 .cn .sl{border:2px solid var(--ink);background:#fff}
 .cn .sl .r{display:flex;align-items:center;gap:8px;min-height:30px;padding:4px 6px 4px 8px}
@@ -1953,7 +1954,7 @@ const SVCARD={us:['잡지 화보 같은 고화질 사진',['화보','스트리�
 function showConnect(){msg.className='cn';
   const svc=k=>`<div class="r"><i class="svi ${k}">${k==='us'?'U':'P'}</i><span><span class="nm">${PSVC[k].n}</span><span class="ds">${SVCARD[k][0]}</span></span><button class="pri" data-wz="${k}">연결 ▶</button></div>`;
   msg.innerHTML=`<div class="hd">패션 사진 · 연결 필요</div><div class="bd"><div class="lead">사진 서비스 하나만 연결하면 시작</div><div class="sub">무료 · 처음 한 번 3분</div>
-  <div class="steps"><span><b>1</b>가입</span><i></i><span><b>2</b>키 복사</span><i></i><span><b>3</b>붙여넣기</span></div>
+  <div class="steps"><span><b>1</b><em>가입</em></span><i></i><span><b>2</b><em>키 복사</em></span><i></i><span><b>3</b><em>붙여넣기</em></span></div>
   <div class="sl">${svc('us')}${svc('px')}</div><div class="ft">API 키 = 사진을 보여 주는 출입증 · 이 기기에만 저장<br>둘 다 연결하면 섞어서 표시</div></div>`}
 msg.addEventListener('click',e=>{const b=e.target.closest('[data-wz]');if(b)openWiz(b.dataset.wz)});
 
