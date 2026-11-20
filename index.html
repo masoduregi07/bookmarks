@@ -1005,6 +1005,36 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #setPop .fx-tab.on::before,#setPop .fx-tab.on+.fx-tab::before{display:none}
 #setPop .fx-tab.on{border-color:var(--soft)!important;background:var(--panel)!important;color:var(--ink);font-weight:700!important;height:28px;box-shadow:inset 0 4px 0 var(--sky)!important;clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
 @media (hover:hover){#setPop .fx-tab:not(.on):hover{color:var(--ink)}}
+/* ---------- 패션 연결 카드 시안 (?cn=a|b|c) */
+.cn .steps{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.cn .steps>div{flex:1;min-width:0;display:flex;align-items:center;gap:6px;border:2px solid var(--ink);background:#fff;padding:4px 8px;font-size:11px;white-space:nowrap}
+#msg.cn .steps b{width:16px;height:16px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--ink);color:#fff;font-size:10px}
+.cn .steps>i{width:10px;flex:none;border-top:2px dotted var(--tx2)}
+.cn .sl{border:2px solid var(--soft);background:#fff;margin-bottom:8px}
+.cn .sl .r{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 10px}
+.cn .sl .r+.r{border-top:1px solid var(--soft)}
+.cn .sl .r>span{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-weight:700;font-size:13px}
+.cn .sl .r small{font-weight:400;font-size:11px;color:var(--tx2)}
+.cn .seg2{display:flex;box-shadow:2px 2px 0 var(--shd);margin-bottom:8px;width:max-content}
+.cn .seg2 button{box-shadow:none}.cn .seg2 button+button{margin-left:-2px}
+.cn .seg2 button.on{background:var(--ink);color:#fff}
+.cn .kl{display:block;font-size:11px;color:var(--tx2);margin-bottom:4px}
+.cn .kin{display:flex;gap:6px;margin-bottom:8px}
+.cn .kin input{flex:1;min-width:0;height:28px;border:2px solid var(--ink);background:#fff;padding:0 8px;font:inherit;font-size:12px;outline:none;border-radius:0}
+.cn .kin input:focus{box-shadow:inset 0 -3px 0 var(--yel)}
+.cn .hint{display:flex;gap:8px;align-items:center;border:2px dotted var(--soft);padding:6px 8px;font-size:11px;color:var(--tx2)}
+.cn .hint .ic{width:18px;height:18px;flex:none;font-size:10px;background:var(--yel);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink)}
+.cn .hint a{color:var(--ink);cursor:pointer;text-decoration:underline}
+.cn .pv{display:flex;gap:14px}
+.cn .pv .mo{width:180px;flex:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-content:start}
+.cn .pv .mo i{height:70px;border:2px solid var(--ink)}
+.cn .pv .mo small{grid-column:1/-1;font-size:10px;color:var(--tx2)}
+.cn .pv .rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.cn .pv .rt .lead{margin:0}
+.cn .pv ul{list-style:none;font-size:11px;color:var(--tx2);display:grid;gap:3px}
+.cn .pv .bl{display:grid;gap:6px;margin-top:auto}
+.cn .pv .bl button{justify-content:space-between;height:30px!important}
+@media (max-width:560px){.cn .pv{flex-direction:column}.cn .pv .mo{width:auto}.cn .pv .mo i{height:44px}.cn .steps>div{padding:4px 6px}}
 </style>
 </head>
 <body>
@@ -1192,6 +1222,7 @@ for(const k of['src','dbTag','dbEx'])delete S.f.fig[k];delete S.f['3d'].wire;
 {const f=S.f['3d'];f.parts=[f.parts.find(x=>D3PARTS_ID.includes(x))||'hand'];f.partsEx=[];f.pose='';f.range='wide';f.rim=false}
 for(const t of['film','anim','fig','3d','game','photo'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig','3d','game','photo'].includes(S.tab))S.tab='film';
+const CNV=(new URLSearchParams(location.search).get('cn')||'').toLowerCase();if(/^[abc]$/.test(CNV))S.tab='photo'; // 연결 카드 시안 미리보기
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
 const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,pxKey:S.pxKey,d3light:S.d3light,d3lightLast:S.d3lightLast,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
 
@@ -1949,12 +1980,31 @@ const WZ={us:{n:'Unsplash',join:'https://unsplash.com/join',keyUrl:'https://unsp
     s2:'열린 페이지에서 이름 · 용도 칸에 "그림 공부" 입력 → <kbd>Generate API Key</kbd><br>나온 긴 글자를 길게 눌러 <kbd>복사</kbd> · 이미 받았으면 <kbd>Your API Key</kbd>에 있음'}};
 const PASTE='<svg class="pi" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M4 0h4v1h2v11H2V1h2zM4 2v1h4V2zM3 2v9h6V2H9v2H3z"/><path d="M4 6h4v1H4zM4 8h3v1H4z"/></svg>';
 const SVCARD={us:['잡지 화보 같은 고화질 사진',['화보','스트리트']],px:['모델 · 포즈 사진이 많음',['모델 포즈','코디']]};
-function showConnect(){msg.className='cn';
+function showConnect(){msg.className='cn';if(/^[abc]$/.test(CNV)){showConnectV(CNV);return}
   msg.innerHTML=`<div class="hd">패션 사진 · 연결 필요</div><div class="bd"><div class="lead">사진 서비스를 연결해야 패션 사진이 나옴</div><div class="sub">처음 한 번만 · 무료 · 3분 정도</div>
   <div class="what"><span class="ic">?</span><span><b>API 키</b> · 사진 사이트가 이 홈페이지에 사진을 보여 주도록 허락하는 <b>출입증</b>. 가입하면 무료로 받고, 여기에 붙여넣으면 끝.</span></div>
   <div class="svc">${['us','px'].map(k=>`<div class="sv"><div class="nm"><i class="svi ${k}">${k==='us'?'U':'P'}</i>${PSVC[k].n}</div><div class="ds">${SVCARD[k][0]}</div><div class="tg">${SVCARD[k][1].map(t=>`<span>${t}</span>`).join('')}</div><button class="pri" data-wz="${k}">연결하기 ▶</button></div>`).join('')}</div>
   <div class="ft">하나만 연결해도 됨 · 둘 다 연결하면 섞어서 보여 줌</div></div>`}
 msg.addEventListener('click',e=>{const b=e.target.closest('[data-wz]');if(b)openWiz(b.dataset.wz)});
+function showConnectV(v){const svc=k=>`<div class="r"><i class="svi ${k}">${k==='us'?'U':'P'}</i><span>${PSVC[k].n}<small>${SVCARD[k][1].join(' · ')}</small></span><button class="pri" data-wz="${k}">연결 ▶</button></div>`;
+  const hd=t=>`<div class="hd">${t}</div>`;
+  if(v==='a')msg.innerHTML=hd('패션 사진 · 연결 필요')+`<div class="bd"><div class="lead">사진 서비스 하나만 연결하면 시작</div><div class="sub">무료 · 처음 한 번 3분</div>
+    <div class="steps"><div><b>1</b>가입</div><i></i><div><b>2</b>키 복사</div><i></i><div><b>3</b>붙여넣기</div></div>
+    <div class="sl">${svc('us')}${svc('px')}</div><div class="ft">API 키 = 사진을 보여 주는 출입증 · 이 기기에만 저장 · 둘 다 연결하면 섞어서 표시</div></div>`;
+  else if(v==='b'){const k=msg.dataset.cnsvc||'us';msg.innerHTML=hd('패션 사진 · 키 붙여넣기')+`<div class="bd">
+    <div class="seg2">${['us','px'].map(x=>`<button data-cnk="${x}" class="${x===k?'on':''}">${PSVC[x].n}</button>`).join('')}</div>
+    <label class="kl" for="cnKey">${PSVC[k].n} API 키</label><div class="kin"><input id="cnKey" placeholder="복사한 키를 여기에 붙여넣기" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="pri" data-cnok>연결</button></div>
+    <div class="hint"><span class="ic">?</span><span>키가 없으면 <a data-cnget>${PSVC[k].n}에서 무료로 받기 ↗</a> · 가입 후 3분</span></div>
+    <div class="ft">키는 이 기기에만 저장</div></div>`}
+  else msg.innerHTML=hd('패션 사진')+`<div class="bd"><div class="pv"><div class="mo"><i style="background:var(--peach)"></i><i style="background:var(--sky)"></i><i style="background:var(--lav)"></i><i style="background:var(--mint)"></i><i style="background:var(--yel)"></i><i style="background:var(--pink)"></i><small>연결하면 여기에 사진</small></div>
+    <div class="rt"><div class="lead">화보 · 포즈 사진으로 크로키 연습</div><ul><li>■ 무료 · 처음 한 번 3분</li><li>■ 하나만 연결해도 됨</li><li>■ 키는 이 기기에만 저장</li></ul>
+    <div class="bl"><button class="pri" data-wz="us"><span>Unsplash 연결 · 화보</span><span>▶</span></button><button data-wz="px"><span>Pexels 연결 · 모델 포즈</span><span>▶</span></button></div></div></div></div>`}
+msg.addEventListener('click',e=>{const t=e.target;
+  const k=t.closest('[data-cnk]');if(k){msg.dataset.cnsvc=k.dataset.cnk;showConnectV('b');return}
+  if(t.closest('[data-cnget]')){window.open(WZ[msg.dataset.cnsvc||'us'].keyUrl,'_blank','noopener');return}
+  if(t.closest('[data-cnok]')){const v=($('#cnKey')||{}).value||'',kk=msg.dataset.cnsvc||'us';openWiz(kk);Object.assign(W,{step:3,val:v.trim()});renderWiz();if(W.val)wzCheck();else{const i=$('#wzIn');if(i)i.focus()}}});
+$('#msg').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='cnKey'){e.preventDefault();msg.querySelector('[data-cnok]').click()}});
+
 const W={k:'',step:1,ok:false,val:'',chk:'',seq:0};
 function setKey(k,v){if(k==='us')S.usKey=v;else S.pxKey=v;pb[k].buf=[];clearQ('photo');save();if(curPop==='set')renderApi()}
 function openWiz(k){if(curPop)closeP();Object.assign(W,{k,step:PSVC[k].key()?3:1,ok:false,val:'',chk:''});renderWiz();$('#wzDim').classList.remove('hidden');$('#wz').classList.remove('hidden')}
