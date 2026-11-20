@@ -970,11 +970,13 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 
 /* ---------- 필터 창 (A2a): rows in one list box, folder tabs on top of it */
 #fltPop section{padding:10px 12px 12px}
-#fltPop .fl{border:2px solid var(--ink);background:#fff;margin-bottom:8px}
+#fltPop .fl{border:2px solid var(--soft);background:#fff;margin-bottom:8px} /* tab panel: light 2px line so the choices lead */
 #fltPop .fl .fx-row{display:grid;grid-template-columns:56px 1fr;padding:0;column-gap:0;align-items:stretch;border-top:1px solid var(--soft)}
 #fltPop .fl>:first-child{border-top:none}
 #fltPop .fl .fx-l{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 6px;font-size:11px;color:var(--tx2)}
 #fltPop .fl .fx-l::after{content:"";position:absolute;right:0;top:6px;bottom:6px;border-right:2px dotted var(--tx3)}
+#fltPop .fl .fx-l::before{content:"";position:absolute;left:4px;right:6px;top:4px;bottom:4px;background:#f1efe9;z-index:-1} /* name column: tinted block inset from the lines, dotted divider kept */
+#fltPop .fl .fx-l{isolation:isolate}
 #fltPop .fl .fx-l span{padding-top:0!important}
 #fltPop .fl .fx-row>div{padding:5px 6px 5px 8px;min-width:0}
 #fltPop .fl .fx-one{padding:6px 8px;border-top:1px solid var(--soft)}
@@ -986,7 +988,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .fx-tab{height:24px;border:2px solid transparent!important;border-bottom:none!important;margin:0!important;padding:0 10px!important;background:none!important;color:var(--tx2);font-weight:400!important;box-shadow:none!important;position:relative}
 #fltPop .fx-tab+.fx-tab::before{content:"";position:absolute;left:-1px;top:50%;margin-top:-5px;width:2px;height:10px;background:var(--soft)}
 #fltPop .fx-tab.on::before,#fltPop .fx-tab.on+.fx-tab::before{display:none}
-#fltPop .fx-tab.on{border-color:var(--ink)!important;background:#fff!important;color:var(--ink);font-weight:700!important;height:28px;box-shadow:inset 0 4px 0 var(--yel)!important;clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
+#fltPop .fx-tab.on{border-color:var(--soft)!important;background:#fff!important;color:var(--ink);font-weight:700!important;height:28px;box-shadow:inset 0 4px 0 var(--yel)!important;clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
 #fltPop .fx-tab i{background:none;border:none;color:var(--tx3);padding:0;min-width:0;font-size:10px}
 @media (hover:hover){#fltPop .fx-tab:not(.on):hover{color:var(--ink)}}
 
@@ -996,6 +998,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .fl .tl .gr{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 #fltPop .fl .tl .gr::-webkit-scrollbar{display:none}
 #fltPop .fl .tl .o{flex:none}
+
 </style>
 </head>
 <body>
