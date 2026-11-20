@@ -886,6 +886,42 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .src .o:not(.on) .dot{background:var(--soft)}
 #fltPop .src .o.add{background:none;box-shadow:none;border:1px dashed var(--tx3);color:var(--tx2);padding:3px 6px 1px}
 #fltPop .src .o.add:hover{border-color:var(--ink);color:var(--ink)}
+
+/* ---------- UI rule: every box fits its text — no padding beyond what the 12px font needs, nothing stretched to fill a row */
+@media (hover:none),(pointer:coarse){
+  button,select,input[type=text],input[type=number]{min-height:30px}
+  button{padding-left:10px;padding-right:10px}
+  .seg button{min-width:0}
+  .seg.ic button{height:30px;min-width:32px;padding-left:8px;padding-right:8px}
+  button.ic{width:34px;min-height:0}
+  .top header .ibar button.ic{height:38px}
+  .chip{height:28px;padding:0 8px}
+  #stTop .chip{height:26px!important}
+  #fltPop .o{padding:5px 8px 3px;line-height:16px}
+  .calp .cmon .nb{width:32px;height:28px}
+  .lsw .lb{height:30px}
+  .fv-ask input,.fv-ask button{height:28px;font-size:13px}
+  .fv-menu label,.fv-menu .nf,.fv-menu small{height:28px}
+  #lnkP .r .lk{padding-top:8px;padding-bottom:8px}
+  #uiShow .tb{width:40px;height:18px}
+}
+@media (min-width:561px) and (pointer:coarse){
+  .top footer button,.top footer select,.top footer input[type=text]{min-height:30px}
+  .top footer .seg.ic button{height:30px}
+  .lsw .lb{height:30px;padding:0 8px 0 6px;gap:5px}
+  /* tablets: groups keep their own width (no stretched 이전 · 다음 · 컬러 · 흑백) */
+  .top footer>.grp,.top footer>.frow,#gGrid #gridOpts,#tone{flex:0 0 auto!important}
+  .top footer>.grp:first-child>button,#tone button{flex:0 0 auto!important}
+  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next,body[data-tb="3"] #flip,body[data-tb="3"] #tone button,body[data-tb="3"] #gMini .mini{flex:0 0 auto!important;padding:0 8px!important}
+  body[data-tb="3"] .top footer>.grp:first-child,body[data-tb="3"] #gTone,body[data-tb="3"] #gMini,body[data-tb="3"] .top footer>.frow{flex:0 0 auto!important}
+  body[data-tb="0"]:not(.tbwide):not(.tbchk) #gGrid{flex:0 0 auto!important}
+  #tmr{margin-right:0}
+  .top footer>.frow{margin-left:auto} /* 필터 sits at the row's end instead of stretching */
+}
+@media (max-width:560px),(pointer:coarse){
+  body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{height:28px}
+  body[data-tb="3"] #flip,body[data-tb="3"] #tone button,#gMini .mini{height:28px}
+}
 </style>
 </head>
 <body>
