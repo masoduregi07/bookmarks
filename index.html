@@ -796,6 +796,89 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   body[data-tb="3"] #gMini .mini{display:flex;align-items:center}
   body[data-tb="3"] #flip .fi{width:16px}
 }
+
+/* ---------- 설정 › API 연결: one list, tag | content */
+#setPop section[data-pane="1"]{padding:10px 12px 12px}
+.al{border:2px solid var(--ink);background:#fff}
+.al .g{display:grid;grid-template-columns:80px 1fr;border-top:1px solid var(--soft)}.al .g:first-child{border-top:none}
+.al .g>.t{grid-row:1/span 9;display:flex;align-items:center;padding:0 8px;position:relative;color:var(--tx2);font-size:11px;white-space:nowrap}
+.al .g>.t::after{content:"";position:absolute;right:0;top:6px;bottom:6px;border-right:2px dotted var(--tx3)}
+.al .r{grid-column:2;display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px;min-height:30px;padding:0 6px 0 8px;font-size:12px}
+.al .r+.r{border-top:1px solid var(--soft)}
+.al .r .e{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--tx3);white-space:nowrap}
+.al .r .e i{width:6px;height:6px;flex:none;background:#3fbf6f;outline:1px solid var(--ink)}
+.al .r .e i.x{background:#e07a95}.al .r .e i.w{background:var(--soft)}
+.al .r .e.ok{color:var(--tx2)}
+#setPop .al button{min-height:0!important;height:22px;padding:0 7px!important;font-size:11px;box-shadow:1px 1px 0 var(--shd);line-height:1}
+#setPop .al button.pri{background:var(--ink);color:#fff}
+#setPop .adv2{display:flex;align-items:center;gap:6px;margin:8px 0 10px;padding:0!important;min-height:0!important;height:auto;border:none;background:none!important;box-shadow:none;font-size:11px;color:var(--tx2)}
+#setPop .adv2:hover{color:var(--ink)}#setPop .adv2:active{transform:none}
+.adv2 .ar{width:5px;height:8px;background:currentColor;clip-path:polygon(0 0,40% 0,40% 20%,70% 20%,70% 40%,100% 40%,100% 60%,70% 60%,70% 80%,40% 80%,40% 100%,0 100%);transition:transform .08s steps(2)}
+.adv2[aria-expanded="true"] .ar{transform:rotate(90deg)}
+#setPop .adv{border:2px dotted var(--soft);padding:8px 8px 6px;margin:-4px 0 10px}
+#setPop .adv .row{grid-template-columns:92px 1fr}
+#setPop .advf{display:flex;justify-content:flex-end}
+#setPop .advf button,#setPop section[data-pane="1"] .btns button{min-height:0!important;height:26px;padding:0 9px!important;font-size:12px;line-height:1}
+/* ---------- 패션: connect card on the stage */
+#msg.cn{max-width:none;width:min(560px,calc(100% - 40px));padding:0;text-align:left;line-height:1.5;color:var(--ink)}
+.cn .hd{display:flex;align-items:center;height:28px;padding:0 12px;border-bottom:2px solid var(--ink);background:var(--peach);font-weight:700;font-size:12px}
+.cn .bd{padding:10px 12px 12px}
+.cn .lead{font-size:13px;font-weight:700;margin-bottom:2px}
+.cn .sub{font-size:11px;color:var(--tx2);margin-bottom:10px}
+.cn .what{display:flex;gap:8px;align-items:center;border:2px dotted var(--soft);padding:6px 8px;margin-bottom:10px;font-size:11px;color:var(--tx2)}
+.cn .what b{color:var(--ink);font-weight:700}
+.cn .what .ic{flex:none;width:22px;height:22px;background:var(--yel);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:var(--ink)}
+.cn .svc{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:560px){.cn .svc{grid-template-columns:1fr}}
+.cn .sv{border:2px solid var(--ink);background:#fff;box-shadow:2px 2px 0 var(--shd);padding:8px;display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+.cn .sv .nm{display:flex;align-items:center;gap:6px;font-weight:700;font-size:13px}
+.svi{width:18px;height:18px;border:2px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:9px;background:#fff;flex:none}
+.svi.px{background:var(--mint)}
+.cn .sv .ds{font-size:11px;color:var(--tx2);line-height:1.5}
+.cn .sv .tg{display:flex;gap:4px;flex-wrap:wrap}
+.cn .sv .tg span{font-size:10px;background:#ebe9e2;padding:1px 5px}
+.cn .ft{font-size:10px;color:var(--tx3);margin-top:8px}
+.cn button,.wz button{min-height:0!important;height:26px;padding:0 8px!important;font-size:12px;line-height:1;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.cn button.pri,.wz button.pri{background:var(--ink);color:#fff}
+.cn .sv button{margin-top:2px}
+/* ---------- 연결 단계 창 */
+#wzDim{position:fixed;inset:0;background:rgba(61,59,55,.25);z-index:55}
+.wz{position:fixed;z-index:56;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;background:var(--panel);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shd);font-size:12px}
+.wz .hd{display:flex;align-items:center;height:28px;padding:0 3px 0 12px;border-bottom:2px solid var(--ink);background:var(--sky);font-weight:700}
+.wz .hd b{margin-right:auto}
+.wz .hd .x{width:22px!important;height:20px!important;padding:0!important;border:none;box-shadow:none;background:none!important}
+.wz .hd .x svg{width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
+.wz .bd{padding:10px}
+.wz .prog{display:flex;gap:4px;margin-bottom:10px}
+.wz .prog i{flex:1;height:6px;background:#e4e2dc;border:1px solid var(--soft)}
+.wz .prog i.d{background:var(--ink);border-color:var(--ink)}.wz .prog i.c{background:var(--yel);border-color:var(--ink)}
+.wz ol{list-style:none;display:grid;gap:6px}
+.wz li{display:grid;grid-template-columns:22px 1fr;gap:6px;align-items:start;border:2px solid var(--soft);background:#fff;padding:6px 8px 6px 6px}
+.wz li .n{width:20px;height:20px;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;background:#fff}
+.wz li .n svg,.wz .res svg{width:8px;height:8px;shape-rendering:crispEdges}
+.wz li.d{background:none;color:var(--tx3);cursor:pointer}.wz li.d .n{background:var(--ink);border-color:var(--ink)}.wz li.d .n svg path{fill:#fff}
+.wz li.c{border-color:var(--ink);box-shadow:2px 2px 0 var(--shd)}.wz li.c .n{background:var(--yel)}
+.wz li.f{color:var(--tx3)}
+.wz li .t{font-weight:700;line-height:20px}
+.wz li .s{font-size:11px;color:var(--tx2);line-height:1.6;margin-top:2px}
+.wz li .s kbd{font:inherit;border:1px solid var(--ink);background:#f7f6f1;padding:0 4px;color:var(--ink)}
+.wz li .act,.wz .key{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.wz .key{flex-wrap:nowrap}
+.wz .key input{flex:1;min-width:0;height:26px!important;min-height:0!important;border:2px solid var(--ink);background:#fff;padding:0 6px;font:inherit;font-size:11px}
+.wz .key input:focus{outline:none;box-shadow:inset 0 -3px 0 var(--yel)}
+.pi{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges;flex:none}
+.wz .res{margin-top:6px;font-size:11px;display:flex;align-items:center;gap:5px;padding:3px 6px;border:2px solid var(--ink);background:#fff}
+.wz .res.ok{background:var(--mint)}.wz .res.err{background:var(--pink)}
+.wz .note{margin-top:8px;font-size:10px;color:var(--tx3);line-height:1.6}
+.wz .btns{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.wz .btns button:disabled{opacity:.4}
+/* 필터 › 출처 */
+#fltPop .src{display:flex;gap:4px;flex-wrap:wrap}
+#fltPop .src .o{display:inline-flex;align-items:center;gap:5px}
+#fltPop .src .o .dot{width:6px;height:6px;background:#3fbf6f;outline:1px solid var(--ink)}
+#fltPop .src .o:not(.on) .dot{background:var(--soft)}
+#fltPop .src .o.add{background:none;box-shadow:none;border:1px dashed var(--tx3);color:var(--tx2);padding:3px 6px 1px}
+#fltPop .src .o.add:hover{border-color:var(--ink);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -897,14 +980,16 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <div class="hd">설정<button id="setX" class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
   <div class="fx-tabs" id="setTabs"><button class="fx-tab on" data-pane="1">API 연결</button><button class="fx-tab" data-pane="0">화면</button><button class="fx-tab kbtab" data-pane="2">단축키</button></div>
   <section data-pane="1">
-    <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
-    <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
-    <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
-    <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
-    <label class="row"><span>UNSPLASH 키</span><input type="password" id="usKey" placeholder="Access Key · 패션 탭" autocomplete="off" spellcheck="false"></label>
-    <label class="row"><span>작화 등급</span><select id="sbRating"><option value="s">안전만</option><option value="">전체</option></select></label>
-    <div class="st"><div>FILM-GRAB <b id="stFG">미확인</b></div><div>SAKUGABOORU <b id="stSB">미확인</b></div><div>GOOD SMILE <b id="stGS">미확인</b></div><div>UNSPLASH <b id="stUS">미확인</b></div></div>
-    <div class="btns"><button id="testBtn">연결 테스트</button><button id="resetBtn">기본값</button><button id="saveBtn" class="pri">저장</button></div>
+    <div class="al" id="apiList"></div>
+    <button type="button" class="adv2" id="advT" aria-expanded="false"><span class="ar"></span>고급 · 주소 · 프록시</button>
+    <div class="adv hidden" id="advB">
+      <label class="row"><span>프록시</span><input type="text" id="proxy" placeholder="비우면 직접 연결"></label>
+      <label class="chk"><input type="checkbox" id="mediaProxy"> 이미지·영상도 프록시로 받기</label>
+      <label class="row"><span>FILM-GRAB</span><input type="text" id="fgUrl"></label>
+      <label class="row"><span>SAKUGABOORU</span><input type="text" id="sbUrl"></label>
+      <div class="advf"><button type="button" id="resetBtn">기본값으로</button></div>
+    </div>
+    <div class="btns"><button id="testBtn">다시 확인</button><button id="saveBtn" class="pri">저장</button></div>
   </section>
   <section data-pane="0" class="hidden">
     <label class="chk"><input type="checkbox" id="sfxOn"> 버튼 효과음</label>
@@ -963,17 +1048,19 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <form class="fv-ask hidden" id="favAsk" autocomplete="off"><input id="favAskIn" maxlength="40" spellcheck="false"><button id="favAskOk" type="submit">만들기</button></form>
 
 <div id="peek"><button id="uiShow" aria-label="UI 표시" data-tip="UI 표시" data-key="H"><span class="tb"><svg viewBox="0 0 10 6"><path d="M0 0h10v2H0zM2 2h6v2H2zM4 4h2v2H4z"/></svg></span></button></div>
+<div id="wzDim" class="hidden"></div>
+<div id="wz" class="wz hidden" role="dialog" aria-label="사진 서비스 연결"></div>
 <div id="toasts"></div>
 
 <script>
 (()=>{
 const $=s=>document.querySelector(s);
-const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s',usKey:''};
+const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s',usKey:'',pxKey:''};
 let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
   grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds',game:'thirds',photo:'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false,game:false,photo:false},hist:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1,game:-1,photo:-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set(),game:new Set(),photo:new Set()},queue:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','d3light','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
-const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{kinds:[],kindsEx:[],kw:'',kwEx:'',onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false},game:{games:[],kind:''},photo:{topics:[],orient:'',q:''}});
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{kinds:[],kindsEx:[],kw:'',kwEx:'',onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false},game:{games:[],kind:''},photo:{topics:[],orient:'',q:'',off:[]}});
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
   if(p.f){const d=FDEF();S.f={film:{...d.film,...p.f.film,ex:{...d.film.ex,...((p.f.film||{}).ex||{})}},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})},'3d':{...S.f['3d'],...(p.f['3d']||{})},game:{...S.f.game,...(p.f.game||{})},photo:{...S.f.photo,...(p.f.photo||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
@@ -982,7 +1069,7 @@ for(const k of['src','dbTag','dbEx'])delete S.f.fig[k];delete S.f['3d'].wire;
 for(const t of['film','anim','fig','3d','game','photo'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig','3d','game','photo'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,d3light:S.d3light,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,pxKey:S.pxKey,d3light:S.d3light,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -1224,20 +1311,38 @@ async function gameRandom(){const f=S.f.game,pool=GAMES.filter(g=>!f.games.lengt
 // ---------- Unsplash (fashion)
 const PTOPICS=[['street fashion','스트리트'],['fashion editorial','화보'],['model pose','모델 포즈'],['outfit','코디'],['coat','코트 · 아우터'],['dress','드레스'],['suit','정장'],['hanbok','한복'],['kimono','기모노'],['sneakers','신발'],['jewelry hands','손 · 액세서리'],['hat fashion','모자']];
 const PORIENT=[['','전체'],['portrait','세로'],['landscape','가로']];
-const us={buf:[],sig:''};
 const UTM='utm_source=cutref&utm_medium=referral';
+// two photo services; each keeps its own small buffer, filtered by the same 패션 filter
+const PSVC={us:{n:'Unsplash',key:()=>S.usKey},px:{n:'Pexels',key:()=>S.pxKey}};
+const photoKeys=()=>['us','px'].filter(k=>PSVC[k].key());
+const photoOn=()=>photoKeys().filter(k=>!(S.f.photo.off||[]).includes(k));
+const pb={us:{buf:[],sig:''},px:{buf:[],sig:'',pages:{}}};
+const capAlt=d=>{d=(d||'').trim();return d?d.charAt(0).toUpperCase()+d.slice(1)+' · ':''};
+const pQuery=f=>{const pool=f.q?[f.q]:f.topics.length?f.topics:PTOPICS.map(x=>x[0]);return pool[rnd(pool.length)]};
 async function usFetch(path,key){const r=await fetch('https://api.unsplash.com/'+path,{headers:{Authorization:'Client-ID '+key,'Accept-Version':'v1'},credentials:'omit'});
-  if(r.status===401)throw new Error('Unsplash 키가 올바르지 않음 (설정 확인)');if(r.status===403)throw new Error('Unsplash 시간당 요청 한도 초과 · 잠시 후 다시');
+  if(r.status===401)throw new Error('Unsplash 키가 올바르지 않음');if(r.status===403)throw new Error('Unsplash 시간당 요청 한도 초과 · 잠시 후 다시');
   if(!r.ok)throw new Error('Unsplash HTTP '+r.status);return r.json()}
-async function photoRandom(){if(!S.usKey)throw new Error('설정에서 Unsplash API 키를 넣어야 함');const f=S.f.photo;
-  const sig=JSON.stringify(f);if(us.sig!==sig){us.buf=[];us.sig=sig}
-  for(let t=0;t<3&&!us.buf.length;t++){const pool=f.q?[f.q]:f.topics.length?f.topics:PTOPICS.map(x=>x[0]);const q=pool[rnd(pool.length)];
-    const d=await usFetch(`photos/random?count=20&content_filter=high&query=${encodeURIComponent(q)}${f.orient?'&orientation='+f.orient:''}`,S.usKey);
-    us.buf=(Array.isArray(d)?d:[d]).filter(x=>x&&x.urls&&!S.seen.photo.has('us'+x.id))}
-  const x=us.buf.shift();if(!x)throw new Error('사진을 찾지 못함 · 검색어 확인');
-  const who=(x.user&&x.user.name)||'Unsplash';const desc=(x.alt_description||x.description||'').trim();
-  return {kind:'img',url:x.urls.regular,hd:x.urls.raw+'&w=2600&q=85&fm=jpg',title:(desc?desc.charAt(0).toUpperCase()+desc.slice(1)+' · ':'')+'Photo by '+who,link:x.links.html+(x.links.html.includes('?')?'&':'?')+UTM,key:'us'+x.id,src:who+' · Unsplash'}}
-const SRC={film:fgRandom,anim:sbRandom,fig:gsRandom,'3d':d3Random,game:gameRandom,photo:photoRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM',photo:'UNSPLASH'};
+async function pxFetch(path,key){const r=await fetch('https://api.pexels.com/v1/'+path,{headers:{Authorization:key},credentials:'omit'});
+  if(r.status===401||r.status===403)throw new Error('Pexels 키가 올바르지 않음');if(r.status===429)throw new Error('Pexels 요청 한도 초과 · 잠시 후 다시');
+  if(!r.ok)throw new Error('Pexels HTTP '+r.status);return r.json()}
+async function usBatch(f){const d=await usFetch(`photos/random?count=20&content_filter=high&query=${encodeURIComponent(pQuery(f))}${f.orient?'&orientation='+f.orient:''}`,S.usKey);
+  return (Array.isArray(d)?d:[d]).filter(x=>x&&x.urls).map(x=>{const who=(x.user&&x.user.name)||'Unsplash';
+    return {kind:'img',url:x.urls.regular,hd:x.urls.raw+'&w=2600&q=85&fm=jpg',title:capAlt(x.alt_description||x.description)+'Photo by '+who,link:x.links.html+(x.links.html.includes('?')?'&':'?')+UTM,key:'us'+x.id,src:who+' · Unsplash'}})}
+async function pxBatch(f){const q=pQuery(f),o=f.orient?'&orientation='+f.orient:'',k=q+o,P=pb.px.pages;
+  if(!P[k]){const d=await pxFetch(`search?query=${encodeURIComponent(q)}&per_page=1${o}`,S.pxKey);P[k]=Math.max(1,Math.min(80,Math.ceil((d.total_results||0)/30)))}
+  const d=await pxFetch(`search?query=${encodeURIComponent(q)}&per_page=30&page=${1+rnd(P[k])}${o}`,S.pxKey);
+  return (d.photos||[]).map(x=>({kind:'img',url:x.src.large2x||x.src.large,hd:x.src.original,title:capAlt(x.alt)+'Photo by '+x.photographer,link:x.url,key:'px'+x.id,src:x.photographer+' · Pexels'}))}
+async function photoRandom(){if(!photoKeys().length)throw new Error('사진 서비스 연결 필요');
+  const f=S.f.photo,on=photoOn();if(!on.length)throw new Error('조건에 맞는 출처가 없음 · 필터 › 출처에서 하나 이상 켜기');
+  const sig=JSON.stringify({q:f.q,t:f.topics,o:f.orient});let last=null;
+  for(const k of on.sort(()=>Math.random()-.5)){const B=pb[k];if(B.sig!==sig){B.buf=[];B.sig=sig}
+    try{for(let t=0;t<3;t++){B.buf=B.buf.filter(x=>!S.seen.photo.has(x.key));if(B.buf.length)break;
+        const l=await (k==='us'?usBatch(f):pxBatch(f));for(let i=l.length-1;i>0;i--){const j=rnd(i+1);[l[i],l[j]]=[l[j],l[i]]}B.buf=l}
+      if(B.buf.length)return B.buf.shift()}
+    catch(e){last=e} // rate limit / bad key on one service: try the other
+  }
+  throw last||new Error('사진을 찾지 못함 · 검색어 확인')}
+const SRC={film:fgRandom,anim:sbRandom,fig:gsRandom,'3d':d3Random,game:gameRandom,photo:photoRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM',photo:'패션 사진'};
 function fill(tab){
   if(fillP[tab])return fillP[tab];
   fillP[tab]=(async()=>{
@@ -1268,7 +1373,7 @@ function media(){return !c3d.classList.contains('hidden')?c3d:vid.classList.cont
 // error kinds → [title, hint]; hint is shown under the message
 const ERRK=[
   [/조건에 맞는/,'결과 없음',''],
-  [/Unsplash API 키|Unsplash 키가/,'설정 필요','설정 → UNSPLASH 키에 Access Key를 넣고 저장.'],
+  [/키가 올바르지 않음/,'키 확인 필요','설정 › API 연결 › 패션에서 다시 연결.'],
   [/요청 한도/,'잠시 후 다시','요청이 몰려 제한됨 · 몇 분 뒤 다시 시도.'],
   [/3D 모델을 열 수 없음/,'3D 표시 불가','이 기기 · 브라우저에서 WebGL을 쓸 수 없음.<br>브라우저 하드웨어 가속 설정 확인.'],
   [/로드 실패/,'불러오기 실패','원본 사이트가 막았을 수 있음 · 다음 컷으로 넘기기.'],
@@ -1278,6 +1383,7 @@ const ERRK=[
 function blankStage(){img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');ov.innerHTML='';
   $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');zoomReset()}
 function showErr(e){
+  msg.className='';if(/^사진 서비스 연결 필요/.test(e)){busy(false);blankStage();showConnect();try{syncSaveBtn()}catch(_){}return}
   busy(false);img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
   $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.remove('hidden');
   const k=ERRK.find(x=>x[0].test(e)),title=k?k[1]:'연결 실패',
@@ -1287,7 +1393,7 @@ function showErr(e){
 }
 function show(){
   const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();cutShownAt=Date.now();
-  zoomReset();msg.classList.add('hidden');if(!it){busy(true,true);return}
+  zoomReset();msg.className='hidden';if(!it){busy(true,true);return}
   busy(true);
   if(it.kind==='3d'){
     img.classList.add('hidden');vid.classList.add('hidden');vid.pause();vid.removeAttribute('src');
@@ -1421,14 +1527,14 @@ tRender();
 const pop=$('#setPop'),sb=$('#setBtn');
 const POPS={set:{el:pop,btn:sb,align:'right'},flt:{el:$('#fltPop'),btn:null,align:'left'}};
 let curPop=null;
-function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl;$('#sbRating').value=c.sbRating;$('#usKey').value=c.usKey||''}
-function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim(),sbRating:$('#sbRating').value,usKey:$('#usKey').value.trim()}}
+function fillPop(c){$('#proxy').value=c.proxy;$('#mediaProxy').checked=c.mediaProxy;$('#fgUrl').value=c.fgUrl;$('#sbUrl').value=c.sbUrl}
+function readPop(){return{proxy:$('#proxy').value.trim(),mediaProxy:$('#mediaProxy').checked,fgUrl:$('#fgUrl').value.trim(),sbUrl:$('#sbUrl').value.trim()}}
 function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const r=P.btn.getBoundingClientRect(),w=el.offsetWidth||340;
   const left=Math.max(8,Math.min(innerWidth-w-8,P.align==='left'?r.left:r.right-w));
   el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
   el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
-  if(n==='set'){fillPop(S);setTab(1);kcStop()}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
+  if(n==='set'){fillPop(S);setTab(1);kcStop();advOpen(false);apiCheck(false)}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
   clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
   if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}}
 function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;
@@ -1566,9 +1672,10 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCou
     b.innerHTML=row('게임',opts(GAMES.map(g=>[g[0],g[1]]),v=>f.games.includes(v),'data-game'))+row('종류',opts(GKINDS,v=>(f.kind||'')===v,'data-gkind'))
       +`<div class="ft"><span class="wk-msg">이미지 출처 · 각 게임 팬 위키</span><a id="fReset">초기화</a></div>`;
   }else if(t==='photo'){const f=S.f.photo,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
-    b.innerHTML=`<div class="fx-row"><span class="fx-l">검색</span><div><input type="text" id="pQ" placeholder="영어 검색어 · 비우면 주제에서" value="${esc(f.q)}" autocomplete="off"></div></div>`
+    const src=['us','px'].map(k=>PSVC[k].key()?`<span class="o${(f.off||[]).includes(k)?'':' on'}" data-psrc="${k}"><i class="dot"></i>${PSVC[k].n}</span>`:`<span class="o add" data-pwz="${k}">+ ${PSVC[k].n} 연결</span>`).join('');
+    b.innerHTML=`<div class="fx-row"><span class="fx-l">출처</span><div><div class="src">${src}</div></div></div><div class="fx-row"><span class="fx-l">검색</span><div><input type="text" id="pQ" placeholder="영어 검색어 · 비우면 주제에서" value="${esc(f.q)}" autocomplete="off"></div></div>`
       +row('주제',opts(PTOPICS,v=>f.topics.includes(v),'data-ptopic'))+row('방향',opts(PORIENT,v=>(f.orient||'')===v,'data-porient'))
-      +`<div class="ft"><span class="wk-msg">${S.usKey?'사진 출처 · Unsplash':'설정에서 Unsplash 키를 넣어야 함'}</span><a id="fReset">초기화</a></div>`;
+      +`<div class="ft"><span class="wk-msg">${photoKeys().length?'사진 출처 · '+photoOn().map(k=>PSVC[k].n).join(' · '):'사진 서비스 연결 필요'}</span><a id="fReset">초기화</a></div>`;
   }else if(t==='3d'){const f=S.f['3d'],hand=!f.partsEx.includes('hand')&&(!f.parts.length||f.parts.includes('hand'));
     b.innerHTML=HINT+`<div class="gb"><h3><span>부위</span><span>${[f.parts.length?f.parts.length+'개':'',f.partsEx.length?'제외 '+f.partsEx.length:''].filter(Boolean).join(' · ')}</span></h3><div class="gr">${opts(D3PARTS,v=>f.parts.includes(v),'data-dpart',v=>f.partsEx.includes(v))}</div></div>
     <div class="${hand?'':'off'}"><div class="gb"><h3><span>손 포즈</span></h3><div class="gr">${opts([['','랜덤'],...D3POSES],v=>f.pose===v,'data-dpose')}</div></div></div>
@@ -1585,7 +1692,7 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCou
     const TABS=[['kind','작화',(f.mat?1:0)+f.kinds.length+f.kindsEx.length+(f.region?1:0)+(f.score?1:0)],['artist','애니메이터',f.artists.length+f.artistsEx.length],['tag','작품 · 태그',nTag+(f.works||[]).length]];
     const row=(l,h,top)=>`<div class="fx-row${top?' top':''}"><span class="fx-l">${l}</span><div>${h}</div></div>`;
     let body='';
-    if(ft==='kind')body=row('자료',`<div class="gr">${opts(MATS,v=>(f.mat||'')===v,'data-mat')}</div>`)+row('지역',`<div class="gr">${opts(REGIONS,v=>f.region===v,'data-region')}</div>`)+row('인기',`<div class="gr">${opts(SCORES,v=>f.score===+v,'data-score')}</div>`)
+    if(ft==='kind')body=row('자료',`<div class="gr">${opts(MATS,v=>(f.mat||'')===v,'data-mat')}</div>`)+row('지역',`<div class="gr">${opts(REGIONS,v=>f.region===v,'data-region')}</div>`)+row('인기',`<div class="gr">${opts(SCORES,v=>f.score===+v,'data-score')}</div>`)+row('등급',`<div class="gr">${opts([['s','안전만'],['','전체']],v=>(S.sbRating||'')===v,'data-rating')}</div>`)
       +(f.mat==='settei'?'':row('종류',`<div class="gr tall">${opts(KINDS,v=>f.kinds.includes(v),'data-kind',v=>f.kindsEx.includes(v))}</div>`,1));
     else if(ft==='artist')body=ARTISTS.map(([g,l])=>row(g,`<div class="gr tall">${opts(l,v=>f.artists.includes(v),'data-art',v=>f.artistsEx.includes(v))}</div>`,1)).join('');
     else body=row('<span style="display:block;padding-top:3px">작품</span>',`<div class="wk-box"><input type="text" id="fWork" placeholder="작품 이름을 영어로 (예: naruto)" autocomplete="off"><div class="wk-list" id="wkList"></div></div>${(f.works||[]).length?`<div class="gr" style="margin-top:6px">${f.works.map(k=>`<span class="o on" data-wkdel="${esc(k)}" title="누르면 빼기">${esc(wkName(k))} ×</span>`).join('')}</div>`:''}`,1)
@@ -1603,7 +1710,9 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
   if(wa||wd){const f=S.f.anim;f.works=f.works||[];if(wa){if(!f.works.includes(wa.dataset.wkadd))f.works=[...f.works,wa.dataset.wkadd]}else f.works=f.works.filter(x=>x!==wd.dataset.wkdel);
     fChange();const i=$('#fWork');if(i&&wa&&!TOUCH())i.focus();return}
   const o=e.target.closest('.o,#fReset');if(!o)return;const t=S.tab,f=S.f[t];
-  if(o.id==='fReset'){S.f[t]=FDEF()[t];return fChange()}
+  if(o.dataset.pwz){closeP();openWiz(o.dataset.pwz);return}
+  if(o.dataset.psrc){const k=o.dataset.psrc;f.off=(f.off||[]).includes(k)?f.off.filter(x=>x!==k):[...(f.off||[]),k];return fChange()}
+  if(o.id==='fReset'){const keep=t==='photo'?f.off:null;S.f[t]=FDEF()[t];if(keep)S.f[t].off=keep;return fChange()}
   if(o.dataset.moreeu!==undefined){app.euAll=true;renderFlt();placeP('flt');return}
   if(o.dataset.morectry!==undefined){app.allCtry=true;renderFlt();placeP('flt');return}
   if(o.dataset.sp){f.person={id:+o.dataset.sp,name:o.dataset.spname};return fChange()}
@@ -1628,6 +1737,7 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
   else if(o.dataset.mat!==undefined)f.mat=o.dataset.mat;
   else if(o.dataset.region!==undefined)f.region=o.dataset.region;
   else if(o.dataset.score!==undefined)f.score=+o.dataset.score;
+  else if(o.dataset.rating!==undefined){S.sbRating=o.dataset.rating}
   fChange()});
 $('#fltPop').addEventListener('change',e=>{if(e.target.id==='pQ'){S.f.photo.q=e.target.value.trim();fChange()}
   else if(e.target.id==='fOne'){S.f[S.tab].onePer=e.target.checked;fChange()}
@@ -1659,19 +1769,84 @@ $('#fltPop').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.target.id==='
 if(S.legacyAnim)loadCats().then(()=>{const a=FGC.groups.genre&&FGC.groups.genre.kids.find(x=>/^animation$/i.test(x.name));
   if(a&&!S.f.film.genre.length){S.f.film.genre=[{id:a.id,name:a.name}];save();renderRow();resetQueues('film')}},()=>{});
 $('#resetBtn').onclick=()=>{fillPop(DEF);toast('기본값으로 채움 · 저장을 눌러 적용')};
-$('#saveBtn').onclick=()=>{Object.assign(S,readPop());applyCfg();save();
-  fg.pages={};FGC.ready=null;FGC.groups={};for(const k in S.queue)S.queue[k]=[];us.buf=[];closeP();toast('설정 저장됨','ok');
+$('#saveBtn').onclick=()=>{const c=readPop(),ch=['proxy','mediaProxy','fgUrl','sbUrl'].some(k=>c[k]!==S[k]);closeP();if(!ch)return;
+  Object.assign(S,c);applyCfg();save();fg.pages={};FGC.ready=null;FGC.groups={};for(const k in S.queue)S.queue[k]=[];pb.us.buf=[];pb.px.buf=[];toast('설정 저장됨','ok');
   if(S.pos[S.tab]<0||!msg.classList.contains('hidden'))next();else fill(S.tab)};
+const advOpen=on=>{$('#advB').classList.toggle('hidden',!on);$('#advT').setAttribute('aria-expanded',on);if(curPop==='set')placeP('set')};
+$('#advT').onclick=()=>advOpen($('#advB').classList.contains('hidden'));
 async function ping(url,cfg){const t0=performance.now();
   const u=cfg.proxy?cfg.proxy+encodeURIComponent(url):url;
-  const r=await fetch(u,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status+(r.status===403?' · Worker 허용 목록':''));await r.text();return Math.round(performance.now()-t0)}
-function setSt(id,ok,txt){const b=$(id);b.className=ok===null?'':ok?'ok':'err';b.textContent=txt}
-$('#testBtn').onclick=async()=>{const c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
-  const ids=['#stFG','#stSB','#stGS','#stUS'];ids.forEach(i=>setSt(i,null,'확인 중…'));
-  const res=await Promise.allSettled([ping(fu+'posts?per_page=1&_fields=id',c),ping(su+'post.json?limit=1',c),ping(GS+'en/product/2539',c),c.usKey?usFetch('photos/random?count=1',c.usKey).then(()=>'OK'):Promise.reject(new Error('키 없음'))]);
-  res.forEach((x,i)=>x.status==='fulfilled'?setSt(ids[i],true,x.value==='OK'?'정상':`정상 ${x.value}ms`):setSt(ids[i],false,netMsg(x.reason.message,'연결 거부')));
-  const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 테스트 ${n}/4 정상`,n===4?'ok':'err')};
-
+  const r=await fetch(u,{credentials:'omit'});if(!r.ok)throw new Error('HTTP '+r.status);await r.text();return Math.round(performance.now()-t0)}
+// status per source: [state, text]   state: ok · x (fail) · w (checking) · '' (unknown)
+const API={fg:['',''],sb:['',''],gs:['',''],gw:['',''],us:['',''],px:['','']};
+const stTxt=e=>{const m=String(e&&e.message||e);return /HTTP 503/.test(m)?'점검 중':/HTTP 403/.test(m)?'허용 안 됨':/HTTP 404/.test(m)?'주소 확인':/키가 올바르지/.test(m)?'키 오류':/한도/.test(m)?'한도 초과':/HTTP \d+/.test(m)?m.match(/HTTP \d+/)[0]:'연결 거부'};
+const X16='<svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg>';
+const CHK8='<svg viewBox="0 0 8 8"><path fill="#3d3b37" d="M7 1h1v2H7zM6 3h1v1H6zM5 4h1v1H5zM4 5h1v1H4zM3 6h1v1H3zM2 5h1v1H2zM1 4h1v1H1zM0 3h1v1H0z"/></svg>';
+function renderApi(){const L=$('#apiList');if(!L)return;
+  const st=k=>{const [a,t]=API[k];return a==='w'?'<span class="e"><i class="w"></i>확인 중</span>':a?`<span class="e ok"><i class="${a==='ok'?'':'x'}"></i>${esc(t)}</span>`:'<span class="e">미확인</span>'};
+  const svc=k=>{const has=!!PSVC[k].key(),[a,t]=API[k];
+    return `<div class="r"><span>${PSVC[k].n}</span>`+(has?`<span class="e${a==='x'?'':' ok'}"><i class="${a==='x'?'x':a==='w'?'w':''}"></i>${a==='x'?esc(t):a==='w'?'확인 중':'연결됨'}<button data-api="${a==='x'?'wz':'off'}" data-k="${k}">${a==='x'?'다시 연결':'끊기'}</button></span>`:`<span class="e"><button class="pri" data-api="wz" data-k="${k}">연결하기</button></span>`)+'</div>'};
+  const g=(t,rows)=>`<div class="g"><span class="t">${t}</span>${rows}</div>`;
+  L.innerHTML=g('영화',`<div class="r"><span>FILM-GRAB</span>${st('fg')}</div>`)+g('애니메이션',`<div class="r"><span>SAKUGABOORU</span>${st('sb')}</div>`)
+    +g('패션',svc('us')+svc('px'))+g('피규어',`<div class="r"><span>GOOD SMILE</span>${st('gs')}</div>`)+g('게임',`<div class="r"><span>팬 위키</span>${st('gw')}</div>`)}
+$('#apiList').addEventListener('click',async e=>{const b=e.target.closest('[data-api]');if(!b)return;e.stopPropagation();const k=b.dataset.k;
+  if(b.dataset.api==='wz'){openWiz(k);return}
+  if(!await askYes(b,`${PSVC[k].n} 연결 끊기<small>키를 이 기기에서 지움</small>`,'끊기'))return;
+  setKey(k,'');API[k]=['',''];renderApi();toast(PSVC[k].n+' 연결 끊음')});
+let apiSeq=0;
+async function apiCheck(keys){const my=++apiSeq,c=readPop(),fu=slash(c.fgUrl)||DEF.fgUrl,su=slash(c.sbUrl)||DEF.sbUrl;
+  const jobs={fg:()=>ping(fu+'posts?per_page=1&_fields=id',c),sb:()=>ping(su+'post.json?limit=1',c),gs:()=>ping(GS+'en/product/2539',c),
+    gw:()=>{const t0=performance.now();return wiki(GAMES[0][2],'action=query&meta=siteinfo').then(()=>Math.round(performance.now()-t0))}};
+  if(keys){if(S.usKey)jobs.us=()=>usFetch('photos/random?count=1',S.usKey);if(S.pxKey)jobs.px=()=>pxFetch('curated?per_page=1',S.pxKey)}
+  for(const k in jobs)API[k]=['w',''];renderApi();
+  const ks=Object.keys(jobs),res=await Promise.allSettled(ks.map(k=>jobs[k]()));if(my!==apiSeq)return;
+  ks.forEach((k,i)=>{const x=res[i];API[k]=x.status==='fulfilled'?['ok','정상']:['x',stTxt(x.reason)]});renderApi();
+  if(keys){const n=res.filter(x=>x.status==='fulfilled').length;toast(`연결 확인 ${n}/${ks.length} 정상`,n===ks.length?'ok':'err')}}
+$('#testBtn').onclick=()=>apiCheck(true);
+// ---------- photo service connect: stage card + 3-step window
+const WZ={us:{n:'Unsplash',join:'https://unsplash.com/join',keyUrl:'https://unsplash.com/oauth/applications/new',
+    s2:'열린 페이지에서 약관 4개 체크 → <kbd>Accept terms</kbd> → 이름에 "cutref" 입력 → <kbd>Create application</kbd><br>아래 <kbd>Keys</kbd>의 <kbd>Access Key</kbd> 글자를 길게 눌러 <kbd>복사</kbd>'},
+  px:{n:'Pexels',join:'https://www.pexels.com/join/',keyUrl:'https://www.pexels.com/api/new/',
+    s2:'열린 페이지에서 이름 · 용도 칸에 "그림 공부" 입력 → <kbd>Generate API Key</kbd><br>나온 긴 글자를 길게 눌러 <kbd>복사</kbd> · 이미 받았으면 <kbd>Your API Key</kbd>에 있음'}};
+const PASTE='<svg class="pi" viewBox="0 0 12 12"><path fill-rule="evenodd" d="M4 0h4v1h2v11H2V1h2zM4 2v1h4V2zM3 2v9h6V2H9v2H3z"/><path d="M4 6h4v1H4zM4 8h3v1H4z"/></svg>';
+const SVCARD={us:['잡지 화보 같은 고화질 사진',['화보','스트리트']],px:['모델 · 포즈 사진이 많음',['모델 포즈','코디']]};
+function showConnect(){msg.className='cn';
+  msg.innerHTML=`<div class="hd">패션 사진 · 연결 필요</div><div class="bd"><div class="lead">사진 서비스를 연결해야 패션 사진이 나옴</div><div class="sub">처음 한 번만 · 무료 · 3분 정도</div>
+  <div class="what"><span class="ic">?</span><span><b>API 키</b> · 사진 사이트가 이 홈페이지에 사진을 보여 주도록 허락하는 <b>출입증</b>. 가입하면 무료로 받고, 여기에 붙여넣으면 끝.</span></div>
+  <div class="svc">${['us','px'].map(k=>`<div class="sv"><div class="nm"><i class="svi ${k}">${k==='us'?'U':'P'}</i>${PSVC[k].n}</div><div class="ds">${SVCARD[k][0]}</div><div class="tg">${SVCARD[k][1].map(t=>`<span>${t}</span>`).join('')}</div><button class="pri" data-wz="${k}">연결하기 ▶</button></div>`).join('')}</div>
+  <div class="ft">하나만 연결해도 됨 · 둘 다 연결하면 섞어서 보여 줌</div></div>`}
+msg.addEventListener('click',e=>{const b=e.target.closest('[data-wz]');if(b)openWiz(b.dataset.wz)});
+const W={k:'',step:1,ok:false,val:'',chk:'',seq:0};
+function setKey(k,v){if(k==='us')S.usKey=v;else S.pxKey=v;pb[k].buf=[];S.queue.photo=[];save();if(curPop==='set')renderApi()}
+function openWiz(k){if(curPop)closeP();Object.assign(W,{k,step:PSVC[k].key()?3:1,ok:false,val:'',chk:''});renderWiz();$('#wzDim').classList.remove('hidden');$('#wz').classList.remove('hidden')}
+function closeWiz(){$('#wz').classList.add('hidden');$('#wzDim').classList.add('hidden');W.seq++}
+function renderWiz(){const z=WZ[W.k],n=W.step,box=$('#wz');
+  const li=(i,t,body)=>{const c=i<n?'d':i===n?'c':'f';return `<li class="${c}" data-st="${i}"><span class="n">${i<n?CHK8:i}</span><div><div class="t">${t}</div>${i===n?body:''}</div></li>`};
+  box.innerHTML=`<div class="hd"><b>${z.n} 연결 · ${n} / 3</b><button class="x ic" data-w="x" aria-label="닫기">${X16}</button></div><div class="bd">
+  <div class="prog">${[1,2,3].map(i=>`<i class="${i<n?'d':i===n?'c':''}"></i>`).join('')}</div><ol>
+  ${li(1,z.n+' 가입','<div class="s">이메일 또는 구글로 가입 · 계정이 있으면 다음</div><div class="act"><button data-w="join">가입 페이지 열기 ↗</button></div>')}
+  ${li(2,'키 받기',`<div class="s">${z.s2}</div><div class="act"><button data-w="key">키 받는 페이지 열기 ↗</button></div>`)}
+  ${li(3,'여기에 붙여넣기',`<div class="key"><input id="wzIn" placeholder="복사한 키 붙여넣기" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(W.val)}"><button data-w="paste">${PASTE}붙여넣기</button></div><div id="wzRes"></div>`)}
+  </ol>${n===3?'<div class="note">키는 이 기기에만 저장 · 다른 곳으로 보내지 않음 · 친구는 각자 자기 키 필요</div>':''}
+  <div class="btns"><button data-w="prev"${n===1?' disabled':''}>◀ 이전</button>${n<3?'<button class="pri" data-w="next">다음 ▶</button>':`<button class="pri" data-w="done"${W.ok?'':' disabled'}>패션 사진 보기 ▶</button>`}</div></div>`;
+  wzRes()}
+function wzRes(){const r=$('#wzRes');if(!r)return;r.className=W.chk?'res '+(W.chk==='ok'?'ok':W.chk==='w'?'':'err'):'';
+  r.innerHTML=W.chk==='ok'?CHK8+' 연결됨 · 사진 불러오기 확인':W.chk==='w'?'확인 중…':W.chk?esc(W.chk):'';const d=$('#wz [data-w="done"]');if(d)d.disabled=!W.ok}
+async function wzCheck(){const v=W.val.trim(),my=++W.seq;W.ok=false;if(v.length<20){W.chk=v?'키가 너무 짧음 · 전체를 복사했는지 확인':'';wzRes();return}
+  W.chk='w';wzRes();
+  try{await (W.k==='us'?usFetch('photos/random?count=1',v):pxFetch('curated?per_page=1',v));if(my!==W.seq)return;W.ok=true;W.chk='ok';setKey(W.k,v);API[W.k]=['ok','정상']}
+  catch(e){if(my!==W.seq)return;W.chk=/키가 올바르지/.test(e.message)?'키가 맞지 않음 · 다시 복사해서 붙여넣기':netMsg(e.message,'연결 거부')}
+  wzRes()}
+let wzT=0;
+$('#wz').addEventListener('input',e=>{if(e.target.id!=='wzIn')return;W.val=e.target.value;clearTimeout(wzT);wzT=setTimeout(wzCheck,400)});
+$('#wz').addEventListener('click',async e=>{const b=e.target.closest('[data-w]'),d=e.target.closest('li.d[data-st]');
+  if(!b){if(d){W.step=+d.dataset.st;renderWiz()}return}const a=b.dataset.w,z=WZ[W.k];
+  if(a==='x')closeWiz();else if(a==='join')window.open(z.join,'_blank','noopener');else if(a==='key')window.open(z.keyUrl,'_blank','noopener');
+  else if(a==='prev'){W.step=Math.max(1,W.step-1);renderWiz()}else if(a==='next'){W.step=Math.min(3,W.step+1);renderWiz()}
+  else if(a==='paste'){const i=$('#wzIn');try{const t=(await navigator.clipboard.readText()).trim();if(!t)throw 0;i.value=W.val=t;wzCheck()}catch(_){i.focus();toast('칸을 길게 눌러 붙여넣기')}}
+  else if(a==='done'){closeWiz();toast(z.n+' 연결됨','ok');if(S.tab!=='photo'){$('.tabs button[data-tab="photo"]').click()}else{S.queue.photo=[];if(S.pos.photo<0||!msg.classList.contains('hidden')){S.hist.photo.length=Math.max(0,S.pos.photo+1);next()}}}});
+$('#wz').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();closeWiz()}});
+$('#wzDim').addEventListener('click',closeWiz);
 // ---------- tablets: compact line-color swatch mirrors the 흰/검/빨 buttons
 (()=>{const tone=document.getElementById('tone'),lc=document.getElementById('lc');
   const sw=document.createElement('button');sw.id='lcSw';sw.setAttribute('aria-label','분할선 색');sw.dataset.tip='분할선 색';sw.innerHTML='선<i></i>';lc.after(sw);
