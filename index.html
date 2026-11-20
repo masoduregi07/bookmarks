@@ -332,7 +332,7 @@ button.ic:active{transform:none}
 @keyframes tipd{from{transform:translateY(-6px);opacity:0}}
 /* save button */
 #saveCut{display:inline-flex;align-items:center;gap:6px;--sv-in:#fff}
-#saveCut svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges}
+#saveCut svg{width:9px;height:11px;fill:currentColor;shape-rendering:crispEdges;flex:none}
 #saveCut.done{background:var(--mint)}
 #saveCut.done span::after{content:"됨"}
 /* calendar */
@@ -644,7 +644,7 @@ header.tov .tsc{display:flex}
   body[data-tb="3"] .top footer>.grp:first-child{flex:1;flex-wrap:nowrap}
   body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{flex:none;justify-content:center;height:30px;min-height:0;padding:0 8px;gap:0}
   body[data-tb="3"] #flip{flex:none;height:30px;min-height:0;padding:0 5px!important}
-  body[data-tb="3"] #prev .bt,body[data-tb="3"] #next .bt{display:none}body[data-tb="3"] #prev .ar,body[data-tb="3"] #next .ar{font-size:12px}
+  body[data-tb="3"] #prev .bt,body[data-tb="3"] #next .bt{display:none}
   body[data-tb="3"] #saveCut span{display:none}
 }
 /* tablets (touch, wider than phones): tighter toolbar box */
@@ -720,7 +720,7 @@ header.tov .tsc{display:flex}
 }
 /* prev / next: arrow + label as one centered unit */
 #prev,#next{display:inline-flex;align-items:center;justify-content:center;gap:6px}
-#prev .ar,#next .ar{display:inline-block;width:10px;text-align:center;line-height:16px}
+#prev .ar,#next .ar{width:6px;height:11px;fill:currentColor;shape-rendering:crispEdges;flex:none} /* pixel arrows, same 11px height as the text */
 #tone .ti{display:none;width:14px;height:14px;shape-rendering:crispEdges}
 #tone button{display:inline-flex;align-items:center;justify-content:center}
 /* very narrow phones: squeeze button side padding so 이전·기록·다음 컷·반전·색 stay on one row */
@@ -949,9 +949,9 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 
 <footer>
   <div class="grp">
-    <button id="prev"><span class="ar">◀</span><span class="bt">이전</span></button>
-    <button id="saveCut" data-tip="오늘 연습에 기록" data-key="S"><svg viewBox="0 0 14 14"><path d="M2 0h10v14l-5-3-5 3z"/><path fill="var(--sv-in,#fff)" d="M6 3h2v2h2v2H8v2H6V7H4V5h2z"/></svg><span>기록</span></button>
-    <button id="next"><span class="bt">다음 컷</span><span class="ar">▶</span></button>
+    <button id="prev"><svg class="ar" viewBox="0 0 6 11" aria-hidden="true"><path d="M5 0h1v1h-1zM4 1h2v1h-2zM3 2h3v1h-3zM2 3h4v1h-4zM1 4h5v1h-5zM0 5h6v1h-6zM1 6h5v1h-5zM2 7h4v1h-4zM3 8h3v1h-3zM4 9h2v1h-2zM5 10h1v1h-1z"/></svg><span class="bt">이전</span></button>
+    <button id="saveCut" data-tip="오늘 연습에 기록" data-key="S"><svg viewBox="0 0 9 11"><path d="M0 0h9v11H7v-1H6V9H3v1H2v1H0z"/><path fill="var(--sv-in,#fff)" d="M4 2h1v1h1v1H5v1H4V4H3V3h1z"/></svg><span>기록</span></button>
+    <button id="next"><span class="bt">다음 컷</span><svg class="ar" viewBox="0 0 6 11" aria-hidden="true"><path d="M0 0h1v1H0zM0 1h2v1H0zM0 2h3v1H0zM0 3h4v1H0zM0 4h5v1H0zM0 5h6v1H0zM0 6h5v1H0zM0 7h4v1H0zM0 8h3v1H0zM0 9h2v1H0zM0 10h1v1H0z"/></svg></button>
   </div>
   <i class="dv"></i>
   <div class="grp d3only" id="gLight"><label>라이팅</label><select id="d3Light" aria-label="라이팅"><option value="rand">랜덤</option><option value="rembr">렘브란트</option><option value="split">스플릿</option><option value="rim">역광 림</option><option value="under">아래 조명</option><option value="top">탑 라이트</option><option value="warmcool">웜 · 쿨 2점</option><option value="off">끔</option></select></div>
