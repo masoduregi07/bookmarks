@@ -848,34 +848,34 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 .cn button.pri,.wz button.pri{background:var(--ink);color:#fff}
 /* ---------- 연결 단계 창 */
 #wzDim{position:fixed;inset:0;background:rgba(61,59,55,.25);z-index:55}
-.wz{position:fixed;z-index:56;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;background:var(--panel);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shd);font-size:12px}
-.wz .hd{display:flex;align-items:center;height:28px;padding:0 3px 0 12px;border-bottom:2px solid var(--ink);background:var(--sky);font-weight:700}
+.wz{position:fixed;z-index:56;left:50%;top:50%;transform:translate(-50%,-50%);width:min(400px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
+.wz .hd{display:flex;align-items:center;height:28px;padding:0 3px 0 12px;border-bottom:2px solid var(--ink);background:var(--peach);font-weight:700}
 .wz .hd b{margin-right:auto}
 .wz .hd .x{width:22px!important;height:20px!important;padding:0!important;border:none;box-shadow:none;background:none!important}
 .wz .hd .x svg{width:16px;height:16px;fill:var(--ink);shape-rendering:crispEdges}
-.wz .bd{padding:10px}
-.wz .prog{display:flex;gap:4px;margin-bottom:10px}
-.wz .prog i{flex:1;height:6px;background:#e4e2dc;border:1px solid var(--soft)}
-.wz .prog i.d{background:var(--ink);border-color:var(--ink)}.wz .prog i.c{background:var(--yel);border-color:var(--ink)}
-.wz ol{list-style:none;display:grid;gap:6px}
-.wz li{display:grid;grid-template-columns:22px 1fr;gap:6px;align-items:start;border:2px solid var(--soft);background:#fff;padding:6px 8px 6px 6px}
-.wz li .n{width:20px;height:20px;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;background:#fff}
-.wz li .n svg,.wz .res svg{width:8px;height:8px;shape-rendering:crispEdges}
-.wz li.d{background:none;color:var(--tx3);cursor:pointer}.wz li.d .n{background:var(--ink);border-color:var(--ink)}.wz li.d .n svg path{fill:#fff}
-.wz li.c{border-color:var(--ink);box-shadow:2px 2px 0 var(--shd)}.wz li.c .n{background:var(--yel)}
-.wz li.f{color:var(--tx3)}
-.wz li .t{font-weight:700;line-height:20px}
-.wz li .s{font-size:11px;color:var(--tx2);line-height:1.6;margin-top:2px}
-.wz li .s kbd{font:inherit;border:1px solid var(--ink);background:#f7f6f1;padding:0 4px;color:var(--ink)}
-.wz li .act,.wz .key{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
-.wz .key{flex-wrap:nowrap}
+.wz .bd{padding:10px 12px 12px}
+.wz .chips{display:flex;align-items:center;justify-content:center;gap:4px;padding-bottom:10px;margin-bottom:10px;border-bottom:2px dotted var(--soft)}
+.wz .chips>i{width:8px;border-top:2px dotted var(--tx2)}
+.wz button.chip{display:inline-flex;align-items:center;gap:5px;height:22px!important;padding:0 6px 0 2px!important;border:2px solid var(--soft);background:#fff;box-shadow:none;font-size:11px;color:var(--tx2);cursor:default}
+.wz .chip b{display:flex;align-items:center;justify-content:center;width:15px;height:14px;background:var(--tx3);color:#fff;font-size:11px;line-height:1;font-weight:700}
+.wz .chip b svg{width:8px;height:8px;shape-rendering:crispEdges}.wz .chip b svg path{fill:#fff}
+.wz button.chip.d{border-color:var(--ink);color:var(--ink);cursor:pointer}.wz .chip.d b,.wz .chip.c b{background:var(--ink)}
+.wz button.chip.c{border-color:var(--ink);background:var(--yel);color:var(--ink);box-shadow:2px 2px 0 var(--shd)}
+.wz button.chip:active{transform:none}.wz button.chip:not(.d):hover{background:#fff}.wz button.chip.c:hover{background:var(--yel)}
+.wz .t{display:block;font-size:13px;font-weight:700;margin-bottom:4px}
+.wz .box{border:2px solid var(--ink);background:#fff;padding:8px}
+.wz .s{font-size:11px;color:var(--tx2);line-height:1.6}
+.wz .s kbd{font:inherit;border:1px solid var(--ink);background:#f7f6f1;padding:0 4px;color:var(--ink)}
+.wz .act,.wz .key{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.wz .key{flex-wrap:nowrap;margin-top:0}
 .wz .key input{flex:1;min-width:0;height:26px!important;min-height:0!important;border:2px solid var(--ink);background:#fff;padding:0 6px;font:inherit;font-size:11px}
 .wz .key input:focus{outline:none;box-shadow:inset 0 -3px 0 var(--yel)}
 .pi{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges;flex:none}
 .wz .res{margin-top:6px;font-size:11px;display:flex;align-items:center;gap:5px;padding:3px 6px;border:2px solid var(--ink);background:#fff}
+.wz .res svg{width:8px;height:8px;shape-rendering:crispEdges}
 .wz .res.ok{background:var(--mint)}.wz .res.err{background:var(--pink)}
-.wz .note{margin-top:8px;font-size:10px;color:var(--tx3);line-height:1.6}
-.wz .btns{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.wz .note{margin-top:8px;font-size:10px;color:var(--tx2);line-height:1.6}
+.wz .btns{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:2px solid var(--ink)}
 .wz .btns button:disabled{opacity:.4}
 /* 필터 › 출처 */
 #fltPop .src{display:flex;gap:4px;flex-wrap:wrap}
@@ -1955,7 +1955,7 @@ const SVCARD={us:['잡지 화보 같은 고화질 사진',['화보','스트리�
 function showConnect(){msg.className='cn';
   const svc=k=>`<div class="r"><i class="svi ${k}">${k==='us'?'U':'P'}</i><span><span class="nm">${PSVC[k].n}</span><span class="ds">${SVCARD[k][0]}</span></span><button class="pri" data-wz="${k}">연결 ▶</button></div>`;
   msg.innerHTML=`<div class="hd">패션 사진 · 연결 필요</div><div class="bd"><div class="lead">사진 서비스 하나만 연결하면 시작</div><div class="sub">무료 · 처음 한 번 3분</div>
-  <div class="steps"><span><b>1</b><em>가입</em></span><i></i><span><b>2</b><em>키 복사</em></span><i></i><span><b>3</b><em>붙여넣기</em></span></div>
+  <div class="steps"><span><b>1</b><em>가입</em></span><i></i><span><b>2</b><em>키 받기</em></span><i></i><span><b>3</b><em>붙여넣기</em></span></div>
   <div class="sl">${svc('us')}${svc('px')}</div><div class="ft">API 키 = 사진을 보여 주는 출입증 · 이 기기에만 저장<br>둘 다 연결하면 섞어서 표시</div></div>`}
 msg.addEventListener('click',e=>{const b=e.target.closest('[data-wz]');if(b)openWiz(b.dataset.wz)});
 
@@ -1963,14 +1963,14 @@ const W={k:'',step:1,ok:false,val:'',chk:'',seq:0};
 function setKey(k,v){if(k==='us')S.usKey=v;else S.pxKey=v;pb[k].buf=[];clearQ('photo');save();if(curPop==='set')renderApi()}
 function openWiz(k){if(curPop)closeP();Object.assign(W,{k,step:PSVC[k].key()?3:1,ok:false,val:'',chk:''});renderWiz();$('#wzDim').classList.remove('hidden');$('#wz').classList.remove('hidden')}
 function closeWiz(){$('#wz').classList.add('hidden');$('#wzDim').classList.add('hidden');W.seq++}
-function renderWiz(){const z=WZ[W.k],n=W.step,box=$('#wz');
-  const li=(i,t,body)=>{const c=i<n?'d':i===n?'c':'f';return `<li class="${c}" data-st="${i}"><span class="n">${i<n?CHK8:i}</span><div><div class="t">${t}</div>${i===n?body:''}</div></li>`};
-  box.innerHTML=`<div class="hd"><b>${z.n} 연결 · ${n} / 3</b><button class="x ic" data-w="x" aria-label="닫기">${X16}</button></div><div class="bd">
-  <div class="prog">${[1,2,3].map(i=>`<i class="${i<n?'d':i===n?'c':''}"></i>`).join('')}</div><ol>
-  ${li(1,z.n+' 가입','<div class="s">이메일 또는 구글로 가입 · 계정이 있으면 다음</div><div class="act"><button data-w="join">가입 페이지 열기 ↗</button></div>')}
-  ${li(2,'키 받기',`<div class="s">${z.s2}</div><div class="act"><button data-w="key">키 받는 페이지 열기 ↗</button></div>`)}
-  ${li(3,'여기에 붙여넣기',`<div class="key"><input id="wzIn" placeholder="복사한 키 붙여넣기" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(W.val)}"><button data-w="paste">${PASTE}붙여넣기</button></div><div id="wzRes"></div>`)}
-  </ol>${n===3?'<div class="note">키는 이 기기에만 저장 · 다른 곳으로 보내지 않음 · 친구는 각자 자기 키 필요</div>':''}
+function renderWiz(){const z=WZ[W.k],n=W.step,box=$('#wz'),NM=['가입','키 받기','붙여넣기'];
+  const chip=i=>{const c=i<n?'d':i===n?'c':'';return `<button type="button" class="chip ${c}"${i<n?` data-st="${i}"`:' tabindex="-1"'}${i===n?' aria-current="step"':''}><b>${i<n?CHK8:i}</b>${NM[i-1]}</button>`};
+  const body=n===1?`<div class="t">${z.n} 가입</div><div class="box"><div class="s">이메일 또는 구글로 가입 · 계정이 있으면 다음</div><div class="act"><button data-w="join">가입 페이지 열기 ↗</button></div></div>`
+    :n===2?`<div class="t">키 받기</div><div class="box"><div class="s">${z.s2}</div><div class="act"><button data-w="key">키 받는 페이지 열기 ↗</button></div></div>`
+    :`<label class="t" for="wzIn">붙여넣기</label><div class="box"><div class="key"><input id="wzIn" placeholder="복사한 키 붙여넣기" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(W.val)}"><button data-w="paste">${PASTE}붙여넣기</button></div><div id="wzRes"></div></div>`;
+  box.innerHTML=`<div class="hd"><b>${z.n} 연결</b><button class="x ic" data-w="x" aria-label="닫기">${X16}</button></div><div class="bd">
+  <div class="chips">${[1,2,3].map(chip).join('<i></i>')}</div>${body}
+  ${n===3?'<div class="note">키는 이 기기에만 저장 · 다른 곳으로 보내지 않음 · 친구는 각자 자기 키 필요</div>':''}
   <div class="btns"><button data-w="prev"${n===1?' disabled':''}>◀ 이전</button>${n<3?'<button class="pri" data-w="next">다음 ▶</button>':`<button class="pri" data-w="done"${W.ok?'':' disabled'}>패션 사진 보기 ▶</button>`}</div></div>`;
   wzRes()}
 function wzRes(){const r=$('#wzRes');if(!r)return;r.className=W.chk?'res '+(W.chk==='ok'?'ok':W.chk==='w'?'':'err'):'';
@@ -1982,7 +1982,7 @@ async function wzCheck(){const v=W.val.trim(),my=++W.seq;W.ok=false;if(v.length<
   wzRes()}
 let wzT=0;
 $('#wz').addEventListener('input',e=>{if(e.target.id!=='wzIn')return;W.val=e.target.value;clearTimeout(wzT);wzT=setTimeout(wzCheck,400)});
-$('#wz').addEventListener('click',async e=>{const b=e.target.closest('[data-w]'),d=e.target.closest('li.d[data-st]');
+$('#wz').addEventListener('click',async e=>{const b=e.target.closest('[data-w]'),d=e.target.closest('.chip.d[data-st]');
   if(!b){if(d){W.step=+d.dataset.st;renderWiz()}return}const a=b.dataset.w,z=WZ[W.k];
   if(a==='x')closeWiz();else if(a==='join')window.open(z.join,'_blank','noopener');else if(a==='key')window.open(z.keyUrl,'_blank','noopener');
   else if(a==='prev'){W.step=Math.max(1,W.step-1);renderWiz()}else if(a==='next'){W.step=Math.min(3,W.step+1);renderWiz()}
