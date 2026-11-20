@@ -954,6 +954,19 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 .calp .d.blank{background:none}
 .calp .cleg{padding:6px 12px 0}.calp .cleg i:first-of-type{background:#ebe9e2;border-color:#ebe9e2}
 @media (hover:none){.calp .d:hover{box-shadow:none}.calp .d.today:hover{box-shadow:inset 0 0 0 2px var(--ink)}}
+
+/* ---------- 연습 기록 panel: the 연습 기록 | 보관함 tabs are the header row (V1) */
+#calP .ch{height:30px;padding:0 3px 0 8px!important;align-items:flex-end;gap:0}
+#calP .ch>.ic{align-self:flex-end;margin-bottom:0} /* icon centers sit on the tab text center line */
+#calP .ch #calTabs{margin:0 auto 0 0;padding:0;border:none;gap:0;align-self:stretch;align-items:flex-end}
+#calP .ch #calTabs button{height:24px;padding:0 10px 2px!important;margin:0 0 -2px;border:2px solid transparent;border-bottom:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;line-height:1;font-size:12px;font-weight:400;color:var(--tx2);background:none!important;box-shadow:none!important;position:relative}
+#calP .ch #calTabs button+button::before{content:"";position:absolute;left:-1px;top:50%;margin-top:-5px;width:2px;height:10px;background:rgba(61,59,55,.25)}
+#calP .ch #calTabs button.on::before,#calP .ch #calTabs button.on+button::before{display:none}
+#calP .ch #calTabs button.on{border-color:var(--ink);background:var(--panel)!important;color:var(--ink);font-weight:700;
+  clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
+#calP .ch #calTabs button i{font-style:normal;font-size:10px;font-weight:400;color:var(--tx3)}
+#calP .ch #calTabs button i:empty{display:none}
+#calP .ch #calTabs svg{width:13px;height:12px}
 </style>
 </head>
 <body>
@@ -1087,7 +1100,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <div class="lbody" id="lnkBody"></div>
 </aside>
 <aside id="calP" class="calp" aria-label="연습 기록" aria-hidden="true">
-  <div class="ch"><b>연습 기록</b>
+  <div class="ch"><div class="ptabs" id="calTabs"><button class="on" data-v="cal">연습 기록<i id="calTabN"></i></button><button data-v="fav"><svg class="hrt" viewBox="0 0 13 12" aria-hidden="true"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v1H0zM6 2h1v1H6zM12 2h1v1H12zM0 3h1v1H0zM12 3h1v1H12zM0 4h1v1H0zM12 4h1v1H12zM0 5h1v1H0zM12 5h1v1H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h5v1H1zM7 2h5v1H7zM1 3h11v1H1zM1 4h11v1H1zM1 5h11v1H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/></svg>보관함 <i id="favTabN"></i></button></div>
     <button class="ic" id="calIo" data-tip="백업" aria-label="기록 백업" aria-haspopup="true"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 1h11v1h1v1h1v1h1v11H1zM4 2h7v4H4zM8 3h2v2H8zM3 9h10v5H3zM5 11h6v1H5z"/></svg></button>
     <button class="ic" id="calFull" data-tip="전체 화면" ><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M220,48V88a12,12,0,0,1-24,0V60H168a12,12,0,0,1,0-24h40A12,12,0,0,1,220,48ZM88,196H60V168a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H88a12,12,0,0,0,0-24Zm120-40a12,12,0,0,0-12,12v28H168a12,12,0,0,0,0,24h40a12,12,0,0,0,12-12V168A12,12,0,0,0,208,156ZM88,36H48A12,12,0,0,0,36,48V88a12,12,0,0,0,24,0V60H88a12,12,0,0,0,0-24Z"/></svg></button>
     <div class="calmenu hidden" id="calMenu">
@@ -1098,7 +1111,6 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     </div>
     <button class="ic" id="calX" data-tip="닫기" data-key="Esc"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button>
   </div>
-  <div class="ptabs" id="calTabs"><button class="on" data-v="cal">캘린더 <i id="calTabN"></i></button><button data-v="fav"><svg class="hrt" viewBox="0 0 13 12" aria-hidden="true"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v1H0zM6 2h1v1H6zM12 2h1v1H12zM0 3h1v1H0zM12 3h1v1H12zM0 4h1v1H0zM12 4h1v1H12zM0 5h1v1H0zM12 5h1v1H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h5v1H1zM7 2h5v1H7zM1 3h11v1H1zM1 4h11v1H1zM1 5h11v1H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/></svg>보관함 <i id="favTabN"></i></button></div>
   <div class="cbody">
     <div class="cmain">
       <div class="cmon"><button class="nb" id="calPrev">◀</button><b id="calTitle"></b><button class="nb" id="calNext">▶</button><button class="sm" id="calToday">오늘</button></div>
