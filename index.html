@@ -968,27 +968,6 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #calP .ch #calTabs button i:empty{display:none}
 #calP .ch #calTabs svg{width:13px;height:12px}
 
-/* ---------- 필터 창: folder tabs (A2a) on a bordered option list (A) */
-#fltPop section{padding:10px 12px 12px}
-#fltPop .fx-tabs{border-bottom:none!important;margin:0 0 -2px!important;padding-left:6px;gap:0;position:relative;z-index:1;align-items:flex-end}
-#fltPop .fx-tab{height:24px;border:2px solid transparent!important;border-bottom:none!important;margin:0!important;padding:0 10px!important;background:none!important;color:var(--tx2);font-weight:400;box-shadow:none!important;position:relative}
-#fltPop .fx-tab+.fx-tab::before{content:"";position:absolute;left:-1px;top:50%;margin-top:-5px;width:2px;height:10px;background:var(--soft)}
-#fltPop .fx-tab.on::before,#fltPop .fx-tab.on+.fx-tab::before{display:none}
-#fltPop .fx-tab.on{border-color:var(--ink)!important;background:#fff!important;color:var(--ink);font-weight:700;height:28px;box-shadow:inset 0 4px 0 var(--yel)!important;
-  clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
-#fltPop .fx-tab i{background:none!important;border:none!important;color:var(--tx3)!important;padding:0!important;min-width:0!important;font-size:10px}
-#fltPop .fl{border:2px solid var(--ink);background:#fff;margin-bottom:8px}
-#fltPop .fl .fx-row{display:grid!important;grid-template-columns:56px 1fr!important;align-items:stretch!important;padding:0!important;column-gap:0!important;border-top:1px solid var(--soft)}
-#fltPop .fl .fx-row:first-child{border-top:none}
-#fltPop .fl .fx-l{position:relative;display:flex!important;align-items:center;justify-content:center;padding:0 4px!important;font-size:11px;text-align:center}
-#fltPop .fl .fx-l span{padding-top:0!important}
-#fltPop .fl .fx-l::after{content:"";position:absolute;right:0;top:6px;bottom:6px;border-right:2px dotted var(--tx3)}
-#fltPop .fl .fx-row>div{padding:5px 6px 5px 8px;min-width:0}
-#fltPop .fl .gr{gap:3px!important}
-#fltPop .fl .o{padding:3px 6px 1px!important;line-height:14px!important}
-#fltPop .fl input[type=text]{margin:0!important}
-#fltPop .ft{border-top:none!important;padding-top:0!important}
-
 /* ---------- 필터 창 (A2a): rows in one list box, folder tabs on top of it */
 #fltPop section{padding:10px 12px 12px}
 #fltPop .fl{border:2px solid var(--ink);background:#fff;margin-bottom:8px}
@@ -1000,7 +979,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .fl .fx-row>div{padding:5px 6px 5px 8px;min-width:0}
 #fltPop .fl .fx-one{padding:6px 8px;border-top:1px solid var(--soft)}
 #fltPop .fl .gr{gap:3px}
-#fltPop .fl .o{padding:3px 6px 1px;line-height:14px}
+#fltPop .fl .o{padding:2px 5px 2px 7px;line-height:14px} /* Galmuri sits 1px low and carries ~2px right bearing: this puts the ink dead center */
 #fltPop .fl .fx-row:has(+ .ft) .gr,#fltPop .fl .fx-one>.gr:last-child{margin-bottom:0}
 #fltPop .ft{border-top:none;padding-top:0}
 #fltPop .fx-tabs{border-bottom:none!important;margin:0 0 -2px!important;padding-left:6px;gap:0;position:relative;z-index:1;align-items:flex-end}
@@ -1010,6 +989,13 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .fx-tab.on{border-color:var(--ink)!important;background:#fff!important;color:var(--ink);font-weight:700!important;height:28px;box-shadow:inset 0 4px 0 var(--yel)!important;clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
 #fltPop .fx-tab i{background:none;border:none;color:var(--tx3);padding:0;min-width:0;font-size:10px}
 @media (hover:hover){#fltPop .fx-tab:not(.on):hover{color:var(--ink)}}
+
+/* 영화 › 장르: 4 equal columns; 시대: one line that scrolls sideways like a timeline */
+#fltPop .fl .g4 .gr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+#fltPop .fl .g4 .o{text-align:center;overflow:hidden;text-overflow:ellipsis;padding-left:4px;padding-right:2px}
+#fltPop .fl .tl .gr{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#fltPop .fl .tl .gr::-webkit-scrollbar{display:none}
+#fltPop .fl .tl .o{flex:none}
 </style>
 </head>
 <body>
@@ -1794,7 +1780,7 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCou
       const byCount=l=>[...l].sort((a,b)=>(b.count||0)-(a.count||0));
       if(ft==='search'){const sel=[...(f.movies||[]).map(m=>`<span class="o on" data-mvdel="${m.id}" title="누르면 빼기">${esc(m.name)} ×</span>`),f.person?`<span class="o on" data-pclr title="누르면 빼기">${esc(f.person.name)} ×</span>`:''].join('');
         h+=`<div class="fx-one"><input type="text" id="fSearch" placeholder="영화 제목 · 감독 · 촬영 이름 (영문)" autocomplete="off"><div id="srList"></div>${sel?`<div class="fx-sec">고른 것</div><div class="gr">${sel}</div>`:''}${(f.movies||[]).length?'<div class="wk-msg" style="margin-top:8px">영화를 고르면 다른 조건은 쓰지 않음</div>':''}</div>`}
-      else if(ft==='genre'){if(G.genre)h+=row('장르',ch('genre',byCount(G.genre.kids),x=>KO_GENRE[x.name]||x.name));if(G.year)h+=row('시대',ch('year',G.year.kids,x=>x.name))}
+      else if(ft==='genre'){if(G.genre)h+=row('장르',ch('genre',byCount(G.genre.kids),x=>KO_GENRE[x.name]||x.name)).replace('fx-row top','fx-row top g4');if(G.year)h+=row('시대',ch('year',G.year.kids,x=>x.name)).replace('fx-row top','fx-row tl')}
       else if(ft==='region'&&G.country){const all=byCount(G.country.kids),big=x=>(x.count||0)>5||f.country.some(y=>y.id===x.id)||f.ex.country.some(y=>y.id===x.id);
         for(const r of REGIONS_F){const l=all.filter(x=>((KO_CTRY[x.name]||[0,'그 외'])[1])===r&&(app.allCtry||big(x)));let l2=l,fold=0;if(r==='유럽'&&!app.euAll){const sel=y=>f.country.some(z=>z.id===y.id)||f.ex.country.some(z=>z.id===y.id);l2=l.filter((y,i)=>i<6||sel(y));fold=l.length-l2.length}
           let x=ch('country',l2,y=>(KO_CTRY[y.name]||[y.name])[0]);if(fold)x+=`<span class="o more" data-moreeu>+ ${fold}개국</span>`;
@@ -1835,9 +1821,6 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCou
       +row('태그',`<input type="text" id="fTags" value="${esc(f.tags)}" placeholder="예: yutaka_nakamura  -3d_cg" autocomplete="off">`);
     b.innerHTML=`<div class="fx-tabs">${TABS.map(([k,l,n])=>`<button class="fx-tab${ft===k?' on':''}" data-ftab="${k}">${l}${n?`<i>${n}</i>`:''}</button>`).join('')}</div>${body}
     <div class="ft"><label><input type="checkbox" id="fPlay" ${S.play?'checked':''}> 영상 재생</label><a id="fReset">초기화</a></div>`}
-  // group each run of option rows into one bordered list (label | dotted divider | choices); the tabs sit on top of it
-  {let run=[];const flush=()=>{if(!run.length)return;const w=document.createElement('div');w.className='fl';run[0].before(w);run.forEach(r=>w.appendChild(r));run=[]};
-   [...b.children].forEach(c=>{if(c.classList.contains('fx-row'))run.push(c);else flush()});flush()}
   // option rows live in one bordered list (name ┊ options), the tabs sit on top of it
   {let box=null;[...b.children].forEach(el=>{if(el.matches('.fx-row,.fx-one')){if(!box){box=document.createElement('div');box.className='fl';el.before(box)}box.appendChild(el)}else box=null})}
   if(ae&&!TOUCH()){const el=document.getElementById(ae);if(el&&el.tagName==='INPUT'){el.focus();try{el.setSelectionRange(sel,sel)}catch(e){}}}
