@@ -1209,6 +1209,7 @@ function placeToasts(){const box=$('#toasts'),top=document.querySelector('.top')
   const zen=document.body.classList.contains('zen');let x,y;
   const stt=$('#stTop');if(!zen&&stt&&stt.getBoundingClientRect().height){const r=stt.getBoundingClientRect();x=r.left;y=r.bottom+6} // always below 필터 / 제목
   else{const r=(zen?st:top).getBoundingClientRect();x=r.left+(zen?10:0);y=zen?r.top+10:r.bottom+18}
+  const dr=$('#tbDrawer');if(!zen&&dr&&!dr.classList.contains('hidden')&&dr.offsetParent){const r=dr.getBoundingClientRect();if(r.bottom+6>y&&r.left<x+200)y=r.bottom+6} // open 분할/타이머 mini window: toasts go under it
   box.style.left=x+'px';box.style.top=y+'px';box.style.maxWidth=(innerWidth-x-12)+'px'}
 function toast(t,kind=''){placeToasts();const el=document.createElement('div');el.className='toast '+kind;el.textContent=t;
   const box=$('#toasts');box.appendChild(el);while(box.children.length>4)box.firstChild.remove();
@@ -1617,6 +1618,7 @@ let tLeft=S.tDur,tInt=null,tState='idle',tEnd=0;
 const tCalc=()=>Math.max(0,Math.ceil((tEnd-Date.now())/1000));
 function tRender(){const el=$('#timerBig');$('#tIn').value=fmt(tState==='idle'?S.tDur:tLeft);
   el.textContent=tState==='idle'?'':fmt(tLeft);el.className='mono '+(tState==='run'?'run':tState==='pause'?'pause':'');
+  {const st=$('#stTop'),rt=el.textContent?(el.offsetWidth+18)+'px':'';if(st.style.right!==rt){st.style.right=rt;fitChips()}} // chips wrap before the timer box
   $('#tmr').classList.toggle('run',tState==='run');$('#tmr').classList.toggle('pause',tState==='pause');
   $('#tPlay').disabled=tState==='run';$('#tPause').disabled=tState!=='run';$('#tReset').disabled=tState==='idle'}
 function tTick(){if(tState!=='run')return;const n=tCalc();
@@ -2038,11 +2040,11 @@ $('#wzDim').addEventListener('click',closeWiz);
 })();
 (()=>{const dr=document.getElementById('tbDrawer'),body=document.getElementById('tbdBody'),T=document.getElementById('tbdT');
   const G={miniGrid:['gGrid','분할'],miniTmr:['tmr','타이머']};let cur=null,mark=null;
-  let tOut=0;const home=()=>{clearTimeout(tOut);if(!mark)return;const el=body.firstElementChild;mark.parentNode.insertBefore(el,mark);mark.remove();mark=null;dr.classList.remove('out');dr.classList.add('hidden')};
+  let tOut=0;const home=()=>{clearTimeout(tOut);if(!mark)return;const el=body.firstElementChild;mark.parentNode.insertBefore(el,mark);mark.remove();mark=null;dr.classList.remove('out');dr.classList.add('hidden');placeToasts()};
   const close=(quick)=>{if(!cur)return;document.getElementById(cur).classList.remove('on');cur=null;
     if(quick===true){home();return}dr.classList.add('out');tOut=setTimeout(home,130)}; // slides back up, then the controls go home
   const open=id=>{close(true);home();const el=document.getElementById(G[id][0]);mark=document.createComment('home');el.before(mark);body.appendChild(el);
-    T.textContent=G[id][1];cur=id;document.getElementById(id).classList.add('on');dr.classList.remove('hidden');dr.style.animation='none';dr.offsetWidth;dr.style.animation=''};
+    T.textContent=G[id][1];cur=id;document.getElementById(id).classList.add('on');dr.classList.remove('hidden');dr.style.animation='none';dr.offsetWidth;dr.style.animation='';placeToasts()};
   Object.keys(G).forEach(id=>document.getElementById(id).onclick=e=>{e.stopPropagation();cur===id?close():open(id)});
   document.getElementById('tbdX').onclick=close;
   document.addEventListener('pointerdown',e=>{if(cur&&!e.target.closest('#tbDrawer,#gMini'))close()},true);
@@ -2137,7 +2139,7 @@ function zoomAt(z,px,py){z=Math.max(1,Math.min(8,z));const [cx,cy]=zoomCenter();
 })();
 // ---------- swipe on image (touch): left = next, right = previous
 (()=>{let sw=null;
-  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||S.tab==='3d'||ZM.z>1.01)return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
+  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||S.tab==='3d'||ZM.z>1.01||e.target.closest('button,a,.chip,#stTop,#info,#zoomUi,#msg'))return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
   stage.addEventListener('pointerup',e=>{if(!sw||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y,dt=Date.now()-sw.t;sw=null;
     if(ZM.used||ZM.z>1.01){ZM.used=false;return}
     if(dt<700&&Math.abs(dx)>60&&Math.abs(dy)<Math.abs(dx)*.6){dx<0?next():prev()}});
