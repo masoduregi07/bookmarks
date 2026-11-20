@@ -967,6 +967,49 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #calP .ch #calTabs button i{font-style:normal;font-size:10px;font-weight:400;color:var(--tx3)}
 #calP .ch #calTabs button i:empty{display:none}
 #calP .ch #calTabs svg{width:13px;height:12px}
+
+/* ---------- 필터 창: folder tabs (A2a) on a bordered option list (A) */
+#fltPop section{padding:10px 12px 12px}
+#fltPop .fx-tabs{border-bottom:none!important;margin:0 0 -2px!important;padding-left:6px;gap:0;position:relative;z-index:1;align-items:flex-end}
+#fltPop .fx-tab{height:24px;border:2px solid transparent!important;border-bottom:none!important;margin:0!important;padding:0 10px!important;background:none!important;color:var(--tx2);font-weight:400;box-shadow:none!important;position:relative}
+#fltPop .fx-tab+.fx-tab::before{content:"";position:absolute;left:-1px;top:50%;margin-top:-5px;width:2px;height:10px;background:var(--soft)}
+#fltPop .fx-tab.on::before,#fltPop .fx-tab.on+.fx-tab::before{display:none}
+#fltPop .fx-tab.on{border-color:var(--ink)!important;background:#fff!important;color:var(--ink);font-weight:700;height:28px;box-shadow:inset 0 4px 0 var(--yel)!important;
+  clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
+#fltPop .fx-tab i{background:none!important;border:none!important;color:var(--tx3)!important;padding:0!important;min-width:0!important;font-size:10px}
+#fltPop .fl{border:2px solid var(--ink);background:#fff;margin-bottom:8px}
+#fltPop .fl .fx-row{display:grid!important;grid-template-columns:56px 1fr!important;align-items:stretch!important;padding:0!important;column-gap:0!important;border-top:1px solid var(--soft)}
+#fltPop .fl .fx-row:first-child{border-top:none}
+#fltPop .fl .fx-l{position:relative;display:flex!important;align-items:center;justify-content:center;padding:0 4px!important;font-size:11px;text-align:center}
+#fltPop .fl .fx-l span{padding-top:0!important}
+#fltPop .fl .fx-l::after{content:"";position:absolute;right:0;top:6px;bottom:6px;border-right:2px dotted var(--tx3)}
+#fltPop .fl .fx-row>div{padding:5px 6px 5px 8px;min-width:0}
+#fltPop .fl .gr{gap:3px!important}
+#fltPop .fl .o{padding:3px 6px 1px!important;line-height:14px!important}
+#fltPop .fl input[type=text]{margin:0!important}
+#fltPop .ft{border-top:none!important;padding-top:0!important}
+
+/* ---------- 필터 창 (A2a): rows in one list box, folder tabs on top of it */
+#fltPop section{padding:10px 12px 12px}
+#fltPop .fl{border:2px solid var(--ink);background:#fff;margin-bottom:8px}
+#fltPop .fl .fx-row{display:grid;grid-template-columns:56px 1fr;padding:0;column-gap:0;align-items:stretch;border-top:1px solid var(--soft)}
+#fltPop .fl>:first-child{border-top:none}
+#fltPop .fl .fx-l{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 6px;font-size:11px;color:var(--tx2)}
+#fltPop .fl .fx-l::after{content:"";position:absolute;right:0;top:6px;bottom:6px;border-right:2px dotted var(--tx3)}
+#fltPop .fl .fx-l span{padding-top:0!important}
+#fltPop .fl .fx-row>div{padding:5px 6px 5px 8px;min-width:0}
+#fltPop .fl .fx-one{padding:6px 8px;border-top:1px solid var(--soft)}
+#fltPop .fl .gr{gap:3px}
+#fltPop .fl .o{padding:3px 6px 1px;line-height:14px}
+#fltPop .fl .fx-row:has(+ .ft) .gr,#fltPop .fl .fx-one>.gr:last-child{margin-bottom:0}
+#fltPop .ft{border-top:none;padding-top:0}
+#fltPop .fx-tabs{border-bottom:none!important;margin:0 0 -2px!important;padding-left:6px;gap:0;position:relative;z-index:1;align-items:flex-end}
+#fltPop .fx-tab{height:24px;border:2px solid transparent!important;border-bottom:none!important;margin:0!important;padding:0 10px!important;background:none!important;color:var(--tx2);font-weight:400!important;box-shadow:none!important;position:relative}
+#fltPop .fx-tab+.fx-tab::before{content:"";position:absolute;left:-1px;top:50%;margin-top:-5px;width:2px;height:10px;background:var(--soft)}
+#fltPop .fx-tab.on::before,#fltPop .fx-tab.on+.fx-tab::before{display:none}
+#fltPop .fx-tab.on{border-color:var(--ink)!important;background:#fff!important;color:var(--ink);font-weight:700!important;height:28px;box-shadow:inset 0 4px 0 var(--yel)!important;clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
+#fltPop .fx-tab i{background:none;border:none;color:var(--tx3);padding:0;min-width:0;font-size:10px}
+@media (hover:hover){#fltPop .fx-tab:not(.on):hover{color:var(--ink)}}
 </style>
 </head>
 <body>
@@ -1792,6 +1835,11 @@ function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCou
       +row('태그',`<input type="text" id="fTags" value="${esc(f.tags)}" placeholder="예: yutaka_nakamura  -3d_cg" autocomplete="off">`);
     b.innerHTML=`<div class="fx-tabs">${TABS.map(([k,l,n])=>`<button class="fx-tab${ft===k?' on':''}" data-ftab="${k}">${l}${n?`<i>${n}</i>`:''}</button>`).join('')}</div>${body}
     <div class="ft"><label><input type="checkbox" id="fPlay" ${S.play?'checked':''}> 영상 재생</label><a id="fReset">초기화</a></div>`}
+  // group each run of option rows into one bordered list (label | dotted divider | choices); the tabs sit on top of it
+  {let run=[];const flush=()=>{if(!run.length)return;const w=document.createElement('div');w.className='fl';run[0].before(w);run.forEach(r=>w.appendChild(r));run=[]};
+   [...b.children].forEach(c=>{if(c.classList.contains('fx-row'))run.push(c);else flush()});flush()}
+  // option rows live in one bordered list (name ┊ options), the tabs sit on top of it
+  {let box=null;[...b.children].forEach(el=>{if(el.matches('.fx-row,.fx-one')){if(!box){box=document.createElement('div');box.className='fl';el.before(box)}box.appendChild(el)}else box=null})}
   if(ae&&!TOUCH()){const el=document.getElementById(ae);if(el&&el.tagName==='INPUT'){el.focus();try{el.setSelectionRange(sel,sel)}catch(e){}}}
 }
 $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]');if(tb){app.fTab=tb.dataset.ftab;renderFlt();return}
