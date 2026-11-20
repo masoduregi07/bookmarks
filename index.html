@@ -931,6 +931,29 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   body[data-tb="3"] #prev,body[data-tb="3"] #saveCut,body[data-tb="3"] #next{height:28px}
   body[data-tb="3"] #flip,body[data-tb="3"] #tone button,#gMini .mini{height:28px}
 }
+
+/* ---------- 연습 기록 캘린더 (B: tiles) */
+#calTabs.ptabs{margin:8px 12px 0;border-bottom:1px solid var(--soft);gap:2px}
+#calTabs.ptabs button{border:none;margin:0;padding:3px 6px 5px;min-height:0!important;height:auto;font-size:12px;line-height:16px;background:none!important;color:var(--tx2)}
+#calTabs.ptabs button.on{font-weight:700;color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink);background:none!important}
+#calTabs.ptabs button i{font-size:10px}
+.calp .cmon{padding:8px 12px 6px;gap:4px}.calp .cmon b{font-size:13px;min-width:0;padding:0 6px}
+.calp .cmon .nb{width:22px!important;height:22px!important;min-height:0!important;padding:0!important}
+.calp .cmon #calToday{height:22px!important;min-height:0!important;padding:0 7px!important;font-size:11px}
+.calp .cstats{gap:4px;padding:0 12px 8px}
+.calp .stat{border:none;background:#ebe9e2;padding:4px 6px;display:flex;align-items:baseline;gap:2px}
+.calp .stat span{display:inline;margin-right:auto}.calp .stat b{font-size:13px}
+.calp .cgrid{gap:3px;padding:6px;margin:0 12px;border:1px solid var(--soft)}
+.calp .d{border:none;background:#ebe9e2;padding:2px 3px;font-size:9px;color:var(--tx3)}
+.calp .d .n{right:3px;bottom:1px;font-size:10px}
+.calp .d:hover{border:none;box-shadow:inset 0 0 0 1px var(--tx3)}
+.calp .d.today{box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
+.calp .d.sel{outline:2px solid var(--ink);outline-offset:1px;box-shadow:none}
+.calp .d.today.sel{box-shadow:inset 0 0 0 2px var(--ink)}
+.calp .d.fut{opacity:.5}
+.calp .d.blank{background:none}
+.calp .cleg{padding:6px 12px 0}.calp .cleg i:first-of-type{background:#ebe9e2;border-color:#ebe9e2}
+@media (hover:none){.calp .d:hover{box-shadow:none}.calp .d.today:hover{box-shadow:inset 0 0 0 2px var(--ink)}}
 </style>
 </head>
 <body>
