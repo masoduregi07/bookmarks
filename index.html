@@ -150,7 +150,7 @@ body.t3d .d3only{display:flex!important}
 /* 3D toolbar order: 이전·기록·다음 | 좌우반전 · 라이팅 [선택] [ON] | 폴리곤 [ON] … */
 body.t3d .top footer>*{order:20!important}
 body.t3d .top footer>.grp:first-child{order:1!important}body.t3d .top footer>.grp:first-child+.dv{order:2!important}
-body.t3d #gTone{order:3!important;margin-right:6px}body.t3d #gLight{order:4!important}
+body.t3d #gTone{order:3!important;margin-right:6px}body.t3d[data-tb="3"] .top footer>.grp:first-child{order:-1!important} /* minimal toolbar: 이전·기록·다음 stay first in 3D too */body.t3d #gLight{order:4!important}
 @media (min-width:561px) and (pointer:coarse){body.t3d #gTone{margin-right:-2px}body.t3d[data-tb]:not(.tbwide):not(.tbchk) .rbr+.dv{display:flex!important}body.t3d #gLight{flex:0 0 auto!important}body.t3d #gPoly{flex:0 0 auto!important}} /* tablets: 라이팅 group stays its own size; 이전·기록·다음 take the spare width */ /* 라이팅 and 좌우반전 sit in different groups: keep the same 6px gap as inside a group */
 .pop{position:fixed;z-index:15;width:min(var(--pw,340px),calc(100vw - 16px));background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px}
 .pop::before{content:"";position:absolute;top:-8px;right:var(--caret,16px);width:10px;height:6px;background:var(--ink);
@@ -1519,14 +1519,14 @@ const ERRK=[
 ];
 // clear the stage (previous tab's media / title) while a new tab loads its first cut
 function blankStage(){img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');ov.innerHTML='';
-  $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');zoomReset()}
+  $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');$('#favBtn').classList.add('hidden');zoomReset()}
 function showErr(e){
-  msg.className='';if(/^사진 서비스 연결 필요/.test(e)){busy(false);blankStage();showConnect();try{syncSaveBtn()}catch(_){}return}
+  msg.className='';if(/^사진 서비스 연결 필요/.test(e)){busy(false);blankStage();showConnect();try{syncSaveBtn()}catch(_){}return} // blankStage also hides the ♥ (it can't act on an error / connect card)
   busy(false);img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
   $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.remove('hidden');
   const k=ERRK.find(x=>x[0].test(e)),title=k?k[1]:'연결 실패',
     hint=k?k[2]:'설정 → API 연결에서 연결 테스트로 확인.'+(location.protocol==='file:'?'<br>파일을 로컬로 열었다면 GitHub Pages 주소로 열기.':'');
-  toast(title+' · '+e,'err');try{syncSaveBtn()}catch(_){}
+  toast(title+' · '+e,'err');$('#favBtn').classList.add('hidden');try{syncSaveBtn()}catch(_){}
   msg.innerHTML=`<b>${title}</b><br>${esc(e)}`+(hint?`<br><span style="color:var(--tx3)">${hint}</span>`:'');
 }
 function show(){
