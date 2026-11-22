@@ -11,6 +11,8 @@
 const DEF_ORIGINS = 'https://masoduregi07.github.io';
 const MAX_IMG = 25 * 1024 * 1024, MAX_VID = 60 * 1024 * 1024;
 const SESSION_DAYS = 30;
+const MAX_DOC = 1900000; // D1 row limit is 2MB
+const DOC_KEYS = ['log', 'links', 'fav', 'set'];
 
 export default {
   async fetch(req, env) {
@@ -18,7 +20,7 @@ export default {
     const o = req.headers.get('Origin');
     const cors = {
       'Access-Control-Allow-Origin': o && origins.includes(o) ? o : origins[0],
-      'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,PATCH,DELETE,OPTIONS',
       'Access-Control-Allow-Headers': 'Authorization,Content-Type,X-Title,X-Src,X-Link,X-Folders',
       'Access-Control-Max-Age': '86400',
       'Vary': 'Origin',
@@ -63,6 +65,29 @@ async function route(req, env) {
     const me = await env.DB.prepare('SELECT email,name,picture FROM users WHERE sub=?').bind(sub).first();
     const st = await env.DB.prepare('SELECT COUNT(*) n, COALESCE(SUM(size),0) used FROM items WHERE sub=?').bind(sub).first();
     return json({ ...me, count: st.n, used: st.used, quota: quota(env) });
+  }
+
+  // ---- synced docs (연습 기록 · 링크 · 보관함 목록 · 설정): whole JSON per key, ver for compare-and-set
+  if (p === '/docs' && m === 'GET') {
+    let have = {}; try { have = JSON.parse(u.searchParams.get('have') || '{}') || {}; } catch { have = {}; }
+    const rows = (await env.DB.prepare('SELECT k,v,ver FROM docs WHERE sub=?').bind(sub).all()).results;
+    return json({ docs: rows.map(r => r.ver === have[r.k] ? { k: r.k, ver: r.ver } : { k: r.k, ver: r.ver, v: JSON.parse(r.v) }) });
+  }
+  mm = p.match(/^\/docs\/(\w+)$/);
+  if (mm && m === 'PUT') {
+    if (!DOC_KEYS.includes(mm[1])) throw fail(404, '없는 연동 항목');
+    const raw = await req.text();
+    if (new TextEncoder().encode(raw).length > MAX_DOC) throw fail(413, '연동 데이터가 너무 큼 · 오래된 기록 정리 필요');
+    let b; try { b = JSON.parse(raw); } catch { throw fail(400, '요청 형식이 이상함'); }
+    if (!b || typeof b.v !== 'object' || b.v === null) throw fail(400, '내용이 없음');
+    const base = Number.isInteger(b.base) && b.base > 0 ? b.base : 0, v = JSON.stringify(b.v), now = Date.now();
+    const r = base
+      ? await env.DB.prepare('UPDATE docs SET v=?,ver=ver+1,updated=? WHERE sub=? AND k=? AND ver=?').bind(v, now, sub, mm[1], base).run()
+      : await env.DB.prepare('INSERT OR IGNORE INTO docs(sub,k,v,ver,updated) VALUES(?,?,?,1,?)').bind(sub, mm[1], v, now).run();
+    if (r.meta.changes) return json({ ver: base + 1 });
+    // someone saved in between: hand back the current copy so the client can merge and retry
+    const cur = await env.DB.prepare('SELECT v,ver FROM docs WHERE sub=? AND k=?').bind(sub, mm[1]).first();
+    return json({ ver: cur ? cur.ver : 0, v: cur ? JSON.parse(cur.v) : null }, 409);
   }
 
   // ---- folders

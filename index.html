@@ -348,6 +348,13 @@ button.ic:active{transform:none}
 .calmenu{position:absolute;right:8px;top:100%;margin-top:6px;z-index:3;min-width:200px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:8px;display:grid;gap:6px}
 .calmenu button{display:flex;align-items:center;gap:8px;text-align:left}
 .calmenu button svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges;flex:none}
+.calmenu .sy{display:grid;gap:6px;padding-bottom:8px;border-bottom:2px dotted var(--soft)}
+.calmenu .sy>div{display:grid;gap:6px}
+.calmenu .syh{font-size:11px;color:var(--tx2)}
+#syG{min-height:32px}
+.calmenu .sym{display:grid;gap:2px;min-width:0}
+.calmenu .sym b{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.calmenu .sym span{font-size:10px;color:var(--tx2)}
 .calmenu small{color:var(--tx3);font-size:10px;padding:2px 2px 0;border-top:2px dotted var(--soft);padding-top:6px}
 .calp .cbody{flex:1;min-height:0;display:flex;flex-direction:column;overflow:auto}
 /* panel mini tabs: 캘린더 | 보관함 */
@@ -1145,6 +1152,10 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <button class="ic" id="calIo" data-tip="백업" aria-label="기록 백업" aria-haspopup="true"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 1h11v1h1v1h1v1h1v11H1zM4 2h7v4H4zM8 3h2v2H8zM3 9h10v5H3zM5 11h6v1H5z"/></svg></button>
     <button class="ic" id="calFull" data-tip="전체 화면" ><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M220,48V88a12,12,0,0,1-24,0V60H168a12,12,0,0,1,0-24h40A12,12,0,0,1,220,48ZM88,196H60V168a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H88a12,12,0,0,0,0-24Zm120-40a12,12,0,0,0-12,12v28H168a12,12,0,0,0,0,24h40a12,12,0,0,0,12-12V168A12,12,0,0,0,208,156ZM88,36H48A12,12,0,0,0,36,48V88a12,12,0,0,0,24,0V60H88a12,12,0,0,0,0-24Z"/></svg></button>
     <div class="calmenu hidden" id="calMenu">
+      <div class="sy hidden" id="sySec">
+        <div id="syOut"><span class="syh">구글 로그인 · 다른 기기와 맞추기</span><div id="syG"></div></div>
+        <div id="syIn" class="hidden"><div class="sym"><b id="syMe"></b><span id="syLast"></span></div><button id="syNow"><svg viewBox="0 0 12 12"><path d="M2 2h6v1H2zM1 3h1v4H1zM8 1h1v1H8zM8 3h1v1H8zM9 2h1v1H9zM10 5h1v4h-1zM4 9h6v1H4zM3 8h1v1H3zM3 10h1v1H3zM2 9h1v1H2z"/></svg>지금 맞추기</button><button id="syOff"><svg viewBox="0 0 12 12"><path d="M1 1h6v1H1zM1 2h1v8H1zM1 10h6v1H1zM6 3h1v1H6zM7 4h1v1H7zM4 5h7v2H4zM7 7h1v1H7zM6 8h1v1H6z"/></svg>로그아웃</button></div>
+      </div>
       <button id="logExp"><svg viewBox="0 0 12 12"><path d="M5 0h2v6H5zM3 6h6v1H3zM4 7h4v1H4zM5 8h2v1H5zM0 10h12v2H0z"/></svg>기록 내보내기</button>
       <button id="logImp"><svg viewBox="0 0 12 12"><path d="M5 1h2v1H5zM4 2h4v1H4zM3 3h6v1H3zM5 4h2v5H5zM0 10h12v2H0z"/></svg>기록 가져오기</button>
       <small id="logInfo"></small>
@@ -1977,7 +1988,7 @@ function renderWiz(){const z=WZ[W.k],n=W.step,box=$('#wz'),NM=['가입','키 받
     :`<label class="t" for="wzIn">붙여넣기</label><div class="box"><div class="key"><input id="wzIn" placeholder="복사한 키 붙여넣기" autocomplete="off" autocapitalize="off" spellcheck="false" value="${esc(W.val)}"><button data-w="paste">${PASTE}붙여넣기</button></div><div id="wzRes"></div></div>`;
   box.innerHTML=`<div class="hd"><b>${z.n} 연결</b><button class="x ic" data-w="x" aria-label="닫기">${X16}</button></div><div class="bd">
   <div class="chips">${[1,2,3].map(chip).join('<i></i>')}</div>${body}
-  ${n===3?'<div class="note">키는 이 기기에만 저장 · 다른 곳으로 보내지 않음 · 친구는 각자 자기 키 필요</div>':''}
+  ${n===3?`<div class="note">${SP&&SP.tok?'키는 이 기기와 내 연동 서버에만 저장':'키는 이 기기에만 저장 · 다른 곳으로 보내지 않음'} · 친구는 각자 자기 키 필요</div>`:''}
   <div class="btns"><button data-w="prev"${n===1?' disabled':''}>◀ 이전</button>${n<3?'<button class="pri" data-w="next">다음 ▶</button>':`<button class="pri" data-w="done"${W.ok?'':' disabled'}>패션 사진 보기 ▶</button>`}</div></div>`;
   wzRes()}
 function wzRes(){const r=$('#wzRes');if(!r)return;r.className=W.chk?'res '+(W.chk==='ok'?'ok':W.chk==='w'?'':'err'):'';
@@ -2229,8 +2240,9 @@ const favOpen=()=>favDB||(favDB=new Promise((ok,no)=>{const r=indexedDB.open('cu
   r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('items',{keyPath:'id'});d.createObjectStore('folders',{keyPath:'id'});d.createObjectStore('blobs')};
   r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}));
 const favTx=async(st,mode,fn)=>{const d=await favOpen();return new Promise((ok,no)=>{const t=d.transaction(st,mode);const out=fn(t);t.oncomplete=()=>ok(out&&out.result!==undefined?out.result:out);t.onerror=t.onabort=()=>no(t.error)})};
-const favPut=(st,v,k)=>(keepStore(),favTx)(st,'readwrite',t=>t.objectStore(st).put(v,k)).catch(e=>{toast('보관함 저장 실패 · 저장 공간 확인','err');throw e});
-const favDel=(st,k)=>favTx(st,'readwrite',t=>t.objectStore(st).delete(k));
+const favPut=(st,v,k)=>{if(st!=='blobs'&&v&&typeof v==='object')v.mt=Date.now(); // mt: newest edit wins when devices merge
+  keepStore();return favTx(st,'readwrite',t=>t.objectStore(st).put(v,k)).then(r=>{if(st!=='blobs')syDirty('fav');return r}).catch(e=>{toast('보관함 저장 실패 · 저장 공간 확인','err');throw e})};
+const favDel=(st,k)=>favTx(st,'readwrite',t=>t.objectStore(st).delete(k)).then(r=>{if(st!=='blobs')syDirty('fav');return r});
 const favAll=st=>favTx(st,'readonly',t=>t.objectStore(st).getAll());
 const favNewId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const favKey=it=>it.kind==='3d'?'3d:'+JSON.stringify(it.state||it.title):it.url;
@@ -2238,7 +2250,8 @@ const favFind=it=>it&&(it.favId?FAV.items.find(x=>x.id===it.favId):FAV.items.fin
 async function favLoad(){try{[FAV.items,FAV.folders]=await Promise.all([favAll('items'),favAll('folders')]);FAV.folders.sort((a,b)=>a.ord-b.ord)}catch(e){FAV.items=[];FAV.folders=[]}favSync();favCount();if(calOpen&&calView==='fav')favRender()}
 // image source for a saved item: uploads come from the blob store
 async function favSrc(x){if(!x.blob)return M(thumbOf(x));if(FAV.urls[x.id])return FAV.urls[x.id];
-  const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));return FAV.urls[x.id]=b?URL.createObjectURL(b):''}
+  const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));if(b instanceof Blob)return FAV.urls[x.id]=URL.createObjectURL(b); // a miss resolves to the request object
+  return x.rid&&SP&&SP.tok&&SYNC.url?`${SYNC.url.replace(/\/+$/,'')}/img/${x.rid}?t=${encodeURIComponent(SP.tok)}`:''} // uploaded on another device: from the R2 store
 function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on))); // a removed upload can't be re-added from the stage
   b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.dataset.tip=on?'보관함에서 빼기':'보관함에 담기'}
 function favCount(){$('#favTabN').textContent=FAV.items.length||'';$('#calTabN').textContent=(()=>{const n=LOG.filter(r=>r.date===dkey(new Date())).length;return n?'오늘 '+n:''})()}
@@ -2250,7 +2263,7 @@ async function favToggle(){let it=curItem();if(!it||!msg.classList.contains('hid
     await favPut('items',x);FAV.items.push(x);b.classList.remove('beat');b.offsetWidth;b.classList.add('beat');
     toast(FAV.cur?`보관함 · ${(FAV.folders.find(f=>f.id===FAV.cur)||{}).name}에 담음`:'보관함에 담음','ok')}
   favSync();favCount();if(calOpen&&calView==='fav')favRender();else if(calOpen)renderCal()}
-async function favRemove(x){await favDel('items',x.id);if(x.blob){await favDel('blobs',x.id);if(FAV.urls[x.id]){URL.revokeObjectURL(FAV.urls[x.id]);delete FAV.urls[x.id]}}
+async function favRemove(x){await favDel('items',x.id);if(x.rid&&SP&&SP.tok)api('/items/'+x.rid,{method:'DELETE'}).catch(()=>{});if(x.blob){await favDel('blobs',x.id);if(FAV.urls[x.id]){URL.revokeObjectURL(FAV.urls[x.id]);delete FAV.urls[x.id]}}
   FAV.items=FAV.items.filter(y=>y!==x);if(calOpen&&calView==='cal')renderCal()}
 $('#favBtn').onclick=e=>{e.stopPropagation();favToggle()};
 // panel view: 캘린더 | 보관함
@@ -2326,7 +2339,7 @@ $('#favBody').addEventListener('dragover',e=>{if(e.dataTransfer.types.includes('
 $('#favBody').addEventListener('drop',e=>{if(e.dataTransfer.files.length){e.preventDefault();favAddFiles([...e.dataTransfer.files])}});
 // backup: favorites travel in the same JSON as the log (uploads as data URLs)
 async function favExport(){const ups={};for(const x of FAV.items)if(x.blob){const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));
-  if(b)ups[x.id]=await new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>ok('');r.readAsDataURL(b)})}
+  if(b instanceof Blob)ups[x.id]=await new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>ok('');r.readAsDataURL(b)})}
   return{items:FAV.items,folders:FAV.folders,uploads:ups}}
 async function favImport(F){if(!F||typeof F!=='object')return 0;let add=0;const fid={};
   for(const f of Array.isArray(F.folders)?F.folders:[]){if(!f||typeof f.name!=='string')continue;let ex=FAV.folders.find(x=>x.name===f.name);
@@ -2486,6 +2499,125 @@ document.addEventListener('keydown',e=>{
   else if(act==='timer'){tState==='run'?tPause():tPlay();toast(tState==='run'?'타이머 재생':'타이머 일시정지')}
   else if((act==='fprev'||act==='fnext')&&!vid.classList.contains('hidden')){vid.pause();vid.currentTime=Math.max(0,vid.currentTime+(act==='fnext'?1:-1)/24)}
 });
+
+// ---------- 구글 로그인 · 기기 연동 (Worker: /auth · /docs · /upload · /img)
+// 연습 기록 · 링크 · 보관함 · 설정을 내 계정 서버에 두고 기기끼리 맞춤. 업로드한 이미지는 R2 창고에.
+var SYNC={url:'',cid:''}; // ← Worker 주소, 구글 OAuth 웹 클라이언트 ID
+const SYK='cutref-sync',SETK=['cutref2','cutref-keys','cutref-tabs'],DOCS=['log','links','fav','set'];
+var SP={tok:'',me:null,ver:{},base:{},h:{},last:0,setJ:'',setMt:0};
+try{Object.assign(SP,JSON.parse(localStorage.getItem(SYK)||'{}'))}catch(e){}
+const SY={busy:false,again:false,timer:0,dirty:new Set(),boot:true,hold:false};
+const J=v=>JSON.stringify(v),fnv=t=>{let h=2166136261;for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619);return (h>>>0).toString(36)+t.length},syOn=()=>!!(SYNC.url&&SYNC.cid);
+const lsRaw=Storage.prototype.setItem,lsPut=(k,v)=>{try{lsRaw.call(localStorage,k,v)}catch(e){}};
+const spSave=()=>lsPut(SYK,J(SP));
+async function api(path,o={}){const h={...(o.headers||{})};if(SP.tok)h.Authorization='Bearer '+SP.tok;
+  let r;try{r=await fetch(SYNC.url.replace(/\/+$/,'')+path,{...o,headers:h,credentials:'omit'})}catch(e){throw new Error('연동 서버에 연결 못 함')}
+  let d=null;try{d=await r.json()}catch(e){}
+  if(r.status===401&&path!=='/auth'){syLogout(true);throw new Error('로그인이 풀림 · 다시 로그인')}
+  if(!r.ok&&r.status!==409)throw new Error((d&&d.error)||'서버 HTTP '+r.status);
+  return {st:r.status,d}}
+// settings doc: the stored settings minus the tab you are on
+function setDoc(){const d={};for(const k of SETK){let v=localStorage.getItem(k);if(v==null)continue;
+  if(k==='cutref2')try{const o=JSON.parse(v);delete o.tab;v=J(o)}catch(e){}d[k]=v}return d}
+if(!SP.setJ)SP.setJ=J(setDoc());
+const favRaw=(st,v)=>favTx(st,'readwrite',t=>t.objectStore(st).put(v));
+const DOC={
+  log:{get:()=>({recs:LOG.map(r=>({...r}))}),
+    put:v=>{LOG=v.recs;lsPut(LOGK,J(LOG));renderCal();syncSaveBtn();favCount()},empty:v=>!v.recs.length},
+  links:{get:()=>({mine:LK.mine.map(m=>({...m})),fav:LK.fav.slice()}),
+    put:v=>{LK.mine=v.mine;LK.fav=v.fav;lsPut(LNKK,J({mine:LK.mine,fav:LK.fav,nude:LK.nude,cat:LK.cat}));if(lnkOpen)renderLnk()},empty:v=>!v.mine.length&&!v.fav.length},
+  fav:{async get(){
+      if(SP.tok)for(const x of FAV.items)if(x.blob&&!x.rid){ // uploads go to the R2 store once, then travel as an id
+        const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));if(!(b instanceof Blob))continue;
+        try{const {d}=await api('/upload',{method:'POST',headers:{'Content-Type':b.type||'image/png','X-Title':encodeURIComponent(x.title||''),'X-Src':encodeURIComponent('업로드')},body:b});
+          x.rid=d.item.id;await favRaw('items',x)}catch(e){toast('업로드 이미지 연동 실패 · '+e.message,'err');break}}
+      return {items:FAV.items.map(x=>({...x})),folders:FAV.folders.map(f=>({...f}))}},
+    async put(v){const keep=new Set(v.items.map(x=>x.id)),old=new Map(FAV.items.map(x=>[x.id,J(x)]));
+      for(const x of FAV.items)if(!keep.has(x.id)){await favTx(['items','blobs'],'readwrite',t=>{t.objectStore('items').delete(x.id);t.objectStore('blobs').delete(x.id)});
+        if(FAV.urls[x.id]){URL.revokeObjectURL(FAV.urls[x.id]);delete FAV.urls[x.id]}}
+      for(const x of v.items)if(old.get(x.id)!==J(x))await favRaw('items',x);
+      const fk=new Set(v.folders.map(f=>f.id)),of=new Map(FAV.folders.map(f=>[f.id,J(f)]));
+      for(const f of FAV.folders)if(!fk.has(f.id))await favTx('folders','readwrite',t=>t.objectStore('folders').delete(f.id));
+      for(const f of v.folders)if(of.get(f.id)!==J(f))await favRaw('folders',f);
+      FAV.items=v.items;FAV.folders=v.folders.slice().sort((a,b)=>a.ord-b.ord);
+      favSync();favCount();if(calOpen&&calView==='fav')favRender();else if(calOpen)renderCal()},
+    empty:v=>!v.items.length&&!v.folders.length},
+  set:{get:()=>({mt:SP.setMt,d:setDoc()}),
+    put:v=>{const tab=S.tab;for(const k of SETK){let x=v.d&&v.d[k];if(x==null)continue;
+        if(k==='cutref2')try{const o=JSON.parse(x);o.tab=tab;x=J(o)}catch(e){}lsPut(k,x)}
+      SP.setJ=J(setDoc());SP.setMt=v.mt||0},empty:()=>false}};
+// 3-way merge by id: something missing on one side that both had at the last sync was deleted there
+function mRecs(l,r,base,key=x=>x.id){const B=new Set(base||[]),L=new Map(l.map(x=>[key(x),x])),R=new Map(r.map(x=>[key(x),x])),out=[];
+  for(const id of new Set([...L.keys(),...R.keys()])){const a=L.get(id),b=R.get(id);
+    if(a!==undefined&&b!==undefined)out.push(typeof b==='object'&&(b.mt||0)>(a.mt||0)?b:a);
+    else if(!B.has(id))out.push(a!==undefined?a:b)}
+  return out}
+const uniq=(list,k)=>{const s=new Set();return list.filter(x=>{const q=k(x);if(s.has(q))return false;s.add(q);return true})};
+function merge(k,l,r){r=r||{};const b=SP.base;
+  if(k==='set')return SP.ver.set===undefined||(r.mt||0)>(l.mt||0)?(r.d?r:l):l; // a new device takes the account's settings
+  if(k==='log')return {recs:uniq(mRecs(l.recs||[],r.recs||[],b.log).sort((x,y)=>x.ts-y.ts),x=>x.date+'|'+x.url)};
+  if(k==='links')return {mine:mRecs(l.mine||[],r.mine||[],b.lmine),fav:mRecs(l.fav||[],r.fav||[],b.lfav,x=>x)};
+  const folders=mRecs(l.folders||[],r.folders||[],b.ffold),fk=new Set(folders.map(f=>f.id));
+  const items=uniq(mRecs(l.items||[],r.items||[],b.fitem).sort((x,y)=>x.ts-y.ts),x=>x.key)
+    .map(x=>(x.folders||[]).every(f=>fk.has(f))?x:{...x,folders:x.folders.filter(f=>fk.has(f))});
+  return {items,folders}}
+function setBase(k,v){const b=SP.base;
+  if(k==='log')b.log=v.recs.map(x=>x.id);
+  else if(k==='links'){b.lmine=v.mine.map(x=>x.id);b.lfav=v.fav.slice()}
+  else if(k==='fav'){b.fitem=v.items.map(x=>x.id);b.ffold=v.folders.map(x=>x.id)}}
+async function syPush(k,v,base){for(let i=0;i<4;i++){
+    const {st,d}=await api('/docs/'+k,{method:'PUT',headers:{'Content-Type':'application/json'},body:J({v,base})});
+    if(st!==409){SP.ver[k]=d.ver;return v}
+    const m=merge(k,v,d.v);if(J(m)!==J(v))await DOC[k].put(m);v=m;base=d.ver} // another device saved first: fold theirs in, try again
+  throw new Error('다른 기기와 동시에 저장됨 · 잠시 후 다시')}
+async function syRun(){if(!SP.tok||!syOn())return;if(SY.busy){SY.again=true;return}
+  SY.busy=true;const boot=SY.boot;SY.boot=false;clearTimeout(SY.timer);syUI('맞추는 중…');let reload=false;
+  try{const {d}=await api('/docs?have='+encodeURIComponent(J(SP.ver)));const map={};for(const x of d.docs||[])map[x.k]=x;
+    for(const k of DOCS){SY.dirty.delete(k);const srv=map[k];if(k==='set'&&SY.hold)continue;
+      const loc=await DOC[k].get();let v=loc;const dirty=fnv(J(loc))!==SP.h[k]; // changed here since the last sync (survives reloads)
+      if(srv&&srv.v!==undefined){v=merge(k,loc,srv.v);
+        if(J(v)!==J(loc)){await DOC[k].put(v);
+          if(k==='set'){if(boot&&!sessionStorage.getItem('cutref-syre'))reload=true;else{SY.hold=true;toast('다른 기기 설정 받음 · 새로고침하면 적용')}}}
+        if(J(v)!==J(srv.v))v=await syPush(k,v,srv.ver);else SP.ver[k]=srv.ver}
+      else if(srv){if(dirty)v=await syPush(k,v,srv.ver)}
+      else if(!DOC[k].empty(v))v=await syPush(k,v,0);
+      setBase(k,v);SP.h[k]=fnv(J(v))}
+    SP.last=Date.now();spSave();
+    if(reload){sessionStorage.setItem('cutref-syre','1');location.reload();return}
+    if(boot)sessionStorage.removeItem('cutref-syre')}
+  catch(e){spSave();if(SP.tok)toast('연동 실패 · '+e.message,'err')}
+  finally{SY.busy=false;syUI();if(SY.again){SY.again=false;syRun()}}}
+function syDirty(k){if(!SP||!SP.tok||!SYNC||!SYNC.url||!SYNC.cid)return; // may run before this block (hoisted)
+  if(k==='set'){const j=J(setDoc());if(j===SP.setJ)return;SP.setJ=j;SP.setMt=Date.now();spSave()}
+  SY.dirty.add(k);clearTimeout(SY.timer);SY.timer=setTimeout(syRun,2500)}
+// every save of a synced key marks its doc for the next push
+{const W={'cutref-log':'log','cutref-links':'links','cutref2':'set','cutref-keys':'set','cutref-tabs':'set'};
+  Storage.prototype.setItem=function(k,v){lsRaw.call(this,k,v);if(this===localStorage&&W[k])syDirty(W[k])}}
+// ---- login
+const gisLoad=()=>window.google&&google.accounts&&google.accounts.id?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');
+  s.src='https://accounts.google.com/gsi/client';s.async=true;s.onload=ok;s.onerror=()=>no(new Error('구글 로그인을 불러오지 못함'));document.head.appendChild(s)});
+let gisReady=false;
+async function syBtn(){const el=$('#syG');if(!el||SP.tok||!syOn()||el.childElementCount)return;
+  try{await gisLoad();if(!gisReady){google.accounts.id.initialize({client_id:SYNC.cid,callback:r=>syLogin(r.credential),auto_select:false,cancel_on_tap_outside:true});gisReady=true}
+    google.accounts.id.renderButton(el,{type:'standard',theme:'outline',size:'medium',text:'signin_with',shape:'rectangular',locale:'ko',width:200})}
+  catch(e){el.textContent=e.message}}
+async function syLogin(cred){try{const {d}=await api('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:J({credential:cred})});
+    Object.assign(SP,{tok:d.token,me:{email:d.email,name:d.name},ver:{},base:{},h:{}});spSave();syUI();toast(d.email+' 로그인 · 기기 맞추는 중','ok');await syRun()}
+  catch(e){toast('로그인 실패 · '+e.message,'err')}}
+function syLogout(expired){Object.assign(SP,{tok:'',me:null,ver:{},base:{},h:{},last:0});spSave();SY.dirty.clear();clearTimeout(SY.timer);syUI();
+  if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
+  toast(expired?'로그인이 풀림 · 백업 메뉴에서 다시 로그인':'로그아웃 · 이 기기 데이터는 그대로',expired?'err':'')}
+function syUI(st){const sec=$('#sySec');if(!sec)return;sec.classList.toggle('hidden',!syOn());if(!syOn())return;
+  $('#syOut').classList.toggle('hidden',!!SP.tok);$('#syIn').classList.toggle('hidden',!SP.tok);
+  if(!SP.tok){syBtn();return}
+  $('#syMe').textContent=SP.me&&SP.me.email||'로그인됨';
+  const t=SP.last?new Date(SP.last):null;$('#syLast').textContent=st||(SY.busy?'맞추는 중…':t?`마지막 맞춤 ${dkey(t)===dkey(new Date())?'':(t.getMonth()+1)+'/'+t.getDate()+' '}${pad(t.getHours())}:${pad(t.getMinutes())}`:'아직 안 맞춤');
+  $('#syNow').disabled=SY.busy}
+$('#syNow').onclick=()=>syRun();
+$('#syOff').onclick=async()=>{if(await askYes($('#syOff'),'로그아웃<small>이 기기 데이터는 남고 연동만 멈춤</small>','로그아웃',{kind:'go'}))syLogout()};
+$('#calIo').addEventListener('click',()=>syUI());
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SP.tok&&Date.now()-SP.last>60e3)syRun()});
+if(SP.tok&&syOn())setTimeout(syRun,800);else sessionStorage.removeItem('cutref-syre');
 
 // UI rule: a select box is exactly as wide as its longest option (+ its own padding / arrow), never stretched to fill a row
 const fitCv=document.createElement('canvas').getContext('2d');

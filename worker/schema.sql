@@ -36,3 +36,12 @@ CREATE TABLE IF NOT EXISTS item_folders (
   PRIMARY KEY (item, folder)
 );
 CREATE INDEX IF NOT EXISTS if_folder ON item_folders(folder);
+-- 기기 연동: 연습 기록 · 링크 · 보관함 목록 · 설정 (계정당 4줄)
+CREATE TABLE IF NOT EXISTS docs (
+  sub TEXT NOT NULL,
+  k TEXT NOT NULL,               -- log · links · fav · set
+  v TEXT NOT NULL,               -- JSON
+  ver INTEGER NOT NULL,          -- 저장할 때마다 +1 (동시 저장 감지)
+  updated INTEGER NOT NULL,
+  PRIMARY KEY (sub, k)
+);
