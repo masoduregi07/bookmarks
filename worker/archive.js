@@ -4,8 +4,9 @@
 //   BUCKET          R2 버킷
 //   GOOGLE_CLIENT_ID  구글 로그인 클라이언트 ID (일반 변수)
 //   SESSION_SECRET  아무 긴 문자열 (Secret으로 저장)
-//   ALLOW           들어올 수 있는 이메일, 쉼표로 구분. "*" 이면 구글 계정 누구나
-//   QUOTA_MB        (선택) 계정당 용량, 기본 2048
+//   ALLOW           (선택) 들어올 수 있는 이메일, 쉼표로 구분. 비워 두거나 "*" 이면 구글 계정 누구나
+//   QUOTA_MB        (선택) 계정당 용량, 기본 1024
+//   TOTAL_MB        (선택) 전체 합계 용량, 기본 9000 (R2 무료 한도 10GB 아래로)
 //   ORIGINS         (선택) 사이트 주소, 기본 https://masoduregi07.github.io
 
 const DEF_ORIGINS = 'https://masoduregi07.github.io';
@@ -192,6 +193,8 @@ async function store(env, sub, bytes, type, meta) {
   const size = bytes.byteLength;
   const st = await env.DB.prepare('SELECT COALESCE(SUM(size),0) used FROM items WHERE sub=?').bind(sub).first();
   if (st.used + size > quota(env)) throw fail(413, '보관함 용량이 가득 참');
+  const all = await env.DB.prepare('SELECT COALESCE(SUM(size),0) used FROM items').first();
+  if (all.used + size > (+env.TOTAL_MB || 9000) * 1024 * 1024) throw fail(507, '서버 전체 창고가 가득 참 · 관리자에게 문의');
   const id = crypto.randomUUID(), r2 = `u/${sub}/${id}`, now = Date.now();
   await env.BUCKET.put(r2, bytes, { httpMetadata: { contentType: type } });
   const row = { id, sub, ckey: meta.ckey, r2, type, size, w: int(meta.w), h: int(meta.h), src: clean(meta.src, 40),
@@ -237,7 +240,7 @@ function checkSize(n, type) { if (n > (type.startsWith('video/') ? MAX_VID : MAX
 async function auth(req, env) {
   const { credential } = await body(req);
   const g = await verifyGoogle(String(credential || ''), env.GOOGLE_CLIENT_ID);
-  const allow = (env.ALLOW || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+  const allow = (env.ALLOW || '*').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
   if (!allow.includes('*') && !allow.includes(String(g.email).toLowerCase())) throw fail(403, '허용되지 않은 계정');
   await env.DB.prepare(`INSERT INTO users(sub,email,name,picture,created) VALUES(?,?,?,?,?)
     ON CONFLICT(sub) DO UPDATE SET email=excluded.email,name=excluded.name,picture=excluded.picture`)
@@ -282,7 +285,7 @@ async function session(env, tok) {
 
 // ---------- small utils
 async function body(req) { try { return await req.json(); } catch { throw fail(400, '요청 형식이 이상함'); } }
-const quota = env => (+env.QUOTA_MB || 2048) * 1024 * 1024;
+const quota = env => (+env.QUOTA_MB || 1024) * 1024 * 1024;
 const clean = (s, n) => s == null ? null : String(s).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n) || null;
 const int = v => Number.isFinite(+v) && +v > 0 ? Math.round(+v) : null;
 const safeUrl = v => { try { const x = new URL(String(v)); return /^https?:$/.test(x.protocol) ? x.toString().slice(0, 2000) : null; } catch { return null; } };
