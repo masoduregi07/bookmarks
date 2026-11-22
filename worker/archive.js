@@ -14,6 +14,7 @@ const MAX_IMG = 25 * 1024 * 1024, MAX_VID = 60 * 1024 * 1024;
 const SESSION_DAYS = 30;
 const MAX_DOC = 1900000; // D1 row limit is 2MB
 const DOC_KEYS = ['log', 'links', 'fav', 'set'];
+const LINK_TTL = 600; // 연결 코드 10분
 
 export default {
   async fetch(req, env) {
@@ -48,12 +49,30 @@ async function route(req, env) {
   if (!env.DB || !env.BUCKET) throw fail(500, 'DB 또는 BUCKET 연결이 없음');
   if (p === '/' ) return json({ ok: true, service: 'cutref-archive' });
   if (p === '/auth' && m === 'POST') return auth(req, env);
+  if (p === '/link/claim' && m === 'POST') { // trade a short code from a signed-in device for a session (iPad home-screen app)
+    const { code } = await body(req);
+    const c = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    await codesTable(env);
+    const row = c.length === 8 ? await env.DB.prepare('SELECT sub,exp FROM codes WHERE code=?').bind(c).first() : null;
+    if (!row || row.exp < Date.now()) throw fail(400, '코드가 틀렸거나 만료됨');
+    await env.DB.prepare('DELETE FROM codes WHERE code=?').bind(c).run(); // one use only
+    const me = await env.DB.prepare('SELECT email,name FROM users WHERE sub=?').bind(row.sub).first();
+    const token = await sign(env, { sub: row.sub, exp: Date.now() + SESSION_DAYS * 864e5 });
+    return json({ token, email: me ? me.email : '', name: me ? me.name || '' : '' });
+  }
 
-  // image bytes: <img> can't send headers, so the session token rides in ?t=
+  // image bytes: <img> can't send headers. ?s= is a per-image signature (safe to leak: opens that one image only);
+  // ?t= (the session token) still works for older links
   let mm = p.match(/^\/img\/([\w-]+)$/);
   if (mm && m === 'GET') {
-    const sub = await session(env, u.searchParams.get('t'));
-    const row = await env.DB.prepare('SELECT r2,type FROM items WHERE id=? AND sub=?').bind(mm[1], sub).first();
+    let row;
+    if (u.searchParams.get('s')) {
+      if (u.searchParams.get('s') !== await imgSig(env, mm[1])) throw fail(403, '이미지 주소가 맞지 않음');
+      row = await env.DB.prepare('SELECT r2,type FROM items WHERE id=?').bind(mm[1]).first();
+    } else {
+      const sub = await session(env, u.searchParams.get('t'));
+      row = await env.DB.prepare('SELECT r2,type FROM items WHERE id=? AND sub=?').bind(mm[1], sub).first();
+    }
     if (!row) throw fail(404, '없는 이미지');
     const obj = await env.BUCKET.get(row.r2);
     if (!obj) throw fail(404, '창고에 파일이 없음');
@@ -66,6 +85,15 @@ async function route(req, env) {
     const me = await env.DB.prepare('SELECT email,name,picture FROM users WHERE sub=?').bind(sub).first();
     const st = await env.DB.prepare('SELECT COUNT(*) n, COALESCE(SUM(size),0) used FROM items WHERE sub=?').bind(sub).first();
     return json({ ...me, count: st.n, used: st.used, quota: quota(env) });
+  }
+
+  if (p === '/link' && m === 'POST') {
+    await codesTable(env);
+    const AB = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', r = crypto.getRandomValues(new Uint8Array(8));
+    const code = [...r].map(x => AB[x % AB.length]).join(''), now = Date.now();
+    await env.DB.batch([env.DB.prepare('DELETE FROM codes WHERE exp<? OR sub=?').bind(now, sub),
+      env.DB.prepare('INSERT INTO codes(code,sub,exp) VALUES(?,?,?)').bind(code, sub, now + LINK_TTL * 1000)]);
+    return json({ code, ttl: LINK_TTL });
   }
 
   // ---- synced docs (연습 기록 · 링크 · 보관함 목록 · 설정): whole JSON per key, ver for compare-and-set
@@ -133,13 +161,14 @@ async function route(req, env) {
       : env.DB.prepare(`SELECT * FROM items WHERE sub=? AND created<? ORDER BY created DESC LIMIT ?`).bind(sub, before, limit);
     const rows = (await q.all()).results;
     await attachFolders(env, rows);
+    await signRows(env, rows);
     return json({ items: rows.map(pub), next: rows.length === limit ? rows[rows.length - 1].created : null });
   }
   if (p === '/check' && m === 'GET') { // is this source url already saved? (heart state)
     const url = u.searchParams.get('url') || '';
     const row = await env.DB.prepare('SELECT * FROM items WHERE sub=? AND ckey=?').bind(sub, ckeyOf(url)).first();
     if (!row) return json({ item: null });
-    await attachFolders(env, [row]);
+    await attachFolders(env, [row]); await signRows(env, [row]);
     return json({ item: pub(row) });
   }
   if (p === '/items' && m === 'POST') { // save from a source url (heart, X bookmarks import)
@@ -148,11 +177,12 @@ async function route(req, env) {
     if (!/^https?:\/\//i.test(url)) throw fail(400, '이미지 주소가 아님');
     const ck = ckeyOf(url);
     const dup = await env.DB.prepare('SELECT * FROM items WHERE sub=? AND ckey=?').bind(sub, ck).first();
-    if (dup) { await setFolders(env, sub, dup.id, b.folders, true); await attachFolders(env, [dup]); return json({ item: pub(dup), dup: true }); }
+    if (dup) { await setFolders(env, sub, dup.id, b.folders, true); await attachFolders(env, [dup]); await signRows(env, [dup]); return json({ item: pub(dup), dup: true }); }
     const got = await pull(url);
     const item = await store(env, sub, got.bytes, got.type, { ckey: ck, url, title: b.title, link: b.link, src: b.src, w: b.w, h: b.h });
     await setFolders(env, sub, item.id, b.folders);
     item.folders = await folderIds(env, item.id);
+    await signRows(env, [item]);
     return json({ item: pub(item) }, 201);
   }
   if (p === '/upload' && m === 'POST') { // raw file body; meta in headers
@@ -163,10 +193,11 @@ async function route(req, env) {
     const ck = 'up:' + hex(await crypto.subtle.digest('SHA-256', bytes));
     const dup = await env.DB.prepare('SELECT * FROM items WHERE sub=? AND ckey=?').bind(sub, ck).first();
     const folders = (req.headers.get('X-Folders') || '').split(',').filter(Boolean);
-    if (dup) { await setFolders(env, sub, dup.id, folders, true); await attachFolders(env, [dup]); return json({ item: pub(dup), dup: true }); }
+    if (dup) { await setFolders(env, sub, dup.id, folders, true); await attachFolders(env, [dup]); await signRows(env, [dup]); return json({ item: pub(dup), dup: true }); }
     const item = await store(env, sub, bytes, type, { ckey: ck, title: dec(req.headers.get('X-Title')), src: dec(req.headers.get('X-Src')) || '업로드', link: dec(req.headers.get('X-Link')) });
     await setFolders(env, sub, item.id, folders);
     item.folders = await folderIds(env, item.id);
+    await signRows(env, [item]);
     return json({ item: pub(item) }, 201);
   }
   mm = p.match(/^\/items\/([\w-]+)$/);
@@ -220,7 +251,7 @@ async function attachFolders(env, rows) {
   const map = {}; for (const x of r.results) (map[x.item] ||= []).push(x.folder);
   for (const x of rows) x.folders = map[x.id] || [];
 }
-const pub = r => ({ id: r.id, type: r.type, size: r.size, w: r.w, h: r.h, src: r.src, title: r.title, link: r.link, url: r.url, created: r.created, folders: r.folders || [] });
+const pub = r => ({ sig: r.sig, id: r.id, type: r.type, size: r.size, w: r.w, h: r.h, src: r.src, title: r.title, link: r.link, url: r.url, created: r.created, folders: r.folders || [] });
 
 // download a source image server-side (no browser CORS limits)
 async function pull(url) {
@@ -263,6 +294,8 @@ async function verifyGoogle(jwt, aud) {
   if (!pl.email_verified) throw fail(401, '이메일 인증이 안 된 계정');
   return pl;
 }
+async function imgSig(env, id) { return b64e(await crypto.subtle.sign('HMAC', await hmacKey(env), new TextEncoder().encode('img:' + id))).slice(0, 22); }
+async function signRows(env, rows) { for (const r of rows) r.sig = await imgSig(env, r.id); }
 async function hmacKey(env) {
   if (!env.SESSION_SECRET || env.SESSION_SECRET.length < 16) throw fail(500, 'SESSION_SECRET이 없거나 짧음');
   return crypto.subtle.importKey('raw', new TextEncoder().encode(env.SESSION_SECRET), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign', 'verify']);
@@ -282,6 +315,11 @@ async function session(env, tok) {
   if (d.exp < Date.now()) throw fail(401, '로그인이 만료됨');
   return d.sub;
 }
+
+// made on first use, so an existing database needs no extra SQL
+let CODES_OK = false;
+async function codesTable(env) { if (CODES_OK) return;
+  await env.DB.prepare('CREATE TABLE IF NOT EXISTS codes (code TEXT PRIMARY KEY, sub TEXT NOT NULL, exp INTEGER NOT NULL)').run(); CODES_OK = true; }
 
 // ---------- small utils
 async function body(req) { try { return await req.json(); } catch { throw fail(400, '요청 형식이 이상함'); } }

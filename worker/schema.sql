@@ -45,3 +45,5 @@ CREATE TABLE IF NOT EXISTS docs (
   updated INTEGER NOT NULL,
   PRIMARY KEY (sub, k)
 );
+-- 다른 기기 연결 코드 (10분 · 한 번만) · 서버가 처음 쓸 때 스스로 만듦
+CREATE TABLE IF NOT EXISTS codes (code TEXT PRIMARY KEY, sub TEXT NOT NULL, exp INTEGER NOT NULL);

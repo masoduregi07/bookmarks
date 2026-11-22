@@ -352,6 +352,13 @@ button.ic:active{transform:none}
 #sySec .syt{font-size:13px}
 #sySec .syd{font-size:11px;color:var(--tx2);line-height:1.6}
 #syG{min-height:40px;margin-top:4px}
+#sySec .syc{display:grid;gap:4px;margin-top:6px;padding-top:8px;border-top:2px dotted var(--soft)}
+#sySec .syc label{font-size:11px;color:var(--tx2)}
+#sySec .syc .row{display:flex;gap:6px}
+#sySec .syc input{flex:1;min-width:0;font:inherit;font-size:16px;letter-spacing:2px;text-transform:uppercase;height:30px;box-sizing:border-box;border:2px solid var(--ink);background:#fff;padding:0 6px}
+#sySec .syk{display:grid;gap:4px;padding:8px;border:2px solid var(--ink);background:var(--yel)}
+#sySec .kc{font-size:22px;letter-spacing:4px;text-align:center}
+#sySec .btns{flex-wrap:wrap}
 #sySec .sye{font-size:11px;line-height:1.6;padding:4px 6px;border:2px solid var(--ink);background:#fff}
 #sySec .sye.err{background:var(--pink)}
 #sySec .sym{display:grid;gap:2px;min-width:0;padding:8px;border:2px solid var(--ink);background:#fff}
@@ -1118,9 +1125,13 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <div class="hd">설정<button id="setX" class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
   <div class="fx-tabs" id="setTabs"><button class="fx-tab hidden" data-pane="3" id="syTab">계정</button><button class="fx-tab on" data-pane="1">API 연결</button><button class="fx-tab" data-pane="0">화면</button><button class="fx-tab kbtab" data-pane="2">단축키</button></div>
   <section data-pane="3" class="hidden" id="sySec">
-    <div id="syOut"><b class="syt">구글 계정으로 로그인</b><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 다른 기기와 맞춤</span><div id="syG"></div><span id="syMsg" class="sye hidden" role="status"></span></div>
+    <div id="syOut"><b class="syt">구글 계정으로 로그인</b><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 다른 기기와 맞춤</span><div id="syG"></div>
+      <span class="syd hidden" id="syPwa">홈 화면 앱에서는 구글 창이 안 열릴 수 있음 → 사파리나 다른 기기에서 로그인 후 아래 연결 코드 사용</span>
+      <form id="syCodeF" class="syc" autocomplete="off"><label for="syCode">연결 코드로 로그인</label><span class="row"><input id="syCode" maxlength="9" placeholder="XXXX-XXXX" autocapitalize="characters" spellcheck="false" inputmode="text"><button type="submit">확인</button></span></form>
+      <span id="syMsg" class="sye hidden" role="status"></span></div>
     <div id="syIn" class="hidden"><div class="sym"><b id="syMe"></b><span id="syLast"></span></div><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 이 계정으로 맞추는 중</span>
-      <div class="btns"><button id="syOff">로그아웃</button><button id="syNow" class="pri">지금 맞추기</button></div></div>
+      <div class="syk hidden" id="syK"><span class="syd">다른 기기의 설정 › 계정 › 연결 코드에 입력 · <b id="syKT"></b> 동안 유효</span><b id="syKC" class="kc"></b></div>
+      <div class="btns"><button id="syOff">로그아웃</button><button id="syLink">다른 기기 연결 코드</button><button id="syNow" class="pri">지금 맞추기</button></div></div>
   </section>
   <section data-pane="1">
     <div class="al" id="apiList"></div>
@@ -2254,7 +2265,7 @@ async function favLoad(){try{[FAV.items,FAV.folders]=await Promise.all([favAll('
 // image source for a saved item: uploads come from the blob store
 async function favSrc(x){if(!x.blob)return M(thumbOf(x));if(FAV.urls[x.id])return FAV.urls[x.id];
   const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));if(b instanceof Blob)return FAV.urls[x.id]=URL.createObjectURL(b); // a miss resolves to the request object
-  return x.rid&&SP&&SP.tok&&SYNC.url?`${SYNC.url.replace(/\/+$/,'')}/img/${x.rid}?t=${encodeURIComponent(SP.tok)}`:''} // uploaded on another device: from the R2 store
+  return x.rid&&SYNC.url&&(x.rsig||SP&&SP.tok)?`${SYNC.url.replace(/\/+$/,'')}/img/${x.rid}?`+(x.rsig?'s='+x.rsig:'t='+encodeURIComponent(SP.tok)):''} // uploaded on another device: from the R2 store
 function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on))); // a removed upload can't be re-added from the stage
   b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.dataset.tip=on?'보관함에서 빼기':'보관함에 담기'}
 function favCount(){$('#favTabN').textContent=FAV.items.length||'';$('#calTabN').textContent=(()=>{const n=LOG.filter(r=>r.date===dkey(new Date())).length;return n?'오늘 '+n:''})()}
@@ -2509,14 +2520,14 @@ var SYNC={url:'https://cutref-archive.masoduregi.workers.dev',cid:'737432106953-
 const SYK='cutref-sync',SETK=['cutref2','cutref-keys','cutref-tabs'],DOCS=['log','links','fav','set'];
 var SP={tok:'',me:null,ver:{},base:{},h:{},last:0,setJ:'',setMt:0};
 try{Object.assign(SP,JSON.parse(localStorage.getItem(SYK)||'{}'))}catch(e){}
-const SY={busy:false,again:false,timer:0,dirty:new Set(),boot:true,hold:false};
+const SY={busy:false,again:false,timer:0,dirty:new Set(),boot:true};
 const J=v=>JSON.stringify(v),fnv=t=>{let h=2166136261;for(let i=0;i<t.length;i++)h=Math.imul(h^t.charCodeAt(i),16777619);return (h>>>0).toString(36)+t.length},syOn=()=>!!(SYNC.url&&SYNC.cid);
 const lsRaw=Storage.prototype.setItem,lsPut=(k,v)=>{try{lsRaw.call(localStorage,k,v)}catch(e){}};
 const spSave=()=>lsPut(SYK,J(SP));
 async function api(path,o={}){const h={...(o.headers||{})};if(SP.tok)h.Authorization='Bearer '+SP.tok;
   let r;try{r=await fetch(SYNC.url.replace(/\/+$/,'')+path,{...o,headers:h,credentials:'omit'})}catch(e){throw new Error('연동 서버에 연결 못 함')}
   let d=null;try{d=await r.json()}catch(e){}
-  if(r.status===401&&path!=='/auth'){syLogout(true);throw new Error('로그인이 풀림 · 다시 로그인')}
+  if(r.status===401&&path!=='/auth'&&path!=='/link/claim'){syLogout(true);throw new Error('로그인이 풀림 · 다시 로그인')}
   if(!r.ok&&r.status!==409)throw new Error((d&&d.error)||'서버 HTTP '+r.status);
   return {st:r.status,d}}
 // settings doc: the stored settings minus the tab you are on
@@ -2533,7 +2544,7 @@ const DOC={
       if(SP.tok)for(const x of FAV.items)if(x.blob&&!x.rid){ // uploads go to the R2 store once, then travel as an id
         const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));if(!(b instanceof Blob))continue;
         try{const {d}=await api('/upload',{method:'POST',headers:{'Content-Type':b.type||'image/png','X-Title':encodeURIComponent(x.title||''),'X-Src':encodeURIComponent('업로드')},body:b});
-          x.rid=d.item.id;await favRaw('items',x)}catch(e){toast('업로드 이미지 연동 실패 · '+e.message,'err');break}}
+          x.rid=d.item.id;x.rsig=d.item.sig||'';await favRaw('items',x)}catch(e){toast('업로드 이미지 연동 실패 · '+e.message,'err');break}}
       return {items:FAV.items.map(x=>({...x})),folders:FAV.folders.map(f=>({...f}))}},
     async put(v){const keep=new Set(v.items.map(x=>x.id)),old=new Map(FAV.items.map(x=>[x.id,J(x)]));
       for(const x of FAV.items)if(!keep.has(x.id)){await favTx(['items','blobs'],'readwrite',t=>{t.objectStore('items').delete(x.id);t.objectStore('blobs').delete(x.id)});
@@ -2548,7 +2559,12 @@ const DOC={
   set:{get:()=>({mt:SP.setMt,d:setDoc()}),
     put:v=>{const tab=S.tab;for(const k of SETK){let x=v.d&&v.d[k];if(x==null)continue;
         if(k==='cutref2')try{const o=JSON.parse(x);o.tab=tab;x=J(o)}catch(e){}lsPut(k,x)}
-      SP.setJ=J(setDoc());SP.setMt=v.mt||0},empty:()=>false}};
+      setLive();SP.setJ=J(setDoc());SP.setMt=v.mt||0},empty:()=>false}};
+// copy received settings into the running page too, so the next local save doesn't write the old ones back
+function setLive(){try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
+    for(const k of['tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3lightLast','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k];
+    if(p.f)for(const t in S.f)if(p.f[t]&&typeof p.f[t]==='object')S.f[t]={...S.f[t],...p.f[t]}}catch(e){}
+  try{const o=JSON.parse(localStorage.getItem('cutref-keys')||'{}');KEYS={...KDEF};for(const k in o)if(k in KDEF&&Array.isArray(o[k]))KEYS[k]=o[k].slice(0,2)}catch(e){}}
 // 3-way merge by id: something missing on one side that both had at the last sync was deleted there
 function mRecs(l,r,base,key=x=>x.id){const B=new Set(base||[]),L=new Map(l.map(x=>[key(x),x])),R=new Map(r.map(x=>[key(x),x])),out=[];
   for(const id of new Set([...L.keys(),...R.keys()])){const a=L.get(id),b=R.get(id);
@@ -2576,11 +2592,11 @@ async function syPush(k,v,base){for(let i=0;i<4;i++){
 async function syRun(){if(!SP.tok||!syOn())return;if(SY.busy){SY.again=true;return}
   SY.busy=true;const boot=SY.boot;SY.boot=false;clearTimeout(SY.timer);syUI('맞추는 중…');let reload=false;
   try{const {d}=await api('/docs?have='+encodeURIComponent(J(SP.ver)));const map={};for(const x of d.docs||[])map[x.k]=x;
-    for(const k of DOCS){SY.dirty.delete(k);const srv=map[k];if(k==='set'&&SY.hold)continue;
+    for(const k of DOCS){SY.dirty.delete(k);const srv=map[k];
       const loc=await DOC[k].get();let v=loc;const dirty=fnv(J(loc))!==SP.h[k]; // changed here since the last sync (survives reloads)
       if(srv&&srv.v!==undefined){v=merge(k,loc,srv.v);
         if(J(v)!==J(loc)){await DOC[k].put(v);
-          if(k==='set'){if(boot&&!sessionStorage.getItem('cutref-syre'))reload=true;else{SY.hold=true;toast('다른 기기 설정 받음 · 새로고침하면 적용')}}}
+          if(k==='set'){if(boot&&!sessionStorage.getItem('cutref-syre'))reload=true;else toast('다른 기기 설정 받음 · 화면 일부는 새로고침 후 적용')}}
         if(J(v)!==J(srv.v))v=await syPush(k,v,srv.ver);else SP.ver[k]=srv.ver}
       else if(srv){if(dirty)v=await syPush(k,v,srv.ver)}
       else if(!DOC[k].empty(v))v=await syPush(k,v,0);
@@ -2606,18 +2622,29 @@ async function syBtn(){const el=$('#syG');if(!el||SP.tok||!syOn()||el.childEleme
   catch(e){syMsg(e.message,true)}}
 const syMsg=(t,err)=>{const m=$('#syMsg');if(!m)return;m.textContent=t||'';m.classList.toggle('hidden',!t);m.classList.toggle('err',!!err)};
 async function syLogin(cred){syMsg('구글 확인 완료 · 연동 서버에 로그인 중…');try{if(!cred)throw new Error('구글에서 로그인 정보를 못 받음');const {d}=await api('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:J({credential:cred})});
-    Object.assign(SP,{tok:d.token,me:{email:d.email,name:d.name},ver:{},base:{},h:{}});spSave();syUI();syMsg('');toast(d.email+' 로그인 · 기기 맞추는 중','ok');await syRun()}
+    await syGotToken(d)}
   catch(e){console.error('[cutref sync] login',e);syMsg('로그인 실패 · '+e.message,true);toast('로그인 실패 · '+e.message,'err')}}
+async function syGotToken(d){Object.assign(SP,{tok:d.token,me:{email:d.email,name:d.name},ver:{},base:{},h:{}});spSave();syUI();syMsg('');toast(d.email+' 로그인 · 기기 맞추는 중','ok');await syRun()}
 function syLogout(expired){Object.assign(SP,{tok:'',me:null,ver:{},base:{},h:{},last:0});spSave();SY.dirty.clear();clearTimeout(SY.timer);syUI();
   if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
   toast(expired?'로그인이 풀림 · 설정 › 계정에서 다시 로그인':'로그아웃 · 이 기기 데이터는 그대로',expired?'err':'')}
 function syUI(st){const sec=$('#sySec');if(!sec)return;$('#syTab').classList.toggle('hidden',!syOn());if(!syOn())return;
   $('#syOut').classList.toggle('hidden',!!SP.tok);$('#syIn').classList.toggle('hidden',!SP.tok);
-  if(!SP.tok){syBtn();return}
+  if(!SP.tok){$('#syPwa').classList.toggle('hidden',!(navigator.standalone||matchMedia('(display-mode: standalone)').matches));syBtn();return}
   $('#syMe').textContent=SP.me&&SP.me.email||'로그인됨';
   const t=SP.last?new Date(SP.last):null;$('#syLast').textContent=st||(SY.busy?'맞추는 중…':t?`마지막 맞춤 ${dkey(t)===dkey(new Date())?'':(t.getMonth()+1)+'/'+t.getDate()+' '}${pad(t.getHours())}:${pad(t.getMinutes())}`:'아직 안 맞춤');
   $('#syNow').disabled=SY.busy}
 $('#syNow').onclick=()=>syRun();
+// link code: a signed-in device hands out a short code, another device (e.g. the iPad home-screen app) trades it for a login
+let syKTimer=0;
+$('#syLink').onclick=async()=>{try{const {d}=await api('/link',{method:'POST'});const c=d.code,end=Date.now()+d.ttl*1000;
+    $('#syKC').textContent=c.slice(0,4)+'-'+c.slice(4);$('#syK').classList.remove('hidden');clearInterval(syKTimer);
+    const tick=()=>{const s=Math.max(0,Math.round((end-Date.now())/1000));$('#syKT').textContent=`${Math.floor(s/60)}:${pad(s%60)}`;if(!s){clearInterval(syKTimer);$('#syK').classList.add('hidden')}};tick();syKTimer=setInterval(tick,1000)}
+  catch(e){toast('연결 코드 실패 · '+e.message,'err')}};
+$('#syCodeF').onsubmit=async e=>{e.preventDefault();const c=$('#syCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(c.length!==8){syMsg('코드 8자리를 입력',true);return}
+  syMsg('연결 코드 확인 중…');try{const {d}=await api('/link/claim',{method:'POST',headers:{'Content-Type':'application/json'},body:J({code:c})});
+    $('#syCode').value='';await syGotToken(d)}catch(err){syMsg('연결 코드 실패 · '+err.message,true)}};
 $('#syOff').onclick=async()=>{if(await askYes($('#syOff'),'로그아웃<small>이 기기 데이터는 남고 연동만 멈춤</small>','로그아웃',{kind:'go'}))syLogout()};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SP.tok&&Date.now()-SP.last>60e3)syRun()});
 syUI();if(SP.tok&&syOn())setTimeout(syRun,800);else sessionStorage.removeItem('cutref-syre');
