@@ -348,13 +348,13 @@ button.ic:active{transform:none}
 .calmenu{position:absolute;right:8px;top:100%;margin-top:6px;z-index:3;min-width:200px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);padding:8px;display:grid;gap:6px}
 .calmenu button{display:flex;align-items:center;gap:8px;text-align:left}
 .calmenu button svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges;flex:none}
-.calmenu .sy{display:grid;gap:6px;padding-bottom:8px;border-bottom:2px dotted var(--soft)}
-.calmenu .sy>div{display:grid;gap:6px}
-.calmenu .syh{font-size:11px;color:var(--tx2)}
-#syG{min-height:32px}
-.calmenu .sym{display:grid;gap:2px;min-width:0}
-.calmenu .sym b{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
-.calmenu .sym span{font-size:10px;color:var(--tx2)}
+#sySec>div{display:grid;gap:6px}
+#sySec .syt{font-size:13px}
+#sySec .syd{font-size:11px;color:var(--tx2);line-height:1.6}
+#syG{min-height:40px;margin-top:4px}
+#sySec .sym{display:grid;gap:2px;min-width:0;padding:8px;border:2px solid var(--ink);background:#fff}
+#sySec .sym b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sySec .sym span{font-size:11px;color:var(--tx2)}
 .calmenu small{color:var(--tx3);font-size:10px;padding:2px 2px 0;border-top:2px dotted var(--soft);padding-top:6px}
 .calp .cbody{flex:1;min-height:0;display:flex;flex-direction:column;overflow:auto}
 /* panel mini tabs: 캘린더 | 보관함 */
@@ -1114,7 +1114,12 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 
 <div id="setPop" class="pop hidden" role="dialog" aria-label="설정">
   <div class="hd">설정<button id="setX" class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
-  <div class="fx-tabs" id="setTabs"><button class="fx-tab on" data-pane="1">API 연결</button><button class="fx-tab" data-pane="0">화면</button><button class="fx-tab kbtab" data-pane="2">단축키</button></div>
+  <div class="fx-tabs" id="setTabs"><button class="fx-tab hidden" data-pane="3" id="syTab">계정</button><button class="fx-tab on" data-pane="1">API 연결</button><button class="fx-tab" data-pane="0">화면</button><button class="fx-tab kbtab" data-pane="2">단축키</button></div>
+  <section data-pane="3" class="hidden" id="sySec">
+    <div id="syOut"><b class="syt">구글 계정으로 로그인</b><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 다른 기기와 맞춤</span><div id="syG"></div></div>
+    <div id="syIn" class="hidden"><div class="sym"><b id="syMe"></b><span id="syLast"></span></div><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 이 계정으로 맞추는 중</span>
+      <div class="btns"><button id="syOff">로그아웃</button><button id="syNow" class="pri">지금 맞추기</button></div></div>
+  </section>
   <section data-pane="1">
     <div class="al" id="apiList"></div>
     <button type="button" class="adv2" id="advT" aria-expanded="false"><span class="ar"></span>고급 · 주소 · 프록시</button>
@@ -1152,10 +1157,6 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <button class="ic" id="calIo" data-tip="백업" aria-label="기록 백업" aria-haspopup="true"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1 1h11v1h1v1h1v1h1v11H1zM4 2h7v4H4zM8 3h2v2H8zM3 9h10v5H3zM5 11h6v1H5z"/></svg></button>
     <button class="ic" id="calFull" data-tip="전체 화면" ><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M220,48V88a12,12,0,0,1-24,0V60H168a12,12,0,0,1,0-24h40A12,12,0,0,1,220,48ZM88,196H60V168a12,12,0,0,0-24,0v40a12,12,0,0,0,12,12H88a12,12,0,0,0,0-24Zm120-40a12,12,0,0,0-12,12v28H168a12,12,0,0,0,0,24h40a12,12,0,0,0,12-12V168A12,12,0,0,0,208,156ZM88,36H48A12,12,0,0,0,36,48V88a12,12,0,0,0,24,0V60H88a12,12,0,0,0,0-24Z"/></svg></button>
     <div class="calmenu hidden" id="calMenu">
-      <div class="sy hidden" id="sySec">
-        <div id="syOut"><span class="syh">구글 로그인 · 다른 기기와 맞추기</span><div id="syG"></div></div>
-        <div id="syIn" class="hidden"><div class="sym"><b id="syMe"></b><span id="syLast"></span></div><button id="syNow"><svg viewBox="0 0 12 12"><path d="M2 2h6v1H2zM1 3h1v4H1zM8 1h1v1H8zM8 3h1v1H8zM9 2h1v1H9zM10 5h1v4h-1zM4 9h6v1H4zM3 8h1v1H3zM3 10h1v1H3zM2 9h1v1H2z"/></svg>지금 맞추기</button><button id="syOff"><svg viewBox="0 0 12 12"><path d="M1 1h6v1H1zM1 2h1v8H1zM1 10h6v1H1zM6 3h1v1H6zM7 4h1v1H7zM4 5h7v2H4zM7 7h1v1H7zM6 8h1v1H6z"/></svg>로그아웃</button></div>
-      </div>
       <button id="logExp"><svg viewBox="0 0 12 12"><path d="M5 0h2v6H5zM3 6h6v1H3zM4 7h4v1H4zM5 8h2v1H5zM0 10h12v2H0z"/></svg>기록 내보내기</button>
       <button id="logImp"><svg viewBox="0 0 12 12"><path d="M5 1h2v1H5zM4 2h4v1H4zM3 3h6v1H3zM5 4h2v5H5zM0 10h12v2H0z"/></svg>기록 가져오기</button>
       <small id="logInfo"></small>
@@ -1691,7 +1692,7 @@ function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const
   el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
   el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
-  if(n==='set'){fillPop(S);setTab(1);kcStop();advOpen(false);apiCheck(false)}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
+  if(n==='set'){fillPop(S);setTab(SYNC&&SYNC.url&&SYNC.cid?3:1);syUI();kcStop();advOpen(false);apiCheck(false)}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
   clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
   if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}}
 function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;
@@ -2606,8 +2607,8 @@ async function syLogin(cred){try{const {d}=await api('/auth',{method:'POST',head
   catch(e){toast('로그인 실패 · '+e.message,'err')}}
 function syLogout(expired){Object.assign(SP,{tok:'',me:null,ver:{},base:{},h:{},last:0});spSave();SY.dirty.clear();clearTimeout(SY.timer);syUI();
   if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
-  toast(expired?'로그인이 풀림 · 백업 메뉴에서 다시 로그인':'로그아웃 · 이 기기 데이터는 그대로',expired?'err':'')}
-function syUI(st){const sec=$('#sySec');if(!sec)return;sec.classList.toggle('hidden',!syOn());if(!syOn())return;
+  toast(expired?'로그인이 풀림 · 설정 › 계정에서 다시 로그인':'로그아웃 · 이 기기 데이터는 그대로',expired?'err':'')}
+function syUI(st){const sec=$('#sySec');if(!sec)return;$('#syTab').classList.toggle('hidden',!syOn());if(!syOn())return;
   $('#syOut').classList.toggle('hidden',!!SP.tok);$('#syIn').classList.toggle('hidden',!SP.tok);
   if(!SP.tok){syBtn();return}
   $('#syMe').textContent=SP.me&&SP.me.email||'로그인됨';
@@ -2615,9 +2616,8 @@ function syUI(st){const sec=$('#sySec');if(!sec)return;sec.classList.toggle('hid
   $('#syNow').disabled=SY.busy}
 $('#syNow').onclick=()=>syRun();
 $('#syOff').onclick=async()=>{if(await askYes($('#syOff'),'로그아웃<small>이 기기 데이터는 남고 연동만 멈춤</small>','로그아웃',{kind:'go'}))syLogout()};
-$('#calIo').addEventListener('click',()=>syUI());
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SP.tok&&Date.now()-SP.last>60e3)syRun()});
-if(SP.tok&&syOn())setTimeout(syRun,800);else sessionStorage.removeItem('cutref-syre');
+syUI();if(SP.tok&&syOn())setTimeout(syRun,800);else sessionStorage.removeItem('cutref-syre');
 
 // UI rule: a select box is exactly as wide as its longest option (+ its own padding / arrow), never stretched to fill a row
 const fitCv=document.createElement('canvas').getContext('2d');
