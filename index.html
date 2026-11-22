@@ -2502,7 +2502,7 @@ document.addEventListener('keydown',e=>{
 
 // ---------- 구글 로그인 · 기기 연동 (Worker: /auth · /docs · /upload · /img)
 // 연습 기록 · 링크 · 보관함 · 설정을 내 계정 서버에 두고 기기끼리 맞춤. 업로드한 이미지는 R2 창고에.
-var SYNC={url:'',cid:'737432106953-u902ff3pnj2qkd0orpbj2fknk3893q3i.apps.googleusercontent.com'}; // ← Worker 주소, 구글 OAuth 웹 클라이언트 ID
+var SYNC={url:'https://cutref-archive.masoduregi.workers.dev',cid:'737432106953-u902ff3pnj2qkd0orpbj2fknk3893q3i.apps.googleusercontent.com'}; // ← Worker 주소, 구글 OAuth 웹 클라이언트 ID
 const SYK='cutref-sync',SETK=['cutref2','cutref-keys','cutref-tabs'],DOCS=['log','links','fav','set'];
 var SP={tok:'',me:null,ver:{},base:{},h:{},last:0,setJ:'',setMt:0};
 try{Object.assign(SP,JSON.parse(localStorage.getItem(SYK)||'{}'))}catch(e){}
