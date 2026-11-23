@@ -49,6 +49,18 @@ async function route(req, env) {
   if (!env.DB || !env.BUCKET) throw fail(500, 'DB 또는 BUCKET 연결이 없음');
   if (p === '/' ) return json({ ok: true, service: 'cutref-archive' });
   if (p === '/auth' && m === 'POST') return auth(req, env);
+  // public board RSS for the 보드 tab (Pinterest sends no CORS headers). Only pinterest.com/<user>/<board>.rss, nothing else
+  if (p === '/pin/rss' && m === 'GET') {
+    const b = (u.searchParams.get('b') || '').split('/').filter(Boolean);
+    if (b.length !== 2 || !b.every(x => /^[\w.%-]{1,100}$/.test(x))) throw fail(400, '보드 주소 형식이 이상함');
+    const r = await fetch(`https://www.pinterest.com/${b[0]}/${b[1]}.rss`, {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; cutref-board-reader/1.0; +https://masoduregi07.github.io/bookmarks/)', Accept: 'application/rss+xml,application/xml;q=0.9,*/*;q=0.5' },
+      cf: { cacheTtl: 900, cacheEverything: true },
+    });
+    const text = await r.text();
+    if (!r.ok || !/<rss[\s>]/i.test(text)) return json({ error: r.ok ? '보드 내용이 RSS가 아님' : '핀터레스트 HTTP ' + r.status, status: r.status }, r.status === 404 ? 404 : 502);
+    return new Response(text, { headers: { 'Content-Type': 'application/rss+xml; charset=utf-8', 'Cache-Control': 'public, max-age=600' } });
+  }
   if (p === '/link/claim' && m === 'POST') { // trade a short code from a signed-in device for a session (iPad home-screen app)
     const { code } = await body(req);
     const c = String(code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');

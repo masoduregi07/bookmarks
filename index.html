@@ -1431,8 +1431,12 @@ const pinBuf={};
 const pinKey=v=>{const m=String(v||'').trim().replace(/^https?:\/\//,'').replace(/^(www\.|[a-z]{2}\.)?pinterest\.[a-z.]+\//i,'').replace(/[?#].*$/,'').replace(/\.rss$/,'').split('/').filter(Boolean);
   return m.length>=2&&!/^(pin|search|ideas|today)$/i.test(m[0])?decodeURIComponent(m[0])+'/'+decodeURIComponent(m[1]):''};
 async function pinLoad(b,force){const c=pinBuf[b];if(c&&!force&&Date.now()-c.t<30*60e3)return c;
-  let r;try{r=await getText(`https://www.pinterest.com/${b.split('/').map(encodeURIComponent).join('/')}.rss`)}catch(e){throw new Error('핀터레스트 연결 실패 · 잠시 후 다시')}
-  if(!r.ok)throw new Error(r.status===404?'보드를 찾지 못함 · 공개 보드 주소인지 확인':'핀터레스트 연결 실패 · HTTP '+r.status+(r.status===403?' (Worker 허용 목록 확인)':''));
+  // via our own Worker (Pinterest RSS has no CORS); the image proxy is only a fallback when the Worker isn't set up
+  const rss=`https://www.pinterest.com/${b.split('/').map(encodeURIComponent).join('/')}.rss`;let r;
+  try{if(SYNC&&SYNC.url){const x=await fetch(SYNC.url.replace(/\/+$/,'')+'/pin/rss?b='+encodeURIComponent(b.split('/').map(encodeURIComponent).join('/')),{credentials:'omit'});
+      r={ok:x.ok,status:x.ok?200:(await x.json().catch(()=>({}))).status||x.status,text:x.ok?await x.text():''}}else r=await getText(rss)}
+  catch(e){throw new Error('핀터레스트 연결 실패 · 잠시 후 다시')}
+  if(!r.ok)throw new Error(r.status===404?'보드를 찾지 못함 · 공개 보드 주소인지 확인':'핀터레스트 연결 실패 · HTTP '+r.status);
   const x=new DOMParser().parseFromString(r.text,'text/xml');if(x.querySelector('parsererror'))throw new Error('보드 내용을 읽지 못함');
   const items=[...x.querySelectorAll('item')].map(it=>{const d=(it.querySelector('description')||{}).textContent||'',m=d.match(/<img[^>]+src="([^"]+)"/i);
     return m?{img:m[1].replace(/\/(236x|474x|564x)\//,'/736x/'),title:dec((it.querySelector('title')||{}).textContent||'').trim(),link:(it.querySelector('link')||{}).textContent||''}:null}).filter(Boolean);
