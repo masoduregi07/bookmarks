@@ -41,6 +41,7 @@ button.sm:active{transform:translate(1px,1px)}
 .top header .tabs button[data-tab="3d"].on{box-shadow:inset 0 4px 0 var(--sky)}
 .top header .tabs button[data-tab="game"].on{box-shadow:inset 0 4px 0 var(--lav)}
 .top header .tabs button[data-tab="photo"].on{box-shadow:inset 0 4px 0 var(--peach)}
+.top header .tabs button[data-tab="pin"].on{box-shadow:inset 0 4px 0 var(--pink)}
 .top header .tabs button.holding{background:var(--yel);transform:translateY(1px);transition:background .3s}
 .top header .tabs button.dragging,.top header .tabs button.dragging:hover{background:transparent;border:2px dashed var(--tx3);border-bottom:none;color:transparent;box-shadow:none;clip-path:none}
 .top header .tabs button.dragging>*{visibility:hidden}
@@ -68,6 +69,7 @@ header .ibar button.ic svg.ph{width:18px;height:18px}
 .tabs button[data-tab="3d"].on svg .acc{fill:var(--sky)}
 .tabs button[data-tab="game"].on svg .acc{fill:var(--lav)}
 .tabs button[data-tab="photo"].on svg .acc{fill:var(--peach)}
+.tabs button[data-tab="pin"].on svg .acc{fill:var(--pink)}
 input[type=checkbox]:not(#gridOn){-webkit-appearance:none;appearance:none;width:14px;height:14px;border:2px solid var(--ink);background:#fff;cursor:pointer}
 input[type=checkbox]:not(#gridOn):checked{background:var(--ink);box-shadow:inset 0 0 0 2px #fff}
 #stage{background:var(--stage);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;min-height:0}
@@ -444,6 +446,10 @@ svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:
 #favBtn.beat{animation:favPop .24s steps(3,end)}
 @keyframes favPop{50%{transform:scale(1.3)}}
 #favBtn.hidden,body.zen #favBtn{display:none}
+#pinBtn{position:absolute;left:44px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
+#pinBtn svg{width:22px;height:22px;shape-rendering:crispEdges}#pinBtn .po{fill:#8e8b83}#pinBtn .pf{fill:#cfccc4}
+#pinBtn:hover .pf{fill:var(--pink)}#pinBtn:hover .po{fill:var(--ink)}#pinBtn:active{transform:none}
+#pinBtn.hidden,body.zen #pinBtn{display:none}
 #zoomUi{left:50px!important}
 .calp.full .cbody{display:grid;grid-template-columns:1fr 340px;overflow:hidden}
 .calp .cmain{padding-bottom:6px}
@@ -1015,6 +1021,13 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .fl .tl .gr{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 #fltPop .fl .tl .gr::-webkit-scrollbar{display:none}
 #fltPop .fl .tl .o{flex:none}
+#fltPop .o.pbd{display:inline-flex;align-items:center;gap:4px;padding-right:2px}
+#fltPop .o.pbd small{font-size:10px;opacity:.7}
+#fltPop .pbx{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;font-weight:400;opacity:.6;cursor:pointer}
+#fltPop .pbx:hover{opacity:1}
+#fltPop .pbadd{display:flex;gap:6px}
+#fltPop .pbadd input{flex:1 1 0;width:0;min-width:0}
+#fltPop .pbhint{display:block;margin-top:4px}
 #fltPop .yr{padding:2px 2px 0;width:100%;box-sizing:border-box;flex:1 1 auto;min-width:0}
 #fltPop .yr .val{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
 #fltPop .yr .val b{font-size:12px}#fltPop .yr .val span{font-size:10px;color:var(--tx2)}
@@ -1080,6 +1093,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
     <button data-tab="fig"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M235.4,86.85A23.55,23.55,0,0,0,212,68H150.59a36,36,0,1,0-45.18,0H44A24,24,0,0,0,34,113.79l.19.09,47.63,21L61.76,211a24,24,0,0,0,12.11,30.74A23.77,23.77,0,0,0,84,244a24,24,0,0,0,21.52-13.29L128,191.91l22.51,38.8A24,24,0,0,0,194.24,211l-20-76.15,47.63-21,.19-.09A23.55,23.55,0,0,0,235.4,86.85ZM128,28a12,12,0,1,1-12,12A12,12,0,0,1,128,28Zm27.16,89a12,12,0,0,0-6.77,14L171.26,218a11.87,11.87,0,0,0,.73,2c-.15-.32-.32-.64-.5-.95L138.38,162a12,12,0,0,0-20.76,0L84.51,219.05c-.18.31-.35.63-.5.95a11.87,11.87,0,0,0,.73-2l22.87-86.92a12,12,0,0,0-6.77-14L44,92H212Z"/></svg><span class="tl">피규어</span></button>
     <button data-tab="game"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M176,116H152a12,12,0,0,1,0-24h24a12,12,0,0,1,0,24ZM104,92h-4V88a12,12,0,0,0-24,0v4H72a12,12,0,0,0,0,24h4v4a12,12,0,0,0,24,0v-4h4a12,12,0,0,0,0-24ZM244.76,202.94a40,40,0,0,1-61,5.35,7,7,0,0,1-.53-.56L144.67,164H111.33L72.81,207.73c-.17.19-.35.38-.53.56A40,40,0,0,1,4.62,173.05a1.18,1.18,0,0,1,0-.2L21,88.79A63.88,63.88,0,0,1,83.88,36H172a64.08,64.08,0,0,1,62.93,52.48,1.8,1.8,0,0,1,0,.19l16.36,84.17a1.77,1.77,0,0,1,0,.2A39.74,39.74,0,0,1,244.76,202.94ZM172,140a40,40,0,0,0,0-80H83.89A39.9,39.9,0,0,0,44.62,93.06a1.55,1.55,0,0,0,0,.21l-16.34,84a16,16,0,0,0,13,18.44,16.07,16.07,0,0,0,13.86-4.21L96.9,144.07a12,12,0,0,1,9-4.07Zm55.76,37.31-7-35.95a63.84,63.84,0,0,1-44.27,22.46l24.41,27.72a16,16,0,0,0,26.85-14.23Z"/></svg><span class="tl">게임</span></button>
     <button data-tab="3d"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M225.6,62.64l-88-48.17a19.91,19.91,0,0,0-19.2,0l-88,48.17A20,20,0,0,0,20,80.19v95.62a20,20,0,0,0,10.4,17.55l88,48.17a19.89,19.89,0,0,0,19.2,0l88-48.17A20,20,0,0,0,236,175.81V80.19A20,20,0,0,0,225.6,62.64ZM128,36.57,200,76,128,115.4,56,76ZM44,96.79l72,39.4v76.67L44,173.44Zm96,116.07V136.19l72-39.4v76.65Z"/></svg><span class="tl">3D 모델</span></button>
+    <button data-tab="pin"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M150 20l86 86-17 17-12-6-45 45 6 39-17 17-46-46-61 61H28v-16l61-61-46-46 17-17 39 6 45-45-6-12zm0 34l-4 8 48 48 8-4zm-14 22l-49 49-26-4 70 70-4-26 49-49z"/></svg><span class="tl">보드</span></button>
   </nav>
     <button class="tsc" id="tscR" aria-label="탭 오른쪽으로"><svg viewBox="0 0 8 10"><path d="M1 1h2v1H1zM2 2h2v1H2zM3 3h2v1H3zM4 4h2v2H4zM3 6h2v1H3zM2 7h2v1H2zM1 8h2v1H1z"/></svg></button>
   <div class="ibar">
@@ -1151,6 +1165,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <canvas id="c3d" class="hidden"></canvas>
   <button id="favBtn" class="hidden" data-tip="보관함에 담기" data-key="B" aria-label="보관함에 담기" aria-pressed="false"><svg class="hrt" viewBox="0 0 13 12" aria-hidden="true"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v1H0zM6 2h1v1H6zM12 2h1v1H12zM0 3h1v1H0zM12 3h1v1H12zM0 4h1v1H0zM12 4h1v1H12zM0 5h1v1H0zM12 5h1v1H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h5v1H1zM7 2h5v1H7zM1 3h11v1H1zM1 4h11v1H1zM1 5h11v1H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/></svg></button>
+  <button id="pinBtn" class="hidden" data-tip="핀터레스트에 저장" aria-label="핀터레스트에 저장"><svg viewBox="0 0 12 12" aria-hidden="true"><path class="pf" d="M5 1h4v1h1v4H9v1H8v1H6V7H5V6H4V4H3V3h1V2h1z"/><path class="po" d="M4 0h6v1H4zM3 1h1v1H3zM10 1h1v1h-1zM2 2h1v1H2zM11 2h1v4h-1zM2 3h1v1H2zM3 4h1v1H3zM4 5h1v1H4zM10 6h1v1h-1zM9 7h1v1H9zM5 6h1v1H5zM6 7h2v2H6zM4 8h2v1H4zM3 9h1v1H3zM2 10h1v1H2zM1 11h1v1H1z"/></svg></button>
   <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
@@ -1253,16 +1268,16 @@ const $=s=>document.querySelector(s);
 const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s',usKey:'',pxKey:''};
 let FG,SB;
 const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
-  grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds',game:'thirds',photo:'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false,game:false,photo:false},hist:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1,game:-1,photo:-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set(),game:new Set(),photo:new Set()},queue:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[]}};
+  grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds',game:'thirds',photo:'thirds',pin:'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false,game:false,photo:false,pin:false},hist:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[],pin:[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1,game:-1,photo:-1,pin:-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set(),game:new Set(),photo:new Set(),pin:new Set()},queue:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[],pin:[]}};
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3lightLast','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
-const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{kinds:[],kindsEx:[],kw:'',kwEx:'',onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false},game:{games:[],kind:''},photo:{topics:[],orient:'',q:'',off:[]}});
+const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{kinds:[],kindsEx:[],kw:'',kwEx:'',onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false},game:{games:[],kind:''},photo:{topics:[],orient:'',q:'',off:[]},pin:{boards:[],sel:[]}});
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
-  if(p.f){const d=FDEF();S.f={film:{...d.film,...p.f.film,ex:{...d.film.ex,...((p.f.film||{}).ex||{})}},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})},'3d':{...S.f['3d'],...(p.f['3d']||{})},game:{...S.f.game,...(p.f.game||{})},photo:{...S.f.photo,...(p.f.photo||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
+  if(p.f){const d=FDEF();S.f={film:{...d.film,...p.f.film,ex:{...d.film.ex,...((p.f.film||{}).ex||{})}},anim:{...S.f.anim,...p.f.anim},fig:{...S.f.fig,...(p.f.fig||{})},'3d':{...S.f['3d'],...(p.f['3d']||{})},game:{...S.f.game,...(p.f.game||{})},photo:{...S.f.photo,...(p.f.photo||{})},pin:{...S.f.pin,...(p.f.pin||{})}}}else{if(p.tags)S.f.anim.tags=p.tags;if(p.onlyAnim)S.legacyAnim=true}}catch(e){}
 for(const k of['src','dbTag','dbEx'])delete S.f.fig[k];delete S.f['3d'].wire;
 {const f=S.f['3d'];f.parts=[f.parts.find(x=>D3PARTS_ID.includes(x))||'hand'];f.partsEx=[];f.pose='';f.range='wide';f.rim=false}
-for(const t of['film','anim','fig','3d','game','photo'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
-if(!['film','anim','fig','3d','game','photo'].includes(S.tab))S.tab='film';
+for(const t of['film','anim','fig','3d','game','photo','pin'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
+if(!['film','anim','fig','3d','game','photo','pin'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
 const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,pxKey:S.pxKey,d3light:S.d3light,d3lightLast:S.d3lightLast,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
 
@@ -1411,6 +1426,27 @@ async function gsRandom(){
   throw new Error((f.kinds.length||kw||f.kindsEx.length||f.kwEx.trim())?'조건에 맞는 피규어를 찾지 못함 · 필터를 줄이거나 다시 시도':'피규어를 불러오지 못함'+(lastErr?' · '+lastErr:''));
 }
 
+// ---------- PINTEREST public boards (each board's RSS: ~25 newest pins, no login)
+const pinBuf={};
+const pinKey=v=>{const m=String(v||'').trim().replace(/^https?:\/\//,'').replace(/^(www\.|[a-z]{2}\.)?pinterest\.[a-z.]+\//i,'').replace(/[?#].*$/,'').replace(/\.rss$/,'').split('/').filter(Boolean);
+  return m.length>=2&&!/^(pin|search|ideas|today)$/i.test(m[0])?decodeURIComponent(m[0])+'/'+decodeURIComponent(m[1]):''};
+async function pinLoad(b,force){const c=pinBuf[b];if(c&&!force&&Date.now()-c.t<30*60e3)return c;
+  let r;try{r=await getText(`https://www.pinterest.com/${b.split('/').map(encodeURIComponent).join('/')}.rss`)}catch(e){throw new Error('핀터레스트 연결 실패 · 잠시 후 다시')}
+  if(!r.ok)throw new Error(r.status===404?'보드를 찾지 못함 · 공개 보드 주소인지 확인':'핀터레스트 연결 실패 · HTTP '+r.status+(r.status===403?' (Worker 허용 목록 확인)':''));
+  const x=new DOMParser().parseFromString(r.text,'text/xml');if(x.querySelector('parsererror'))throw new Error('보드 내용을 읽지 못함');
+  const items=[...x.querySelectorAll('item')].map(it=>{const d=(it.querySelector('description')||{}).textContent||'',m=d.match(/<img[^>]+src="([^"]+)"/i);
+    return m?{img:m[1].replace(/\/(236x|474x|564x)\//,'/736x/'),title:dec((it.querySelector('title')||{}).textContent||'').trim(),link:(it.querySelector('link')||{}).textContent||''}:null}).filter(Boolean);
+  const name=dec(((x.querySelector('channel>title')||{}).textContent||b.split('/')[1]).trim());
+  return pinBuf[b]={t:Date.now(),name,items}}
+async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('필터에서 핀터레스트 보드를 추가하면 시작');
+  const pick=f.sel.length?f.boards.filter(b=>f.sel.includes(b.u)):f.boards;let lastE=null;
+  for(const b of [...pick].sort(()=>Math.random()-.5)){let c;try{c=await pinLoad(b.u)}catch(e){lastE=e;continue}
+    let list=c.items.filter(i=>!S.seen.pin.has(i.img));if(!list.length&&c.items.length){c.items.forEach(i=>S.seen.pin.delete(i.img));list=c.items}
+    if(!list.length)continue;const i=list[rnd(list.length)];
+    return {kind:'img',url:i.img,title:(b.n||c.name)+(i.title?' · '+i.title:''),link:i.link||('https://www.pinterest.com/'+b.u+'/'),key:i.img,src:'Pinterest · '+(b.n||c.name)}}
+  throw lastE||new Error('보드에 핀이 없음');
+}
+
 // ---------- SAKUGABOORU (Moebooru API)
 async function sbRandom(){
   const a=S.f.anim,tl=['order:random'];
@@ -1553,7 +1589,7 @@ async function photoRandom(){if(!photoKeys().length)throw new Error('사진 서�
     catch(e){last=e} // rate limit / bad key on one service: try the other
   }
   throw last||new Error('사진을 찾지 못함 · 검색어 확인')}
-const SRC={film:fgRandom,anim:sbRandom,fig:gsRandom,'3d':d3Random,game:gameRandom,photo:photoRandom},SRCNAME={film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM',photo:'패션 사진'};
+const SRC={film:fgRandom,anim:sbRandom,fig:gsRandom,'3d':d3Random,game:gameRandom,photo:photoRandom,pin:pinRandom},SRCNAME={pin:'PINTEREST',film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM',photo:'패션 사진'};
 function fill(tab){
   if(fillP[tab])return fillP[tab];
   const g=fillG[tab]||0;
@@ -1566,7 +1602,7 @@ function fill(tab){
   return fillP[tab]=p;
 }
 function clearQ(tab){S.queue[tab]=[];fillG[tab]=(fillG[tab]||0)+1;fillP[tab]=null}
-const lastErr={film:'',anim:'',fig:'','3d':'',game:'',photo:''};
+const lastErr={film:'',anim:'',fig:'','3d':'',game:'',photo:'',pin:''};
 let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);busyT=0;h.classList.add('hidden');return}
   if(now){clearTimeout(busyT);busyT=0;h.classList.remove('hidden')}else if(!busyT&&h.classList.contains('hidden'))busyT=setTimeout(()=>{busyT=0;h.classList.remove('hidden')},300)}
 let nextWait=null; // one pending load per tab: repeated taps while loading don't skip cuts
@@ -1586,6 +1622,9 @@ function media(){return !c3d.classList.contains('hidden')?c3d:vid.classList.cont
 // error kinds → [title, hint]; hint is shown under the message
 const ERRK=[
   [/조건에 맞는/,'결과 없음',''],
+  [/핀터레스트 보드를 추가/,'보드 없음','필터 › 추가에 공개 보드 주소 붙여넣기 · 예: pinterest.com/아이디/보드이름'],
+  [/보드를 찾지 못함|보드에 핀이 없음|보드 내용을 읽지/,'보드 확인 필요','필터에서 보드 주소 확인 · 비공개 보드는 불러올 수 없음.'],
+  [/핀터레스트 연결 실패/,'핀터레스트 연결 실패','잠시 후 다시 · 계속되면 중계 Worker 허용 목록에 pinterest.com 추가 필요.'],
   [/키가 올바르지 않음/,'키 확인 필요','설정 › API 연결 › 패션에서 다시 연결.'],
   [/요청 한도/,'잠시 후 다시','요청이 몰려 제한됨 · 몇 분 뒤 다시 시도.'],
   [/3D 모델을 열 수 없음/,'3D 표시 불가','이 기기 · 브라우저에서 WebGL을 쓸 수 없음.<br>브라우저 하드웨어 가속 설정 확인.'],
@@ -1594,14 +1633,14 @@ const ERRK=[
 ];
 // clear the stage (previous tab's media / title) while a new tab loads its first cut
 function blankStage(){img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');ov.innerHTML='';
-  $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');$('#favBtn').classList.add('hidden');zoomReset()}
+  $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');$('#favBtn').classList.add('hidden');$('#pinBtn').classList.add('hidden');zoomReset()}
 function showErr(e){
   msg.className='';if(/^사진 서비스 연결 필요/.test(e)){busy(false);blankStage();showConnect();try{syncSaveBtn()}catch(_){}return} // blankStage also hides the ♥ (it can't act on an error / connect card)
   busy(false);img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
   $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.remove('hidden');
   const k=ERRK.find(x=>x[0].test(e)),title=k?k[1]:'연결 실패',
     hint=k?k[2]:'설정 → API 연결에서 연결 테스트로 확인.'+(location.protocol==='file:'?'<br>파일을 로컬로 열었다면 GitHub Pages 주소로 열기.':'');
-  toast(title+' · '+e,'err');$('#favBtn').classList.add('hidden');try{syncSaveBtn()}catch(_){}
+  toast(title+' · '+e,'err');$('#favBtn').classList.add('hidden');$('#pinBtn').classList.add('hidden');try{syncSaveBtn()}catch(_){}
   msg.innerHTML=`<b>${title}</b><br>${esc(e)}`+(hint?`<br><span style="color:var(--tx3)">${hint}</span>`:'');
 }
 function show(){
@@ -1819,6 +1858,7 @@ function fCount(t){const f=S.f[t];
   if(t==='fig')return f.kinds.length+f.kindsEx.length+(f.kw.trim()?1:0)+(f.kwEx.trim()?1:0)+(f.onePer?1:0);
   if(t==='game')return f.games.length+(f.kind?1:0);
   if(t==='photo')return f.topics.length+(f.orient?1:0)+(f.q?1:0);
+  if(t==='pin')return f.sel.length;
   if(t==='3d')return f.parts.length+f.partsEx.length+(f.pose?1:0)+(f.range!=='wide'?1:0)+(f.rim?1:0);
   if(t==='film')return (f.movies||[]).length+f.genre.length+(f.year.length?1:0)+f.country.length+f.ratio.length+Object.values(f.ex).reduce((a,v)=>a+v.length,0)+(f.person?1:0)+(f.onePer?1:0);
   return (f.mat?1:0)+f.kinds.length+f.kindsEx.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length+(f.artists||[]).length+(f.artistsEx||[]).length+(f.works||[]).length}
@@ -1828,6 +1868,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
     if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
   else if(t==='fig'){f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
   else if(t==='game'){f.games.forEach(k=>ch.push([nm(GAMES,k),'gm',k]));if(f.kind)ch.push([nm(GKINDS,f.kind),'gkd'])}
+  else if(t==='pin'){f.boards.filter(b=>f.sel.includes(b.u)).forEach(b=>ch.push([b.n||b.u,'pb',b.u]))}
   else if(t==='photo'){if(f.q)ch.push(['“'+f.q+'”','pq']);else f.topics.forEach(k=>ch.push([nm(PTOPICS,k),'pt',k]));if(f.orient)ch.push([nm(PORIENT,f.orient),'po'])}
   else if(t==='3d'){f.parts.forEach(k=>ch.push([nm(D3PARTS,k),'dp',k]));f.partsEx.forEach(k=>ch.push(['−'+nm(D3PARTS,k),'dpx',k]));
     if(f.pose)ch.push([nm(D3POSES,f.pose),'dpo']);if(f.range!=='wide')ch.push(['각도 '+nm(D3RANGE,f.range),'drg']);if(f.rim)ch.push(['림 조명','drim'])}
@@ -1850,7 +1891,7 @@ $('#frow').addEventListener('click',e=>{if(e.target.closest('[data-more]')){e.st
   if(p){const f=S.f['3d'];if(f.parts[0]===p.dataset.d3p&&S.pos['3d']>=0)return;f.parts=[p.dataset.d3p];save();renderRow();clearQ('3d');next();return}
   const c=e.target.closest('[data-rm]');if(!c)return;const [ty,a,b]=c.dataset.rm.split('|'),t=S.tab,f=S.f[t];
   if(ty==='c'){const n=(f[a].find(x=>String(x.id)===b)||{}).name;f[a]=f[a].filter(x=>String(x.id)!==b&&!(a==='ratio'&&x.name===n))}else if(ty==='cx'){const n=(f.ex[a].find(x=>String(x.id)===b)||{}).name;f.ex[a]=f.ex[a].filter(x=>String(x.id)!==b&&!(a==='ratio'&&x.name===n))}
-  else if(ty==='kx'||ty==='gkx')f.kindsEx=f.kindsEx.filter(x=>x!==a);else if(ty==='kwx')f.kwEx='';else if(ty==='p')f.person=null;else if(ty==='yr')f.year=[];else if(ty==='one')f.onePer=false;
+  else if(ty==='kx'||ty==='gkx')f.kindsEx=f.kindsEx.filter(x=>x!==a);else if(ty==='kwx')f.kwEx='';else if(ty==='p')f.person=null;else if(ty==='pb')f.sel=f.sel.filter(x=>x!==a);else if(ty==='yr')f.year=[];else if(ty==='one')f.onePer=false;
   else if(ty==='k')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='mv')f.movies=f.movies.filter(x=>String(x.id)!==a);else if(ty==='wk')f.works=f.works.filter(x=>x!==a);else if(ty==='ar')f.artists=f.artists.filter(x=>x!==a);else if(ty==='arx')f.artistsEx=f.artistsEx.filter(x=>x!==a);else if(ty==='gm')f.games=f.games.filter(x=>x!==a);else if(ty==='gkd')f.kind='';else if(ty==='pt')f.topics=f.topics.filter(x=>x!==a);else if(ty==='po')f.orient='';else if(ty==='pq')f.q='';else if(ty==='mat')f.mat='';else if(ty==='r')f.region='';else if(ty==='s')f.score=0;
   else if(ty==='gk')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='kw')f.kw='';
   else if(ty==='dp')f.parts=f.parts.filter(x=>x!==a);else if(ty==='dpx')f.partsEx=f.partsEx.filter(x=>x!==a);else if(ty==='dpo')f.pose='';else if(ty==='drg')f.range='wide';else if(ty==='drim')f.rim=false;
@@ -1875,7 +1916,7 @@ $('#fltPop').addEventListener('input',e=>{if(e.target.id==='yrA'||e.target.id===
 $('#fltPop').addEventListener('change',e=>{if(e.target.id!=='yrA'&&e.target.id!=='yrB')return;const f=S.f.film,a=+$('#yrA').value,b=+$('#yrB').value,n=yrKids.length-1;
   f.year=a===0&&b===n?[]:yrKids.slice(a,b+1).map(k=>({id:k.id,name:k.name}));f.ex.year=[];fChange()});
 function renderFlt(){renderFlt0();yrPaint()}
-function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCount(t)?'':'전체에서 랜덤';$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진'})[t];
+function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCount(t)?'':'전체에서 랜덤';$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진',pin:'핀터레스트 보드'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){const none=FGC.done&&!FGC.err; // loaded fine but no usable groups: say so (re-requesting here looped forever)
@@ -1902,6 +1943,11 @@ function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCo
   }else if(t==='game'){const f=S.f.game,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
     b.innerHTML=row('게임',opts(GAMES.map(g=>[g[0],g[1]]),v=>f.games.includes(v),'data-game'))+row('종류',opts(GKINDS,v=>(f.kind||'')===v,'data-gkind'))
       +`<div class="ft"><span class="wk-msg">이미지 출처 · 각 게임 팬 위키</span><a id="fReset">초기화</a></div>`;
+  }else if(t==='pin'){const f=S.f.pin;
+    const chips=f.boards.length?`<span class="o${f.sel.length?'':' on'}" data-pbsel="">전체</span>`+f.boards.map(b=>`<span class="o pbd${f.sel.includes(b.u)?' on':''}" data-pbsel="${esc(b.u)}">${esc(b.n||b.u)}<small>${b.c||''}</small><b class="pbx" data-pbdel="${esc(b.u)}" role="button" aria-label="${esc(b.n||b.u)} 보드 삭제">×</b></span>`).join(''):'<span class="wk-msg">아직 추가한 보드가 없음</span>';
+    b.innerHTML=`<div class="fx-row top"><span class="fx-l">보드</span><div><div class="gr tall">${chips}</div></div></div>`
+      +`<div class="fx-row top"><span class="fx-l">추가</span><div><form class="pbadd" id="pbAdd" autocomplete="off"><input type="text" id="pbIn" placeholder="pinterest.com/아이디/보드이름" aria-label="핀터레스트 보드 주소"><button type="submit">추가</button></form><span class="wk-msg pbhint">공개 보드만 · 보드마다 최근 핀 약 25개</span></div></div>`
+      +`<div class="ft"><span class="wk-msg">이미지 출처 · 핀터레스트 공개 보드</span><a id="fReset">초기화</a></div>`;
   }else if(t==='photo'){const f=S.f.photo,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
     const src=['us','px'].map(k=>PSVC[k].key()?`<span class="o${(f.off||[]).includes(k)?'':' on'}" data-psrc="${k}"><i class="dot"></i>${PSVC[k].n}</span>`:`<span class="o add" data-pwz="${k}">+ ${PSVC[k].n} 연결</span>`).join('');
     b.innerHTML=`<div class="fx-row"><span class="fx-l">출처</span><div><div class="src">${src}</div></div></div><div class="fx-row"><span class="fx-l">검색</span><div><input type="text" id="pQ" placeholder="영어 검색어 · 비우면 주제에서" value="${esc(f.q)}" autocomplete="off"></div></div>`
@@ -1945,7 +1991,7 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
   const o=e.target.closest('.o,#fReset');if(!o)return;const t=S.tab,f=S.f[t];
   if(o.dataset.pwz){closeP();openWiz(o.dataset.pwz);return}
   if(o.dataset.psrc){const k=o.dataset.psrc;f.off=(f.off||[]).includes(k)?f.off.filter(x=>x!==k):[...(f.off||[]),k];return fChange()}
-  if(o.id==='fReset'){const keep=t==='photo'?f.off:null;S.f[t]=FDEF()[t];if(keep)S.f[t].off=keep;return fChange()}
+  if(o.id==='fReset'){const keep=t==='photo'?f.off:null,pb=t==='pin'?f.boards:null;S.f[t]=FDEF()[t];if(keep)S.f[t].off=keep;if(pb)S.f[t].boards=pb;return fChange()}
   if(o.dataset.moreeu!==undefined){app.euAll=true;renderFlt();placeP('flt');return}
   if(o.dataset.morectry!==undefined){app.allCtry=true;renderFlt();placeP('flt');return}
   if(o.dataset.sp){f.person={id:+o.dataset.sp,name:o.dataset.spname};return fChange()}
@@ -1969,9 +2015,18 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
   else if(o.dataset.porient!==undefined)f.orient=o.dataset.porient;
   else if(o.dataset.mat!==undefined)f.mat=o.dataset.mat;
   else if(o.dataset.region!==undefined)f.region=o.dataset.region;
+  else if(o.dataset.pbsel!==undefined){const k=o.dataset.pbsel;f.sel=!k?[]:f.sel.includes(k)?f.sel.filter(x=>x!==k):[...f.sel,k]}
   else if(o.dataset.score!==undefined)f.score=+o.dataset.score;
   else if(o.dataset.rating!==undefined){S.sbRating=o.dataset.rating}
   fChange()});
+$('#fltPop').addEventListener('click',e=>{const x=e.target.closest('[data-pbdel]');if(!x)return;e.stopPropagation();const f=S.f.pin,u=x.dataset.pbdel,b=f.boards.find(v=>v.u===u);
+  f.boards=f.boards.filter(v=>v.u!==u);f.sel=f.sel.filter(v=>v!==u);delete pinBuf[u];toast((b&&b.n||u)+' 보드 삭제');fChange()},true);
+$('#fltPop').addEventListener('submit',async e=>{if(e.target.id!=='pbAdd')return;e.preventDefault();const inp=$('#pbIn'),u=pinKey(inp.value),f=S.f.pin;
+  if(!u){toast('보드 주소 형식 · pinterest.com/아이디/보드이름','err');return}
+  if(f.boards.some(b=>b.u===u)){toast('이미 추가한 보드','err');return}
+  const btn=e.target.querySelector('button');btn.disabled=true;btn.textContent='확인 중…';
+  try{const c=await pinLoad(u,true);if(!c.items.length)throw new Error('보드에 핀이 없음');f.boards=[...f.boards,{u,n:c.name,c:c.items.length}];toast(c.name+' 보드 추가 · 핀 '+c.items.length+'개','ok');fChange()}
+  catch(err){toast(err.message,'err');btn.disabled=false;btn.textContent='추가'}});
 $('#fltPop').addEventListener('change',e=>{if(e.target.id==='pQ'){S.f.photo.q=e.target.value.trim();fChange()}
   else if(e.target.id==='fOne'){S.f[S.tab].onePer=e.target.checked;fChange()}
   else if(e.target.id==='fRim'){S.f['3d'].rim=e.target.checked;fChange()}
@@ -2258,9 +2313,15 @@ let LOG=[];try{LOG=JSON.parse(localStorage.getItem(LOGK)||'[]')}catch(e){}
 const saveLog=()=>{keepStore();try{localStorage.setItem(LOGK,JSON.stringify(LOG))}catch(e){toast('기록 저장 실패 · 브라우저 저장 공간 확인','err')}};
 const pad=n=>String(n).padStart(2,'0');
 const dkey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-const TABNAME={film:'영화',anim:'애니',fig:'피규어','3d':'3D',game:'게임',photo:'패션'};
+const TABNAME={film:'영화',anim:'애니',fig:'피규어','3d':'3D',game:'게임',photo:'패션',pin:'보드'};
 let cutShownAt=Date.now();
 function curItem(){const t=S.tab;return S.hist[t][S.pos[t]]}
+// 핀터레스트에 저장: Pinterest's own save page (pick a board there) · needs a public image address, so not for uploads or 3D snapshots
+const pinMedia=it=>{const u=it&&(it.kind==='vid'?it.thumb:(it.hd||it.url));return u&&/^https?:\/\//.test(u)?u:''};
+function pinSync(it){const b=$('#pinBtn');if(b)b.classList.toggle('hidden',!pinMedia(it)||!msg.classList.contains('hidden'))}
+$('#pinBtn').addEventListener('click',()=>{const it=curItem(),m=pinMedia(it);if(!m)return;
+  const q=new URLSearchParams({url:it.link&&/^https?:/.test(it.link)?it.link:m,media:m,description:(it.title||'').slice(0,480)});
+  window.open('https://www.pinterest.com/pin/create/button/?'+q,'_blank','noopener,width=760,height=640')});
 function savedToday(it){const k=dkey(new Date());return it&&LOG.find(r=>r.date===k&&r.url===it.url)}
 function syncSaveBtn(){const it=curItem(),b=$('#saveCut');b.disabled=!it||!msg.classList.contains('hidden');b.classList.toggle('done',!!savedToday(it))}
 function toggleSave(){const it=curItem();if(!it||!msg.classList.contains('hidden'))return;if(it.kind==='3d'&&!it.url){if(!M3||c3d.classList.contains('hidden'))return;M3.then(m=>{it.url=m.snapshot(320);toggleSave()});return}const ex=savedToday(it);
@@ -2325,7 +2386,7 @@ async function favLoad(){try{[FAV.items,FAV.folders]=await Promise.all([favAll('
 async function favSrc(x){if(!x.blob)return M(thumbOf(x));if(FAV.urls[x.id])return FAV.urls[x.id];
   const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));if(b instanceof Blob)return FAV.urls[x.id]=URL.createObjectURL(b); // a miss resolves to the request object
   return x.rid&&SYNC.url&&(x.rsig||SP&&SP.tok)?`${SYNC.url.replace(/\/+$/,'')}/img/${x.rid}?`+(x.rsig?'s='+x.rsig:'t='+encodeURIComponent(SP.tok)):''} // uploaded on another device: from the R2 store
-function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on))); // a removed upload can't be re-added from the stage
+function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on)));pinSync(it); // a removed upload can't be re-added from the stage
   b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.dataset.tip=on?'보관함에서 빼기':'보관함에 담기'}
 function favCount(){$('#favTabN').textContent=FAV.items.length||'';$('#calTabN').textContent=(()=>{const n=LOG.filter(r=>r.date===dkey(new Date())).length;return n?'오늘 '+n:''})()}
 async function favToggle(){let it=curItem();if(!it||!msg.classList.contains('hidden'))return;
