@@ -1031,9 +1031,9 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 /* 설정: like the 필터 box. Each tab's main block is the white box the active tab opens into;
    footers (고급 · buttons · hints) sit below it on the window color */
 #setPop .fx-tabs{border-bottom:none!important;margin:12px 12px -2px!important;position:relative;z-index:1}
-#setPop .fx-tab{margin:0!important;height:28px!important;padding-bottom:4px!important;box-sizing:border-box}
-#setPop .fx-tab.on{height:32px!important} /* labels sit 4px higher: off the box line */
-#setPop .fx-tab+.fx-tab::before{top:calc(50% - 2px)!important} /* divider follows the raised label */ /* the row already overlaps the box by 2px; a second -2px pushed the tab's side lines into the box */
+#setPop .fx-tab{margin:0!important;height:28px!important;padding-bottom:2px!important;box-sizing:border-box}
+#setPop .fx-tab.on{height:32px!important} /* labels sit 2px higher: off the box line */
+#setPop .fx-tab+.fx-tab::before{top:calc(50% - 1px)!important} /* divider follows the raised label */ /* the row already overlaps the box by 2px; a second -2px pushed the tab's side lines into the box */
 #setPop .fx-tab.on{background:#fff!important}
 #setPop>section[data-pane]{padding:0 12px 12px}
 #setPop .al,#setPop .sbox,#kcList,#syOut,#sySec .sym{border:2px solid var(--soft);background:#fff}
