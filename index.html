@@ -17,7 +17,7 @@ html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Galmuri1
 a{color:var(--tx2)}
 button,select,input{font:inherit;color:inherit}
 button{background:#fff;border:2px solid var(--ink);border-radius:0;padding:4px 10px;cursor:pointer;white-space:nowrap;box-shadow:2px 2px 0 var(--shd);line-height:16px}
-button:hover{background:var(--yel)}
+@media (hover:hover){button:hover{background:var(--yel)}}
 button:active{transform:translate(2px,2px);box-shadow:none}
 button.on{background:var(--ink);color:#fff}
 button:disabled{color:var(--tx3);border-color:var(--soft);box-shadow:2px 2px 0 var(--soft);cursor:default;background:#fff}
@@ -54,7 +54,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:0 10p
 .tabs{display:flex;gap:4px;padding-left:10px;align-items:flex-end;position:relative;z-index:2;margin-bottom:-2px}
 .tabs button{box-shadow:none;border:2px solid var(--ink);border-bottom:none;padding:4px 14px 5px 12px;background:var(--stage);color:var(--tx2);display:flex;align-items:center;gap:6px;
   clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)}
-.tabs button:hover{background:var(--yel);color:var(--ink)}
+@media (hover:hover){.tabs button:hover{background:var(--yel);color:var(--ink)}}
 .tabs button.on{background:var(--panel);color:var(--ink);font-weight:700;padding:6px 16px 7px 14px}
 .tabs button:active{transform:none}
 .tabs .wip{font-size:11px;font-weight:400;color:var(--tx3)}
@@ -104,7 +104,7 @@ body.zen #zoomUi{display:none}
 /* idle: faded box (B); over a dark picture: whole box at 50% (A); hover restores it */
 #info:not(:hover){background:rgba(251,250,246,.55);border-color:rgba(61,59,55,.3);color:rgba(61,59,55,.75)}
 #info.dk:not(:hover){background:var(--panel);border-color:var(--ink);color:var(--ink);opacity:.5}
-#info.lnk:hover{background:var(--yel)}#info:not(.lnk){cursor:default}
+@media (hover:hover){#info.lnk:hover{background:var(--yel)}}#info:not(.lnk){cursor:default}
 #srcLink{display:none!important} /* the title box is the source link now */
 body.zen #info{display:none}
 #info a{color:var(--ink)}
@@ -117,7 +117,7 @@ body.zen #info{display:none}
 .seg.ic button{padding:4px 7px;display:flex;align-items:center;justify-content:center;height:28px;min-width:30px}
 .seg.ic svg{width:12px;height:12px;fill:currentColor;shape-rendering:crispEdges}
 #srcLink{position:absolute;right:10px;bottom:10px;font-size:11px;background:var(--panel);border:2px solid var(--ink);padding:2px 8px;color:var(--ink);text-decoration:none;display:flex;gap:6px;align-items:center}
-#srcLink:hover{background:var(--yel)}
+@media (hover:hover){#srcLink:hover{background:var(--yel)}}
 #srcLink b{font-weight:700}
 #srcLink.hidden{display:none}
 #toasts{position:fixed;left:20px;top:20px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;z-index:20;pointer-events:none}
@@ -137,7 +137,7 @@ footer{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:8px 1
 .seg button:first-child{margin-left:0}
 .seg button:active{transform:none}
 #next{font-weight:700;background:var(--pink)}
-#next:hover{background:var(--yel)}
+@media (hover:hover){#next:hover{background:var(--yel)}}
 .sw{display:inline-flex;align-items:center;cursor:pointer;user-select:none}
 .sw input{display:none}
 .sw i{width:30px;height:16px;border:2px solid var(--ink);background:#fff;position:relative}
@@ -176,9 +176,9 @@ body.t3d #gTone{order:3!important;margin-right:6px}body.t3d[data-tb="3"] .top fo
 #kcList .kr>span{color:var(--tx2)}
 #kcList .ks{display:flex;gap:3px;align-items:center}
 #kcList kbd{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 5px;border:2px solid var(--ink);background:#fff;box-shadow:1px 1px 0 var(--shd);font:inherit;font-size:11px;cursor:pointer;user-select:none;-webkit-user-select:none}
-#kcList kbd:hover{background:var(--yel)}
+@media (hover:hover){#kcList kbd:hover{background:var(--yel)}}
 #kcList kbd.add{border-style:dashed;border-color:var(--soft);color:var(--tx3);box-shadow:none;background:none}
-#kcList kbd.add:hover{border-color:var(--ink);color:var(--ink)}
+@media (hover:hover){#kcList kbd.add:hover{border-color:var(--ink);color:var(--ink)}}
 #kcList kbd.rec{background:var(--yel);cursor:default}
 #kcList .warn{grid-column:1/-1;font-size:11px;background:#fff;border:2px solid var(--ink);padding:4px 4px 4px 7px;display:flex;gap:8px;align-items:center;justify-content:space-between}
 #kcList .warn b{font-weight:400;background:var(--yel);padding:0 3px}
@@ -202,7 +202,7 @@ body.t3d #gTone{order:3!important;margin-right:6px}body.t3d[data-tb="3"] .top fo
 .pop .st b.err{color:var(--ink)}.pop .st b.err::before{content:"✕ ";color:#d26a82}
 .pop .btns{display:flex;gap:6px;justify-content:flex-end}
 .pop .btns .pri{background:var(--ink);color:#fff}
-.pop .btns .pri:hover{background:#55524c}
+@media (hover:hover){.pop .btns .pri:hover{background:#55524c}}
 #setBtn.on{background:var(--ink);color:#fff}
 .top{transition:margin-top .28s cubic-bezier(.2,.7,.2,1)}
 body.zen .top{margin-top:calc(-1 * var(--th,220px));pointer-events:none}
@@ -212,11 +212,11 @@ body.zen #peek{display:flex}
 body.zen.peek #peek{height:60px}
 #uiShow{position:relative;top:0;width:44px;height:calc(var(--fb,10px) + 20px);display:inline-flex;align-items:flex-start;opacity:0;transform:translateY(-10px);transition:opacity .28s,transform .28s cubic-bezier(.2,.7,.2,1);pointer-events:none}
 #uiShow{justify-content:center;padding:0;border:none;background:none;box-shadow:none;color:var(--ink)}
-#uiShow:hover{background:none;color:var(--ink)}
+@media (hover:hover){#uiShow:hover{background:none;color:var(--ink)}}
 /* the tab continues the toolbar outline: same 2px border + 2px shadow, and it covers the toolbar's bottom line where it joins */
 #uiShow .tb{position:relative;top:var(--fb,10px);width:34px;height:16px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:var(--panel);border:2px solid var(--ink);border-top:none;box-shadow:2px 2px 0 var(--shd)}
 #uiShow .tb::before{content:"";position:absolute;left:0;right:0;top:-2px;height:2px;background:inherit}
-#uiShow:hover .tb{background:var(--yel)}
+@media (hover:hover){#uiShow:hover .tb{background:var(--yel)}}
 #uiShow svg{width:10px;height:6px;fill:currentColor;shape-rendering:crispEdges}
 body.zen.peek #uiShow{opacity:1;transform:none;pointer-events:auto}
 body.zen #stTop,body.zen #srcLink{display:none}
@@ -226,7 +226,7 @@ body.zen #stTop,body.zen #srcLink{display:none}
 .top header .tabs{gap:0!important}
 .top header .tabs button:not(.on):not(.tab-ghost){padding:5px 10px 6px;position:relative} /* same size while dragged, so the strip doesn't jump */
 .top header .tabs button:not(.on):not(.tab-ghost):not(.dragging){border-color:transparent;background:none!important;clip-path:none}
-.top header .tabs button:not(.on):not(.tab-ghost):hover{color:var(--ink);background:none!important}
+@media (hover:hover){.top header .tabs button:not(.on):not(.tab-ghost):hover{color:var(--ink);background:none!important}}
 @media (hover:hover){ /* hover: the tab's own shape appears in stage gray — a preview of the selected tab */
 .top header .tabs button:not(.on):not(.lift):not(.dragging):hover:is(#_,button){background:var(--stage)!important;border-color:var(--ink)!important;border-bottom-color:transparent!important;color:var(--ink);
   clip-path:polygon(0 4px,2px 4px,2px 2px,4px 2px,4px 0,calc(100% - 4px) 0,calc(100% - 4px) 2px,calc(100% - 2px) 2px,calc(100% - 2px) 4px,100% 4px,100% 100%,0 100%)!important}
@@ -254,11 +254,11 @@ footer .dv::before{content:"";border-left:2px dotted var(--tx3);margin:2px 0}
 }
 footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px} /* sits at the end of the last row; wraps only when it must */
 .chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 8px;background:#fff;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);font-size:12px;cursor:pointer;white-space:nowrap;line-height:1}
-.chip:hover{background:var(--yel)}
+@media (hover:hover){.chip:hover{background:var(--yel)}}
 .chip.on{background:var(--ink);color:#fff}
 .chip.set{background:var(--yel)}
 .chip.set b{font-weight:400;color:var(--tx2);margin-left:2px}
-.chip.set:hover b{color:var(--ink)}
+@media (hover:hover){.chip.set:hover b{color:var(--ink)}}
 .cnt{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 3px;background:var(--pink);border:2px solid var(--ink);font-size:10px;font-weight:700;color:var(--ink)}
 .chip .ar{width:8px;height:5px;background:currentColor;clip-path:polygon(0 0,100% 0,100% 40%,80% 40%,80% 70%,60% 70%,60% 100%,40% 100%,40% 70%,20% 70%,20% 40%,0 40%)}
 .frow .none{color:var(--tx3);font-size:11px}
@@ -268,7 +268,7 @@ footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:c
 #fltPop .gr.tall{max-height:none}
 :is(#fltPop,#setPop) .fx-tabs{display:flex;border-bottom:2px solid var(--ink);margin:0 0 16px}
 :is(#fltPop,#setPop) .fx-tab{border:2px solid transparent;border-bottom:none;margin:0 0 -2px;padding:5px 12px;background:none;box-shadow:none;color:var(--tx2);font-size:12px;display:flex;align-items:center;gap:4px}
-:is(#fltPop,#setPop) .fx-tab:hover{color:var(--ink);background:none}
+@media (hover:hover){:is(#fltPop,#setPop) .fx-tab:hover{color:var(--ink);background:none}}
 :is(#fltPop,#setPop) .fx-tab.on{border-color:var(--ink);background:var(--panel);color:var(--ink)}
 :is(#fltPop,#setPop) .fx-tab i{font-style:normal;font-size:10px;line-height:14px;min-width:14px;padding:0 3px;background:var(--yel);border:1px solid var(--ink);color:var(--ink);text-align:center}
 #fltPop .fx-row{display:grid;grid-template-columns:52px 1fr;align-items:center;column-gap:8px;padding:0 0 12px 14px}
@@ -287,7 +287,7 @@ footer .frow{flex:1 1 auto;min-width:0;display:flex;flex-wrap:wrap;align-items:c
 #fltPop .o.more{background:none;box-shadow:none;color:var(--tx2)}
 #fltPop .wk-msg{font-size:11px;color:var(--tx3)}
 #fltPop .o{padding:4px 5px 2px 6px;border:none;background:#ebe9e2;box-shadow:1px 1px 0 rgba(61,59,55,.18);cursor:pointer;font-size:11px;line-height:16px;white-space:nowrap}
-#fltPop .o:hover{background:var(--yel)}
+@media (hover:hover){#fltPop .o:hover{background:var(--yel)}}
 #fltPop .o.on{background:var(--ink);color:#fff}
 #fltPop .o.ex{background:var(--pink);color:var(--ink);text-decoration:line-through;text-decoration-thickness:2px}
 .chip.set.ex{background:var(--pink);text-decoration:line-through}
@@ -323,10 +323,10 @@ footer .grp>label{margin-right:0}
 .ibar{display:flex;gap:2px;align-items:center;margin-bottom:4px}
 button.ic{width:30px;height:28px;display:inline-flex;align-items:center;justify-content:center;background:none;border:none;box-shadow:none;padding:0;color:var(--ink);position:relative;cursor:pointer}
 button.ic svg{width:16px;height:16px;fill:currentColor;shape-rendering:crispEdges;flex:none;transition:transform .08s steps(2)}
-button.ic:hover{background:none}
+@media (hover:hover){button.ic:hover{background:none}}
 button.ic::after{content:"";position:absolute;left:7px;right:7px;bottom:2px;height:2px;background:var(--ink);opacity:0;transition:opacity .08s}
-button.ic:hover svg,button.ic:focus-visible svg,button.ic.on svg{transform:translateY(-2px)}
-button.ic:hover::after,button.ic:focus-visible::after,button.ic.on::after{opacity:1}
+button.ic:focus-visible svg,button.ic.on svg{transform:translateY(-2px)}@media (hover:hover){button.ic:hover svg{transform:translateY(-2px)}}
+button.ic:focus-visible::after,button.ic.on::after{opacity:1}@media (hover:hover){button.ic:hover::after{opacity:1}}
 button.ic:active svg{transform:translateY(1px)}
 button.ic:active::after{opacity:1;height:3px;bottom:1px}
 button.ic:active{transform:none}
@@ -384,7 +384,7 @@ button.ic:active{transform:none}
 /* panel mini tabs: 캘린더 | 보관함 */
 .ptabs{display:flex;border-bottom:2px solid var(--ink);margin:10px 14px 0;flex:none}
 .ptabs button{border:2px solid transparent;border-bottom:none;margin:0 0 -2px;padding:5px 12px;background:none;box-shadow:none;color:var(--tx2);font-size:12px;display:flex;align-items:center;gap:5px}
-.ptabs button:hover{background:none;color:var(--ink)}.ptabs button:active{transform:none}
+@media (hover:hover){.ptabs button:hover{background:none;color:var(--ink)}}.ptabs button:active{transform:none}
 .ptabs button.on{border-color:var(--ink);color:var(--ink);font-weight:700;background:linear-gradient(transparent 58%,var(--mint) 58%,var(--mint) 88%,transparent 88%) no-repeat 8px 0/calc(100% - 16px) 100%,var(--panel)}
 .ptabs button i{font-style:normal;font-size:10px;color:var(--tx3);font-weight:400}
 .ptabs svg{width:13px;height:12px}.ptabs svg.hrt .ho{fill:currentColor}.ptabs svg.hrt .hf{fill:#cfccc4}.ptabs button.on svg.hrt .hf{fill:var(--tx3)}
@@ -420,34 +420,34 @@ button.ic:active{transform:none}
 .fv-menu.hidden{display:none}
 .fv-menu label{display:flex;align-items:center;gap:8px;height:24px;padding:0 10px 0 7px;cursor:pointer;color:var(--ink);white-space:nowrap}
 .fv-menu label svg{flex:none;width:13px;height:12px;shape-rendering:crispEdges}.fv-menu label svg.ic8{width:11px;height:11px}
-.fv-menu label:hover{background:var(--ink)!important;color:#fff}.fv-menu label:hover .hrt .ho{fill:#fff}
-.fv-menu label.dg{color:#c2546f}.fv-menu label.dg:hover{color:#f3a7ba}
-.fv-menu label.off{color:var(--tx3);cursor:default}.fv-menu label.off:hover{background:none!important;color:var(--tx3)}.fv-menu label.off .hf{fill:#cfccc4}.fv-menu label.off .ho{fill:var(--tx3)!important}
+@media (hover:hover){.fv-menu label:hover{background:var(--ink)!important;color:#fff}}@media (hover:hover){.fv-menu label:hover .hrt .ho{fill:#fff}}
+.fv-menu label.dg{color:#c2546f}@media (hover:hover){.fv-menu label.dg:hover{color:#f3a7ba}}
+.fv-menu label.off{color:var(--tx3);cursor:default}@media (hover:hover){.fv-menu label.off:hover{background:none!important;color:var(--tx3)}}.fv-menu label.off .hf{fill:#cfccc4}.fv-menu label.off .ho{fill:var(--tx3)!important}
 .fv-menu hr{border:none;border-top:2px dotted var(--soft);margin:2px 0}
-.fv-menu .nf{height:24px;display:flex;align-items:center;padding:0 10px 0 7px;color:var(--tx2);cursor:pointer}.fv-menu .nf:hover{background:var(--ink);color:#fff}
+.fv-menu .nf{height:24px;display:flex;align-items:center;padding:0 10px 0 7px;color:var(--tx2);cursor:pointer}@media (hover:hover){.fv-menu .nf:hover{background:var(--ink);color:#fff}}
 .fv-menu small{color:var(--tx3);height:22px;display:flex;align-items:center;padding:0 8px}
 .fv-ask{position:fixed;z-index:61;display:flex;gap:2px;padding:2px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);animation:tbdIn .12s steps(3,end)}
 .fv-ask.hidden{display:none}
 .fv-ask input{width:150px;height:24px;padding:0 7px;border:2px solid var(--ink);background:#fff;font:inherit;font-size:12px;outline:none;border-radius:0;box-shadow:none}
 .fv-ask input:focus{box-shadow:inset 0 -3px 0 var(--yel)}
 .fv-ask button{height:24px;min-height:0;padding:0 10px;font-size:12px;background:var(--ink);color:#fff;border:2px solid var(--ink);box-shadow:none}
-.fv-ask button:hover{background:#55524c}
+@media (hover:hover){.fv-ask button:hover{background:#55524c}}
 .fv-cf{align-items:center;max-width:calc(100vw - 16px);box-sizing:border-box}.fv-cf span{font-size:12px;line-height:1.35;padding:2px 8px 2px 6px;flex:1 1 auto;min-width:0}.fv-cf button{flex:none}.fv-cf span small{color:var(--tx3);font-size:11px;margin-left:4px}
-.fv-cf button.dg{background:#c2546f;border-color:var(--ink)}.fv-cf button.dg:hover{background:#a8445c}
-.fv-cf button.no{background:#fff;color:var(--ink)}.fv-cf button.go{background:var(--ink)}.fv-cf button{min-width:34px}.fv-cf button.no:hover{background:#ebe9e2}
+.fv-cf button.dg{background:#c2546f;border-color:var(--ink)}@media (hover:hover){.fv-cf button.dg:hover{background:#a8445c}}
+.fv-cf button.no{background:#fff;color:var(--ink)}.fv-cf button.go{background:var(--ink)}.fv-cf button{min-width:34px}@media (hover:hover){.fv-cf button.no:hover{background:#ebe9e2}}
 @media (hover:none),(pointer:coarse){.fv-ask input,.fv-ask button{height:32px;font-size:14px}.fv-ask input{width:170px}}
 @media (hover:none),(pointer:coarse){.fv-menu{font-size:13px}.fv-menu label,.fv-menu .nf,.fv-menu small{height:32px;padding:0 12px 0 9px}} /* finger-sized rows, same snug sides */
 /* stage heart */
 svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:#e07a95}
 #favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
 #favBtn svg{width:24px;height:24px}#favBtn .hb{fill:#8e8b83}#favBtn .hfl{display:none;fill:#e07a95}
-#favBtn:hover .hb{fill:var(--ink)}#favBtn.on .hb{display:none}#favBtn.on .hfl{display:inline}#favBtn:active{transform:none}
+@media (hover:hover){#favBtn:hover .hb{fill:var(--ink)}}#favBtn.on .hb{display:none}#favBtn.on .hfl{display:inline}#favBtn:active{transform:none}
 #favBtn.beat{animation:favPop .24s steps(3,end)}
 @keyframes favPop{50%{transform:scale(1.3)}}
 #favBtn.hidden,body.zen #favBtn{display:none}
 #pinBtn{position:absolute;left:44px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
 #pinBtn svg{width:22px;height:22px;fill:#8e8b83}
-#pinBtn:hover svg{fill:var(--ink)}#pinBtn:active{transform:none}
+@media (hover:hover){#pinBtn:hover svg{fill:var(--ink)}}#pinBtn:active{transform:none}
 #pinBtn.hidden,body.zen #pinBtn{display:none}
 #zoomUi{left:50px!important}
 .calp.full .cbody{display:grid;grid-template-columns:1fr 340px;overflow:hidden}
@@ -464,7 +464,7 @@ svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:
 .calp .cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;padding:0 14px}
 .calp .dw{color:var(--tx3);font-size:10px;text-align:center}
 .calp .d{aspect-ratio:1;border:2px solid var(--soft);background:#fff;position:relative;font-size:10px;padding:2px 3px;color:var(--tx2);cursor:pointer;overflow:hidden}
-.calp .d:hover{border-color:var(--ink)}
+@media (hover:hover){.calp .d:hover{border-color:var(--ink)}}
 .calp .d.l1{background:#e3f1e8}.calp .d.l2{background:#c8e6d4}.calp .d.l3{background:#9fd0b2}.calp .d.l4{background:#6fb08b;color:#fff}
 .calp .d .n{position:absolute;right:3px;bottom:1px;font-weight:700;font-size:11px;color:var(--ink)}
 .calp .d.l4 .n{color:#fff}
@@ -497,7 +497,7 @@ svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:
 .calp .th img{width:100%;height:100%;object-fit:cover;display:block}
 .calp .th span{position:absolute;left:0;bottom:0;background:var(--panel);font-size:9px;padding:1px 4px;border-top:2px solid var(--ink);border-right:2px solid var(--ink);color:var(--ink)}
 .calp .th a{cursor:pointer;-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
-.calp .th a:hover,.calp .th a.sel{outline:2px solid var(--yel)}
+.calp .th a.sel{outline:2px solid var(--yel)}@media (hover:hover){.calp .th a:hover{outline:2px solid var(--yel)}}
 .calp .th a.lift{opacity:.35}
 .calp .th .lgf{position:absolute;right:3px;top:3px;width:9px;height:8px;background:#e07a95;clip-path:polygon(0 12%,12% 0,38% 0,50% 15%,62% 0,88% 0,100% 12%,100% 50%,50% 100%,0 50%)}
 .lgghost{position:fixed;z-index:80;width:72px;aspect-ratio:4/3;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);pointer-events:none;background:var(--stage) center/cover;transform:translate(-50%,-60%) rotate(-4deg)}
@@ -506,17 +506,18 @@ svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:
 html{-webkit-text-size-adjust:100%}
 html,body{overscroll-behavior:none;touch-action:manipulation} /* iPad: no rubber-band bounce or double-tap page zoom */
 button,select,.chip,.o,.tabs button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.calp{padding-bottom:env(safe-area-inset-bottom)} /* iPad home indicator */
 #app{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom))}
 .top header .tabs button{flex:none;touch-action:pan-x;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .top header .ibar{flex:none;margin-left:auto;align-self:flex-end;display:flex;align-items:flex-end;margin-bottom:-2px} /* same row as the tabs: bottoms line up */
 .top header .ibar button.ic{height:29px}
 /* icon bar: small label above each icon, two groups (기록·링크 | 숨김·설정) */
 .top header .ibar button.ic .lb{transition:transform .08s steps(2)}
-.top header .ibar button.ic:hover .lb,.top header .ibar button.ic:focus-visible .lb,.top header .ibar button.ic.on .lb{transform:translateY(-2px)}
+.top header .ibar button.ic:focus-visible .lb,.top header .ibar button.ic.on .lb{transform:translateY(-2px)}@media (hover:hover){.top header .ibar button.ic:hover .lb{transform:translateY(-2px)}}
 .top header .ibar button.ic:active .lb{transform:translateY(1px)}
 .top header .ibar button.ic{flex-direction:column;justify-content:flex-end;gap:2px;height:38px;padding-bottom:6px}
 .top header .ibar .lb{font-size:9px;line-height:1;color:var(--tx2);letter-spacing:0;white-space:nowrap;pointer-events:none}
-.top header .ibar button.ic:hover .lb,.top header .ibar button.ic.on .lb{color:var(--ink)}
+.top header .ibar button.ic.on .lb{color:var(--ink)}@media (hover:hover){.top header .ibar button.ic:hover .lb{color:var(--ink)}}
 .top header .ibar .isep{display:block;flex:none;width:2px;height:10px;background:var(--soft);margin:0 4px 9px}
 .ibar .lb,.ibar .isep{display:none}.top header .ibar .lb{display:block}.top header .ibar .isep{display:block}
 header .ibar button.ic svg.ph{width:16px!important;height:16px!important}
@@ -581,16 +582,16 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 #lnkP .r .nm::after{content:" ↗";font-weight:400;opacity:0;transition:opacity .08s steps(2)}
 #lnkP .r .ds{color:var(--tx2);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #lnkP .r .ds .me{color:var(--ink);background:var(--yel);padding:0 3px;margin-right:4px}
-#lnkP .r:hover,#lnkP .r:focus-within,#lnkP .r:active{background:var(--yel)}
-#lnkP .r:hover .nm::after,#lnkP .r:focus-within .nm::after{opacity:1}
-#lnkP .r:hover .ds,#lnkP .r:focus-within .ds{color:var(--ink)}
+#lnkP .r:focus-within,#lnkP .r:active{background:var(--yel)}@media (hover:hover){#lnkP .r:hover{background:var(--yel)}}
+#lnkP .r:focus-within .nm::after{opacity:1}@media (hover:hover){#lnkP .r:hover .nm::after{opacity:1}}
+#lnkP .r:focus-within .ds{color:var(--ink)}@media (hover:hover){#lnkP .r:hover .ds{color:var(--ink)}}
 #lnkP .r .lk:active .fav{transform:translate(1px,1px)}
 #lnkP .r .st,#lnkP .r .del{border:none;background:none;box-shadow:none;padding:0 8px;min-width:0;align-self:stretch;color:var(--tx3);font-size:14px;line-height:1}
 #lnkP .r .st.on{color:#d9a400}
-#lnkP .r .st:hover,#lnkP .r .del:hover{color:var(--ink);background:none}
+@media (hover:hover){#lnkP .r .st:hover,#lnkP .r .del:hover{color:var(--ink);background:none}}
 #lnkP .r .del{padding:0 10px 0 2px;font-size:12px}
 #lnkP .add{display:block;margin:12px 14px 0;border-style:dashed;border-color:var(--tx3);box-shadow:none;width:calc(100% - 28px);color:var(--tx2);background:none}
-#lnkP .add:hover{background:var(--yel);color:var(--ink)}
+@media (hover:hover){#lnkP .add:hover{background:var(--yel);color:var(--ink)}}
 #lnkP .lk-form{margin:12px 14px 0;padding:12px 12px 10px;border:2px solid var(--ink);background:#fff}
 #lnkP .lk-form .fx-row{display:grid;grid-template-columns:40px 1fr;align-items:center;gap:8px;margin-bottom:6px}
 #lnkP .lk-form .fx-l{font-size:11px;color:var(--tx2)}
@@ -605,7 +606,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 #lnkP .ch{gap:0}
 .pop .hd button.ic,.calp .ch button.ic{width:22px;height:20px;min-height:0;min-width:0}
 .pop .hd button.ic::after,.calp .ch button.ic::after{left:3px;right:3px;bottom:-2px}
-.pop .hd button.ic:hover svg,.calp .ch button.ic:hover svg,.calp .ch button.ic.on svg{transform:translateY(-1px)}
+.calp .ch button.ic.on svg{transform:translateY(-1px)}@media (hover:hover){.pop .hd button.ic:hover svg,.calp .ch button.ic:hover svg{transform:translateY(-1px)}}
 .calp .ch b{font-size:12px}
 @media (hover:none),(pointer:coarse){
   .pop .hd button.ic,.calp .ch button.ic{width:30px;height:20px;min-height:0}
@@ -643,7 +644,7 @@ footer .grp{flex-wrap:wrap;row-gap:6px}
 .tsc{display:none;flex:none;align-self:flex-end;width:26px;height:30px;padding:0;margin:0 0 2px;border:none;box-shadow:none;background:none;align-items:center;justify-content:center;color:var(--ink);min-height:0}
 .tsc svg{width:8px;height:10px;fill:currentColor;shape-rendering:crispEdges}
 .tsc:disabled{opacity:.2}
-.tsc:not(:disabled):hover{background:var(--yel)}
+@media (hover:hover){.tsc:not(:disabled):hover{background:var(--yel)}}
 header.tov .tsc{display:flex}
 @media (hover:none){.tsc:not(:disabled):hover{background:none}}
 /* small screens (phones): compact toolbar */
@@ -734,7 +735,7 @@ header.tov .tsc{display:flex}
 .lsw input:checked+.lb .t-on{display:inline;font-weight:700}
 .lsw input:checked+.lb{background:var(--mint);color:var(--ink);box-shadow:inset 2px 2px 0 rgba(61,59,55,.22)} /* pressed look without moving, stays aligned */
 .lsw input:checked+.lb i{background:#3fbf6f}
-.lsw:hover .lb{background:var(--yel)}.lsw:hover input:checked+.lb{background:var(--mint)}
+@media (hover:hover){.lsw:hover .lb{background:var(--yel)}}@media (hover:hover){.lsw:hover input:checked+.lb{background:var(--mint)}}
 @media (hover:none){.lsw:hover .lb{background:#fff}}
 @media (hover:none),(pointer:coarse){.lsw .lb{height:32px}}
 @media (min-width:561px) and (pointer:coarse){.lsw .lb{height:34px;padding:0 6px 0 4px;gap:4px}}
@@ -858,7 +859,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #setPop .al button{min-height:0!important;height:22px;padding:0 7px!important;font-size:11px;box-shadow:1px 1px 0 var(--shd);line-height:1}
 #setPop .al button.pri{background:var(--ink);color:#fff}
 #setPop .adv2{display:flex;align-items:center;gap:6px;margin:8px 0 10px;padding:0!important;min-height:0!important;height:auto;border:none;background:none!important;box-shadow:none;font-size:11px;color:var(--tx2)}
-#setPop .adv2:hover{color:var(--ink)}#setPop .adv2:active{transform:none}
+@media (hover:hover){#setPop .adv2:hover{color:var(--ink)}}#setPop .adv2:active{transform:none}
 .adv2 .ar{width:5px;height:8px;background:currentColor;clip-path:polygon(0 0,40% 0,40% 20%,70% 20%,70% 40%,100% 40%,100% 60%,70% 60%,70% 80%,40% 80%,40% 100%,0 100%);transition:transform .08s steps(2)}
 .adv2[aria-expanded="true"] .ar{transform:rotate(90deg)}
 #setPop .adv{border:2px dotted var(--tx3);padding:8px 8px 6px;margin:-4px 0 10px}
@@ -895,7 +896,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 .wz .chip b svg{width:8px;height:8px;shape-rendering:crispEdges}.wz .chip b svg path{fill:#fff}
 .wz button.chip.d{border-color:var(--ink);color:var(--ink);cursor:pointer}.wz .chip.d b,.wz .chip.c b{background:var(--ink)}
 .wz button.chip.c{border-color:var(--ink);background:var(--yel);color:var(--ink);box-shadow:2px 2px 0 var(--shd)}
-.wz button.chip:active{transform:none}.wz button.chip:not(.d):hover{background:#fff}.wz button.chip.c:hover{background:var(--yel)}
+.wz button.chip:active{transform:none}@media (hover:hover){.wz button.chip:not(.d):hover{background:#fff}}@media (hover:hover){.wz button.chip.c:hover{background:var(--yel)}}
 .wz .t{display:block;font-size:13px;font-weight:700;margin-bottom:4px}
 .wz .box{border:2px solid var(--ink);background:#fff;padding:8px}
 .wz .s{font-size:11px;color:var(--tx2);line-height:1.6}
@@ -917,7 +918,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .src .o .dot{width:6px;height:6px;background:#3fbf6f;outline:1px solid var(--ink)}
 #fltPop .src .o:not(.on) .dot{background:var(--soft)}
 #fltPop .src .o.add{background:none;box-shadow:none;border:1px dashed var(--tx3);color:var(--tx2);padding:3px 6px 1px}
-#fltPop .src .o.add:hover{border-color:var(--ink);color:var(--ink)}
+@media (hover:hover){#fltPop .src .o.add:hover{border-color:var(--ink);color:var(--ink)}}
 
 /* ---------- UI rule: every box fits its text — no padding beyond what the 12px font needs, nothing stretched to fill a row */
 /* ---------- UI rule: text, digits and icons inside a box sit dead center (measure the ink: Galmuri sits high and carries a right bearing; use native sizes 9/11px, line-height:1 + text-box:trim-both cap alphabetic — Windows reads Galmuri's win metrics and draws ~1–2px lower than Mac/iPad, the trim makes centering OS-independent) */
@@ -970,7 +971,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 .calp .cgrid{gap:3px;padding:6px;margin:0 12px;border:1px solid var(--soft)}
 .calp .d{border:none;background:#ebe9e2;padding:2px 3px;font-size:9px;color:var(--tx3)}
 .calp .d .n{right:3px;bottom:1px;font-size:10px}
-.calp .d:hover{border:none;box-shadow:inset 0 0 0 1px var(--tx3)}
+@media (hover:hover){.calp .d:hover{border:none;box-shadow:inset 0 0 0 1px var(--tx3)}}
 .calp .d.today{box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink)}
 .calp .d.sel{outline:2px solid var(--ink);outline-offset:1px;box-shadow:none}
 .calp .d.today.sel{box-shadow:inset 0 0 0 2px var(--ink)}
@@ -1038,10 +1039,10 @@ body[data-tab=pin] :is(#fltPop,#frow){--yel:var(--pink)} /* 보드 tab: the boar
 #fltPop .pbn{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #fltPop .pbli small{font-size:10px;color:var(--tx3)}#fltPop .pbli .sp{flex:1 1 auto}
 #fltPop .pbi{flex:none;display:inline-flex;align-items:center;justify-content:center;width:24px;height:22px;padding:0;border:none!important;background:none!important;box-shadow:none!important;min-width:0!important;min-height:0!important;cursor:pointer}
-#fltPop .pbi svg{width:14px;height:14px;fill:var(--ink);opacity:.65}#fltPop .pbi:hover svg,#fltPop .pbi.on svg{opacity:1}
+#fltPop .pbi svg{width:14px;height:14px;fill:var(--ink);opacity:.65}#fltPop .pbi.on svg{opacity:1}@media (hover:hover){#fltPop .pbi:hover svg{opacity:1}}
 #fltPop .pbm{position:absolute;right:2px;top:100%;z-index:6;width:max-content;background:#fbfaf6;border:2px solid var(--ink);box-shadow:2px 2px 0 #c6c3ba;padding:4px 0;cursor:default}
 #fltPop .pbm button{display:flex;align-items:center;gap:8px;width:100%;height:26px;padding:0 12px 0 10px;white-space:nowrap;border:none!important;background:none!important;box-shadow:none!important;font:inherit;font-size:11px;color:var(--ink);text-align:left;cursor:pointer}
-#fltPop .pbm button:hover{background:var(--ink)!important;color:#fff}#fltPop .pbm button:hover svg{fill:#fff}
+@media (hover:hover){#fltPop .pbm button:hover{background:var(--ink)!important;color:#fff}}@media (hover:hover){#fltPop .pbm button:hover svg{fill:#fff}}
 #fltPop .pbm svg{width:14px;height:14px;fill:var(--ink);flex:none}#fltPop .pbm hr{border:none;border-top:1px dotted #a19f97;margin:4px 0}
 #fltPop .pbm .dg{color:#b23a3a}#fltPop .pbm .dg svg{fill:#b23a3a}
 #fltPop .pbli .pbt{flex:none;white-space:nowrap}
@@ -1319,6 +1320,8 @@ function placeToasts(){const box=$('#toasts'),top=document.querySelector('.top')
   const stt=$('#stTop');if(!zen&&stt&&stt.getBoundingClientRect().height){const r=stt.getBoundingClientRect();x=r.left;y=r.bottom+6} // always below 필터 / 제목
   else{const r=(zen?st:top).getBoundingClientRect();x=r.left+(zen?10:0);y=zen?r.top+10:r.bottom+18}
   const dr=$('#tbDrawer');if(!zen&&dr&&!dr.classList.contains('hidden')&&dr.offsetParent){const r=dr.getBoundingClientRect();if(r.bottom+6>y&&r.left<x+200)y=r.bottom+6} // open 분할/타이머 mini window: toasts go under it
+  let pp=null;try{pp=!zen&&curPop&&POPS[curPop]&&POPS[curPop].el}catch(e){} // curPop is declared further down: toasts during start-up skip this
+  if(pp){const t=parseFloat(pp.style.top)||0,h=pp.offsetHeight,l=parseFloat(pp.style.left)||0;if(h&&t<y+30&&t+h>y&&l<x+200){y=t+h+6;if(y>innerHeight-60)y=Math.max(8,innerHeight-60)}} // open 필터 / 설정 window: toasts go under it, not over its title
   box.style.left=x+'px';box.style.top=y+'px';box.style.maxWidth=(innerWidth-x-12)+'px'}
 function toast(t,kind=''){placeToasts();const el=document.createElement('div');el.className='toast '+kind;el.textContent=t;
   const box=$('#toasts');box.appendChild(el);while(box.children.length>4)box.firstChild.remove();
@@ -1875,10 +1878,10 @@ function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
   if(n==='set'){fillPop(S);setTab(SYNC&&SYNC.url&&SYNC.cid?3:1);syUI();kcStop();advOpen(false);apiCheck(false)}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;pinMenu='';renderFlt()}
   clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
-  if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}}
+  if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}placeToasts()}
 function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;
   if(n==='flt'){P.el.classList.remove('in');P.el.classList.add('out');clearTimeout(P.tOut);P.tOut=setTimeout(()=>{P.el.classList.add('hidden');P.el.classList.remove('out')},130)}else P.el.classList.add('hidden');P.btn&&P.btn.classList.remove('on');curPop=null;
-  if(n==='flt'){if(fltDirty){fltDirty=false;applyFilter()}else renderRow()}}
+  if(n==='flt'){if(fltDirty){fltDirty=false;applyFilter()}else renderRow()}placeToasts()}
 sb.onclick=e=>{e.stopPropagation();curPop==='set'?closeP():openP('set')};
 // settings mini tabs + shortcut list sliding open under its button
 const setTab=n=>{document.querySelectorAll('#setTabs .fx-tab').forEach(b=>b.classList.toggle('on',b.dataset.pane==n));document.querySelectorAll('#setPop section[data-pane]').forEach(x=>x.classList.toggle('hidden',x.dataset.pane!=n))};
@@ -2429,9 +2432,10 @@ function showTip(b){hideTip();if(!b.dataset.tip)return;const r=b.getBoundingClie
   const h=tipEl.offsetHeight,up=r.bottom+6+h>innerHeight-4;tipEl.classList.toggle('up',up); // near the bottom edge: show above
   tipEl.style.left=left+'px';tipEl.style.top=(up?r.top-6-h:r.bottom+6)+'px';tipEl.style.setProperty('--tx',(r.left+r.width/2-left)+'px')}
 function hideTip(){if(tipEl){tipEl.remove();tipEl=null}}
-document.addEventListener('mouseover',e=>{const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))showTip(b)});
-document.addEventListener('mouseout',e=>{const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))hideTip()});
-document.addEventListener('mousedown',hideTip,true);
+// mouse/trackpad only: on touch a tip flashes for one frame, and iPad Safari can swallow the tap when hover adds content
+document.addEventListener('pointerover',e=>{if(e.pointerType!=='mouse')return;const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))showTip(b)});
+document.addEventListener('pointerout',e=>{if(e.pointerType!=='mouse')return;const b=e.target.closest('[data-tip]');if(b&&!b.contains(e.relatedTarget))hideTip()});
+document.addEventListener('pointerdown',hideTip,true);
 
 // ---------- practice log + calendar
 const LOGK='cutref-log';
@@ -2849,7 +2853,7 @@ async function syRun(){if(!SP.tok||!syOn())return;if(SY.busy){SY.again=true;retu
       else if(!DOC[k].empty(v))v=await syPush(k,v,0);
       setBase(k,v);SP.h[k]=fnv(J(v))}
     SP.last=Date.now();SY.err=false;spSave();
-    if(reload){sessionStorage.setItem('cutref-syre','1');location.reload();return}
+    if(reload){let ok=true;try{sessionStorage.setItem('cutref-syre','1')}catch(e){ok=false}if(ok){location.reload();return}toast('다른 기기 설정 받음 · 새로고침하면 적용')} // no flag = no reload (avoids a reload loop)
     if(boot)sessionStorage.removeItem('cutref-syre')}
   catch(e){SY.err=true;spSave();if(SP.tok)toast('동기화 실패 · '+e.message,'err')}
   finally{SY.busy=false;syUI();if(SY.again){SY.again=false;syRun()}}}

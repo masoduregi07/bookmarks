@@ -97,7 +97,9 @@ async function route(req, env) {
     if (!row) throw fail(404, '없는 이미지');
     const obj = await env.BUCKET.get(row.r2);
     if (!obj) throw fail(404, '창고에 파일이 없음');
-    return new Response(obj.body, { headers: { 'Content-Type': row.type, 'Cache-Control': 'private, max-age=31536000, immutable' } });
+    // uploads keep the type the browser sent: an SVG/HTML upload must not run script on this origin
+    return new Response(obj.body, { headers: { 'Content-Type': row.type, 'Cache-Control': 'private, max-age=31536000, immutable',
+      'X-Content-Type-Options': 'nosniff', 'Content-Security-Policy': "default-src 'none'; style-src 'unsafe-inline'; sandbox" } });
   }
 
   const sub = await session(env, (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, ''));
