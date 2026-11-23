@@ -1019,6 +1019,20 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .fl .tl .gr{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 #fltPop .fl .tl .gr::-webkit-scrollbar{display:none}
 #fltPop .fl .tl .o{flex:none}
+#fltPop .yr{padding:2px 2px 0;width:100%;box-sizing:border-box;flex:1 1 auto;min-width:0}
+#fltPop .yr .val{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+#fltPop .yr .val b{font-size:12px}#fltPop .yr .val span{font-size:10px;color:var(--tx2)}
+#fltPop .yr .trk{position:relative;height:18px;margin:0 7px}
+#fltPop .yr .ln{position:absolute;left:0;right:0;top:7px;height:4px;box-sizing:border-box;background:#e4e2dc;border:1px solid var(--soft)}
+#fltPop .yr .rg{position:absolute;top:7px;height:4px;background:var(--ink)}
+#fltPop .yr input[type=range]{position:absolute;left:-7px;top:0;width:calc(100% + 14px);height:18px;margin:0;padding:0;background:none;border:none;box-shadow:none;-webkit-appearance:none;appearance:none;pointer-events:none;outline:none}
+#fltPop .yr input[type=range]::-webkit-slider-runnable-track{height:18px;background:none;border:none}
+#fltPop .yr input[type=range]::-moz-range-track{height:18px;background:none;border:none}
+#fltPop .yr input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:14px;height:18px;box-sizing:border-box;border:2px solid var(--ink);border-radius:0;background:var(--yel);box-shadow:2px 2px 0 var(--shd);cursor:grab;margin:0}
+#fltPop .yr input[type=range]::-moz-range-thumb{pointer-events:auto;width:14px;height:18px;box-sizing:border-box;border:2px solid var(--ink);border-radius:0;background:var(--yel);box-shadow:2px 2px 0 var(--shd);cursor:grab}
+#fltPop .yr input[type=range]:focus-visible::-webkit-slider-thumb{background:#fff}
+#fltPop .yr .ticks{display:flex;justify-content:space-between;margin:6px 7px 0;font-size:10px;color:var(--tx2)}
+#fltPop .yr .ticks span{width:0;display:flex;justify-content:center}
 
 
 /* 설정 창 tabs: same folder tabs as 필터 (P2 light line), accent = the window's sky color */
@@ -1809,11 +1823,11 @@ function fCount(t){const f=S.f[t];
   if(t==='game')return f.games.length+(f.kind?1:0);
   if(t==='photo')return f.topics.length+(f.orient?1:0)+(f.q?1:0);
   if(t==='3d')return f.parts.length+f.partsEx.length+(f.pose?1:0)+(f.range!=='wide'?1:0)+(f.rim?1:0);
-  if(t==='film')return (f.movies||[]).length+f.genre.length+f.year.length+f.country.length+f.ratio.length+Object.values(f.ex).reduce((a,v)=>a+v.length,0)+(f.person?1:0)+(f.onePer?1:0);
+  if(t==='film')return (f.movies||[]).length+f.genre.length+(f.year.length?1:0)+f.country.length+f.ratio.length+Object.values(f.ex).reduce((a,v)=>a+v.length,0)+(f.person?1:0)+(f.onePer?1:0);
   return (f.mat?1:0)+f.kinds.length+f.kindsEx.length+(f.region?1:0)+(f.score?1:0)+f.tags.trim().split(/\s+/).filter(Boolean).length+(f.artists||[]).length+(f.artistsEx||[]).length+(f.works||[]).length}
 function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
   if(t==='3d'){const cur=f.parts[0]||'hand';$('#frow').innerHTML=`<div class="seg" id="d3seg">${D3PARTS.map(([v,l])=>`<button data-d3p="${v}"${cur===v?' class="on"':''}>${l}</button>`).join('')}</div>`;return}
-  if(t==='film'){(f.movies||[]).forEach(m=>ch.push([m.name,'mv',String(m.id)]));const lab=(k,n)=>k==='genre'?(KO_GENRE[n]||n):k==='country'?((KO_CTRY[n]||[n])[0]):n;for(const k of['genre','year','country','ratio']){const seen=new Set();f[k].forEach(x=>{if(seen.has('i'+x.name))return;seen.add('i'+x.name);ch.push([lab(k,x.name),'c',k,x.id])});f.ex[k].forEach(x=>{if(seen.has('e'+x.name))return;seen.add('e'+x.name);ch.push(['−'+lab(k,x.name),'cx',k,x.id])})}
+  if(t==='film'){(f.movies||[]).forEach(m=>ch.push([m.name,'mv',String(m.id)]));const lab=(k,n)=>k==='genre'?(KO_GENRE[n]||n):k==='country'?((KO_CTRY[n]||[n])[0]):n;if(f.year.length)ch.push([yrLabel(f.year),'yr']);for(const k of['genre','year','country','ratio']){const seen=new Set();if(k!=='year')f[k].forEach(x=>{if(seen.has('i'+x.name))return;seen.add('i'+x.name);ch.push([lab(k,x.name),'c',k,x.id])});f.ex[k].forEach(x=>{if(seen.has('e'+x.name))return;seen.add('e'+x.name);ch.push(['−'+lab(k,x.name),'cx',k,x.id])})}
     if(f.person)ch.push([f.person.name,'p']);if(f.onePer)ch.push(['영화당 1장','one'])}
   else if(t==='fig'){f.kindsEx.forEach(k=>ch.push(['−'+(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gkx',k]));if(f.kwEx.trim())ch.push(['−"'+f.kwEx.trim()+'"','kwx']);f.kinds.forEach(k=>ch.push([(FKINDS.find(x=>x[0]===k)||[k,k])[1],'gk',k]));if(f.kw.trim())ch.push(['"'+f.kw.trim()+'"','kw']);if(f.onePer)ch.push(['피규어당 1장','one'])}
   else if(t==='game'){f.games.forEach(k=>ch.push([nm(GAMES,k),'gm',k]));if(f.kind)ch.push([nm(GKINDS,f.kind),'gkd'])}
@@ -1839,7 +1853,7 @@ $('#frow').addEventListener('click',e=>{if(e.target.closest('[data-more]')){e.st
   if(p){const f=S.f['3d'];if(f.parts[0]===p.dataset.d3p&&S.pos['3d']>=0)return;f.parts=[p.dataset.d3p];save();renderRow();clearQ('3d');next();return}
   const c=e.target.closest('[data-rm]');if(!c)return;const [ty,a,b]=c.dataset.rm.split('|'),t=S.tab,f=S.f[t];
   if(ty==='c'){const n=(f[a].find(x=>String(x.id)===b)||{}).name;f[a]=f[a].filter(x=>String(x.id)!==b&&!(a==='ratio'&&x.name===n))}else if(ty==='cx'){const n=(f.ex[a].find(x=>String(x.id)===b)||{}).name;f.ex[a]=f.ex[a].filter(x=>String(x.id)!==b&&!(a==='ratio'&&x.name===n))}
-  else if(ty==='kx'||ty==='gkx')f.kindsEx=f.kindsEx.filter(x=>x!==a);else if(ty==='kwx')f.kwEx='';else if(ty==='p')f.person=null;else if(ty==='one')f.onePer=false;
+  else if(ty==='kx'||ty==='gkx')f.kindsEx=f.kindsEx.filter(x=>x!==a);else if(ty==='kwx')f.kwEx='';else if(ty==='p')f.person=null;else if(ty==='yr')f.year=[];else if(ty==='one')f.onePer=false;
   else if(ty==='k')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='mv')f.movies=f.movies.filter(x=>String(x.id)!==a);else if(ty==='wk')f.works=f.works.filter(x=>x!==a);else if(ty==='ar')f.artists=f.artists.filter(x=>x!==a);else if(ty==='arx')f.artistsEx=f.artistsEx.filter(x=>x!==a);else if(ty==='gm')f.games=f.games.filter(x=>x!==a);else if(ty==='gkd')f.kind='';else if(ty==='pt')f.topics=f.topics.filter(x=>x!==a);else if(ty==='po')f.orient='';else if(ty==='pq')f.q='';else if(ty==='mat')f.mat='';else if(ty==='r')f.region='';else if(ty==='s')f.score=0;
   else if(ty==='gk')f.kinds=f.kinds.filter(x=>x!==a);else if(ty==='kw')f.kw='';
   else if(ty==='dp')f.parts=f.parts.filter(x=>x!==a);else if(ty==='dpx')f.partsEx=f.partsEx.filter(x=>x!==a);else if(ty==='dpo')f.pose='';else if(ty==='drg')f.range='wide';else if(ty==='drim')f.rim=false;
@@ -1848,21 +1862,37 @@ $('#frow').addEventListener('click',e=>{if(e.target.closest('[data-more]')){e.st
 function opts(list,isOn,attr,isEx){return list.map(([v,l])=>`<span class="o${isOn(v)?' on':''}${isEx&&isEx(v)?' ex':''}" ${attr}="${esc(v)}">${esc(l)}</span>`).join('')}
 const app={fTab:'kind',fTabFilm:'search'};
 const HINT='<div class="gb"><span class="msg">한 번 누르면 포함 · 두 번 누르면 <s>제외</s> · 세 번 누르면 해제</span></div>';
-function renderFlt(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCount(t)?'':'전체에서 랜덤';$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진'})[t];
+// 영화 › 시대: one range slider over the decades (FILM-GRAB '1970s' … categories); the range = every decade in it
+let yrKids=[];
+const yrName=n=>parseInt(n)+'년대',yrLabel=list=>{const y=list.map(x=>parseInt(x.name)).filter(n=>n>0).sort((a,b)=>a-b);return !y.length?'전체':y[0]===y[y.length-1]?y[0]+'년대':y[0]+'년대~'+y[y.length-1]+'년대'};
+function yrHtml(kids,f){yrKids=kids.slice().sort((a,b)=>parseInt(a.name)-parseInt(b.name));const n=yrKids.length-1,ids=f.year.map(x=>x.id);
+  const idx=yrKids.map((k,i)=>ids.includes(k.id)?i:-1).filter(i=>i>=0),a=idx.length?Math.min(...idx):0,b=idx.length?Math.max(...idx):n;
+  return `<div class="yr"><div class="val"><b id="yrL"></b><span id="yrC"></span></div><div class="trk"><div class="ln"></div><div class="rg" id="yrR"></div>`+
+    `<input type="range" id="yrA" min="0" max="${n}" step="1" value="${a}" aria-label="시작 연대"><input type="range" id="yrB" min="0" max="${n}" step="1" value="${b}" aria-label="끝 연대"></div>`+
+    `<div class="ticks">${yrKids.map(k=>`<span>${String(parseInt(k.name)%100).padStart(2,'0')}</span>`).join('')}</div></div>`}
+function yrPaint(){const A=$('#yrA'),B=$('#yrB');if(!A||!yrKids.length)return;let a=+A.value,b=+B.value;const n=yrKids.length-1;
+  if(a>b){if(document.activeElement===A)A.value=a=b;else B.value=b=a}
+  const r=$('#yrR');r.style.left=(n?a/n*100:0)+'%';r.style.width=(n?(b-a)/n*100:100)+'%';
+  const full=a===0&&b===n,sel=yrKids.slice(a,b+1);$('#yrL').textContent=full?'전체':yrLabel(sel);$('#yrC').textContent='약 '+sel.reduce((t,k)=>t+(k.count||0),0).toLocaleString()+'편'}
+$('#fltPop').addEventListener('input',e=>{if(e.target.id==='yrA'||e.target.id==='yrB')yrPaint()});
+$('#fltPop').addEventListener('change',e=>{if(e.target.id!=='yrA'&&e.target.id!=='yrB')return;const f=S.f.film,a=+$('#yrA').value,b=+$('#yrB').value,n=yrKids.length-1;
+  f.year=a===0&&b===n?[]:yrKids.slice(a,b+1).map(k=>({id:k.id,name:k.name}));f.ex.year=[];fChange()});
+function renderFlt(){renderFlt0();yrPaint()}
+function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCount(t)?'':'전체에서 랜덤';$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){const none=FGC.done&&!FGC.err; // loaded fine but no usable groups: say so (re-requesting here looped forever)
       h=`<div class="gb"><span class="msg">${FGC.err?'분류를 불러오지 못함 · 설정 → 연결 테스트 확인':none?'분류를 찾지 못함 · 원본 사이트 구조가 바뀌었을 수 있음':'분류 불러오는 중…'}</span></div>`;
       if(!FGC.err&&!none)loadCats().then(()=>{if(curPop==='flt'&&S.tab==='film'){renderFlt();placeP('flt')}},()=>{if(curPop==='flt'){renderFlt()}})}
     else{const ft=['search','genre','region','ratio'].includes(app.fTabFilm)?app.fTabFilm:'search',G=FGC.groups,n=k=>f[k].length+f.ex[k].length;
-      const tabs=[['search','검색',(f.movies||[]).length+(f.person?1:0)],['genre','장르 · 시대',n('genre')+n('year')],['region','지역',n('country')],['ratio','화면비',new Set([...f.ratio.map(x=>'i'+x.name),...f.ex.ratio.map(x=>'e'+x.name)]).size]];
+      const tabs=[['search','검색',(f.movies||[]).length+(f.person?1:0)],['genre','장르 · 시대',n('genre')+(f.year.length?1:0)],['region','지역',n('country')],['ratio','화면비',new Set([...f.ratio.map(x=>'i'+x.name),...f.ex.ratio.map(x=>'e'+x.name)]).size]];
       h=`<div class="fx-tabs">${tabs.map(([k,l,c])=>`<button class="fx-tab${ft===k?' on':''}" data-ftabf="${k}">${l}${c?`<i>${c}</i>`:''}</button>`).join('')}</div>`;
       const row=(l,x)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${x}</div></div></div>`;
       const ch=(k,list,lab)=>opts(list.map(x=>[x.id,lab(x)]),v=>f[k].some(x=>x.id===v),`data-g="${k}" data-id`,v=>f.ex[k].some(x=>x.id===v));
       const byCount=l=>[...l].sort((a,b)=>(b.count||0)-(a.count||0));
       if(ft==='search'){const sel=[...(f.movies||[]).map(m=>`<span class="o on" data-mvdel="${m.id}" title="누르면 빼기">${esc(m.name)} ×</span>`),f.person?`<span class="o on" data-pclr title="누르면 빼기">${esc(f.person.name)} ×</span>`:''].join('');
         h+=`<div class="fx-one"><input type="text" id="fSearch" placeholder="영화 제목 · 감독 · 촬영 이름 (영문)" autocomplete="off"><div id="srList"></div>${sel?`<div class="fx-sec">고른 것</div><div class="gr">${sel}</div>`:''}${(f.movies||[]).length?'<div class="wk-msg" style="margin-top:8px">영화를 고르면 다른 조건은 쓰지 않음</div>':''}</div>`}
-      else if(ft==='genre'){if(G.genre)h+=row('장르',ch('genre',byCount(G.genre.kids),x=>KO_GENRE[x.name]||x.name)).replace('fx-row top','fx-row top g4');if(G.year)h+=row('시대',ch('year',G.year.kids,x=>x.name)).replace('fx-row top','fx-row tl')}
+      else if(ft==='genre'){if(G.genre)h+=row('장르',ch('genre',byCount(G.genre.kids),x=>KO_GENRE[x.name]||x.name)).replace('fx-row top','fx-row top g4');if(G.year)h+=row('시대',yrHtml(G.year.kids,f))}
       else if(ft==='region'&&G.country){const all=byCount(G.country.kids),big=x=>(x.count||0)>5||f.country.some(y=>y.id===x.id)||f.ex.country.some(y=>y.id===x.id);
         for(const r of REGIONS_F){const l=all.filter(x=>((KO_CTRY[x.name]||[0,'그 외'])[1])===r&&(app.allCtry||big(x)));let l2=l,fold=0;if(r==='유럽'&&!app.euAll){const sel=y=>f.country.some(z=>z.id===y.id)||f.ex.country.some(z=>z.id===y.id);l2=l.filter((y,i)=>i<6||sel(y));fold=l.length-l2.length}
           let x=ch('country',l2,y=>(KO_CTRY[y.name]||[y.name])[0]);if(fold)x+=`<span class="o more" data-moreeu>+ ${fold}개국</span>`;
