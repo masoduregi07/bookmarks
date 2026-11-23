@@ -369,7 +369,10 @@ button.ic:active{transform:none}
 #sySec .btns{flex-wrap:wrap}
 #sySec .sye{font-size:11px;line-height:1.6;padding:4px 6px;border:2px solid var(--ink);background:#fff}
 #sySec .sye.err{background:var(--pink)}
-#sySec .sym{display:grid;gap:2px;min-width:0;padding:8px;border:2px solid var(--ink);background:#fff}
+#sySec .sym{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 4px 6px 8px;border:2px solid var(--ink);background:#fff}
+#sySec .syme{display:grid;gap:2px;min-width:0;flex:1}
+#sySec #syOff{flex:none;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center}
+#sySec #syOff svg{width:14px;height:14px;fill:currentColor;shape-rendering:crispEdges}
 #sySec .sym b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #sySec .sym span{font-size:11px;color:var(--tx2)}
 .calmenu small{color:var(--tx3);font-size:10px;padding:2px 2px 0;border-top:2px dotted var(--soft);padding-top:6px}
@@ -1138,9 +1141,9 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
       <div class="sypn" id="syPG"><span class="syd">연습 기록 · 보관함 · 링크 · 설정을<br>다른 기기와 맞춤</span><div id="syG"></div><span class="syd sm">처음이면 계정 설정을 받고 · 이 기기 기록은 합쳐짐</span></div>
       <form class="sypn hidden" id="syCodeF" autocomplete="off"><span class="syd">로그인한 기기의 설정 › 계정 › 다른 기기 연결 코드</span><div class="syxs"><input class="syx" maxlength="1" aria-label="연결 코드 1번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 2번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 3번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 4번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><i></i><input class="syx" maxlength="1" aria-label="연결 코드 5번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 6번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 7번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 8번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"></div><button type="submit" class="pri">로그인</button><span class="syd sm">홈 화면 앱은 이쪽이 편함 · 10분 안에 입력</span></form>
       <span id="syMsg" class="sye hidden" role="status"></span></div>
-    <div id="syIn" class="hidden"><div class="sym"><b id="syMe"></b><span id="syLast"></span></div><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 이 계정으로 맞추는 중</span>
+    <div id="syIn" class="hidden"><div class="sym"><div class="syme"><b id="syMe"></b><span id="syLast"></span></div><button id="syOff" class="ic" type="button" aria-label="로그아웃" data-tip="로그아웃"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1h6v1H1zM1 2h1v8H1zM1 10h6v1H1zM6 2h1v2H6zM6 8h1v2H6zM4 5h6v2H4zM8 3h1v2H8zM9 4h1v1H9zM8 7h1v2H8zM9 7h1v1H9z"/></svg></button></div><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 이 계정으로 맞추는 중</span>
       <div class="syk hidden" id="syK"><span class="syd">다른 기기의 설정 › 계정 › 연결 코드에 입력 · <b id="syKT"></b> 동안 유효</span><b id="syKC" class="kc"></b></div>
-      <div class="btns"><button id="syOff">로그아웃</button><button id="syLink">다른 기기 연결 코드</button><button id="syNow" class="pri">지금 맞추기</button></div></div>
+      <div class="btns"><button id="syLink">다른 기기 연결 코드</button><button id="syNow" class="pri">동기화</button></div></div>
   </section>
   <section data-pane="1">
     <div class="al" id="apiList"></div>
