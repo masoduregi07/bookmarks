@@ -370,6 +370,11 @@ button.ic:active{transform:none}
 #sySec .sye{font-size:11px;line-height:1.6;padding:4px 6px;border:2px solid var(--ink);background:#fff}
 #sySec .sye.err{background:var(--pink)}
 #sySec .sym{display:flex;align-items:center;gap:8px;min-width:0;padding:6px 4px 6px 8px;border:2px solid var(--ink);background:#fff}
+#sySec .syav{position:relative;width:32px;height:32px;flex:none}
+#sySec .syav b,#sySec .syav img{position:absolute;inset:0;width:100%;height:100%;box-sizing:border-box;border:2px solid var(--ink);object-fit:cover;display:flex;align-items:center;justify-content:center;background:var(--sky);color:var(--ink);font-size:13px}
+#sySec .syav img.hidden{display:none}
+#sySec #syDot{position:absolute;right:-4px;bottom:-4px;width:10px;height:10px;box-sizing:border-box;border:2px solid var(--ink);background:var(--mint)}
+#sySec #syDot.busy{background:var(--yel)}#sySec #syDot.err{background:var(--pink)}
 #sySec .syme{display:grid;gap:2px;min-width:0;flex:1}
 #sySec #syOff{flex:none;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center}
 #sySec #syOff svg{width:14px;height:14px;fill:currentColor;shape-rendering:crispEdges}
@@ -1141,7 +1146,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
       <div class="sypn" id="syPG"><span class="syd">연습 기록 · 보관함 · 링크 · 설정을<br>다른 기기와 맞춤</span><div id="syG"></div><span class="syd sm">처음이면 계정 설정을 받고 · 이 기기 기록은 합쳐짐</span></div>
       <form class="sypn hidden" id="syCodeF" autocomplete="off"><span class="syd">로그인한 기기의 설정 › 계정 › 다른 기기 연결 코드</span><div class="syxs"><input class="syx" maxlength="1" aria-label="연결 코드 1번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 2번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 3번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 4번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><i></i><input class="syx" maxlength="1" aria-label="연결 코드 5번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 6번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 7번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 8번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"></div><button type="submit" class="pri">로그인</button><span class="syd sm">홈 화면 앱은 이쪽이 편함 · 10분 안에 입력</span></form>
       <span id="syMsg" class="sye hidden" role="status"></span></div>
-    <div id="syIn" class="hidden"><div class="sym"><div class="syme"><b id="syMe"></b><span id="syLast"></span></div><button id="syOff" class="ic" type="button" aria-label="로그아웃" data-tip="로그아웃"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1h6v1H1zM1 2h1v8H1zM1 10h6v1H1zM6 2h1v2H6zM6 8h1v2H6zM4 5h6v2H4zM8 3h1v2H8zM9 4h1v1H9zM8 7h1v2H8zM9 7h1v1H9z"/></svg></button></div><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 이 계정으로 맞추는 중</span>
+    <div id="syIn" class="hidden"><div class="sym"><span class="syav"><b id="syIni"></b><img id="syPic" class="hidden" alt="" referrerpolicy="no-referrer"><i id="syDot"></i></span><div class="syme"><b id="syMe"></b><span id="syLast"></span></div><button id="syOff" class="ic" type="button" aria-label="로그아웃" data-tip="로그아웃"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1 1h6v1H1zM1 2h1v8H1zM1 10h6v1H1zM6 2h1v2H6zM6 8h1v2H6zM4 5h6v2H4zM8 3h1v2H8zM9 4h1v1H9zM8 7h1v2H8zM9 7h1v1H9z"/></svg></button></div><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 이 계정으로 동기화</span>
       <div class="syk hidden" id="syK"><span class="syd">다른 기기의 설정 › 계정 › 연결 코드에 입력 · <b id="syKT"></b> 동안 유효</span><b id="syKC" class="kc"></b></div>
       <div class="btns"><button id="syLink">다른 기기 연결 코드</button><button id="syNow" class="pri">동기화</button></div></div>
   </section>
@@ -2602,7 +2607,7 @@ async function syPush(k,v,base){for(let i=0;i<4;i++){
     const m=merge(k,v,d.v);if(J(m)!==J(v))await DOC[k].put(m);v=m;base=d.ver} // another device saved first: fold theirs in, try again
   throw new Error('다른 기기와 동시에 저장됨 · 잠시 후 다시')}
 async function syRun(){if(!SP.tok||!syOn())return;if(SY.busy){SY.again=true;return}
-  SY.busy=true;const boot=SY.boot;SY.boot=false;clearTimeout(SY.timer);syUI('맞추는 중…');let reload=false;
+  SY.busy=true;const boot=SY.boot;SY.boot=false;clearTimeout(SY.timer);syUI('busy');let reload=false;
   try{const {d}=await api('/docs?have='+encodeURIComponent(J(SP.ver)));const map={};for(const x of d.docs||[])map[x.k]=x;
     for(const k of DOCS){SY.dirty.delete(k);const srv=map[k];
       const loc=await DOC[k].get();let v=loc;const dirty=fnv(J(loc))!==SP.h[k]; // changed here since the last sync (survives reloads)
@@ -2613,10 +2618,10 @@ async function syRun(){if(!SP.tok||!syOn())return;if(SY.busy){SY.again=true;retu
       else if(srv){if(dirty)v=await syPush(k,v,srv.ver)}
       else if(!DOC[k].empty(v))v=await syPush(k,v,0);
       setBase(k,v);SP.h[k]=fnv(J(v))}
-    SP.last=Date.now();spSave();
+    SP.last=Date.now();SY.err=false;spSave();
     if(reload){sessionStorage.setItem('cutref-syre','1');location.reload();return}
     if(boot)sessionStorage.removeItem('cutref-syre')}
-  catch(e){spSave();if(SP.tok)toast('연동 실패 · '+e.message,'err')}
+  catch(e){SY.err=true;spSave();if(SP.tok)toast('동기화 실패 · '+e.message,'err')}
   finally{SY.busy=false;syUI();if(SY.again){SY.again=false;syRun()}}}
 function syDirty(k){if(!SP||!SP.tok||!SYNC||!SYNC.url||!SYNC.cid)return; // may run before this block (hoisted)
   if(k==='set'){const j=J(setDoc());if(j===SP.setJ)return;SP.setJ=j;SP.setMt=Date.now();spSave()}
@@ -2636,15 +2641,21 @@ const syMsg=(t,err)=>{const m=$('#syMsg');if(!m)return;m.textContent=t||'';m.cla
 async function syLogin(cred){syMsg('구글 확인 완료 · 연동 서버에 로그인 중…');try{if(!cred)throw new Error('구글에서 로그인 정보를 못 받음');const {d}=await api('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:J({credential:cred})});
     await syGotToken(d)}
   catch(e){console.error('[cutref sync] login',e);syMsg('로그인 실패 · '+e.message,true);toast('로그인 실패 · '+e.message,'err')}}
-async function syGotToken(d){Object.assign(SP,{tok:d.token,me:{email:d.email,name:d.name},ver:{},base:{},h:{}});spSave();syUI();syMsg('');toast(d.email+' 로그인 · 기기 맞추는 중','ok');await syRun()}
+async function syGotToken(d){Object.assign(SP,{tok:d.token,me:{email:d.email,name:d.name,picture:d.picture||''},ver:{},base:{},h:{}});syMe();spSave();syUI();syMsg('');toast(d.email+' 로그인 · 동기화 중','ok');await syRun()}
+// profile photo (link-code logins and older sessions don't carry it, so ask /me once)
+async function syMe(){if(!SP.tok||(SP.me&&SP.me.pk))return;try{const {d}=await api('/me');SP.me={...(SP.me||{}),email:d.email||SP.me&&SP.me.email,name:d.name||'',picture:d.picture||'',pk:1};spSave();syUI()}catch(e){}}
 function syLogout(expired){Object.assign(SP,{tok:'',me:null,ver:{},base:{},h:{},last:0});spSave();SY.dirty.clear();clearTimeout(SY.timer);syUI();
   if(window.google&&google.accounts&&google.accounts.id)google.accounts.id.disableAutoSelect();
   toast(expired?'로그인이 풀림 · 설정 › 계정에서 다시 로그인':'로그아웃 · 이 기기 데이터는 그대로',expired?'err':'')}
 function syUI(st){const sec=$('#sySec');if(!sec)return;$('#syTab').classList.toggle('hidden',!syOn());if(!syOn())return;
   $('#syOut').classList.toggle('hidden',!!SP.tok);$('#syIn').classList.toggle('hidden',!SP.tok);
   if(!SP.tok){if(!syUI.seg){syUI.seg=1;sySeg(navigator.standalone||matchMedia('(display-mode: standalone)').matches?'c':'g')}syBtn();return}
-  $('#syMe').textContent=SP.me&&SP.me.email||'로그인됨';
-  const t=SP.last?new Date(SP.last):null;$('#syLast').textContent=st||(SY.busy?'맞추는 중…':t?`마지막 맞춤 ${dkey(t)===dkey(new Date())?'':(t.getMonth()+1)+'/'+t.getDate()+' '}${pad(t.getHours())}:${pad(t.getMinutes())}`:'아직 안 맞춤');
+  const me=SP.me||{},em=me.email||'로그인됨';$('#syMe').textContent=em;$('#syIni').textContent=(me.name||em).trim().charAt(0).toUpperCase();
+  const pic=$('#syPic');if(me.picture&&pic.dataset.src!==me.picture){pic.dataset.src=me.picture;pic.onload=()=>pic.classList.remove('hidden');pic.onerror=()=>pic.classList.add('hidden');pic.src=me.picture}
+  else if(!me.picture)pic.classList.add('hidden');
+  const busy=SY.busy||!!st,dot=$('#syDot');dot.classList.toggle('busy',busy);dot.classList.toggle('err',!busy&&!!SY.err);
+  const t=SP.last?new Date(SP.last):null,hm=t?`${dkey(t)===dkey(new Date())?'':(t.getMonth()+1)+'/'+t.getDate()+' '}${pad(t.getHours())}:${pad(t.getMinutes())}`:'';
+  $('#syLast').textContent=busy?'동기화 중…':SY.err?'동기화 실패 · 동기화를 눌러 다시':t?'동기화됨 · '+hm:'아직 동기화 안 함';
   $('#syNow').disabled=SY.busy}
 $('#syNow').onclick=()=>syRun();
 // link code: a signed-in device hands out a short code, another device (e.g. the iPad home-screen app) trades it for a login
@@ -2670,7 +2681,7 @@ $('#syCodeF').onsubmit=async e=>{e.preventDefault();const c=syXv();
     syX.forEach(i=>i.value='');await syGotToken(d)}catch(err){syMsg('연결 코드 실패 · '+err.message,true)}};
 $('#syOff').onclick=async()=>{if(await askYes($('#syOff'),'로그아웃<small>이 기기 데이터는 남고 연동만 멈춤</small>','로그아웃',{kind:'go'}))syLogout()};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SP.tok&&Date.now()-SP.last>60e3)syRun()});
-syUI();if(SP.tok&&syOn())setTimeout(syRun,800);else sessionStorage.removeItem('cutref-syre');
+syUI();if(SP.tok&&syOn()){setTimeout(syRun,800);setTimeout(syMe,1500)}else sessionStorage.removeItem('cutref-syre');
 
 // UI rule: a select box is exactly as wide as its longest option (+ its own padding / arrow), never stretched to fill a row
 const fitCv=document.createElement('canvas').getContext('2d');
