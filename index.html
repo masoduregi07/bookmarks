@@ -1028,6 +1028,12 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .pbadd{display:flex;gap:6px}
 #fltPop .pbadd input{flex:1 1 0;width:0;min-width:0}
 #fltPop .pbhint{display:block;margin-top:4px}
+#fltPop .pbt{font-style:normal;font-size:9px;line-height:1;padding:1px 2px;border:1px solid currentColor;opacity:.75}
+#fltPop .pbbm-r{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#fltPop .pbbm{display:inline-flex;align-items:center;height:26px;padding:0 10px;border:2px dashed var(--ink);background:#f7e3a1;color:#3d3b37;font-size:12px;font-weight:700;text-decoration:none;cursor:grab;-webkit-touch-callout:default}
+#fltPop .pbta{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+#fltPop .pbta textarea{width:100%;box-sizing:border-box;height:64px;resize:vertical;font:inherit;font-size:11px;border:2px solid var(--ink);background:#fff;padding:4px 6px}
+#fltPop .pbta button{align-self:flex-end}
 #fltPop .yr{padding:2px 2px 0;width:100%;box-sizing:border-box;flex:1 1 auto;min-width:0}
 #fltPop .yr .val{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
 #fltPop .yr .val b{font-size:12px}#fltPop .yr .val span{font-size:10px;color:var(--tx2)}
@@ -1428,6 +1434,63 @@ async function gsRandom(){
 
 // ---------- PINTEREST public boards (each board's RSS: ~25 newest pins, no login)
 const pinBuf={};
+// boards collected in full with the bookmarklet: {"user/board":{n,t,pins:[{i,l,t}]}} — links only, images stay on Pinterest
+let PINS={};try{PINS=JSON.parse(localStorage.getItem('cutref-pins')||'{}')||{}}catch(e){PINS={}}
+const pinSave=()=>{try{localStorage.setItem('cutref-pins',J(PINS))}catch(e){toast('핀 저장 실패 · 브라우저 저장 공간 부족','err')}};
+const pinExp=p=>({img:/^https?:/.test(p.i)?p.i:'https://i.pinimg.com/736x/'+p.i,title:p.t||'',link:!p.l?'':/^[\w-]+$/.test(p.l)?'https://www.pinterest.com/pin/'+p.l+'/':p.l});
+let pinPaste=false;
+// runs on a Pinterest board page (as a bookmarklet): scrolls to the end, collects every pin above "More ideas", hands the list to cutref
+function cutrefPins(SITE){
+  if(window.__crp){window.__crp.style.display='';return}
+  var d=document,M=Math.min,seen=new Map(),stop=false,fin=false,idle=0,lastH=0,lastN=0,tot=0,timer=0;
+  var seg=location.pathname.split('/').filter(Boolean),okPage=/(^|\.)pinterest\./.test(location.hostname)&&seg.length>=2&&!/^(pin|search|ideas|today|_|settings|business)$/i.test(seg[0]);
+  var B=okPage?decodeURIComponent(seg[0])+'/'+decodeURIComponent(seg[1]):'',h1=d.querySelector('h1'),N=(h1&&h1.textContent.trim())||seg[1]||'';
+  function el(t,css,txt){var e=d.createElement(t);if(css)e.style.cssText=css;if(txt!=null)e.textContent=txt;return e}
+  var btnCss='font:inherit;font-size:11px;height:24px;padding:0 8px;border:2px solid #3d3b37;background:#fff;color:#3d3b37;cursor:pointer;box-shadow:1px 1px 0 #c6c3ba';
+  var box=el('div','position:fixed;top:76px;right:16px;z-index:2147483647;width:236px;background:#fbfaf6;border:2px solid #3d3b37;box-shadow:3px 3px 0 #c6c3ba;color:#3d3b37;font:12px/1.5 Galmuri11,ui-monospace,Menlo,monospace;text-align:left');
+  var hd=el('div','display:flex;align-items:center;height:24px;padding:0 4px 0 8px;border-bottom:2px solid #3d3b37;background:#f6c9d3;font-weight:700;font-size:11px');
+  var ttl=el('span','margin-right:auto','cutref 핀 수집'),x=el('button','border:none;background:none;font:inherit;font-size:14px;cursor:pointer;color:#3d3b37;padding:0 4px','×');
+  hd.append(ttl,x);var bd=el('div','padding:8px;display:grid;gap:8px'),st=el('div','font-size:12px'),bar=el('div','height:8px;border:2px solid #3d3b37;background:#fff;position:relative'),fill=el('i','position:absolute;left:0;top:0;bottom:0;width:0;background:#3d3b37;transition:width .3s');
+  bar.append(fill);var hint=el('div','font-size:10px;color:#5f5d57'),row=el('div','display:flex;gap:6px;justify-content:flex-end');
+  var bStop=el('button',btnCss,'멈춤'),bCopy=el('button',btnCss,'복사'),bSend=el('button',btnCss+';background:#3d3b37;color:#fff','cutref로 보내기');
+  row.append(bStop);bd.append(st,bar,hint,row);box.append(hd,bd);d.body.appendChild(box);window.__crp=box;
+  x.onclick=function(){stop=true;clearTimeout(timer);box.remove();window.__crp=null};
+  if(!okPage){st.textContent='보드 화면이 아님';hint.textContent='핀터레스트에서 보드를 연 다음 다시 눌러 주세요';row.remove();return}
+  (function(){var w=d.createTreeWalker(d.body,NodeFilter.SHOW_TEXT),n,k=0;while((n=w.nextNode())&&k++<4000){var t=n.nodeValue.trim(),m=t.match(/^(?:핀\s*([\d,.]+)\s*개|([\d,.]+)\s*(?:Pins?|개의 핀|핀))$/i);
+    if(m){var r=n.parentElement.getBoundingClientRect();if(r.top+scrollY<900){tot=+(m[1]||m[2]).replace(/[,.]/g,'');break}}}})();
+  function cut(){var hs=d.querySelectorAll('h2,h3,h4,[role=heading]');for(var i=0;i<hs.length;i++){var t=hs[i].textContent;
+    if(t.length<60&&/더 많은 아이디어|추가 아이디어|비슷한 아이디어|More ideas|More like this|Find more ideas|Ideas you might love/i.test(t))return hs[i].getBoundingClientRect().top+scrollY}return Infinity}
+  function grab(){var c=cut(),im=d.querySelectorAll('a[href*="/pin/"] img');for(var i=0;i<im.length&&seen.size<1000;i++){var g=im[i],s=g.currentSrc||g.src||'',r=g.getBoundingClientRect();
+      if(r.width<60||r.top+scrollY>=c)continue;var p=s.replace(/^https?:\/\/i\.pinimg\.com\/[^/]+\//,'');if(p===s||seen.has(p))continue;
+      var a=g.closest('a'),id=((a&&a.getAttribute('href')||'').match(/\/pin\/([\w-]+)/)||[])[1]||'';seen.set(p,{i:p,l:id,t:(g.alt||'').slice(0,80)})}
+    return c}
+  function show(){var n=seen.size;st.textContent=(fin?'완료 · ':stop?'멈춤 · ':'수집 중 · ')+n+'장'+(fin?' 수집':'');
+    fill.style.width=(fin?100:tot?M(100,n/tot*100):M(90,n/10))+'%';hint.textContent=fin?'"'+N+'" 보드':(tot?'보드 핀 '+tot+'개 중 · ':'')+(stop?'계속을 누르면 이어서':'자동으로 내리는 중')}
+  function done(){fin=true;clearTimeout(timer);row.textContent='';row.append(bCopy,bSend);show()}
+  function tick(){if(stop||fin)return;var c=grab(),n=seen.size,H=d.documentElement.scrollHeight;
+    if(n>=1000||(tot&&n>=tot)||c<scrollY+innerHeight){done();return}
+    idle=(H===lastH&&n===lastN)?idle+1:0;lastH=H;lastN=n;if(idle>=8){done();return}
+    window.scrollBy(0,Math.round(innerHeight*.85));show();timer=setTimeout(tick,700)}
+  bStop.onclick=function(){if(fin)return;stop=!stop;bStop.textContent=stop?'계속':'멈춤';if(stop){clearTimeout(timer);row.textContent='';row.append(bStop,bCopy,bSend)}else{row.textContent='';row.append(bStop);tick()}show()};
+  function data(){var a=[];seen.forEach(function(v){a.push(v)});return JSON.stringify({cutref:'pins',v:1,b:B,n:N,pins:a})}
+  bSend.onclick=function(){if(!seen.size)return;window.open(SITE+'#pinimp='+encodeURIComponent(data()),'_blank')};
+  bCopy.onclick=function(){var s=data(),ok=function(){bCopy.textContent='복사됨'},no=function(){var t=el('textarea','position:fixed;left:-999px');t.value=s;d.body.appendChild(t);t.select();try{d.execCommand('copy');ok()}catch(e){}t.remove()};
+    if(navigator.clipboard)navigator.clipboard.writeText(s).then(ok,no);else no()};
+  window.scrollTo(0,0);show();timer=setTimeout(tick,400);
+}
+const pinBM=()=>'javascript:'+encodeURIComponent('('+cutrefPins.toString()+')('+JSON.stringify(location.origin+location.pathname)+')');
+function pinImport(o){
+  if(!o||o.cutref!=='pins'||!Array.isArray(o.pins))throw new Error('핀 수집 데이터가 아님');
+  const u=pinKey('pinterest.com/'+String(o.b||''));if(!u)throw new Error('보드 주소가 없음');
+  const pins=[],seen=new Set();for(const p of o.pins.slice(0,1000)){if(!p||typeof p.i!=='string'||p.i.length>300||seen.has(p.i))continue;seen.add(p.i);
+    pins.push({i:p.i,l:String(p.l||'').slice(0,200),t:String(p.t||'').slice(0,120)})}
+  if(!pins.length)throw new Error('수집된 핀이 없음');
+  const n=String(o.n||u.split('/')[1]).slice(0,80),f=S.f.pin,b=f.boards.find(v=>v.u===u);
+  PINS[u]={n,t:Date.now(),pins};pinSave();delete pinBuf[u];pins.forEach(p=>S.seen.pin.delete(pinExp(p).img));
+  if(b){b.c=pins.length;b.imp=1;if(!b.n)b.n=n;f.boards=[...f.boards]}else f.boards=[...f.boards,{u,n,c:pins.length,imp:1}];
+  pinPaste=false;fChange();return {n:b&&b.n||n,c:pins.length,isNew:!b}}
+function pinImportTxt(t){const o=JSON.parse(String(t||'').trim());const r=pinImport(o);toast(`${r.n} 보드 ${r.isNew?'추가':'갱신'} · 핀 ${r.c}장`,'ok');
+  if(S.tab!=='pin'){const nb=document.querySelector('.tabs button[data-tab="pin"]');if(nb)nb.click()}return r}
 const pinKey=v=>{const m=String(v||'').trim().replace(/^https?:\/\//,'').replace(/^(www\.|[a-z]{2}\.)?pinterest\.[a-z.]+\//i,'').replace(/[?#].*$/,'').replace(/\.rss$/,'').split('/').filter(Boolean);
   return m.length>=2&&!/^(pin|search|ideas|today)$/i.test(m[0])?decodeURIComponent(m[0])+'/'+decodeURIComponent(m[1]):''};
 async function pinLoad(b,force){const c=pinBuf[b];if(c&&!force&&Date.now()-c.t<30*60e3)return c;
@@ -1442,9 +1505,10 @@ async function pinLoad(b,force){const c=pinBuf[b];if(c&&!force&&Date.now()-c.t<3
     return m?{img:m[1].replace(/\/(236x|474x|564x)\//,'/736x/'),title:dec((it.querySelector('title')||{}).textContent||'').trim(),link:(it.querySelector('link')||{}).textContent||''}:null}).filter(Boolean);
   const name=dec(((x.querySelector('channel>title')||{}).textContent||b.split('/')[1]).trim());
   return pinBuf[b]={t:Date.now(),name,items}}
-async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('보드 버튼에서 핀터레스트 보드를 추가하면 시작');
+async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('보드 버튼에서 핀터레스트 보드를 추가하거나 수집하면 시작');
   const pick=f.sel.length?f.boards.filter(b=>f.sel.includes(b.u)):f.boards;let lastE=null;
-  for(const b of [...pick].sort(()=>Math.random()-.5)){let c;try{c=await pinLoad(b.u)}catch(e){lastE=e;continue}
+  for(const b of [...pick].sort(()=>Math.random()-.5)){let c;const P=PINS[b.u];
+    if(P&&P.pins&&P.pins.length)c={name:P.n,items:P.pins.map(pinExp)};else try{c=await pinLoad(b.u)}catch(e){lastE=e;continue}
     let list=c.items.filter(i=>!S.seen.pin.has(i.img));if(!list.length&&c.items.length){c.items.forEach(i=>S.seen.pin.delete(i.img));list=c.items}
     if(!list.length)continue;const i=list[rnd(list.length)];
     return {kind:'img',url:i.img,title:(b.n||c.name)+(i.title?' · '+i.title:''),link:i.link||('https://www.pinterest.com/'+b.u+'/'),key:i.img,src:'Pinterest · '+(b.n||c.name)}}
@@ -1948,10 +2012,13 @@ function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCo
     b.innerHTML=row('게임',opts(GAMES.map(g=>[g[0],g[1]]),v=>f.games.includes(v),'data-game'))+row('종류',opts(GKINDS,v=>(f.kind||'')===v,'data-gkind'))
       +`<div class="ft"><span class="wk-msg">이미지 출처 · 각 게임 팬 위키</span><a id="fReset">초기화</a></div>`;
   }else if(t==='pin'){const f=S.f.pin;
-    const chips=f.boards.length?`<span class="o${f.sel.length?'':' on'}" data-pbsel="">전체</span>`+f.boards.map(b=>`<span class="o pbd${f.sel.includes(b.u)?' on':''}" data-pbsel="${esc(b.u)}">${esc(b.n||b.u)}<small>${b.c||''}</small><b class="pbx" data-pbdel="${esc(b.u)}" role="button" aria-label="${esc(b.n||b.u)} 보드 삭제">×</b></span>`).join(''):'<span class="wk-msg">아직 추가한 보드가 없음</span>';
+    const chips=f.boards.length?`<span class="o${f.sel.length?'':' on'}" data-pbsel="">전체</span>`+f.boards.map(b=>`<span class="o pbd${f.sel.includes(b.u)?' on':''}" data-pbsel="${esc(b.u)}">${esc(b.n||b.u)}<small>${b.c||''}</small>${PINS[b.u]?'<i class="pbt">전체</i>':''}<b class="pbx" data-pbdel="${esc(b.u)}" role="button" aria-label="${esc(b.n||b.u)} 보드 삭제">×</b></span>`).join(''):'<span class="wk-msg">아직 추가한 보드가 없음</span>';
     b.innerHTML=`<div class="fx-row top"><span class="fx-l">보드</span><div><div class="gr tall">${chips}</div></div></div>`
-      +`<div class="fx-row top"><span class="fx-l">추가</span><div><form class="pbadd" id="pbAdd" autocomplete="off"><input type="text" id="pbIn" placeholder="pinterest.com/아이디/보드이름" aria-label="핀터레스트 보드 주소"><button type="submit">추가</button></form><span class="wk-msg pbhint">공개 보드만 · 보드마다 최근 핀 약 25개</span></div></div>`
-      +`<div class="ft"><span class="wk-msg">이미지 출처 · 핀터레스트 공개 보드</span><a id="fReset">초기화</a></div>`;
+      +`<div class="fx-row top"><span class="fx-l">추가</span><div><form class="pbadd" id="pbAdd" autocomplete="off"><input type="text" id="pbIn" placeholder="pinterest.com/아이디/보드이름" aria-label="핀터레스트 보드 주소"><button type="submit">추가</button></form><span class="wk-msg pbhint">공개 보드만 · 최근 핀 약 25개 · 자동 갱신</span></div></div>`
+      +`<div class="fx-row top"><span class="fx-l">수집</span><div><div class="pbbm-r"><a class="pbbm" id="pbBm" href="${esc(pinBM())}" draggable="true" title="즐겨찾기 막대로 끌어다 놓기">✦ cutref 핀 수집</a><button type="button" id="pbPaste">붙여넣기</button></div>`
+      +(pinPaste?`<div class="pbta"><textarea id="pbTa" placeholder="수집 상자에서 [복사]한 내용을 붙여넣기" aria-label="핀 수집 데이터"></textarea><button type="button" id="pbTaGo">가져오기</button></div>`:'')
+      +`<span class="wk-msg pbhint">① 노란 버튼을 즐겨찾기 막대로 끌어다 놓기<br>② 핀터레스트 보드에서 그 즐겨찾기 누르기 → 자동으로 끝까지 수집<br>③ [cutref로 보내기] → 여기 보드로 들어옴</span></div></div>`
+      +`<div class="ft"><span class="wk-msg">"전체" = 수집한 보드 · 다시 수집하면 갱신</span><a id="fReset">초기화</a></div>`;
   }else if(t==='photo'){const f=S.f.photo,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
     const src=['us','px'].map(k=>PSVC[k].key()?`<span class="o${(f.off||[]).includes(k)?'':' on'}" data-psrc="${k}"><i class="dot"></i>${PSVC[k].n}</span>`:`<span class="o add" data-pwz="${k}">+ ${PSVC[k].n} 연결</span>`).join('');
     b.innerHTML=`<div class="fx-row"><span class="fx-l">출처</span><div><div class="src">${src}</div></div></div><div class="fx-row"><span class="fx-l">검색</span><div><input type="text" id="pQ" placeholder="영어 검색어 · 비우면 주제에서" value="${esc(f.q)}" autocomplete="off"></div></div>`
@@ -2024,7 +2091,12 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
   else if(o.dataset.rating!==undefined){S.sbRating=o.dataset.rating}
   fChange()});
 $('#fltPop').addEventListener('click',e=>{const x=e.target.closest('[data-pbdel]');if(!x)return;e.stopPropagation();const f=S.f.pin,u=x.dataset.pbdel,b=f.boards.find(v=>v.u===u);
-  f.boards=f.boards.filter(v=>v.u!==u);f.sel=f.sel.filter(v=>v!==u);delete pinBuf[u];toast((b&&b.n||u)+' 보드 삭제');fChange()},true);
+  f.boards=f.boards.filter(v=>v.u!==u);f.sel=f.sel.filter(v=>v!==u);delete pinBuf[u];if(PINS[u]){delete PINS[u];pinSave()}toast((b&&b.n||u)+' 보드 삭제');fChange()},true);
+$('#fltPop').addEventListener('click',async e=>{const t=e.target.closest('#pbBm,#pbPaste,#pbTaGo');if(!t)return;
+  if(t.id==='pbBm'){e.preventDefault();try{await navigator.clipboard.writeText(t.getAttribute('href'));toast('즐겨찾기 막대로 끌어다 놓기 · 모바일은 복사된 코드를 북마크 주소에 붙여넣기')}catch(err){toast('즐겨찾기 막대로 끌어다 놓기')}return}
+  if(t.id==='pbPaste'){if(!pinPaste){try{const c=navigator.clipboard&&navigator.clipboard.readText?await navigator.clipboard.readText():'';if(/"cutref"\s*:\s*"pins"/.test(c)){pinImportTxt(c);return}}catch(err){}}
+    pinPaste=!pinPaste;renderFlt();if(curPop)placeP(curPop);const ta=$('#pbTa');if(ta)ta.focus();return}
+  try{pinImportTxt($('#pbTa').value)}catch(err){toast(err instanceof SyntaxError?'가져오기 실패 · 복사한 내용 전체를 붙여넣기':err.message,'err')}});
 $('#fltPop').addEventListener('submit',async e=>{if(e.target.id!=='pbAdd')return;e.preventDefault();const inp=$('#pbIn'),u=pinKey(inp.value),f=S.f.pin;
   if(!u){toast('보드 주소 형식 · pinterest.com/아이디/보드이름','err');return}
   if(f.boards.some(b=>b.u===u)){toast('이미 추가한 보드','err');return}
@@ -2641,7 +2713,7 @@ document.addEventListener('keydown',e=>{
 // ---------- 구글 로그인 · 기기 연동 (Worker: /auth · /docs · /upload · /img)
 // 연습 기록 · 링크 · 보관함 · 설정을 내 계정 서버에 두고 기기끼리 맞춤. 업로드한 이미지는 R2 창고에.
 var SYNC={url:'https://cutref-archive.masoduregi.workers.dev',cid:'737432106953-u902ff3pnj2qkd0orpbj2fknk3893q3i.apps.googleusercontent.com'}; // ← Worker 주소, 구글 OAuth 웹 클라이언트 ID
-const SYK='cutref-sync',SETK=['cutref2','cutref-keys','cutref-tabs'],DOCS=['log','links','fav','set'];
+const SYK='cutref-sync',SETK=['cutref2','cutref-keys','cutref-tabs','cutref-pins'],DOCS=['log','links','fav','set'];
 var SP={tok:'',me:null,ver:{},base:{},h:{},last:0,setJ:'',setMt:0};
 try{Object.assign(SP,JSON.parse(localStorage.getItem(SYK)||'{}'))}catch(e){}
 const SY={busy:false,again:false,timer:0,dirty:new Set(),boot:true};
@@ -2688,6 +2760,7 @@ const DOC={
 function setLive(){try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
     for(const k of['tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3lightLast','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k];
     if(p.f)for(const t in S.f)if(p.f[t]&&typeof p.f[t]==='object')S.f[t]={...S.f[t],...p.f[t]}}catch(e){}
+  try{PINS=JSON.parse(localStorage.getItem('cutref-pins')||'{}')||{};for(const k in pinBuf)delete pinBuf[k]}catch(e){}
   try{const o=JSON.parse(localStorage.getItem('cutref-keys')||'{}');KEYS={...KDEF};for(const k in o)if(k in KDEF&&Array.isArray(o[k]))KEYS[k]=o[k].slice(0,2)}catch(e){}}
 // 3-way merge by id: something missing on one side that both had at the last sync was deleted there
 function mRecs(l,r,base,key=x=>x.id){const B=new Set(base||[]),L=new Map(l.map(x=>[key(x),x])),R=new Map(r.map(x=>[key(x),x])),out=[];
@@ -2734,7 +2807,7 @@ function syDirty(k){if(!SP||!SP.tok||!SYNC||!SYNC.url||!SYNC.cid)return; // may 
   if(k==='set'){const j=J(setDoc());if(j===SP.setJ)return;SP.setJ=j;SP.setMt=Date.now();spSave()}
   SY.dirty.add(k);clearTimeout(SY.timer);SY.timer=setTimeout(syRun,2500)}
 // every save of a synced key marks its doc for the next push
-{const W={'cutref-log':'log','cutref-links':'links','cutref2':'set','cutref-keys':'set','cutref-tabs':'set'};
+{const W={'cutref-log':'log','cutref-links':'links','cutref2':'set','cutref-keys':'set','cutref-tabs':'set','cutref-pins':'set'};
   Storage.prototype.setItem=function(k,v){lsRaw.call(this,k,v);if(this===localStorage&&W[k])syDirty(W[k])}}
 // ---- login
 const gisLoad=()=>window.google&&google.accounts&&google.accounts.id?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');
@@ -2783,6 +2856,10 @@ $('#syCodeF').onsubmit=async e=>{e.preventDefault();const c=syCodeV();
 $('#syOff').onclick=async()=>{if(await askYes($('#syOff'),'로그아웃<small>이 기기 데이터는 남고 연동만 멈춤</small>','로그아웃',{kind:'go'}))syLogout()};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SP.tok&&Date.now()-SP.last>60e3)syRun()});
 syUI();if(SP.tok&&syOn()){setTimeout(syRun,800);setTimeout(syMe,1500)}else sessionStorage.removeItem('cutref-syre');
+// bookmarklet hand-off: …/bookmarks/#pinimp=<json>
+function pinHash(){const m=location.hash.match(/^#pinimp=(.+)$/s);if(!m)return;history.replaceState(null,'',location.pathname+location.search);
+  try{pinImportTxt(decodeURIComponent(m[1]))}catch(e){toast('핀 가져오기 실패 · '+(e instanceof SyntaxError||e instanceof URIError?'데이터가 잘림 · 수집 상자에서 [복사] → 붙여넣기':e.message),'err')}}
+pinHash();window.addEventListener('hashchange',pinHash);
 
 // UI rule: a select box is exactly as wide as its longest option (+ its own padding / arrow), never stretched to fill a row
 const fitCv=document.createElement('canvas').getContext('2d');
