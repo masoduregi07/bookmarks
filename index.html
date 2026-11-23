@@ -1024,7 +1024,10 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .o.pbd small{font-size:10px;opacity:.7}
 #fltPop .pbadd{display:flex;gap:6px}
 #fltPop .pbadd input{flex:1 1 0;width:0;min-width:0}
-#fltPop .pbhint{display:block;margin-top:4px}
+#fltPop .pbhint{display:block;margin-top:6px;line-height:16px}
+#fltPop :is(#pbIn,#pbAdd button,#pbPaste,#pbTaGo,.pbbm){height:26px!important;min-height:0!important;box-sizing:border-box;line-height:22px!important;padding-top:0!important;padding-bottom:0!important}
+#fltPop :is(#pbAdd button,#pbPaste,#pbTaGo){padding:0 10px!important}
+#fltPop .pbadd{align-items:center;height:26px;margin:0}#fltPop #pbIn{margin:0!important}
 body[data-tab=pin] :is(#fltPop,#frow){--yel:var(--pink)} /* 보드 tab: the board window and its row wear the tab's pink */
 #fltPop .pbl{display:grid;grid-template-columns:minmax(0,1fr)}
 #fltPop .pbli{position:relative;display:flex;align-items:center;gap:6px;padding:2px 2px 2px 6px;border-top:1px dotted #c9c7bf;font-size:12px;line-height:18px;cursor:pointer}
