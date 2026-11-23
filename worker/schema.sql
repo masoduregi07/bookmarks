@@ -47,3 +47,5 @@ CREATE TABLE IF NOT EXISTS docs (
 );
 -- 다른 기기 연결 코드 (10분 · 한 번만) · 서버가 처음 쓸 때 스스로 만듦
 CREATE TABLE IF NOT EXISTS codes (code TEXT PRIMARY KEY, sub TEXT NOT NULL, exp INTEGER NOT NULL);
+-- 보드 공유 링크 (30일) · 서버가 처음 쓸 때 스스로 만듦
+CREATE TABLE IF NOT EXISTS shares (id TEXT PRIMARY KEY, sub TEXT NOT NULL, v TEXT NOT NULL, exp INTEGER NOT NULL);

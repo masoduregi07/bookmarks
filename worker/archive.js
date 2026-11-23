@@ -73,6 +73,15 @@ async function route(req, env) {
     return json({ token, email: me ? me.email : '', name: me ? me.name || '' : '' });
   }
 
+  // shared board (보드 › 공유 링크): anyone with the link can read it until it expires
+  let sm = p.match(/^\/share\/([A-Za-z0-9]{6,16})$/);
+  if (sm && m === 'GET') {
+    await sharesTable(env);
+    const row = await env.DB.prepare('SELECT v,exp FROM shares WHERE id=?').bind(sm[1]).first();
+    if (!row || row.exp < Date.now()) throw fail(404, '공유 링크가 없거나 만료됨');
+    return new Response(row.v, { headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'public, max-age=300' } });
+  }
+
   // image bytes: <img> can't send headers. ?s= is a per-image signature (safe to leak: opens that one image only);
   // ?t= (the session token) still works for older links
   let mm = p.match(/^\/img\/([\w-]+)$/);
@@ -92,6 +101,27 @@ async function route(req, env) {
   }
 
   const sub = await session(env, (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, ''));
+
+  if (p === '/share' && m === 'POST') { // signed-in users make a 30-day link for one board's pin list
+    const raw = await req.text();
+    if (raw.length > 300000) throw fail(413, '보드가 너무 큼 (핀 1000장까지)');
+    let d; try { d = JSON.parse(raw); } catch { throw fail(400, '요청 형식이 이상함'); }
+    const b = String(d.b || '').split('/').filter(Boolean);
+    if (b.length !== 2 || !b.every(x => x.length <= 100)) throw fail(400, '보드 주소 형식이 이상함');
+    const pins = (Array.isArray(d.pins) ? d.pins : []).slice(0, 1000).filter(x => x && typeof x.i === 'string' && x.i.length <= 300)
+      .map(x => ({ i: x.i, l: String(x.l || '').slice(0, 200), t: String(x.t || '').slice(0, 120) }));
+    if (!pins.length) throw fail(400, '공유할 핀이 없음');
+    await sharesTable(env);
+    const now = Date.now();
+    await env.DB.prepare('DELETE FROM shares WHERE exp<?').bind(now).run();
+    const n = await env.DB.prepare('SELECT COUNT(*) n FROM shares WHERE sub=?').bind(sub).first();
+    if (n.n >= 50) throw fail(429, '공유 링크가 너무 많음 (계정당 50개 · 30일 뒤 자동 삭제)');
+    const AB = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789', r = crypto.getRandomValues(new Uint8Array(8));
+    const id = [...r].map(x => AB[x % AB.length]).join(''), exp = now + 30 * 864e5;
+    const v = JSON.stringify({ cutref: 'pins', v: 1, b: b.join('/'), n: String(d.n || b[1]).slice(0, 80), pins, exp });
+    await env.DB.prepare('INSERT INTO shares (id,sub,v,exp) VALUES (?,?,?,?)').bind(id, sub, v, exp).run();
+    return json({ id, exp });
+  }
 
   if (p === '/me' && m === 'GET') {
     const me = await env.DB.prepare('SELECT email,name,picture FROM users WHERE sub=?').bind(sub).first();
@@ -332,6 +362,10 @@ async function session(env, tok) {
 let CODES_OK = false;
 async function codesTable(env) { if (CODES_OK) return;
   await env.DB.prepare('CREATE TABLE IF NOT EXISTS codes (code TEXT PRIMARY KEY, sub TEXT NOT NULL, exp INTEGER NOT NULL)').run(); CODES_OK = true; }
+
+let SHARES_OK = false;
+async function sharesTable(env) { if (SHARES_OK) return;
+  await env.DB.prepare('CREATE TABLE IF NOT EXISTS shares (id TEXT PRIMARY KEY, sub TEXT NOT NULL, v TEXT NOT NULL, exp INTEGER NOT NULL)').run(); SHARES_OK = true; }
 
 // ---------- small utils
 async function body(req) { try { return await req.json(); } catch { throw fail(400, '요청 형식이 이상함'); } }

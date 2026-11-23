@@ -440,15 +440,14 @@ button.ic:active{transform:none}
 /* stage heart */
 svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:#e07a95}
 #favBtn{position:absolute;left:10px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
-#favBtn svg{width:26px;height:24px}
-#favBtn:not(.on) .ho{fill:#8e8b83}#favBtn:not(.on) .hf{fill:#cfccc4}
-#favBtn:not(.on):hover .hf{fill:#bdbab1}#favBtn:active{transform:none}
+#favBtn svg{width:24px;height:24px}#favBtn .hb{fill:#8e8b83}#favBtn .hfl{display:none;fill:#e07a95}
+#favBtn:hover .hb{fill:var(--ink)}#favBtn.on .hb{display:none}#favBtn.on .hfl{display:inline}#favBtn:active{transform:none}
 #favBtn.beat{animation:favPop .24s steps(3,end)}
 @keyframes favPop{50%{transform:scale(1.3)}}
 #favBtn.hidden,body.zen #favBtn{display:none}
 #pinBtn{position:absolute;left:44px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
-#pinBtn svg{width:22px;height:22px;shape-rendering:crispEdges}#pinBtn .po{fill:#8e8b83}#pinBtn .pf{fill:#cfccc4}
-#pinBtn:hover .pf{fill:var(--pink)}#pinBtn:hover .po{fill:var(--ink)}#pinBtn:active{transform:none}
+#pinBtn svg{width:22px;height:22px;fill:#8e8b83}
+#pinBtn:hover svg{fill:var(--ink)}#pinBtn:active{transform:none}
 #pinBtn.hidden,body.zen #pinBtn{display:none}
 #zoomUi{left:50px!important}
 .calp.full .cbody{display:grid;grid-template-columns:1fr 340px;overflow:hidden}
@@ -1023,11 +1022,23 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .fl .tl .o{flex:none}
 #fltPop .o.pbd{display:inline-flex;align-items:center;gap:4px;padding-right:2px}
 #fltPop .o.pbd small{font-size:10px;opacity:.7}
-#fltPop .pbx{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;font-weight:400;opacity:.6;cursor:pointer}
-#fltPop .pbx:hover{opacity:1}
 #fltPop .pbadd{display:flex;gap:6px}
 #fltPop .pbadd input{flex:1 1 0;width:0;min-width:0}
 #fltPop .pbhint{display:block;margin-top:4px}
+#fltPop .pbl{display:grid}
+#fltPop .pbli{position:relative;display:flex;align-items:center;gap:6px;padding:4px 2px 4px 6px;border-top:1px dotted #c9c7bf;font-size:12px;line-height:18px;cursor:pointer}
+#fltPop .pbli:first-child{border-top:none}#fltPop .pbli.on{background:#efeee9}
+@media (hover:hover){#fltPop .pbli:hover{background:#f4f3ef}#fltPop .pbli.on:hover{background:#e9e8e2}}
+#fltPop .pbli .cb{flex:none;width:8px;height:8px;border:2px solid var(--ink);background:#fff}#fltPop .pbli.on .cb{background:var(--ink)}
+#fltPop .pbn{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#fltPop .pbli small{font-size:10px;color:var(--tx3)}#fltPop .pbli .sp{flex:1 1 auto}
+#fltPop .pbi{flex:none;display:inline-flex;align-items:center;justify-content:center;width:24px;height:22px;padding:0;border:none!important;background:none!important;box-shadow:none!important;min-width:0!important;min-height:0!important;cursor:pointer}
+#fltPop .pbi svg{width:14px;height:14px;fill:var(--ink);opacity:.65}#fltPop .pbi:hover svg,#fltPop .pbi.on svg{opacity:1}
+#fltPop .pbm{position:absolute;right:2px;top:100%;z-index:6;width:184px;background:#fbfaf6;border:2px solid var(--ink);box-shadow:2px 2px 0 #c6c3ba;padding:4px 0;cursor:default}
+#fltPop .pbm button{display:flex;align-items:center;gap:8px;width:100%;height:26px;padding:0 10px;border:none!important;background:none!important;box-shadow:none!important;font:inherit;font-size:11px;color:var(--ink);text-align:left;cursor:pointer}
+#fltPop .pbm button:hover{background:var(--ink)!important;color:#fff}#fltPop .pbm button:hover svg{fill:#fff}
+#fltPop .pbm svg{width:14px;height:14px;fill:var(--ink);flex:none}#fltPop .pbm hr{border:none;border-top:1px dotted #a19f97;margin:4px 0}
+#fltPop .pbm .dg{color:#b23a3a}#fltPop .pbm .dg svg{fill:#b23a3a}
 #fltPop .pbt{font-style:normal;font-size:9px;line-height:1;padding:1px 2px;border:1px solid currentColor;opacity:.75}
 #fltPop .pbbm-r{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 #fltPop .pbbm{display:inline-flex;align-items:center;height:26px;padding:0 10px;border:2px dashed var(--ink);background:#f7e3a1;color:#3d3b37;font-size:12px;font-weight:700;text-decoration:none;cursor:grab;-webkit-touch-callout:default}
@@ -1170,8 +1181,8 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <svg id="hg" viewBox="0 0 10 12" shape-rendering="crispEdges" aria-label="불러오는 중"><path fill="currentColor" d="M0 0h10v1H0zM0 11h10v1H0zM1 1h1v2H1zM8 1h1v2H8zM2 3h1v1H2zM7 3h1v1H7zM3 4h1v1H3zM6 4h1v1H6zM3 7h1v1H3zM6 7h1v1H6zM2 8h1v1H2zM7 8h1v1H7zM1 9h1v2H1zM8 9h1v2H8z"/><path class="sd s1" d="M2 1h6v2H2zM3 3h4v1H3zM4 4h2v1H4z"/><path class="sd s2" d="M3 3h4v1H3zM4 4h2v1H4zM4 6h1v2H4zM3 10h4v1H3z"/><path class="sd s3" d="M3 8h4v1H3zM2 9h6v2H2z"/></svg>
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <canvas id="c3d" class="hidden"></canvas>
-  <button id="favBtn" class="hidden" data-tip="보관함에 담기" data-key="B" aria-label="보관함에 담기" aria-pressed="false"><svg class="hrt" viewBox="0 0 13 12" aria-hidden="true"><path class="ho" d="M2 0h3v1H2zM8 0h3v1H8zM1 1h1v1H1zM5 1h1v1H5zM7 1h1v1H7zM11 1h1v1H11zM0 2h1v1H0zM6 2h1v1H6zM12 2h1v1H12zM0 3h1v1H0zM12 3h1v1H12zM0 4h1v1H0zM12 4h1v1H12zM0 5h1v1H0zM12 5h1v1H12zM1 6h1v1H1zM11 6h1v1H11zM2 7h1v1H2zM10 7h1v1H10zM3 8h1v1H3zM9 8h1v1H9zM4 9h1v1H4zM8 9h1v1H8zM5 10h1v1H5zM7 10h1v1H7zM6 11h1v1H6z"/><path class="hf" d="M2 1h3v1H2zM8 1h3v1H8zM1 2h5v1H1zM7 2h5v1H7zM1 3h11v1H1zM1 4h11v1H1zM1 5h11v1H1zM2 6h9v1H2zM3 7h7v1H3zM4 8h5v1H4zM5 9h3v1H5zM6 10h1v1H6z"/></svg></button>
-  <button id="pinBtn" class="hidden" data-tip="핀터레스트에 저장" aria-label="핀터레스트에 저장"><svg viewBox="0 0 12 12" aria-hidden="true"><path class="pf" d="M5 1h4v1h1v4H9v1H8v1H6V7H5V6H4V4H3V3h1V2h1z"/><path class="po" d="M4 0h6v1H4zM3 1h1v1H3zM10 1h1v1h-1zM2 2h1v1H2zM11 2h1v4h-1zM2 3h1v1H2zM3 4h1v1H3zM4 5h1v1H4zM10 6h1v1h-1zM9 7h1v1H9zM5 6h1v1H5zM6 7h2v2H6zM4 8h2v1H4zM3 9h1v1H3zM2 10h1v1H2zM1 11h1v1H1z"/></svg></button>
+  <button id="favBtn" class="hidden" data-tip="보관함에 담기" data-key="B" aria-label="보관함에 담기" aria-pressed="false"><svg class="ph fvh" viewBox="0 0 256 256" aria-hidden="true"><path class="hb" d="M178,36c-20.09,0-37.92,7.93-50,21.56C115.92,43.93,98.09,36,78,36a66.08,66.08,0,0,0-66,66c0,72.34,105.81,130.14,110.31,132.57a12,12,0,0,0,11.38,0C138.19,232.14,244,174.34,244,102A66.08,66.08,0,0,0,178,36Zm-5.49,142.36A328.69,328.69,0,0,1,128,210.16a328.69,328.69,0,0,1-44.51-31.8C61.82,159.77,36,131.42,36,102A42,42,0,0,1,78,60c17.8,0,32.7,9.4,38.89,24.54a12,12,0,0,0,22.22,0C145.3,69.4,160.2,60,178,60a42,42,0,0,1,42,42C220,131.42,194.18,159.77,172.51,178.36Z"/><path class="hfl" d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></svg></button>
+  <button id="pinBtn" class="hidden" data-tip="핀터레스트에 저장" aria-label="핀터레스트에 저장"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M238.15,78.54,177.46,17.86a20,20,0,0,0-28.3,0L97.2,70c-12.43-3.33-36.68-5.72-61.74,14.5a20,20,0,0,0-1.6,29.73l45.46,45.47-39.8,39.8a12,12,0,0,0,17,17l39.8-39.81,45.47,45.46A20,20,0,0,0,155.91,228c.46,0,.93,0,1.4-.05A20,20,0,0,0,171.87,220c4.69-6.23,11-16.13,14.44-28s3.45-22.88.16-33.4l51.7-51.87A20,20,0,0,0,238.15,78.54Zm-74.26,68.79a12,12,0,0,0-2.23,13.84c3.43,6.86,6.9,21-6.28,40.65L54.08,100.53c21.09-14.59,39.53-6.64,41-6a11.67,11.67,0,0,0,13.81-2.29l54.43-54.61,55,55Z"/></svg></button>
   <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
@@ -1438,7 +1449,8 @@ const pinBuf={};
 let PINS={};try{PINS=JSON.parse(localStorage.getItem('cutref-pins')||'{}')||{}}catch(e){PINS={}}
 const pinSave=()=>{try{localStorage.setItem('cutref-pins',J(PINS))}catch(e){toast('핀 저장 실패 · 브라우저 저장 공간 부족','err')}};
 const pinExp=p=>({img:/^https?:/.test(p.i)?p.i:'https://i.pinimg.com/736x/'+p.i,title:p.t||'',link:!p.l?'':/^[\w-]+$/.test(p.l)?'https://www.pinterest.com/pin/'+p.l+'/':p.l});
-let pinPaste=false;
+let pinPaste=false,pinMenu='';
+const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
 // runs on a Pinterest board page (as a bookmarklet): scrolls to the end, collects every pin above "More ideas", hands the list to cutref
 function cutrefPins(SITE){
   if(window.__crp){window.__crp.style.display='';return}
@@ -1855,7 +1867,7 @@ function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const
   el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
   el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
-  if(n==='set'){fillPop(S);setTab(SYNC&&SYNC.url&&SYNC.cid?3:1);syUI();kcStop();advOpen(false);apiCheck(false)}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;renderFlt()}
+  if(n==='set'){fillPop(S);setTab(SYNC&&SYNC.url&&SYNC.cid?3:1);syUI();kcStop();advOpen(false);apiCheck(false)}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;pinMenu='';renderFlt()}
   clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
   if(n==='flt'){P.el.classList.remove('in');P.el.offsetWidth;P.el.classList.add('in')}}
 function closeP(){if(!curPop)return;const P=POPS[curPop],n=curPop;
@@ -2012,13 +2024,17 @@ function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCo
     b.innerHTML=row('게임',opts(GAMES.map(g=>[g[0],g[1]]),v=>f.games.includes(v),'data-game'))+row('종류',opts(GKINDS,v=>(f.kind||'')===v,'data-gkind'))
       +`<div class="ft"><span class="wk-msg">이미지 출처 · 각 게임 팬 위키</span><a id="fReset">초기화</a></div>`;
   }else if(t==='pin'){const f=S.f.pin;
-    const chips=f.boards.length?`<span class="o${f.sel.length?'':' on'}" data-pbsel="">전체</span>`+f.boards.map(b=>`<span class="o pbd${f.sel.includes(b.u)?' on':''}" data-pbsel="${esc(b.u)}">${esc(b.n||b.u)}<small>${b.c||''}</small>${PINS[b.u]?'<i class="pbt">전체</i>':''}<b class="pbx" data-pbdel="${esc(b.u)}" role="button" aria-label="${esc(b.n||b.u)} 보드 삭제">×</b></span>`).join(''):'<span class="wk-msg">아직 추가한 보드가 없음</span>';
-    b.innerHTML=`<div class="fx-row top"><span class="fx-l">보드</span><div><div class="gr tall">${chips}</div></div></div>`
+    const menu=b=>pinMenu!==b.u?'':`<div class="pbm" data-pbm="1"><button type="button" data-pbact="share" data-u="${esc(b.u)}">${PHI('link')}공유 링크 복사</button>`
+        +(PINS[b.u]?`<button type="button" data-pbact="open" data-u="${esc(b.u)}">${PHI('open')}핀터레스트에서 다시 수집</button>`:`<button type="button" data-pbact="re" data-u="${esc(b.u)}">${PHI('re')}다시 불러오기</button>`)
+        +`<hr><button type="button" class="dg" data-pbact="del" data-u="${esc(b.u)}">${PHI('trash')}보드 삭제…</button></div>`;
+    const chips=f.boards.length?'<div class="pbl">'+f.boards.map(b=>`<div class="pbli${f.sel.includes(b.u)?' on':''}" data-pbrow="${esc(b.u)}" role="checkbox" aria-checked="${f.sel.includes(b.u)}" tabindex="0"><span class="cb"></span><span class="pbn">${esc(b.n||b.u)}</span><small>${PINS[b.u]?PINS[b.u].pins.length:b.c||''}</small>${PINS[b.u]?'<i class="pbt">전체</i>':''}<span class="sp"></span>`
+        +`<button type="button" class="pbi" data-pbshare="${esc(b.u)}" aria-label="${esc(b.n||b.u)} 공유 링크 복사" data-tip="공유 링크 복사">${PHI('link')}</button><button type="button" class="pbi${pinMenu===b.u?' on':''}" data-pbmenu="${esc(b.u)}" aria-label="${esc(b.n||b.u)} 메뉴">${PHI('dots')}</button>${menu(b)}</div>`).join('')+'</div>':'<span class="wk-msg">아직 추가한 보드가 없음</span>';
+    b.innerHTML=`<div class="fx-row top"><span class="fx-l">보드</span><div>${chips}</div></div>`
       +`<div class="fx-row top"><span class="fx-l">추가</span><div><form class="pbadd" id="pbAdd" autocomplete="off"><input type="text" id="pbIn" placeholder="pinterest.com/아이디/보드이름" aria-label="핀터레스트 보드 주소"><button type="submit">추가</button></form><span class="wk-msg pbhint">공개 보드만 · 최근 핀 약 25개 · 자동 갱신</span></div></div>`
       +`<div class="fx-row top"><span class="fx-l">수집</span><div><div class="pbbm-r"><a class="pbbm" id="pbBm" href="${esc(pinBM())}" draggable="true" title="즐겨찾기 막대로 끌어다 놓기">✦ cutref 핀 수집</a><button type="button" id="pbPaste">붙여넣기</button></div>`
       +(pinPaste?`<div class="pbta"><textarea id="pbTa" placeholder="수집 상자에서 [복사]한 내용을 붙여넣기" aria-label="핀 수집 데이터"></textarea><button type="button" id="pbTaGo">가져오기</button></div>`:'')
       +`<span class="wk-msg pbhint">① 노란 버튼을 즐겨찾기 막대로 끌어다 놓기<br>② 핀터레스트 보드에서 그 즐겨찾기 누르기 → 자동으로 끝까지 수집<br>③ [cutref로 보내기] → 여기 보드로 들어옴</span></div></div>`
-      +`<div class="ft"><span class="wk-msg">"전체" = 수집한 보드 · 다시 수집하면 갱신</span><a id="fReset">초기화</a></div>`;
+      +`<div class="ft"><span class="wk-msg">선택 없음 = 모든 보드에서 랜덤 · "전체" = 수집한 보드</span><a id="fReset">초기화</a></div>`;
   }else if(t==='photo'){const f=S.f.photo,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
     const src=['us','px'].map(k=>PSVC[k].key()?`<span class="o${(f.off||[]).includes(k)?'':' on'}" data-psrc="${k}"><i class="dot"></i>${PSVC[k].n}</span>`:`<span class="o add" data-pwz="${k}">+ ${PSVC[k].n} 연결</span>`).join('');
     b.innerHTML=`<div class="fx-row"><span class="fx-l">출처</span><div><div class="src">${src}</div></div></div><div class="fx-row"><span class="fx-l">검색</span><div><input type="text" id="pQ" placeholder="영어 검색어 · 비우면 주제에서" value="${esc(f.q)}" autocomplete="off"></div></div>`
@@ -2090,8 +2106,34 @@ $('#fltPop').addEventListener('click',e=>{const tb=e.target.closest('[data-ftab]
   else if(o.dataset.score!==undefined)f.score=+o.dataset.score;
   else if(o.dataset.rating!==undefined){S.sbRating=o.dataset.rating}
   fChange()});
-$('#fltPop').addEventListener('click',e=>{const x=e.target.closest('[data-pbdel]');if(!x)return;e.stopPropagation();const f=S.f.pin,u=x.dataset.pbdel,b=f.boards.find(v=>v.u===u);
-  f.boards=f.boards.filter(v=>v.u!==u);f.sel=f.sel.filter(v=>v!==u);delete pinBuf[u];if(PINS[u]){delete PINS[u];pinSave()}toast((b&&b.n||u)+' 보드 삭제');fChange()},true);
+function pinDel(u){const f=S.f.pin,b=f.boards.find(v=>v.u===u);f.boards=f.boards.filter(v=>v.u!==u);f.sel=f.sel.filter(v=>v!==u);delete pinBuf[u];if(PINS[u]){delete PINS[u];pinSave()}toast((b&&b.n||u)+' 보드 삭제');fChange()}
+const pinSite=()=>location.origin+location.pathname;
+async function pinShare(u,anchor){const f=S.f.pin,b=f.boards.find(v=>v.u===u)||{u},P=PINS[u],n=b.n||(P&&P.n)||u;
+  const make=async()=>{if(!P)return pinSite()+'#pinshare=@'+u.split('/').map(encodeURIComponent).join('/');
+    if(!SP.tok)throw new Error('수집한 보드 공유는 설정 › 계정에서 로그인한 뒤 사용');
+    const {d}=await api('/share',{method:'POST',headers:{'Content-Type':'application/json'},body:J({b:u,n,pins:P.pins})});return pinSite()+'#pinshare='+d.id};
+  const job=make(),tail=P?' · 30일 동안 열림':'';
+  try{if(window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){ // Safari: the copy must start inside the tap, before the server answers
+      await navigator.clipboard.write([new ClipboardItem({'text/plain':job.then(t=>new Blob([t],{type:'text/plain'}))})])}
+    else await navigator.clipboard.writeText(await job);
+    toast(n+' 공유 링크 복사됨'+tail,'ok')}
+  catch(e){let url='';try{url=await job}catch(err){toast(err.message,'err');return}
+    await askYes(anchor,`<b>${esc(n)}</b> 공유 링크<small style="user-select:all;word-break:break-all">${esc(url)}</small>`,'닫기',{no:'',kind:'go'})}}
+$('#fltPop').addEventListener('click',async e=>{const t=e.target;
+  const sh=t.closest('[data-pbshare]'),mb=t.closest('[data-pbmenu]'),ac=t.closest('[data-pbact]'),row=t.closest('[data-pbrow]');
+  if(!sh&&!mb&&!ac&&!row){if(pinMenu&&!t.closest('[data-pbm]')){pinMenu='';renderFlt()}return}
+  e.stopPropagation();const f=S.f.pin;
+  if(sh){pinMenu='';pinShare(sh.dataset.pbshare,sh);return}
+  if(mb){pinMenu=pinMenu===mb.dataset.pbmenu?'':mb.dataset.pbmenu;renderFlt();if(curPop)placeP(curPop);return}
+  if(ac){const u=ac.dataset.u,a=ac.dataset.pbact,b=f.boards.find(v=>v.u===u)||{};pinMenu='';
+    if(a==='share'){renderFlt();pinShare(u,$('[data-pbshare="'+CSS.escape(u)+'"]')||$('#fltBtn'));return}
+    if(a==='open'){renderFlt();window.open('https://www.pinterest.com/'+u.split('/').map(encodeURIComponent).join('/')+'/','_blank','noopener');toast('보드가 열리면 즐겨찾기의 cutref 핀 수집을 누르기');return}
+    if(a==='re'){renderFlt();try{const c=await pinLoad(u,true);b.c=c.items.length;if(c.name)b.n=c.name;fChange();toast((b.n||u)+' · 핀 '+c.items.length+'개 다시 불러옴','ok')}catch(err){toast(err.message,'err')}return}
+    if(a==='del'){renderFlt();const anc=$('[data-pbrow="'+CSS.escape(u)+'"]')||$('#fltBtn'),P=PINS[u];
+      if(await askYes(anc,`<b>${esc(b.n||u)}</b> 보드 삭제<small>${P?'수집한 핀 '+P.pins.length+'장도 함께 지워짐':'보드 목록에서만 빠짐 · 핀터레스트 보드는 그대로'}</small>`))pinDel(u);return}}
+  if(row){const k=row.dataset.pbrow;f.sel=f.sel.includes(k)?f.sel.filter(x=>x!==k):[...f.sel,k];pinMenu='';fChange()}},true);
+$('#fltPop').addEventListener('keydown',e=>{const r=e.target.closest&&e.target.closest('[data-pbrow]');if(r&&e.target===r&&(e.key===' '||e.key==='Enter')){e.preventDefault();r.click()}
+  else if(e.key==='Escape'&&pinMenu){e.stopPropagation();pinMenu='';renderFlt()}},true);
 $('#fltPop').addEventListener('click',async e=>{const t=e.target.closest('#pbBm,#pbPaste,#pbTaGo');if(!t)return;
   if(t.id==='pbBm'){e.preventDefault();try{await navigator.clipboard.writeText(t.getAttribute('href'));toast('즐겨찾기 막대로 끌어다 놓기 · 모바일은 복사된 코드를 북마크 주소에 붙여넣기')}catch(err){toast('즐겨찾기 막대로 끌어다 놓기')}return}
   if(t.id==='pbPaste'){if(!pinPaste){try{const c=navigator.clipboard&&navigator.clipboard.readText?await navigator.clipboard.readText():'';if(/"cutref"\s*:\s*"pins"/.test(c)){pinImportTxt(c);return}}catch(err){}}
@@ -2516,9 +2558,9 @@ function askName(anchor,{value='',ph='새 폴더 이름',ok='만들기'}={}){if(
 $('#favAsk').onsubmit=e=>{e.preventDefault();const v=$('#favAskIn').value.trim().slice(0,40);if(askDone)askDone(v||null)};
 $('#favAskIn').addEventListener('keydown',e=>{if(e.key==='Escape'){e.stopPropagation();if(askDone)askDone(null)}});
 document.addEventListener('pointerdown',e=>{if(askDone&&!e.target.closest('#favAsk,#favCf'))askDone(null)},true);
-function askYes(anchor,html,ok='삭제',{no='취소',kind='del'}={}){if(askDone)askDone(null);const f=$('#favCf');$('#favCfT').innerHTML=html;$('#favCfOk').textContent=ok;$('#favCfNo').textContent=no;$('#favCfOk').className=kind==='del'?'dg':'go';f.classList.remove('hidden');
+function askYes(anchor,html,ok='삭제',{no='취소',kind='del'}={}){if(askDone)askDone(null);const f=$('#favCf');$('#favCfT').innerHTML=html;$('#favCfOk').textContent=ok;$('#favCfNo').textContent=no;$('#favCfNo').classList.toggle('hidden',!no);$('#favCfOk').className=kind==='del'?'dg':'go';f.classList.remove('hidden');
   const r=anchor.getBoundingClientRect(),h=f.offsetHeight,w=f.offsetWidth;f.style.left=Math.max(8,Math.min(r.right-w>8&&r.left+w>innerWidth-8?r.right-w:r.left,innerWidth-w-8))+'px';f.style.top=(r.bottom+4+h>innerHeight-8?Math.max(8,r.top-h-4):r.bottom+4)+'px';
-  setTimeout(()=>$('#favCfNo').focus(),30);
+  setTimeout(()=>(no?$('#favCfNo'):$('#favCfOk')).focus(),30);
   return new Promise(res=>{askDone=v=>{askDone=null;f.classList.add('hidden');res(!!v)}})}
 $('#favCfOk').onclick=()=>{if(askDone)askDone(true)};$('#favCfNo').onclick=()=>{if(askDone)askDone(null)};
 $('#favCf').addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(k==='escape'||k==='n'){e.stopPropagation();e.preventDefault();if(askDone)askDone(null)}else if(k==='y'){e.stopPropagation();e.preventDefault();if(askDone)askDone(true)}});
@@ -2857,7 +2899,21 @@ $('#syOff').onclick=async()=>{if(await askYes($('#syOff'),'로그아웃<small>�
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SP.tok&&Date.now()-SP.last>60e3)syRun()});
 syUI();if(SP.tok&&syOn()){setTimeout(syRun,800);setTimeout(syMe,1500)}else sessionStorage.removeItem('cutref-syre');
 // bookmarklet hand-off: …/bookmarks/#pinimp=<json>
-function pinHash(){const m=location.hash.match(/^#pinimp=(.+)$/s);if(!m)return;history.replaceState(null,'',location.pathname+location.search);
+async function pinShared(id){const anc=document.querySelector('.tabs button[data-tab="pin"]')||$('#fltBtn'),f=S.f.pin;
+  if(id[0]==='@'){const u=pinKey('pinterest.com/'+decodeURIComponent(id.slice(1)));if(!u)throw new Error('보드 주소가 이상함');
+    if(f.boards.some(b=>b.u===u)){toast('이미 있는 보드');return}
+    if(!await askYes(anc,`<b>공유된 보드</b><small>${esc(u)} · 보드 탭에 추가</small>`,'추가',{kind:'go'}))return;
+    const c=await pinLoad(u,true);f.boards=[...f.boards,{u,n:c.name,c:c.items.length}];fChange();toast(c.name+' 보드 추가 · 핀 '+c.items.length+'개','ok');
+    if(S.tab!=='pin')anc.click();return}
+  if(!SYNC||!SYNC.url)throw new Error('공유 서버가 설정되지 않음');
+  const r=await fetch(SYNC.url.replace(/\/+$/,'')+'/share/'+encodeURIComponent(id),{credentials:'omit'});
+  const o=await r.json().catch(()=>({}));if(!r.ok)throw new Error(o.error||'공유 링크를 열지 못함');
+  const u=pinKey('pinterest.com/'+String(o.b||'')),has=f.boards.some(b=>b.u===u);
+  if(!await askYes(anc,`<b>공유된 보드 · ${esc(o.n||u)}</b><small>핀 ${(o.pins||[]).length}장 · 보드 탭에 추가${has?' · 지금 목록을 새 목록으로 바꿈':''}<br>이미지는 핀터레스트에서 불러옴</small>`,'추가',{kind:'go'}))return;
+  pinImportTxt(J(o))}
+function pinHash(){const sh=location.hash.match(/^#pinshare=([@\w%./-]+)$/);
+  if(sh){history.replaceState(null,'',location.pathname+location.search);pinShared(sh[1]).catch(e=>toast('공유 링크 · '+e.message,'err'));return}
+  const m=location.hash.match(/^#pinimp=(.+)$/s);if(!m)return;history.replaceState(null,'',location.pathname+location.search);
   try{pinImportTxt(decodeURIComponent(m[1]))}catch(e){toast('핀 가져오기 실패 · '+(e instanceof SyntaxError||e instanceof URIError?'데이터가 잘림 · 수집 상자에서 [복사] → 붙여넣기':e.message),'err')}}
 pinHash();window.addEventListener('hashchange',pinHash);
 
