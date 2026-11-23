@@ -351,11 +351,19 @@ button.ic:active{transform:none}
 #sySec>div{display:grid;gap:6px}
 #sySec .syt{font-size:13px}
 #sySec .syd{font-size:11px;color:var(--tx2);line-height:1.6}
-#syG{min-height:40px;margin-top:4px}
-#sySec .syc{display:grid;gap:4px;margin-top:6px;padding-top:8px;border-top:2px dotted var(--soft)}
-#sySec .syc label{font-size:11px;color:var(--tx2)}
-#sySec .syc .row{display:flex;gap:6px}
-#sySec .syc input{flex:1;min-width:0;font:inherit;font-size:16px;letter-spacing:2px;text-transform:uppercase;height:30px;box-sizing:border-box;border:2px solid var(--ink);background:#fff;padding:0 6px}
+#syG{min-height:40px;display:flex;justify-content:center}
+#sySec .syseg{display:flex;border:2px solid var(--ink)}
+#sySec .syseg button{flex:1;height:26px!important;border:none!important;box-shadow:none!important;background:#fff;color:var(--tx2);font-size:12px}
+#sySec .syseg button.on{background:var(--ink);color:#fff}
+#sySec .sypn{display:grid;gap:10px;justify-items:center;text-align:center;padding:10px 0 4px}
+#sySec .sypn.hidden{display:none}
+#sySec .syd.sm{font-size:10px}
+#sySec .syxs{display:flex;align-items:center;gap:4px}
+#sySec .syxs i{width:6px;border-top:2px solid var(--ink)}
+#sySec .syx{width:28px;height:34px;box-sizing:border-box;border:2px solid var(--ink);background:#fff;text-align:center;font:inherit;font-size:16px;font-weight:700;text-transform:uppercase;color:var(--ink);padding:0;border-radius:0}
+#sySec .syx:focus{outline:none;background:var(--yel)}
+#sySec #syCodeF button{width:200px;height:28px!important}
+#sySec #syCodeF button.pri{background:var(--ink);color:#fff}
 #sySec .syk{display:grid;gap:4px;padding:8px;border:2px solid var(--ink);background:var(--yel)}
 #sySec .kc{font-size:22px;letter-spacing:4px;text-align:center}
 #sySec .btns{flex-wrap:wrap}
@@ -1125,9 +1133,10 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
   <div class="hd">설정<button id="setX" class="px ic" data-tip="닫기" data-key="Esc" aria-label="닫기"><svg viewBox="0 0 16 16"><path d="M3 3h2v1h1v1h1v1h2V5h1V4h1V3h2v2h-1v1h-1v1H10v2h1v1h1v1h1v2h-2v-1h-1v-1H9v-1H7v1H6v1H5v1H3v-2h1v-1h1V9h1V7H5V6H4V5H3z"/></svg></button></div>
   <div class="fx-tabs" id="setTabs"><button class="fx-tab hidden" data-pane="3" id="syTab">계정</button><button class="fx-tab on" data-pane="1">API 연결</button><button class="fx-tab" data-pane="0">소리</button><button class="fx-tab kbtab" data-pane="2">단축키</button></div>
   <section data-pane="3" class="hidden" id="sySec">
-    <div id="syOut"><b class="syt">구글 계정으로 로그인</b><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 다른 기기와 맞춤</span><div id="syG"></div>
-      <span class="syd hidden" id="syPwa">홈 화면 앱에서는 구글 창이 안 열릴 수 있음 → 사파리나 다른 기기에서 로그인 후 아래 연결 코드 사용</span>
-      <form id="syCodeF" class="syc" autocomplete="off"><label for="syCode">연결 코드로 로그인</label><span class="row"><input id="syCode" maxlength="9" placeholder="XXXX-XXXX" autocapitalize="characters" spellcheck="false" inputmode="text"><button type="submit">확인</button></span></form>
+    <div id="syOut">
+      <div class="syseg" role="tablist"><button type="button" role="tab" data-sy="g" class="on" aria-selected="true">구글 계정</button><button type="button" role="tab" data-sy="c" aria-selected="false">연결 코드</button></div>
+      <div class="sypn" id="syPG"><span class="syd">연습 기록 · 보관함 · 링크 · 설정을<br>다른 기기와 맞춤</span><div id="syG"></div><span class="syd sm">처음이면 계정 설정을 받고 · 이 기기 기록은 합쳐짐</span></div>
+      <form class="sypn hidden" id="syCodeF" autocomplete="off"><span class="syd">로그인한 기기의 설정 › 계정 › 다른 기기 연결 코드</span><div class="syxs"><input class="syx" maxlength="1" aria-label="연결 코드 1번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 2번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 3번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 4번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><i></i><input class="syx" maxlength="1" aria-label="연결 코드 5번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 6번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 7번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"><input class="syx" maxlength="1" aria-label="연결 코드 8번째 글자" autocapitalize="characters" autocomplete="off" spellcheck="false"></div><button type="submit" class="pri">로그인</button><span class="syd sm">홈 화면 앱은 이쪽이 편함 · 10분 안에 입력</span></form>
       <span id="syMsg" class="sye hidden" role="status"></span></div>
     <div id="syIn" class="hidden"><div class="sym"><b id="syMe"></b><span id="syLast"></span></div><span class="syd">연습 기록 · 보관함 · 링크 · 설정을 이 계정으로 맞추는 중</span>
       <div class="syk hidden" id="syK"><span class="syd">다른 기기의 설정 › 계정 › 연결 코드에 입력 · <b id="syKT"></b> 동안 유효</span><b id="syKC" class="kc"></b></div>
@@ -2618,7 +2627,7 @@ const gisLoad=()=>window.google&&google.accounts&&google.accounts.id?Promise.res
 let gisReady=false;
 async function syBtn(){const el=$('#syG');if(!el||SP.tok||!syOn()||el.childElementCount)return;
   try{await gisLoad();if(!gisReady){google.accounts.id.initialize({client_id:SYNC.cid,callback:r=>syLogin(r.credential),auto_select:false,cancel_on_tap_outside:true});gisReady=true}
-    google.accounts.id.renderButton(el,{type:'standard',theme:'outline',size:'medium',text:'signin_with',shape:'rectangular',locale:'ko',width:200})}
+    google.accounts.id.renderButton(el,{type:'standard',theme:'filled_black',size:'large',text:'signin_with',shape:'rectangular',locale:'ko',width:220})}
   catch(e){syMsg(e.message,true)}}
 const syMsg=(t,err)=>{const m=$('#syMsg');if(!m)return;m.textContent=t||'';m.classList.toggle('hidden',!t);m.classList.toggle('err',!!err)};
 async function syLogin(cred){syMsg('구글 확인 완료 · 연동 서버에 로그인 중…');try{if(!cred)throw new Error('구글에서 로그인 정보를 못 받음');const {d}=await api('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:J({credential:cred})});
@@ -2630,7 +2639,7 @@ function syLogout(expired){Object.assign(SP,{tok:'',me:null,ver:{},base:{},h:{},
   toast(expired?'로그인이 풀림 · 설정 › 계정에서 다시 로그인':'로그아웃 · 이 기기 데이터는 그대로',expired?'err':'')}
 function syUI(st){const sec=$('#sySec');if(!sec)return;$('#syTab').classList.toggle('hidden',!syOn());if(!syOn())return;
   $('#syOut').classList.toggle('hidden',!!SP.tok);$('#syIn').classList.toggle('hidden',!SP.tok);
-  if(!SP.tok){$('#syPwa').classList.toggle('hidden',!(navigator.standalone||matchMedia('(display-mode: standalone)').matches));syBtn();return}
+  if(!SP.tok){if(!syUI.seg){syUI.seg=1;sySeg(navigator.standalone||matchMedia('(display-mode: standalone)').matches?'c':'g')}syBtn();return}
   $('#syMe').textContent=SP.me&&SP.me.email||'로그인됨';
   const t=SP.last?new Date(SP.last):null;$('#syLast').textContent=st||(SY.busy?'맞추는 중…':t?`마지막 맞춤 ${dkey(t)===dkey(new Date())?'':(t.getMonth()+1)+'/'+t.getDate()+' '}${pad(t.getHours())}:${pad(t.getMinutes())}`:'아직 안 맞춤');
   $('#syNow').disabled=SY.busy}
@@ -2641,10 +2650,21 @@ $('#syLink').onclick=async()=>{try{const {d}=await api('/link',{method:'POST'});
     $('#syKC').textContent=c.slice(0,4)+'-'+c.slice(4);$('#syK').classList.remove('hidden');clearInterval(syKTimer);
     const tick=()=>{const s=Math.max(0,Math.round((end-Date.now())/1000));$('#syKT').textContent=`${Math.floor(s/60)}:${pad(s%60)}`;if(!s){clearInterval(syKTimer);$('#syK').classList.add('hidden')}};tick();syKTimer=setInterval(tick,1000)}
   catch(e){toast('연결 코드 실패 · '+e.message,'err')}};
-$('#syCodeF').onsubmit=async e=>{e.preventDefault();const c=$('#syCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+// code cells: type to move on, backspace to go back, paste fills all eight
+const syX=[...document.querySelectorAll('#sySec .syx')],syXv=()=>syX.map(i=>i.value).join('');
+const syXfill=(t,from=0)=>{const c=String(t).toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8-from);[...c].forEach((ch,k)=>syX[from+k].value=ch);
+  syX[Math.min(from+c.length,7)].focus();if(syXv().length===8)$('#syCodeF').requestSubmit()};
+syX.forEach((el,i)=>{el.addEventListener('input',()=>{const v=el.value;el.value='';syXfill(v,i)});
+  el.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!el.value&&i){e.preventDefault();syX[i-1].value='';syX[i-1].focus()}
+    else if(e.key==='ArrowLeft'&&i)syX[i-1].focus();else if(e.key==='ArrowRight'&&i<7)syX[i+1].focus()});
+  el.addEventListener('paste',e=>{e.preventDefault();syXfill((e.clipboardData||window.clipboardData).getData('text'),i)})});
+function sySeg(k){document.querySelectorAll('#sySec .syseg button').forEach(b=>{const on=b.dataset.sy===k;b.classList.toggle('on',on);b.setAttribute('aria-selected',on)});
+  $('#syPG').classList.toggle('hidden',k!=='g');$('#syCodeF').classList.toggle('hidden',k!=='c');syMsg('')}
+document.querySelectorAll('#sySec .syseg button').forEach(b=>b.onclick=()=>{sySeg(b.dataset.sy);if(b.dataset.sy==='c')syX[0].focus()});
+$('#syCodeF').onsubmit=async e=>{e.preventDefault();const c=syXv();
   if(c.length!==8){syMsg('코드 8자리를 입력',true);return}
   syMsg('연결 코드 확인 중…');try{const {d}=await api('/link/claim',{method:'POST',headers:{'Content-Type':'application/json'},body:J({code:c})});
-    $('#syCode').value='';await syGotToken(d)}catch(err){syMsg('연결 코드 실패 · '+err.message,true)}};
+    syX.forEach(i=>i.value='');await syGotToken(d)}catch(err){syMsg('연결 코드 실패 · '+err.message,true)}};
 $('#syOff').onclick=async()=>{if(await askYes($('#syOff'),'로그아웃<small>이 기기 데이터는 남고 연동만 멈춤</small>','로그아웃',{kind:'go'}))syLogout()};
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&SP.tok&&Date.now()-SP.last>60e3)syRun()});
 syUI();if(SP.tok&&syOn())setTimeout(syRun,800);else sessionStorage.removeItem('cutref-syre');
