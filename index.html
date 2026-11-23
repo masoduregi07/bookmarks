@@ -1438,7 +1438,7 @@ async function pinLoad(b,force){const c=pinBuf[b];if(c&&!force&&Date.now()-c.t<3
     return m?{img:m[1].replace(/\/(236x|474x|564x)\//,'/736x/'),title:dec((it.querySelector('title')||{}).textContent||'').trim(),link:(it.querySelector('link')||{}).textContent||''}:null}).filter(Boolean);
   const name=dec(((x.querySelector('channel>title')||{}).textContent||b.split('/')[1]).trim());
   return pinBuf[b]={t:Date.now(),name,items}}
-async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('필터에서 핀터레스트 보드를 추가하면 시작');
+async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('보드 버튼에서 핀터레스트 보드를 추가하면 시작');
   const pick=f.sel.length?f.boards.filter(b=>f.sel.includes(b.u)):f.boards;let lastE=null;
   for(const b of [...pick].sort(()=>Math.random()-.5)){let c;try{c=await pinLoad(b.u)}catch(e){lastE=e;continue}
     let list=c.items.filter(i=>!S.seen.pin.has(i.img));if(!list.length&&c.items.length){c.items.forEach(i=>S.seen.pin.delete(i.img));list=c.items}
@@ -1622,8 +1622,8 @@ function media(){return !c3d.classList.contains('hidden')?c3d:vid.classList.cont
 // error kinds → [title, hint]; hint is shown under the message
 const ERRK=[
   [/조건에 맞는/,'결과 없음',''],
-  [/핀터레스트 보드를 추가/,'보드 없음','필터 › 추가에 공개 보드 주소 붙여넣기 · 예: pinterest.com/아이디/보드이름'],
-  [/보드를 찾지 못함|보드에 핀이 없음|보드 내용을 읽지/,'보드 확인 필요','필터에서 보드 주소 확인 · 비공개 보드는 불러올 수 없음.'],
+  [/핀터레스트 보드를 추가/,'보드 없음','보드 › 추가에 공개 보드 주소 붙여넣기 · 예: pinterest.com/아이디/보드이름'],
+  [/보드를 찾지 못함|보드에 핀이 없음|보드 내용을 읽지/,'보드 확인 필요','보드 버튼에서 주소 확인 · 비공개 보드는 불러올 수 없음.'],
   [/핀터레스트 연결 실패/,'핀터레스트 연결 실패','잠시 후 다시 · 계속되면 중계 Worker 허용 목록에 pinterest.com 추가 필요.'],
   [/키가 올바르지 않음/,'키 확인 필요','설정 › API 연결 › 패션에서 다시 연결.'],
   [/요청 한도/,'잠시 후 다시','요청이 몰려 제한됨 · 몇 분 뒤 다시 시도.'],
@@ -1876,7 +1876,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
     if(f.region)ch.push([REGIONS.find(x=>x[0]===f.region)[1],'r']);if(f.score)ch.push(['인기 '+f.score+'+','s']);
     (f.works||[]).forEach(k=>ch.push([wkName(k),'wk',k]));(f.artists||[]).forEach(k=>ch.push([artName(k),'ar',k]));(f.artistsEx||[]).forEach(k=>ch.push(['−'+artName(k),'arx',k]));
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
-  $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>필터${n?`<span class="cnt">${n}</span>`:''}</button>`+
+  $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>${t==='pin'?'보드':'필터'}${n?`<span class="cnt">${n}</span>`:''}</button>`+
     (ch.length?ch.slice(0,3).map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join('')+`<span class="more" data-more data-extra="${Math.max(0,ch.length-3)}"></span>`:''); // at most 3 chips; the rest live in the filter window
   $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};fitChips();
 }
@@ -1916,7 +1916,7 @@ $('#fltPop').addEventListener('input',e=>{if(e.target.id==='yrA'||e.target.id===
 $('#fltPop').addEventListener('change',e=>{if(e.target.id!=='yrA'&&e.target.id!=='yrB')return;const f=S.f.film,a=+$('#yrA').value,b=+$('#yrB').value,n=yrKids.length-1;
   f.year=a===0&&b===n?[]:yrKids.slice(a,b+1).map(k=>({id:k.id,name:k.name}));f.ex.year=[];fChange()});
 function renderFlt(){renderFlt0();yrPaint()}
-function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCount(t)?'':'전체에서 랜덤';$('#fltTitle').textContent='필터 · '+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진',pin:'핀터레스트 보드'})[t];
+function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCount(t)?'':'전체에서 랜덤';$('#fltTitle').textContent=(t==='pin'?'보드 · ':'필터 · ')+({film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'피규어','3d':'3D 모델',game:'게임 일러스트',photo:'패션 사진',pin:'핀터레스트'})[t];
   const ae=document.activeElement&&document.activeElement.id,sel=ae&&document.activeElement.selectionStart;
   if(t==='film'){const f=S.f.film;let h='';
     if(!Object.keys(FGC.groups).length){const none=FGC.done&&!FGC.err; // loaded fine but no usable groups: say so (re-requesting here looped forever)
