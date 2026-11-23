@@ -432,7 +432,7 @@ button.ic:active{transform:none}
 .fv-ask input:focus{box-shadow:inset 0 -3px 0 var(--yel)}
 .fv-ask button{height:24px;min-height:0;padding:0 10px;font-size:12px;background:var(--ink);color:#fff;border:2px solid var(--ink);box-shadow:none}
 .fv-ask button:hover{background:#55524c}
-.fv-cf{align-items:center}.fv-cf span{font-size:12px;line-height:1;padding:0 8px 0 6px;white-space:nowrap}.fv-cf span small{color:var(--tx3);font-size:11px;margin-left:4px}
+.fv-cf{align-items:center;max-width:calc(100vw - 16px);box-sizing:border-box}.fv-cf span{font-size:12px;line-height:1.35;padding:2px 8px 2px 6px;flex:1 1 auto;min-width:0}.fv-cf button{flex:none}.fv-cf span small{color:var(--tx3);font-size:11px;margin-left:4px}
 .fv-cf button.dg{background:#c2546f;border-color:var(--ink)}.fv-cf button.dg:hover{background:#a8445c}
 .fv-cf button.no{background:#fff;color:var(--ink)}.fv-cf button.go{background:var(--ink)}.fv-cf button{min-width:34px}.fv-cf button.no:hover{background:#ebe9e2}
 @media (hover:none),(pointer:coarse){.fv-ask input,.fv-ask button{height:32px;font-size:14px}.fv-ask input{width:170px}}
@@ -1025,7 +1025,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .pbadd{display:flex;gap:6px}
 #fltPop .pbadd input{flex:1 1 0;width:0;min-width:0}
 #fltPop .pbhint{display:block;margin-top:4px}
-#fltPop .pbl{display:grid}
+#fltPop .pbl{display:grid;grid-template-columns:minmax(0,1fr)}
 #fltPop .pbli{position:relative;display:flex;align-items:center;gap:6px;padding:4px 2px 4px 6px;border-top:1px dotted #c9c7bf;font-size:12px;line-height:18px;cursor:pointer}
 #fltPop .pbli:first-child{border-top:none}#fltPop .pbli.on{background:#efeee9}
 @media (hover:hover){#fltPop .pbli:hover{background:#f4f3ef}#fltPop .pbli.on:hover{background:#e9e8e2}}
@@ -1039,6 +1039,7 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .pbm button:hover{background:var(--ink)!important;color:#fff}#fltPop .pbm button:hover svg{fill:#fff}
 #fltPop .pbm svg{width:14px;height:14px;fill:var(--ink);flex:none}#fltPop .pbm hr{border:none;border-top:1px dotted #a19f97;margin:4px 0}
 #fltPop .pbm .dg{color:#b23a3a}#fltPop .pbm .dg svg{fill:#b23a3a}
+#fltPop .pbli .pbt{flex:none;white-space:nowrap}
 #fltPop .pbt{font-style:normal;font-size:9px;line-height:1;padding:1px 2px;border:1px solid currentColor;opacity:.75}
 #fltPop .pbbm-r{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 #fltPop .pbbm{display:inline-flex;align-items:center;height:26px;padding:0 10px;border:2px dashed var(--ink);background:#f7e3a1;color:#3d3b37;font-size:12px;font-weight:700;text-decoration:none;cursor:grab;-webkit-touch-callout:default}
@@ -1865,7 +1866,7 @@ function readPop(){return{proxy:$('#proxy').value.trim(),fgUrl:$('#fgUrl').value
 function placeP(n){const P=POPS[n],el=P.el;if(n==='flt')P.btn=$('#fltBtn');const r=P.btn.getBoundingClientRect(),w=el.offsetWidth||340;
   const left=Math.max(8,Math.min(innerWidth-w-8,P.align==='left'?r.left:r.right-w));
   el.style.top=(r.bottom+8)+'px';el.style.left=left+'px';el.style.setProperty('--caret',(left+w-(r.left+r.width/2)-5)+'px');
-  el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflow='auto'}
+  el.style.maxHeight=(innerHeight-r.bottom-20)+'px';el.style.overflowX='hidden';el.style.overflowY='auto'}
 function openP(n){if(curPop&&curPop!==n)closeP();const P=POPS[n];
   if(n==='set'){fillPop(S);setTab(SYNC&&SYNC.url&&SYNC.cid?3:1);syUI();kcStop();advOpen(false);apiCheck(false)}if(n==='flt'){P.btn=$('#fltBtn');fltDirty=false;pinMenu='';renderFlt()}
   clearTimeout(P.tOut);P.el.classList.remove('hidden','out');placeP(n);P.btn.classList.add('on');curPop=n;
@@ -1918,7 +1919,8 @@ window.addEventListener('keydown',e=>{if(!kcRec)return;e.preventDefault();e.stop
   if(o!==a||KEYS[a][i]!==k)kcSet(a,i,k);kcStop()},true);
 renderKeys();
 document.querySelectorAll('.pop .px').forEach(b=>b.onclick=closeP);
-document.addEventListener('pointerdown',e=>{if(!curPop)return;const P=POPS[curPop];
+document.addEventListener('pointerdown',e=>{if(!curPop||(e.target.closest&&e.target.closest('#favCf')))return;const P=POPS[curPop]; // a confirm box opened from a popup belongs to it
+ 
   if(!P.el.contains(e.target)&&!(P.btn&&P.btn.contains(e.target)))closeP()});
 addEventListener('resize',()=>{if(curPop)placeP(curPop)});
 
@@ -2032,7 +2034,7 @@ function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCo
     b.innerHTML=`<div class="fx-row top"><span class="fx-l">보드</span><div>${chips}</div></div>`
       +`<div class="fx-row top"><span class="fx-l">추가</span><div><form class="pbadd" id="pbAdd" autocomplete="off"><input type="text" id="pbIn" placeholder="pinterest.com/아이디/보드이름" aria-label="핀터레스트 보드 주소"><button type="submit">추가</button></form><span class="wk-msg pbhint">공개 보드만 · 최근 핀 약 25개 · 자동 갱신</span></div></div>`
       +`<div class="fx-row top"><span class="fx-l">수집</span><div><div class="pbbm-r"><a class="pbbm" id="pbBm" href="${esc(pinBM())}" draggable="true" title="즐겨찾기 막대로 끌어다 놓기">✦ cutref 핀 수집</a><button type="button" id="pbPaste">붙여넣기</button></div>`
-      +(pinPaste?`<div class="pbta"><textarea id="pbTa" placeholder="수집 상자에서 [복사]한 내용을 붙여넣기" aria-label="핀 수집 데이터"></textarea><button type="button" id="pbTaGo">가져오기</button></div>`:'')
+      +(pinPaste?`<div class="pbta"><textarea id="pbTa" placeholder="수집 상자에서 [복사]한 내용 · 또는 공유 링크" aria-label="핀 수집 데이터"></textarea><button type="button" id="pbTaGo">가져오기</button></div>`:'')
       +`<span class="wk-msg pbhint">① 노란 버튼을 즐겨찾기 막대로 끌어다 놓기<br>② 핀터레스트 보드에서 그 즐겨찾기 누르기 → 자동으로 끝까지 수집<br>③ [cutref로 보내기] → 여기 보드로 들어옴</span></div></div>`
       +`<div class="ft"><span class="wk-msg">선택 없음 = 모든 보드에서 랜덤 · "전체" = 수집한 보드</span><a id="fReset">초기화</a></div>`;
   }else if(t==='photo'){const f=S.f.photo,row=(l,h)=>`<div class="fx-row top"><span class="fx-l">${l}</span><div><div class="gr tall">${h}</div></div></div>`;
@@ -2136,9 +2138,10 @@ $('#fltPop').addEventListener('keydown',e=>{const r=e.target.closest&&e.target.c
   else if(e.key==='Escape'&&pinMenu){e.stopPropagation();pinMenu='';renderFlt()}},true);
 $('#fltPop').addEventListener('click',async e=>{const t=e.target.closest('#pbBm,#pbPaste,#pbTaGo');if(!t)return;
   if(t.id==='pbBm'){e.preventDefault();try{await navigator.clipboard.writeText(t.getAttribute('href'));toast('즐겨찾기 막대로 끌어다 놓기 · 모바일은 복사된 코드를 북마크 주소에 붙여넣기')}catch(err){toast('즐겨찾기 막대로 끌어다 놓기')}return}
-  if(t.id==='pbPaste'){if(!pinPaste){try{const c=navigator.clipboard&&navigator.clipboard.readText?await navigator.clipboard.readText():'';if(/"cutref"\s*:\s*"pins"/.test(c)){pinImportTxt(c);return}}catch(err){}}
+  if(t.id==='pbPaste'){if(!pinPaste){try{const c=navigator.clipboard&&navigator.clipboard.readText?await navigator.clipboard.readText():'';if(/"cutref"\s*:\s*"pins"/.test(c)){pinImportTxt(c);return}const sl=c.match(/#pinshare=([@\w%./-]+)/);if(sl){pinShared(sl[1]).catch(er=>toast('공유 링크 · '+er.message,'err'));return}}catch(err){}}
     pinPaste=!pinPaste;renderFlt();if(curPop)placeP(curPop);const ta=$('#pbTa');if(ta)ta.focus();return}
-  try{pinImportTxt($('#pbTa').value)}catch(err){toast(err instanceof SyntaxError?'가져오기 실패 · 복사한 내용 전체를 붙여넣기':err.message,'err')}});
+  const v=$('#pbTa').value,sl=v.match(/#pinshare=([@\w%./-]+)/);if(sl){pinShared(sl[1]).then(()=>{pinPaste=false;renderFlt()},er=>toast('공유 링크 · '+er.message,'err'));return}
+  try{pinImportTxt(v)}catch(err){toast(err instanceof SyntaxError?'가져오기 실패 · 복사한 내용 전체를 붙여넣기':err.message,'err')}});
 $('#fltPop').addEventListener('submit',async e=>{if(e.target.id!=='pbAdd')return;e.preventDefault();const inp=$('#pbIn'),u=pinKey(inp.value),f=S.f.pin;
   if(!u){toast('보드 주소 형식 · pinterest.com/아이디/보드이름','err');return}
   if(f.boards.some(b=>b.u===u)){toast('이미 추가한 보드','err');return}
