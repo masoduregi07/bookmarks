@@ -1807,7 +1807,7 @@ const ARTISTS=[['시조',[['kenichi_kutsuna','쿠츠나 켄이치'],['ryo-timo',
 const wkName=k=>k.replace(/_/g,' ');
 const ARTALL=ARTISTS.flatMap(g=>g[1]),artName=k=>(ARTALL.find(x=>x[0]===k)||[k,k])[1];
 const MATS=[['','작화 영상'],['settei','설정화']];
-const REGIONS=[['','전체'],['jp','일본'],['west','서양']],ERAS=[['1980','~1980년대'],['1990','1990년대'],['2000','2000년대'],['2010','2010년대'],['2020','2020년대~']],SCORES=[[0,'전체'],[20,'20+'],[50,'50+'],[100,'100+']];
+const REGIONS=[['','전체'],['jp','일본'],['west','서양']],ERAS=[['1980','~80년대'],['1990','90년대'],['2000','00년대'],['2010','10년대'],['2020','20년대~']],SCORES=[[0,'전체'],[20,'20+'],[50,'50+'],[100,'100+']];
 let fltDirty=false;
 function fChange(){fltDirty=true;save();renderRow();renderFlt();if(curPop)placeP(curPop)}
 function applyFilter(){const t=S.tab;clearQ(t);fg.pages={};next();toast('필터 적용','ok')}
