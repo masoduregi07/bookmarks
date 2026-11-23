@@ -2677,7 +2677,7 @@ const gisLoad=()=>window.google&&google.accounts&&google.accounts.id?Promise.res
 let gisReady=false;
 async function syBtn(){const el=$('#syG');if(!el||SP.tok||!syOn()||el.childElementCount)return;
   try{await gisLoad();if(!gisReady){google.accounts.id.initialize({client_id:SYNC.cid,callback:r=>syLogin(r.credential),auto_select:false,cancel_on_tap_outside:true});gisReady=true}
-    google.accounts.id.renderButton(el,{type:'standard',theme:'filled_blue',size:'large',text:'continue_with',shape:'rectangular',locale:'ko',width:220})}
+    google.accounts.id.renderButton(el,{type:'standard',theme:'outline',size:'large',text:'continue_with',shape:'rectangular',locale:'ko',width:220})}
   catch(e){syMsg(e.message,true)}}
 const syMsg=(t,err)=>{const m=$('#syMsg');if(!m)return;m.textContent=t||'';m.classList.toggle('hidden',!t);m.classList.toggle('err',!!err)};
 async function syLogin(cred){syMsg('구글 확인 완료 · 연동 서버에 로그인 중…');try{if(!cred)throw new Error('구글에서 로그인 정보를 못 받음');const {d}=await api('/auth',{method:'POST',headers:{'Content-Type':'application/json'},body:J({credential:cred})});
