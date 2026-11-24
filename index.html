@@ -97,7 +97,6 @@ body.zen #zoomUi{display:none}
 /* 보기 = 여러 장: up to 12 cuts on the stage, tap one to view it */
 #pick{position:absolute;inset:0;z-index:3;background:var(--stage);display:flex;flex-direction:column}
 #pick .pkh{display:flex;align-items:center;justify-content:flex-end;gap:8px;height:24px;margin:10px 12px 0 120px;font-size:11px;color:var(--tx2);white-space:nowrap;min-width:0}
-#pick .pkh b{font-weight:400;color:var(--ink)}
 #pick .pkh>span{overflow:hidden;text-overflow:ellipsis;min-width:0}
 #pick .pkr{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 3px;border:none;background:none;box-shadow:none;font-size:11px;color:var(--ink)}
 #pick .pkr svg,#pick em svg{width:12px;height:12px;fill:currentColor;flex:none}
@@ -107,14 +106,12 @@ body.zen #zoomUi{display:none}
 #pick .t{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;container-type:size;cursor:pointer}
 #pick .t>span{position:relative;display:block;aspect-ratio:var(--ar);width:min(100cqw,calc(100cqh * var(--ar)));border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);background:#111;box-sizing:border-box;overflow:hidden}
 #pick .t img{width:100%;height:100%;display:block;object-fit:cover;-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
-#pick .t i{position:absolute;left:0;top:0;font-style:normal;font-size:11px;line-height:16px;padding:0 5px;background:var(--ink);color:#fff}
 #pick .t u{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:11px;color:#bbb}
 #pick .t.ld>span{background:#d6d4cd;border-color:var(--tx3);box-shadow:none;animation:pkld 1.2s steps(2) infinite}
 @keyframes pkld{50%{opacity:.55}}
 #pick .t.bad>span::after{content:"불러오기 실패";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb}
 #pick .t.seen img{opacity:.38}
-#pick .t.seen i{background:var(--tx3)}
-#pick .t em{position:absolute;right:0;top:0;display:flex;align-items:center;gap:3px;font-style:normal;font-size:11px;line-height:16px;padding:0 5px;background:#fff;color:var(--ink)}
+#pick .t em{position:absolute;right:0;top:0;display:flex;align-items:center;justify-content:center;width:18px;height:18px;background:#fff;color:var(--ink)} /* seen: check icon only */
 #pick .t.cur>span{outline:3px solid var(--yel);outline-offset:1px}
 @media (hover:hover){#pick .t:hover>span{outline:3px solid var(--yel);outline-offset:1px}}
 #pkBack{pointer-events:auto;gap:5px}
@@ -1755,13 +1752,13 @@ function pkCount(t){const [W,H]=pkWH(),ar=PKAR[t]||16/9,gap=10;let n=1;
 // columns × rows for n tiles that makes each tile biggest
 function pkFit(n,ar){const [W,H]=pkWH(),gap=10;let b=null;for(let c=1;c<=n;c++){const r=Math.ceil(n/c),tw=Math.min((W-gap*(c-1))/c,(H-gap*(r-1))/r*ar);if(!b||tw>b.tw)b={c,r,tw}}return b}
 function pkCell(t,i){const P=PK[t],it=P.items[i],ar=PKAR[t]||16/9;
-  if(!it)return `<div class="t ld"><span style="--ar:${ar}"><i>${i+1}</i></span></div>`;
+  if(!it)return `<div class="t ld"><span style="--ar:${ar}"></span></div>`;
   const src=it.kind==='vid'?it.thumb:(it.thumb||it.url),sn=P.seen.has(i);
-  return `<div class="t${sn?' seen':''}${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}">`:'<u>영상</u>'}<i>${i+1}</i>${sn?`<em>${PHI('check')}봄</em>`:''}</span></div>`}
+  return `<div class="t${sn?' seen':''}${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}">`:'<u>영상</u>'}${sn?`<em aria-label="봄">${PHI('check')}</em>`:''}</span></div>`}
 function pkWire(root){root.querySelectorAll('img').forEach(im=>{im.onload=()=>{if(im.naturalWidth)im.parentNode.style.setProperty('--ar',im.naturalWidth/im.naturalHeight)};
   im.onerror=()=>{if(!viaProxy(im,im.dataset.raw))im.closest('.t').classList.add('bad')}})}
 function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);
-  pkEl.innerHTML=`<div class="pkh"><span><b>${P.n}장 중 고르기</b>${P.seen.size?` · ${P.seen.size}장 봄`:''} · 탭하면 크게 보기</span><button class="pkr" type="button">${PHI('ref')}새로 고르기</button></div>`+
+  pkEl.innerHTML=`<div class="pkh"><span>탭하면 크게 보기</span><button class="pkr" type="button">${PHI('ref')}새로 고르기</button></div>`+
     `<div class="pkg" style="grid-template-columns:repeat(${f.c},${tw}px);grid-template-rows:repeat(${f.r},${th}px)">${P.items.length||P.n?Array.from({length:P.n},(_,i)=>pkCell(t,i)).join(''):''}</div>`;
   pkHead();pkWire(pkEl)}
 function pkHead(){const h=pkEl.firstChild;if(!h||pkEl.classList.contains('hidden'))return;const fr=$('#frow').getBoundingClientRect(),sr=$('#stage').getBoundingClientRect();h.style.marginLeft=Math.max(12,Math.round(fr.right-sr.left)+16)+'px'} // header text starts right of the 필터 chips
@@ -1791,7 +1788,7 @@ function pkNext(t){const P=PK[t];
 pkEl.addEventListener('click',e=>{const t=S.tab;if(!PK[t])return;if(e.target.closest('.pkr'))return pkLoad(t);
   const c=e.target.closest('.t[data-i]');if(c)pkPick(t,+c.dataset.i)});
 $('#pkBack').onclick=e=>{e.stopPropagation();const P=PK[S.tab];if(!P)return;P.open=true;vid.pause();pkSync()};
-function syncViewBtn(){const b=$('#viewBtn'),g=S.view==='grid';b.classList.toggle('on',g);b.setAttribute('aria-pressed',g);b.dataset.tip=g?'한 장씩 보기로':'여러 장에서 고르기로';b.classList.toggle('hidden',S.tab==='3d')}
+function syncViewBtn(){const b=$('#viewBtn'),g=S.view==='grid';b.classList.toggle('on',g);b.setAttribute('aria-pressed',g);b.dataset.tip='여러장 보기';b.classList.toggle('hidden',S.tab==='3d')}
 $('#viewBtn').onclick=()=>{S.view=S.view==='grid'?'one':'grid';save();syncViewBtn();const t=S.tab,P=PK[t];
   if(pkOK(t)){if(P&&P.g===(fillG[t]||0)&&P.items.length){P.open=true;pkSync()}else pkLoad(t)}
   else{pkSync();if(S.pos[t]<0)next()}
