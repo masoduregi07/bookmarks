@@ -7,6 +7,14 @@
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow, noarchive">
 <title>컷 레퍼런스</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="컷 레퍼런스">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#efeee9">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
 <style>
 :root{--bg:#efeee9;--panel:#fbfaf6;--stage:#dfded8;--ink:#3d3b37;--soft:#c9c7bf;--tx2:#75736c;--tx3:#a19f97;
@@ -92,6 +100,7 @@ body.zen #zoomUi{display:none}
 @keyframes hg3{0%,33%{visibility:hidden}66%,100%{visibility:visible}}
 @keyframes hgflip{0%,85%{rotate:0deg}100%{rotate:180deg}}
 @media (prefers-reduced-motion:reduce){#hg,#hg .s1,#hg .s2,#hg .s3{animation:none}#hg .s1{visibility:visible}}
+#msg .rt{display:block;margin-top:6px;padding-top:6px;border-top:2px dotted var(--soft);color:var(--ink);font-size:11px}
 #msg{text-align:center;color:var(--tx2);line-height:1.9;max-width:460px;padding:14px 20px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
 #msg b{color:var(--ink);font-weight:700}
 /* 보기 = 여러 장: up to 12 cuts on the stage, tap one to view it */
@@ -1573,7 +1582,7 @@ async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('
   if(!list.length){const ks=new Set(all.map(x=>x[2].img));PSEEN=PSEEN.filter(k=>!ks.has(k));ks.forEach(k=>pseen.delete(k));pseenSave(); // all shown lately: start the round over
     list=all.filter(x=>!S.seen.pin.has(x[2].img));if(!list.length){all.forEach(x=>S.seen.pin.delete(x[2].img));list=all}}
   const [b,c,i]=list[rnd(list.length)];pseenAdd(i.img);
-  return {kind:'img',url:i.img,title:(b.n||c.name)+(i.title?' · '+i.title:''),link:i.link||('https://www.pinterest.com/'+b.u+'/'),key:i.img,src:'Pinterest · '+(b.n||c.name)}
+  return {kind:'img',url:i.img,thumb:/\/(736x|originals)\//.test(i.img)?i.img.replace(/\/(736x|originals)\//,'/474x/'):'',title:(b.n||c.name)+(i.title?' · '+i.title:''),link:i.link||('https://www.pinterest.com/'+b.u+'/'),key:i.img,src:'Pinterest · '+(b.n||c.name)}
 }
 
 // ---------- SAKUGABOORU (Moebooru API)
@@ -1599,7 +1608,7 @@ async function sbRandom(){
   if(!list.length){sbBuf.q='';throw new Error('조건에 맞는 이미지가 없음 · 필터를 줄여 보기')}
   const p=list[0];sbBuf.q=q;sbBuf.list=list.slice(1);const ext=(p.file_ext||p.file_url.split('.').pop()).toLowerCase();
   const tagStr=(p.tags||'').split(' ').slice(0,4).join(' ');
-  return {kind:'img',url:abs(p.file_url),thumb:abs(p.preview_url||''),title:`#${p.id} ${tagStr}`,link:SB+'post/show/'+p.id,key:p.id};
+  return {kind:'img',url:abs(p.file_url),thumb:abs(p.sample_url||p.file_url),title:`#${p.id} ${tagStr}`,link:SB+'post/show/'+p.id,key:p.id};
 }
 
 // ---------- queue / prefetch
@@ -1688,7 +1697,7 @@ async function gameRandom(){const f=S.f.game,pool=GAMES.filter(g=>!f.games.lengt
     const d=await wiki(g[2],`action=query&prop=imageinfo&iiprop=url&iiurlwidth=1800&titles=${encodeURIComponent(title)}`);
     const pg=Object.values((d.query&&d.query.pages)||{})[0],ii=pg&&pg.imageinfo&&pg.imageinfo[0];if(!ii)continue;
     const name=title.replace(/^File:/,'').replace(/\.\w+$/,'').replace(/^Character /,'').replace(/_/g,' ');
-    return {kind:'img',url:ii.thumburl||ii.url,hd:ii.url,title:`${g[1]} · ${name}`,link:ii.descriptionurl||`https://${g[2]}/wiki/${encodeURIComponent(title)}`,key:g[0]+title,src:g[1]+' 위키'}}
+    return {kind:'img',url:ii.thumburl||ii.url,thumb:ii.thumburl&&/\/scale-to-width-down\/\d+/.test(ii.thumburl)?ii.thumburl.replace(/\/scale-to-width-down\/\d+/,'/scale-to-width-down/640'):'',hd:ii.url,title:`${g[1]} · ${name}`,link:ii.descriptionurl||`https://${g[2]}/wiki/${encodeURIComponent(title)}`,key:g[0]+title,src:g[1]+' 위키'}}
   throw new Error('이미지를 찾지 못함 · 다시 시도')}
 // ---------- Unsplash (fashion)
 const PTOPICS=[['street fashion','스트리트'],['fashion editorial','화보'],['model pose','모델 포즈'],['outfit','코디'],['coat','코트 · 아우터'],['dress','드레스'],['suit','정장'],['hanbok','한복'],['kimono','기모노'],['sneakers','신발'],['jewelry hands','손 · 액세서리'],['hat fashion','모자']];
@@ -1709,11 +1718,11 @@ async function pxFetch(path,key){const r=await fetch('https://api.pexels.com/v1/
   if(!r.ok)throw new Error('Pexels HTTP '+r.status);return r.json()}
 async function usBatch(f){const d=await usFetch(`photos/random?count=20&content_filter=high&query=${encodeURIComponent(pQuery(f))}${f.orient?'&orientation='+f.orient:''}`,S.usKey);
   return (Array.isArray(d)?d:[d]).filter(x=>x&&x.urls).map(x=>{const who=(x.user&&x.user.name)||'Unsplash';
-    return {kind:'img',url:x.urls.regular,hd:x.urls.raw+'&w=2600&q=85&fm=jpg',title:capAlt(x.alt_description||x.description)+'Photo by '+who,link:x.links.html+(x.links.html.includes('?')?'&':'?')+UTM,key:'us'+x.id,src:who+' · Unsplash'}})}
+    return {kind:'img',url:x.urls.regular,thumb:x.urls.raw+'&w=640&q=70&fm=jpg',hd:x.urls.raw+'&w=2600&q=85&fm=jpg',title:capAlt(x.alt_description||x.description)+'Photo by '+who,link:x.links.html+(x.links.html.includes('?')?'&':'?')+UTM,key:'us'+x.id,src:who+' · Unsplash'}})}
 async function pxBatch(f){const q=pQuery(f),o=f.orient?'&orientation='+f.orient:'',k=q+o,P=pb.px.pages;
   if(!P[k]){const d=await pxFetch(`search?query=${encodeURIComponent(q)}&per_page=1${o}`,S.pxKey);P[k]=Math.max(1,Math.min(80,Math.ceil((d.total_results||0)/30)))}
   const d=await pxFetch(`search?query=${encodeURIComponent(q)}&per_page=30&page=${1+rnd(P[k])}${o}`,S.pxKey);
-  return (d.photos||[]).map(x=>({kind:'img',url:x.src.large2x||x.src.large,hd:x.src.original,title:capAlt(x.alt)+'Photo by '+x.photographer,link:x.url,key:'px'+x.id,src:x.photographer+' · Pexels'}))}
+  return (d.photos||[]).map(x=>({kind:'img',url:x.src.large2x||x.src.large,thumb:x.src.large,hd:x.src.original,title:capAlt(x.alt)+'Photo by '+x.photographer,link:x.url,key:'px'+x.id,src:x.photographer+' · Pexels'}))}
 async function photoRandom(){if(!photoKeys().length)throw new Error('사진 서비스 연결 필요');
   const f=S.f.photo,on=photoOn();if(!on.length)throw new Error('조건에 맞는 출처가 없음 · 필터 › 출처에서 하나 이상 켜기');
   const sig=JSON.stringify({q:f.q,t:f.topics,o:f.orient});let last=null;
@@ -1725,12 +1734,13 @@ async function photoRandom(){if(!photoKeys().length)throw new Error('사진 서�
   }
   throw last||new Error('사진을 찾지 못함 · 검색어 확인')}
 const SRC={film:fgRandom,anim:sbRandom,fig:gsRandom,'3d':d3Random,game:gameRandom,photo:photoRandom,pin:pinRandom},SRCNAME={pin:'PINTEREST',film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM',photo:'패션 사진'};
+const QWANT={fig:4,film:3,game:3}; // cuts kept ready for 다음 컷 (each figure / film / game cut is its own page fetch)
 function fill(tab){
   if(fillP[tab])return fillP[tab];
   try{if(pkOK(tab)&&PK[tab]&&PK[tab].loading)return Promise.resolve()}catch(e){} // the grid is loading this tab itself: no extra request on top
   const g=fillG[tab]||0;
   const p=(async()=>{
-    try{while(S.queue[tab].length<2){const it=await SRC[tab]();if(g!==(fillG[tab]||0))return;
+    try{while(S.queue[tab].length<(QWANT[tab]||2)){const it=await SRC[tab]();if(g!==(fillG[tab]||0))return;
       S.seen[tab].add(it.key);if(it.kind==='img'){const pre=new Image();pre.referrerPolicy='no-referrer';pre.src=M(it.url)}
       S.queue[tab].push(it)}}
     catch(e){if(g===(fillG[tab]||0))lastErr[tab]=netMsg(e.message,'연결 거부 (프록시 · 네트워크 확인)')}
@@ -1764,9 +1774,9 @@ function pkFit(n,ar){const [W,H]=pkWH(),gap=10;let b=null;for(let c=1;c<=n;c++){
 function pkCell(t,i){const P=PK[t],it=P.items[i],ar=PKAR[t]||16/9;
   if(!it)return `<div class="t ld"><span style="--ar:${ar}"></span></div>`;
   const src=it.kind==='vid'?it.thumb:(it.thumb||it.url),sn=P.seen.has(i);
-  return `<div class="t${sn?' seen':''}${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}">`:'<u>영상</u>'}${sn?`<em aria-label="봄">${PHI('check')}</em>`:''}</span></div>`}
+  return `<div class="t${sn?' seen':''}${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}" data-full="${esc(it.url||'')}">`:'<u>영상</u>'}${sn?`<em aria-label="봄">${PHI('check')}</em>`:''}</span></div>`}
 function pkWire(root){root.querySelectorAll('img').forEach(im=>{im.onload=()=>{if(im.naturalWidth)im.parentNode.style.setProperty('--ar',im.naturalWidth/im.naturalHeight)};
-  im.onerror=()=>{if(!viaProxy(im,im.dataset.raw))im.closest('.t').classList.add('bad')}})}
+  im.onerror=()=>{if(viaProxy(im,im.dataset.raw))return;if(im.dataset.full&&im.dataset.raw!==im.dataset.full){im.dataset.raw=im.dataset.full;delete im.dataset.px;im.src=M(im.dataset.full);return}im.closest('.t').classList.add('bad')}})}
 function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);
   pkEl.innerHTML=`<div class="pkh"><span>탭하면 크게 보기</span><button class="pkr" type="button">${PHI('ref')}새로 고르기</button></div>`+
     `<div class="pkg" style="grid-template-columns:repeat(${f.c},${tw}px);grid-template-rows:repeat(${f.r},${th}px)">${P.items.length||P.n?Array.from({length:P.n},(_,i)=>pkCell(t,i)).join(''):''}</div>`;
@@ -1796,8 +1806,8 @@ async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen
     if(!live())return;if(!take(it)&&++dup>P.n*2)return}}; // same cut picked twice by two workers: drop it and pick again
   await Promise.all(Array.from({length:par},(_,w)=>worker(w)));P.loading=false;
   if(PK[t]!==P)return;if(g!==(fillG[t]||0)){if(S.tab===t&&P.open)pkLoad(t);return} // filter changed while loading
+  if(!P.items.length){delete PK[t];if(S.tab===t){pkSync();showErr(lastErr[t]||'불러오기 실패')}return} // before the shrink below: a 0-tile grid can't be laid out
   if(P.items.length<P.n){P.n=P.items.length;if(S.tab===t&&P.open)pkRender()}
-  if(!P.items.length){delete PK[t];if(S.tab===t){pkSync();showErr(lastErr[t]||'불러오기 실패')}return}
   fill(t)}
 const pkUp=()=>!$('#pick').classList.contains('hidden'); // grid on screen: the big cut behind it is not the one the user is looking at
 function pkPick(t,i){const P=PK[t],it=P&&P.items[i];if(!it)return;P.seen.add(i);P.cur=i;P.open=false;
@@ -1843,7 +1853,7 @@ function showErr(e){
   const k=ERRK.find(x=>x[0].test(e)),title=k?k[1]:'연결 실패',
     hint=k?k[2]:'설정 → API 연결에서 연결 테스트로 확인.'+(location.protocol==='file:'?'<br>파일을 로컬로 열었다면 GitHub Pages 주소로 열기.':'');
   toast(title+' · '+e,'err');$('#favBtn').classList.add('hidden');$('#pinBtn').classList.add('hidden');try{syncSaveBtn()}catch(_){}
-  msg.innerHTML=`<b>${title}</b><br>${esc(e)}`+(hint?`<br><span style="color:var(--tx3)">${hint}</span>`:'');
+  msg.innerHTML=`<b>${title}</b><br>${esc(e)}`+(hint?`<br><span style="color:var(--tx3)">${hint}</span>`:'')+'<span class="rt">화면을 누르면 다시 시도</span>';msg.classList.add('err');
 }
 function show(){
   const t=S.tab,it=S.hist[t][S.pos[t]];cutTimer();cutShownAt=Date.now();
@@ -1955,6 +1965,10 @@ document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(curPop)cl
   syncViewBtn();const P=PK[S.tab];if(pkOK(S.tab)&&P&&P.open&&P.g===(fillG[S.tab]||0)){busy(false);msg.className='hidden'} /* its grid was open: just show it again */
   else if(S.pos[S.tab]<0)next();else show();pkSync();applyView()});
 $('#next').onclick=next;$('#prev').onclick=prev;
+stage.addEventListener('click',e=>{if(!msg.classList.contains('err')||msg.classList.contains('hidden'))return;
+  if(e.target.closest('button,a,input,select,label,.chip,#stTop,#pick,.pop'))return; // controls keep their own job
+  msg.className='hidden';const t=S.tab;lastErr[t]='';if(pkOK(t)&&PK[t]&&!PK[t].items.length)delete PK[t];
+  next()});
 document.querySelectorAll('#tone button').forEach(b=>b.onclick=()=>{S.tone=b.dataset.v;save();applyView()});
 document.querySelectorAll('#lc button').forEach(b=>b.onclick=()=>{S.lc=b.dataset.v;save();applyView()});
 $('#grid').onchange=e=>{S.grid[S.tab]=e.target.value;save();applyView()};
