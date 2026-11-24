@@ -1028,11 +1028,11 @@ body.tbwide[data-tb="1"] #tmr{display:flex!important}
 #fltPop .pbadd input{flex:1 1 0;width:0;min-width:0}
 #fltPop .pbhint{display:block;margin-top:6px;line-height:16px;word-break:keep-all;overflow-wrap:break-word} /* wrap at words, not mid-word */
 #fltPop :is(#pbIn,#pbAdd button,#pbPaste,#pbTaGo,.pbbm){height:26px!important;min-height:0!important;box-sizing:border-box;line-height:22px!important;padding-top:0!important;padding-bottom:0!important}
-/* 추가 · 붙여넣기 · 가져오기: no box, icon + word, tight 3px sides; hover/press = tab color behind */
+/* 추가 · 붙여넣기 · 가져오기: no box, icon + word, tight 3px sides; hover/press = underline */
 #fltPop :is(#pbAdd button,#pbPaste,#pbTaGo){display:inline-flex;align-items:center;gap:4px;padding:0 3px!important;border:none!important;background:none!important;box-shadow:none!important;color:var(--ink);font-size:11px;line-height:16px!important}
 #fltPop :is(#pbAdd button,#pbPaste,#pbTaGo) svg,#fltPop .pbbm svg{width:12px;height:12px;fill:currentColor;flex:none}
-@media (hover:hover){#fltPop :is(#pbAdd button,#pbPaste,#pbTaGo):hover{background:var(--yel)!important}}
-#fltPop :is(#pbAdd button,#pbPaste,#pbTaGo):active{background:var(--yel)!important;transform:none}
+@media (hover:hover){#fltPop :is(#pbAdd button,#pbPaste,#pbTaGo):hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}}
+#fltPop :is(#pbAdd button,#pbPaste,#pbTaGo):active{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;transform:none}
 #fltPop .pbadd{gap:4px!important}
 #fltPop .pbadd{align-items:center;height:26px;margin:0}#fltPop #pbIn{margin:0!important}
 body[data-tab=pin] :is(#fltPop,#frow){--yel:var(--pink)} /* 보드 tab: the board window and its row wear the tab's pink */
