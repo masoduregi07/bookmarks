@@ -763,7 +763,7 @@ header.tov .tsc{display:flex}
   body[data-tb="1"]:not(.tbwide) .top footer>#gGrid+.dv{display:none!important} /* timer hidden: no trailing divider */
 }
 /* tablet + PC width (≥561px), when it doesn't fit on one row: 2 rows — 이전·기록·다음 컷 | 색 · 좌우반전 (left)  /  분할 … 타이머.
-   분할 takes the leftover width and only the 불투명도 slider stretches, so 타이머 lands at the right edge */
+   분할 takes the leftover width (the slider keeps a capped length) so 타이머 lands at the right edge */
 @media (min-width:561px){
   body[data-tb="0"]:not(.tbwide):not(.tbchk) .rbr{display:block;flex:0 0 100%;height:0}
   body[data-tb="0"]:not(.tbwide):not(.tbchk) .rbr+.dv{display:none!important}
@@ -771,7 +771,7 @@ header.tov .tsc{display:flex}
   body[data-tb="0"]:not(.tbwide):not(.tbchk) #gGrid{flex:1 1 auto!important;min-width:0}
   body[data-tb="0"]:not(.tbwide):not(.tbchk) #gGrid #gridOpts{flex:1 1 auto;min-width:0}
   body[data-tb="0"]:not(.tbwide):not(.tbchk) #gGrid .opw{flex:1 1 auto;min-width:0}
-  body[data-tb="0"]:not(.tbwide):not(.tbchk) #gGrid #op{flex:1 1 60px;width:60px!important;min-width:60px}
+  body[data-tb="0"]:not(.tbwide):not(.tbchk) #gGrid #op{flex:1 1 60px;width:60px!important;min-width:60px;max-width:120px} /* 60px basis so 분할 + 타이머 fit on one row; grows to 120px at most — the rest stays empty before 타이머 */
   body.t3d[data-tb]:not(.tbwide):not(.tbchk) .rbr+.dv{display:flex!important} /* 3D: that divider sits before 폴리곤 on row 1 */
 }
 /* prev / next: arrow + label as one centered unit */
