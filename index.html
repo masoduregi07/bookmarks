@@ -478,10 +478,6 @@ svg.hrt{shape-rendering:crispEdges}svg.hrt .ho{fill:var(--ink)}svg.hrt .hf{fill:
 #favBtn.beat{animation:favPop .24s steps(3,end)}
 @keyframes favPop{50%{transform:scale(1.3)}}
 #favBtn.hidden,body.zen #favBtn{display:none}
-#pinBtn{position:absolute;left:44px;bottom:10px;z-index:4;width:34px!important;height:34px!important;min-height:0!important;min-width:0!important;padding:0;display:flex;align-items:center;justify-content:center;background:none!important;border:none!important;box-shadow:none!important}
-#pinBtn svg{width:22px;height:22px;fill:#8e8b83}
-@media (hover:hover){#pinBtn:hover svg{fill:var(--ink)}}#pinBtn:active{transform:none}
-#pinBtn.hidden,body.zen #pinBtn{display:none}
 #zoomUi{left:50px!important}
 .calp.full .cbody{display:grid;grid-template-columns:1fr 340px;overflow:hidden}
 .calp .cmain{padding-bottom:6px}
@@ -1228,7 +1224,6 @@ body[data-tab=pin] :is(#fltPop,#frow){--yel:var(--pink)} /* 보드 tab: the boar
   <img id="img" class="hidden" alt="" referrerpolicy="no-referrer">
   <canvas id="c3d" class="hidden"></canvas>
   <button id="favBtn" class="hidden" data-tip="보관함에 담기" data-key="B" aria-label="보관함에 담기" aria-pressed="false"><svg class="ph fvh" viewBox="0 0 256 256" aria-hidden="true"><path class="hb" d="M178,36c-20.09,0-37.92,7.93-50,21.56C115.92,43.93,98.09,36,78,36a66.08,66.08,0,0,0-66,66c0,72.34,105.81,130.14,110.31,132.57a12,12,0,0,0,11.38,0C138.19,232.14,244,174.34,244,102A66.08,66.08,0,0,0,178,36Zm-5.49,142.36A328.69,328.69,0,0,1,128,210.16a328.69,328.69,0,0,1-44.51-31.8C61.82,159.77,36,131.42,36,102A42,42,0,0,1,78,60c17.8,0,32.7,9.4,38.89,24.54a12,12,0,0,0,22.22,0C145.3,69.4,160.2,60,178,60a42,42,0,0,1,42,42C220,131.42,194.18,159.77,172.51,178.36Z"/><path class="hfl" d="M240,102c0,70-103.79,126.66-108.21,129a8,8,0,0,1-7.58,0C119.79,228.66,16,172,16,102A62.07,62.07,0,0,1,78,40c20.65,0,38.73,8.88,50,23.89C139.27,48.88,157.35,40,178,40A62.07,62.07,0,0,1,240,102Z"/></svg></button>
-  <button id="pinBtn" class="hidden" data-tip="핀터레스트에 저장" aria-label="핀터레스트에 저장"><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M238.15,78.54,177.46,17.86a20,20,0,0,0-28.3,0L97.2,70c-12.43-3.33-36.68-5.72-61.74,14.5a20,20,0,0,0-1.6,29.73l45.46,45.47-39.8,39.8a12,12,0,0,0,17,17l39.8-39.81,45.47,45.46A20,20,0,0,0,155.91,228c.46,0,.93,0,1.4-.05A20,20,0,0,0,171.87,220c4.69-6.23,11-16.13,14.44-28s3.45-22.88.16-33.4l51.7-51.87A20,20,0,0,0,238.15,78.54Zm-74.26,68.79a12,12,0,0,0-2.23,13.84c3.43,6.86,6.9,21-6.28,40.65L54.08,100.53c21.09-14.59,39.53-6.64,41-6a11.67,11.67,0,0,0,13.81-2.29l54.43-54.61,55,55Z"/></svg></button>
   <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
@@ -1787,7 +1782,7 @@ function pkTile(t,i){if(S.tab!==t||!PK[t].open)return;const c=pkEl.querySelector
 function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);if(P){const k=P.items.indexOf(curItem());if(k>=0)P.cur=k} /* yellow frame / next = the cut last on screen (also after 이전) */pkEl.classList.toggle('hidden',!on);if(on)pkRender();
   const bk=$('#pkBack'),sh=!!(pkOK(t)&&P&&!P.open&&P.items.length&&P.g===(fillG[t]||0));bk.classList.toggle('hidden',!sh);
   if(sh){const k=P.items.indexOf(curItem());$('#pkCnt').textContent=(k<0?'–':k+1)+'/'+P.items.length}
-  ['#favBtn','#pinBtn','#info','#srcLink','#zoomUi'].forEach(q=>{const e=$(q);if(e)e.style.visibility=on?'hidden':''})}
+  ['#favBtn','#info','#srcLink','#zoomUi'].forEach(q=>{const e=$(q);if(e)e.style.visibility=on?'hidden':''})}
 // tabs whose every cut is its own page fetch load 3 at a time; tabs that fill a shared buffer (사진 API, Sakugabooru page, 보드 RSS) stay at 1 so they never fetch the same batch twice
 const PKPAR={film:3,fig:3,game:3},pkSlow={}; // pkSlow: the site pushed back (403 / 429) → one at a time for this session
 async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen:new Set(),cur:-1,open:true,g,loading:true};
@@ -1845,14 +1840,14 @@ const ERRK=[
 ];
 // clear the stage (previous tab's media / title) while a new tab loads its first cut
 function blankStage(){img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.pause();vid.removeAttribute('src');ov.innerHTML='';
-  $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');$('#favBtn').classList.add('hidden');$('#pinBtn').classList.add('hidden');zoomReset()}
+  $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.add('hidden');$('#favBtn').classList.add('hidden');zoomReset()}
 function showErr(e){
   msg.className='';if(/^사진 서비스 연결 필요/.test(e)){busy(false);blankStage();showConnect();try{syncSaveBtn()}catch(_){}return} // blankStage also hides the ♥ (it can't act on an error / connect card)
   busy(false);img.classList.add('hidden');vid.classList.add('hidden');c3d.classList.add('hidden');vid.removeAttribute('src');ov.innerHTML='';
   $('#info').innerHTML='';$('#srcLink').classList.add('hidden');msg.classList.remove('hidden');
   const k=ERRK.find(x=>x[0].test(e)),title=k?k[1]:'연결 실패',
     hint=k?k[2]:'설정 → API 연결에서 연결 테스트로 확인.'+(location.protocol==='file:'?'<br>파일을 로컬로 열었다면 GitHub Pages 주소로 열기.':'');
-  toast(title+' · '+e,'err');$('#favBtn').classList.add('hidden');$('#pinBtn').classList.add('hidden');try{syncSaveBtn()}catch(_){}
+  toast(title+' · '+e,'err');$('#favBtn').classList.add('hidden');try{syncSaveBtn()}catch(_){}
   msg.innerHTML=`<b>${title}</b><br>${esc(e)}`+(hint?`<br><span style="color:var(--tx3)">${hint}</span>`:'')+'<span class="rt">화면을 누르면 다시 시도</span>';msg.classList.add('err');
 }
 function show(){
@@ -2574,12 +2569,6 @@ const dkey=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const TABNAME={film:'영화',anim:'애니',fig:'피규어','3d':'3D',game:'게임',photo:'패션',pin:'보드'};
 let cutShownAt=Date.now();
 function curItem(){const t=S.tab;return S.hist[t][S.pos[t]]}
-// 핀터레스트에 저장: Pinterest's own save page (pick a board there) · needs a public image address, so not for uploads or 3D snapshots
-const pinMedia=it=>{const u=it&&(it.kind==='vid'?it.thumb:(it.hd||it.url));return u&&/^https?:\/\//.test(u)?u:''};
-function pinSync(it){const b=$('#pinBtn');if(b)b.classList.toggle('hidden',!pinMedia(it)||!msg.classList.contains('hidden'))}
-$('#pinBtn').addEventListener('click',()=>{const it=curItem(),m=pinMedia(it);if(!m)return;
-  const q=new URLSearchParams({url:it.link&&/^https?:/.test(it.link)?it.link:m,media:m,description:(it.title||'').slice(0,480)});
-  window.open('https://www.pinterest.com/pin/create/button/?'+q,'_blank','noopener,width=760,height=640')});
 function savedToday(it){const k=dkey(new Date());return it&&LOG.find(r=>r.date===k&&r.url===it.url)}
 function syncSaveBtn(){const it=curItem(),b=$('#saveCut');b.disabled=!it||!msg.classList.contains('hidden');b.classList.toggle('done',!!savedToday(it))}
 function toggleSave(){if(pkUp())return toast('목록에서 컷을 먼저 고르기');const it=curItem();if(!it||!msg.classList.contains('hidden'))return;if(it.kind==='3d'&&!it.url){if(!M3||c3d.classList.contains('hidden'))return;M3.then(m=>{it.url=m.snapshot(320);toggleSave()});return}const ex=savedToday(it);
@@ -2644,7 +2633,7 @@ async function favLoad(){try{[FAV.items,FAV.folders]=await Promise.all([favAll('
 async function favSrc(x){if(!x.blob)return M(thumbOf(x));if(FAV.urls[x.id])return FAV.urls[x.id];
   const b=await favTx('blobs','readonly',t=>t.objectStore('blobs').get(x.id));if(b instanceof Blob)return FAV.urls[x.id]=URL.createObjectURL(b); // a miss resolves to the request object
   return x.rid&&SYNC.url&&(x.rsig||SP&&SP.tok)?`${SYNC.url.replace(/\/+$/,'')}/img/${x.rid}?`+(x.rsig?'s='+x.rsig:'t='+encodeURIComponent(SP.tok)):''} // uploaded on another device: from the R2 store
-function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on)));pinSync(it); // a removed upload can't be re-added from the stage
+function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on))); // a removed upload can't be re-added from the stage
   b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.dataset.tip=on?'보관함에서 빼기':'보관함에 담기'}
 function favCount(){$('#favTabN').textContent=FAV.items.length||'';$('#calTabN').textContent=(()=>{const n=LOG.filter(r=>r.date===dkey(new Date())).length;return n?'오늘 '+n:''})()}
 async function favToggle(){if(pkUp())return toast('목록에서 컷을 먼저 고르기');let it=curItem();if(!it||!msg.classList.contains('hidden'))return;
