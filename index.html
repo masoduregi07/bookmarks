@@ -1557,14 +1557,22 @@ async function pinLoad(b,force){const c=pinBuf[b];if(c&&!force&&Date.now()-c.t<3
     return m?{img:m[1].replace(/\/(236x|474x|564x)\//,'/736x/'),title:dec((it.querySelector('title')||{}).textContent||'').trim(),link:(it.querySelector('link')||{}).textContent||''}:null}).filter(Boolean);
   const name=dec(((x.querySelector('channel>title')||{}).textContent||b.split('/')[1]).trim());
   return pinBuf[b]={t:Date.now(),name,items}}
+// pins shown lately, kept across reloads, so a refresh doesn't bring back the same pins (cleared per board once it has all been seen)
+let PSEEN=[];try{PSEEN=JSON.parse(localStorage.getItem('cutref-pinseen')||'[]')||[]}catch(e){PSEEN=[]}
+const pseen=new Set(PSEEN),pseenSave=()=>{try{localStorage.setItem('cutref-pinseen',JSON.stringify(PSEEN))}catch(e){}};
+function pseenAdd(k){if(pseen.has(k))return;PSEEN.push(k);pseen.add(k);while(PSEEN.length>3000)pseen.delete(PSEEN.shift());pseenSave()}
 async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('보드 버튼에서 핀터레스트 보드를 추가하거나 수집하면 시작');
-  const pick=f.sel.length?f.boards.filter(b=>f.sel.includes(b.u)):f.boards;let lastE=null;
-  for(const b of [...pick].sort(()=>Math.random()-.5)){let c;const P=PINS[b.u];
+  const pick=f.sel.length?f.boards.filter(b=>f.sel.includes(b.u)):f.boards;let lastE=null;const all=[];
+  for(const b of pick){let c;const P=PINS[b.u];
     if(P&&P.pins&&P.pins.length)c={name:P.n,items:P.pins.map(pinExp)};else try{c=await pinLoad(b.u)}catch(e){lastE=e;continue}
-    let list=c.items.filter(i=>!S.seen.pin.has(i.img));if(!list.length&&c.items.length){c.items.forEach(i=>S.seen.pin.delete(i.img));list=c.items}
-    if(!list.length)continue;const i=list[rnd(list.length)];
-    return {kind:'img',url:i.img,title:(b.n||c.name)+(i.title?' · '+i.title:''),link:i.link||('https://www.pinterest.com/'+b.u+'/'),key:i.img,src:'Pinterest · '+(b.n||c.name)}}
-  throw lastE||new Error('보드에 핀이 없음');
+    c.items.forEach(i=>all.push([b,c,i]))}
+  if(!all.length)throw lastE||new Error('보드에 핀이 없음');
+  // every pin of the chosen boards has the same chance (a small board no longer comes up as often as a big one)
+  let list=all.filter(x=>!S.seen.pin.has(x[2].img)&&!pseen.has(x[2].img));
+  if(!list.length){const ks=new Set(all.map(x=>x[2].img));PSEEN=PSEEN.filter(k=>!ks.has(k));ks.forEach(k=>pseen.delete(k));pseenSave(); // all shown lately: start the round over
+    list=all.filter(x=>!S.seen.pin.has(x[2].img));if(!list.length){all.forEach(x=>S.seen.pin.delete(x[2].img));list=all}}
+  const [b,c,i]=list[rnd(list.length)];pseenAdd(i.img);
+  return {kind:'img',url:i.img,title:(b.n||c.name)+(i.title?' · '+i.title:''),link:i.link||('https://www.pinterest.com/'+b.u+'/'),key:i.img,src:'Pinterest · '+(b.n||c.name)}
 }
 
 // ---------- SAKUGABOORU (Moebooru API)
@@ -1788,7 +1796,8 @@ function pkNext(t){const P=PK[t];
 pkEl.addEventListener('click',e=>{const t=S.tab;if(!PK[t])return;if(e.target.closest('.pkr'))return pkLoad(t);
   const c=e.target.closest('.t[data-i]');if(c)pkPick(t,+c.dataset.i)});
 $('#pkBack').onclick=e=>{e.stopPropagation();const P=PK[S.tab];if(!P)return;P.open=true;vid.pause();pkSync()};
-function syncViewBtn(){const b=$('#viewBtn'),g=S.view==='grid';b.classList.toggle('on',g);b.setAttribute('aria-pressed',g);b.dataset.tip='여러장 보기';b.classList.toggle('hidden',S.tab==='3d')}
+const VIC={grid:'M100,36H56A20,20,0,0,0,36,56v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,100,36ZM96,96H60V60H96ZM200,36H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,200,36Zm-4,60H160V60h36Zm-96,40H56a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,100,136Zm-4,60H60V160H96Zm104-60H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,200,136Zm-4,60H160V160h36Z',one:'M208,28H48A20,20,0,0,0,28,48V208a20,20,0,0,0,20,20H208a20,20,0,0,0,20-20V48A20,20,0,0,0,208,28Zm-4,176H52V52H204Z'};
+function syncViewBtn(){const b=$('#viewBtn'),g=S.view==='grid';b.classList.toggle('on',g);b.setAttribute('aria-pressed',g);b.dataset.tip=g?'한장씩 보기':'여러장 보기';b.querySelector('svg path').setAttribute('d',g?VIC.one:VIC.grid); /* icon = what a tap switches to */b.classList.toggle('hidden',S.tab==='3d')}
 $('#viewBtn').onclick=()=>{S.view=S.view==='grid'?'one':'grid';save();syncViewBtn();const t=S.tab,P=PK[t];
   if(pkOK(t)){if(P&&P.g===(fillG[t]||0)&&P.items.length){P.open=true;pkSync()}else pkLoad(t)}
   else{pkSync();if(S.pos[t]<0)next()}
