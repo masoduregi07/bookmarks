@@ -94,6 +94,31 @@ body.zen #zoomUi{display:none}
 @media (prefers-reduced-motion:reduce){#hg,#hg .s1,#hg .s2,#hg .s3{animation:none}#hg .s1{visibility:visible}}
 #msg{text-align:center;color:var(--tx2);line-height:1.9;max-width:460px;padding:14px 20px;background:var(--panel);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd)}
 #msg b{color:var(--ink);font-weight:700}
+/* 보기 = 여러 장: up to 12 cuts on the stage, tap one to view it */
+#pick{position:absolute;inset:0;z-index:3;background:var(--stage);display:flex;flex-direction:column}
+#pick .pkh{display:flex;align-items:center;justify-content:flex-end;gap:8px;height:24px;margin:10px 12px 0 120px;font-size:11px;color:var(--tx2);white-space:nowrap;min-width:0}
+#pick .pkh b{font-weight:400;color:var(--ink)}
+#pick .pkh>span{overflow:hidden;text-overflow:ellipsis;min-width:0}
+#pick .pkr{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 3px;border:none;background:none;box-shadow:none;font-size:11px;color:var(--ink)}
+#pick .pkr svg,#pick em svg{width:12px;height:12px;fill:currentColor;flex:none}
+@media (hover:hover){#pick .pkr:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}}
+#pick .pkr:active{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;transform:none}
+#pick .pkg{flex:1;min-height:0;display:grid;gap:10px;padding:8px 12px 12px;align-content:center;justify-content:center}
+#pick .t{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;container-type:size;cursor:pointer}
+#pick .t>span{position:relative;display:block;aspect-ratio:var(--ar);width:min(100cqw,calc(100cqh * var(--ar)));border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);background:#111;box-sizing:border-box;overflow:hidden}
+#pick .t img{width:100%;height:100%;display:block;object-fit:cover;-webkit-user-drag:none;user-select:none;-webkit-touch-callout:none}
+#pick .t i{position:absolute;left:0;top:0;font-style:normal;font-size:11px;line-height:16px;padding:0 5px;background:var(--ink);color:#fff}
+#pick .t u{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:11px;color:#bbb}
+#pick .t.ld>span{background:#d6d4cd;border-color:var(--tx3);box-shadow:none;animation:pkld 1.2s steps(2) infinite}
+@keyframes pkld{50%{opacity:.55}}
+#pick .t.bad>span::after{content:"불러오기 실패";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb}
+#pick .t.seen img{opacity:.38}
+#pick .t.seen i{background:var(--tx3)}
+#pick .t em{position:absolute;right:0;top:0;display:flex;align-items:center;gap:3px;font-style:normal;font-size:11px;line-height:16px;padding:0 5px;background:#fff;color:var(--ink)}
+#pick .t.cur>span{outline:3px solid var(--yel);outline-offset:1px}
+@media (hover:hover){#pick .t:hover>span{outline:3px solid var(--yel);outline-offset:1px}}
+#pkBack{pointer-events:auto;gap:5px}
+#pkBack .bk{width:5px;height:9px;fill:currentColor;shape-rendering:crispEdges;flex:none}
 #stTop{position:absolute;left:10px;top:10px;right:10px;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;pointer-events:none}
 #stTop>*{pointer-events:auto}
 #stTop .frow{display:flex;align-items:center;gap:4px;flex:0 1 auto;flex-wrap:wrap;min-width:0}
@@ -1126,6 +1151,7 @@ body[data-tab=pin] :is(#fltPop,#frow){--yel:var(--pink)} /* 보드 tab: the boar
   </nav>
     <button class="tsc" id="tscR" aria-label="탭 오른쪽으로"><svg viewBox="0 0 8 10"><path d="M1 1h2v1H1zM2 2h2v1H2zM3 3h2v1H3zM4 4h2v2H4zM3 6h2v1H3zM2 7h2v1H2zM1 8h2v1H1z"/></svg></button>
   <div class="ibar">
+    <button id="viewBtn" class="ic" aria-label="보기 전환" aria-pressed="false"><span class="lb">보기</span><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M100,36H56A20,20,0,0,0,36,56v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,100,36ZM96,96H60V60H96ZM200,36H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,200,36Zm-4,60H160V60h36Zm-96,40H56a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,100,136Zm-4,60H60V160H96Zm104-60H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,200,136Zm-4,60H160V160h36Z"/></svg></button><i class="isep" aria-hidden="true"></i>
     <button id="calBtn" class="ic" aria-label="연습 기록"><span class="lb">기록</span><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M208,28H188V24a12,12,0,0,0-24,0v4H92V24a12,12,0,0,0-24,0v4H48A20,20,0,0,0,28,48V208a20,20,0,0,0,20,20H208a20,20,0,0,0,20-20V48A20,20,0,0,0,208,28ZM68,52a12,12,0,0,0,24,0h72a12,12,0,0,0,24,0h16V76H52V52ZM52,204V100H204V204Zm92-76a16,16,0,1,1-16-16A16,16,0,0,1,144,128Zm48,0a16,16,0,1,1-16-16A16,16,0,0,1,192,128ZM96,176a16,16,0,1,1-16-16A16,16,0,0,1,96,176Zm48,0a16,16,0,1,1-16-16A16,16,0,0,1,144,176Zm48,0a16,16,0,1,1-16-16A16,16,0,0,1,192,176Z"/></svg></button>
     <button id="lnkBtn" class="ic" aria-label="크로키 링크"><span class="lb">링크</span><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z"/></svg></button>
     <i class="isep" aria-hidden="true"></i><button id="zen" class="ic" aria-label="UI 숨김"><span class="lb">숨김</span><svg class="ph" viewBox="0 0 256 256" aria-hidden="true"><path d="M216.49,183.51a12,12,0,0,1-17,17L128,129,56.49,200.49a12,12,0,0,1-17-17l80-80a12,12,0,0,1,17,0ZM48,84H208a12,12,0,0,0,0-24H48a12,12,0,0,0,0,24Z"/></svg></button>
@@ -1198,7 +1224,8 @@ body[data-tab=pin] :is(#fltPop,#frow){--yel:var(--pink)} /* 보드 tab: the boar
   <div id="zoomUi" class="hidden"><span id="zoomPct">100%</span><button id="zoom1">1:1</button><button id="zoomFit">맞춤</button></div>
   <video id="vid" class="hidden" muted playsinline loop preload="auto" referrerpolicy="no-referrer"></video>
   <svg id="ov"></svg>
-  <div id="stTop"><div class="frow" id="frow"></div></div>
+  <div id="pick" class="hidden"></div>
+  <div id="stTop"><div class="frow" id="frow"></div><button class="chip hidden" id="pkBack" aria-label="목록으로"><svg class="bk" viewBox="0 0 6 11" aria-hidden="true"><path d="M5 0h1v1h-1zM4 1h2v1h-2zM3 2h3v1h-3zM2 3h4v1h-4zM1 4h5v1h-5zM0 5h6v1h-6zM1 6h5v1h-5zM2 7h4v1h-4zM3 8h3v1h-3zM4 9h2v1h-2zM5 10h1v1h-1z"/></svg>목록<span class="cnt" id="pkCnt"></span></button></div>
   <div id="info" class="mono" role="link" tabindex="0"></div>
   <div id="timerBig" class="mono"></div>
   <a id="srcLink" class="hidden" target="_blank" rel="noopener noreferrer"></a>
@@ -1296,9 +1323,9 @@ body[data-tab=pin] :is(#fltPop,#frow){--yel:var(--pink)} /* 보드 tab: the boar
 const $=s=>document.querySelector(s);
 const DEF={proxy:'https://cutref-proxy.masoduregi.workers.dev/?url=',fgUrl:'https://film-grab.com/wp-json/wp/v2/',sbUrl:'https://www.sakugabooru.com/',mediaProxy:false,sbRating:'s',usKey:'',pxKey:''};
 let FG,SB;
-const S={tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
+const S={view:'one',tab:'film',tone:'color',lc:'#ffffff',op:60,flip:false,tDur:300,play:false,...DEF,
   grid:{film:'thirds',anim:'field',fig:'thirds','3d':'thirds',game:'thirds',photo:'thirds',pin:'thirds'},gridOn:{film:true,anim:true,fig:false,'3d':false,game:false,photo:false,pin:false},hist:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[],pin:[]},pos:{film:-1,anim:-1,fig:-1,'3d':-1,game:-1,photo:-1,pin:-1},seen:{film:new Set(),anim:new Set(),fig:new Set(),'3d':new Set(),game:new Set(),photo:new Set(),pin:new Set()},queue:{film:[],anim:[],fig:[],'3d':[],game:[],photo:[],pin:[]}};
-try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3lightLast','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
+try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');for(const k of['view','tab','tone','lc','op','tDur','play','proxy','grid','gridOn','fgUrl','sbUrl','mediaProxy','sbRating','usKey','pxKey','d3light','d3lightLast','d3poly','sfx','tSnd'])if(p[k]!==undefined)S[k]=p[k]}catch(e){}
 const FDEF=()=>({film:{genre:[],year:[],country:[],ratio:[],ex:{genre:[],year:[],country:[],ratio:[]},person:null,onePer:false,movies:[]},anim:{mat:'',kinds:[],kindsEx:[],region:'',score:0,tags:'',artists:[],artistsEx:[],works:[]},fig:{kinds:[],kindsEx:[],kw:'',kwEx:'',onePer:true},'3d':{parts:[],partsEx:[],pose:'',range:'wide',rim:false},game:{games:[],kind:''},photo:{topics:[],orient:'',q:'',off:[]},pin:{boards:[],sel:[]}});
 S.f=FDEF();S.legacyAnim=false;const D3PARTS_ID=['hand','foot','head'];
 try{const p=JSON.parse(localStorage.getItem('cutref2')||'{}');
@@ -1308,7 +1335,7 @@ for(const k of['src','dbTag','dbEx'])delete S.f.fig[k];delete S.f['3d'].wire;
 for(const t of['film','anim','fig','3d','game','photo','pin'])if(!S.grid[t]){S.grid[t]='thirds';S.gridOn[t]=false}
 if(!['film','anim','fig','3d','game','photo','pin'].includes(S.tab))S.tab='film';
 for(const t of['film','anim'])if(S.grid[t]==='none'){S.grid[t]=t==='film'?'thirds':'field';S.gridOn[t]=false}
-const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,pxKey:S.pxKey,d3light:S.d3light,d3lightLast:S.d3lightLast,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
+const save=()=>{try{localStorage.setItem('cutref2',JSON.stringify({view:S.view,tab:S.tab,tone:S.tone,lc:S.lc,op:S.op,tDur:S.tDur,play:S.play,f:S.f,proxy:S.proxy,grid:S.grid,gridOn:S.gridOn,fgUrl:S.fgUrl,sbUrl:S.sbUrl,mediaProxy:S.mediaProxy,sbRating:S.sbRating,usKey:S.usKey,pxKey:S.pxKey,d3light:S.d3light,d3lightLast:S.d3lightLast,d3poly:S.d3poly,sfx:S.sfx,tSnd:S.tSnd}))}catch(e){}};
 
 const slash=u=>u&&!u.endsWith('/')?u+'/':u;
 function applyCfg(){FG=slash(S.fgUrl)||DEF.fgUrl;SB=slash(S.sbUrl)||DEF.sbUrl}
@@ -1464,7 +1491,7 @@ let PINS={};try{PINS=JSON.parse(localStorage.getItem('cutref-pins')||'{}')||{}}c
 const pinSave=()=>{try{localStorage.setItem('cutref-pins',J(PINS))}catch(e){toast('핀 저장 실패 · 브라우저 저장 공간 부족','err')}};
 const pinExp=p=>({img:/^https?:/.test(p.i)?p.i:'https://i.pinimg.com/736x/'+p.i,title:p.t||'',link:!p.l?'':/^[\w-]+$/.test(p.l)?'https://www.pinterest.com/pin/'+p.l+'/':p.l});
 let pinPaste=false,pinMenu='';
-const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{plus:'M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z',paste:'M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z',bm:'M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z',link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
+const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{grid:'M100,36H56A20,20,0,0,0,36,56v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,100,36ZM96,96H60V60H96ZM200,36H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,200,36Zm-4,60H160V60h36Zm-96,40H56a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,100,136Zm-4,60H60V160H96Zm104-60H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,200,136Zm-4,60H160V160h36Z',check:'M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z',ref:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',plus:'M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z',paste:'M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z',bm:'M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z',link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
 // runs on a Pinterest board page (as a bookmarklet): scrolls to the end, collects every pin above "More ideas", hands the list to cutref
 function cutrefPins(SITE){
   if(window.__crp){window.__crp.style.display='';return}
@@ -1701,14 +1728,66 @@ let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);b
   if(now){clearTimeout(busyT);busyT=0;h.classList.remove('hidden')}else if(!busyT&&h.classList.contains('hidden'))busyT=setTimeout(()=>{busyT=0;h.classList.remove('hidden')},300)}
 let nextWait=null; // one pending load per tab: repeated taps while loading don't skip cuts
 async function next(){const t=S.tab;
-  if(S.pos[t]<S.hist[t].length-1){S.pos[t]++;show();return}
+  if(S.pos[t]<S.hist[t].length-1){if(PK[t])PK[t].open=false;S.pos[t]++;pkSync();show();return}
+  if(pkOK(t))return pkNext(t); // 보기 = 여러 장: next unseen cut of the set, or a new set
   if(!S.queue[t].length){if(nextWait===t)return;nextWait=t;busy(true);lastErr[t]='';try{let g;do{g=fillG[t]||0;await fill(t)}while(!S.queue[t].length&&g!==(fillG[t]||0))}finally{if(nextWait===t)nextWait=null}
     if(S.tab!==t)return; // user switched tabs while this one was loading
     if(!S.queue[t].length){return showErr(lastErr[t]||'불러오기 실패')}}
   S.hist[t].push(S.queue[t].shift());S.pos[t]=S.hist[t].length-1;show();fill(t);
 }
-function prev(){const t=S.tab;if(S.pos[t]>0){S.pos[t]--;show()}}
+function prev(){const t=S.tab;if(PK[t]&&PK[t].open&&S.pos[t]>=0){PK[t].open=false;pkSync();show();return}if(S.pos[t]>0){S.pos[t]--;show()}}
 function resetQueues(tab){clearQ(tab);fill(tab)}
+// ---------- picker (보기 = 여러 장): load a set of cuts, show them as a grid, tap one to view it big
+const PK={},pkEl=$('#pick'),pkOK=t=>S.view==='grid'&&t!=='3d';
+const PKAR={film:16/9,anim:16/9,game:16/9,fig:3/4,photo:3/4,pin:3/4},PKMAX=12;
+const pkWH=()=>[stage.clientWidth-24,stage.clientHeight-62];
+// how many fit: tiles at least 240px (landscape) / 150px (portrait) wide, never more than 12 — extra room makes tiles bigger, not more
+function pkCount(t){const [W,H]=pkWH(),ar=PKAR[t]||16/9,gap=10;let n=1;
+  for(let c=1;c<=8;c++){const tw=(W-gap*(c-1))/c;if(c>1&&tw<(ar>1?240:150))break;n=Math.max(n,Math.min(PKMAX,c*Math.max(1,Math.floor((H+gap)/(tw/ar+gap)))))}return n}
+// columns × rows for n tiles that makes each tile biggest
+function pkFit(n,ar){const [W,H]=pkWH(),gap=10;let b=null;for(let c=1;c<=n;c++){const r=Math.ceil(n/c),tw=Math.min((W-gap*(c-1))/c,(H-gap*(r-1))/r*ar);if(!b||tw>b.tw)b={c,r,tw}}return b}
+function pkCell(t,i){const P=PK[t],it=P.items[i],ar=PKAR[t]||16/9;
+  if(!it)return `<div class="t ld"><span style="--ar:${ar}"><i>${i+1}</i></span></div>`;
+  const src=it.kind==='vid'?it.thumb:(it.thumb||it.url),sn=P.seen.has(i);
+  return `<div class="t${sn?' seen':''}${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}">`:'<u>영상</u>'}<i>${i+1}</i>${sn?`<em>${PHI('check')}봄</em>`:''}</span></div>`}
+function pkWire(root){root.querySelectorAll('img').forEach(im=>{im.onload=()=>{if(im.naturalWidth)im.parentNode.style.setProperty('--ar',im.naturalWidth/im.naturalHeight)};
+  im.onerror=()=>{if(!viaProxy(im,im.dataset.raw))im.closest('.t').classList.add('bad')}})}
+function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);
+  pkEl.innerHTML=`<div class="pkh"><span><b>${P.n}장 중 고르기</b>${P.seen.size?` · ${P.seen.size}장 봄`:''} · 탭하면 크게 보기</span><button class="pkr" type="button">${PHI('ref')}새로 고르기</button></div>`+
+    `<div class="pkg" style="grid-template-columns:repeat(${f.c},${tw}px);grid-template-rows:repeat(${f.r},${th}px)">${P.items.length||P.n?Array.from({length:P.n},(_,i)=>pkCell(t,i)).join(''):''}</div>`;
+  {const fr=$('#frow').getBoundingClientRect(),sr=stage.getBoundingClientRect();pkEl.firstChild.style.marginLeft=Math.max(12,Math.round(fr.right-sr.left)+16)+'px'} // header text starts right of the 필터 chips
+  pkWire(pkEl)}
+function pkTile(t,i){if(S.tab!==t||!PK[t].open)return;const c=pkEl.querySelectorAll('.pkg>.t')[i];if(!c)return pkRender();
+  const d=document.createElement('div');d.innerHTML=pkCell(t,i);const n=d.firstChild;c.replaceWith(n);pkWire(n)}
+function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);pkEl.classList.toggle('hidden',!on);if(on)pkRender();
+  const bk=$('#pkBack'),sh=!!(pkOK(t)&&P&&!P.open&&P.items.length&&P.g===(fillG[t]||0));bk.classList.toggle('hidden',!sh);
+  if(sh)$('#pkCnt').textContent=(P.cur+1)+'/'+P.items.length;
+  ['#favBtn','#pinBtn','#info','#srcLink','#zoomUi'].forEach(q=>{const e=$(q);if(e)e.style.visibility=on?'hidden':''})}
+async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen:new Set(),cur:-1,open:true,g};
+  if(S.tab===t){msg.className='hidden';busy(false);pkSync()}
+  for(let i=0;i<P.n;i++){
+    if(!S.queue[t].length){lastErr[t]='';await fill(t);if(PK[t]!==P)return;if(g!==(fillG[t]||0)){if(S.tab===t&&P.open)pkLoad(t);return}}
+    if(!S.queue[t].length)break;
+    P.items.push(S.queue[t].shift());pkTile(t,i)}
+  if(P.items.length<P.n){P.n=P.items.length;if(S.tab===t&&P.open)pkRender()}
+  if(!P.items.length){delete PK[t];if(S.tab===t){pkSync();showErr(lastErr[t]||'불러오기 실패')}return}
+  fill(t)}
+function pkPick(t,i){const P=PK[t],it=P&&P.items[i];if(!it)return;P.seen.add(i);P.cur=i;P.open=false;
+  if(S.hist[t][S.pos[t]]!==it){S.hist[t].push(it);S.pos[t]=S.hist[t].length-1}pkSync();show()}
+function pkNext(t){const P=PK[t];
+  if(!P||P.g!==(fillG[t]||0)||!P.items.length)return pkLoad(t); // first time, or filter / settings changed
+  const L=P.items.length,start=P.open?-1:P.cur;
+  for(let k=1;k<=L;k++){const j=(start+k+L)%L;if(!P.seen.has(j))return pkPick(t,j)}
+  return pkLoad(t)} // all seen: a new set
+pkEl.addEventListener('click',e=>{const t=S.tab;if(!PK[t])return;if(e.target.closest('.pkr'))return pkLoad(t);
+  const c=e.target.closest('.t[data-i]');if(c)pkPick(t,+c.dataset.i)});
+$('#pkBack').onclick=e=>{e.stopPropagation();const P=PK[S.tab];if(!P)return;P.open=true;vid.pause();pkSync()};
+function syncViewBtn(){const b=$('#viewBtn'),g=S.view==='grid';b.classList.toggle('on',g);b.setAttribute('aria-pressed',g);b.dataset.tip=g?'한 장씩 보기로':'여러 장에서 고르기로';b.classList.toggle('hidden',S.tab==='3d')}
+$('#viewBtn').onclick=()=>{S.view=S.view==='grid'?'one':'grid';save();syncViewBtn();const t=S.tab,P=PK[t];
+  if(pkOK(t)){if(P&&P.g===(fillG[t]||0)&&P.items.length){P.open=true;pkSync()}else pkLoad(t)}
+  else{pkSync();if(S.pos[t]<0)next()}
+  toast(S.view==='grid'?'여러 장에서 고르기':'한 장씩 보기','ok')};
+{let rt;new ResizeObserver(()=>{if(pkEl.classList.contains('hidden'))return;clearTimeout(rt);rt=setTimeout(pkRender,80)}).observe($('#stage'))}
 
 // ---------- render
 const img=$('#img'),vid=$('#vid'),ov=$('#ov'),stage=$('#stage'),msg=$('#msg'),c3d=$('#c3d');
@@ -1844,7 +1923,8 @@ function tSet(sec){S.tDur=Math.max(0,Math.min(sec,6*3600));save();tReset()}
 
 // ---------- events
 document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{if(curPop)closeP();S.tab=b.dataset.tab;save();if(S.pos[S.tab]<0)blankStage();
-  if(S.pos[S.tab]<0)next();else show();applyView()});
+  syncViewBtn();const P=PK[S.tab];if(pkOK(S.tab)&&P&&P.open&&P.g===(fillG[S.tab]||0)){busy(false);msg.className='hidden'} /* its grid was open: just show it again */
+  else if(S.pos[S.tab]<0)next();else show();pkSync();applyView()});
 $('#next').onclick=next;$('#prev').onclick=prev;
 document.querySelectorAll('#tone button').forEach(b=>b.onclick=()=>{S.tone=b.dataset.v;save();applyView()});
 document.querySelectorAll('#lc button').forEach(b=>b.onclick=()=>{S.lc=b.dataset.v;save();applyView()});
@@ -2423,7 +2503,7 @@ function zoomAt(z,px,py){z=Math.max(1,Math.min(8,z));const [cx,cy]=zoomCenter();
 })();
 // ---------- swipe on image (touch): left = next, right = previous
 (()=>{let sw=null;
-  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||S.tab==='3d'||ZM.z>1.01||e.target.closest('button,a,.chip,#stTop,#info,#zoomUi,#msg'))return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
+  stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'||S.tab==='3d'||ZM.z>1.01||e.target.closest('button,a,.chip,#stTop,#info,#zoomUi,#msg,#pick'))return;sw={x:e.clientX,y:e.clientY,t:Date.now(),id:e.pointerId}});
   stage.addEventListener('pointerup',e=>{if(!sw||e.pointerId!==sw.id)return;const dx=e.clientX-sw.x,dy=e.clientY-sw.y,dt=Date.now()-sw.t;sw=null;
     if(ZM.used||ZM.z>1.01){ZM.used=false;return}
     if(dt<700&&Math.abs(dx)>60&&Math.abs(dy)<Math.abs(dx)*.6){dx<0?next():prev()}});
@@ -2942,7 +3022,7 @@ function fitSelect(el){const cs=getComputedStyle(el);fitCv.font=`${cs.fontWeight
   el.style.flex='none';el.style.width=Math.ceil(w+pad+2)+'px'}
 const fitSelects=()=>document.querySelectorAll('#d3Light,#grid,#favSort').forEach(fitSelect);
 fitSelects();(document.fonts&&document.fonts.ready||Promise.resolve()).then(fitSelects);addEventListener('resize',()=>requestAnimationFrame(fitSelects));
-applyView();next();setTimeout(()=>fill(S.tab==='film'?'anim':'film'),1500);
+syncViewBtn();applyView();next();setTimeout(()=>fill(S.tab==='film'?'anim':'film'),1500);
 })();
 </script>
 </body>
