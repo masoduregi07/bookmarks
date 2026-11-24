@@ -1448,7 +1448,7 @@ async function fgRandom(){
 // ---------- GOOD SMILE COMPANY (product pages)
 const GS='https://www.goodsmile.com/';
 const GS_SEED=[2539,4379,10119,11861,12431,11275,2046,5434,3173,1136995,9687,5617];
-const gs={pool:new Set(GS_SEED),bad:new Set(),seen:new Set()};
+const gs={pool:new Set(GS_SEED),bad:new Set(),seen:new Set(),busy:new Set()}; // busy: product pages being fetched right now (parallel loads don't take the same one)
 try{JSON.parse(localStorage.getItem('cutref-gs')||'[]').forEach(i=>gs.pool.add(i))}catch(e){}
 const gsSave=()=>{try{localStorage.setItem('cutref-gs',JSON.stringify([...gs.pool].slice(-3000)))}catch(e){}};
 const FKINDS=[['nendo','넨도로이드'],['figma','figma'],['pop','POP UP PARADE'],['scale','스케일']];
@@ -1459,10 +1459,11 @@ async function getText(u){const r=await fetch(P(u),{credentials:'omit'});return 
 async function gsRandom(){
   const f=S.f.fig,kw=f.kw.trim().toLowerCase();let lastErr='';
   for(let tries=0;tries<10;tries++){
-    const pool=[...gs.pool].filter(i=>!gs.bad.has(i)&&!(f.onePer&&gs.seen.has(i)));
-    const id=(Math.random()<.55&&pool.length>8)?pool[rnd(pool.length)]:1000+rnd(13500);
-    if(gs.bad.has(id)||(f.onePer&&gs.seen.has(id)))continue;
-    let r;try{r=await getText(GS+'en/product/'+id)}catch(e){lastErr=e.message;continue}
+    const pool=[...gs.pool].filter(i=>!gs.bad.has(i)&&!gs.busy.has(i)&&!(f.onePer&&gs.seen.has(i)));
+    // known product numbers first (blind numbers often 404); a few blind ones (45% while the list is small, 18% after) keep finding new figures
+    const blind=pool.length<60?.45:.18,id=(pool.length>8&&Math.random()>=blind)?pool[rnd(pool.length)]:1000+rnd(13500);
+    if(gs.bad.has(id)||gs.busy.has(id)||(f.onePer&&gs.seen.has(id)))continue;
+    let r;gs.busy.add(id);try{r=await getText(GS+'en/product/'+id)}catch(e){lastErr=e.message;continue}finally{gs.busy.delete(id)}
     if(!r.ok){if(r.status===404){gs.bad.add(id);gs.pool.delete(id);lastErr='HTTP 404';continue}throw new Error('굿스마일 연결 실패 · HTTP '+r.status+(r.status===503?' (사이트 점검 중일 수 있음)':r.status===403?' (Worker 허용 목록 확인)':''))}
     const html=r.text;
     for(const m of html.matchAll(/\/product\/image\/(\d+)\//g)){const n=+m[1];if(n!==id&&!gs.bad.has(n))gs.pool.add(n)}
@@ -1726,6 +1727,7 @@ async function photoRandom(){if(!photoKeys().length)throw new Error('사진 서�
 const SRC={film:fgRandom,anim:sbRandom,fig:gsRandom,'3d':d3Random,game:gameRandom,photo:photoRandom,pin:pinRandom},SRCNAME={pin:'PINTEREST',film:'FILM-GRAB',anim:'SAKUGABOORU',fig:'GOOD SMILE','3d':'3D 모델',game:'FANDOM',photo:'패션 사진'};
 function fill(tab){
   if(fillP[tab])return fillP[tab];
+  try{if(pkOK(tab)&&PK[tab]&&PK[tab].loading)return Promise.resolve()}catch(e){} // the grid is loading this tab itself: no extra request on top
   const g=fillG[tab]||0;
   const p=(async()=>{
     try{while(S.queue[tab].length<2){const it=await SRC[tab]();if(g!==(fillG[tab]||0))return;
@@ -1776,12 +1778,24 @@ function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);if(P){const k=
   const bk=$('#pkBack'),sh=!!(pkOK(t)&&P&&!P.open&&P.items.length&&P.g===(fillG[t]||0));bk.classList.toggle('hidden',!sh);
   if(sh){const k=P.items.indexOf(curItem());$('#pkCnt').textContent=(k<0?'–':k+1)+'/'+P.items.length}
   ['#favBtn','#pinBtn','#info','#srcLink','#zoomUi'].forEach(q=>{const e=$(q);if(e)e.style.visibility=on?'hidden':''})}
-async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen:new Set(),cur:-1,open:true,g};
+// tabs whose every cut is its own page fetch load 3 at a time; tabs that fill a shared buffer (사진 API, Sakugabooru page, 보드 RSS) stay at 1 so they never fetch the same batch twice
+const PKPAR={film:3,fig:3,game:3},pkSlow={}; // pkSlow: the site pushed back (403 / 429) → one at a time for this session
+async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen:new Set(),cur:-1,open:true,g,loading:true};
   if(S.tab===t){msg.className='hidden';busy(false);pkSync()}
-  for(let i=0;i<P.n;i++){
-    if(!S.queue[t].length){lastErr[t]='';await fill(t);if(PK[t]!==P)return;if(g!==(fillG[t]||0)){if(S.tab===t&&P.open)pkLoad(t);return}}
-    if(!S.queue[t].length)break;
-    P.items.push(S.queue[t].shift());pkTile(t,i)}
+  const live=()=>PK[t]===P&&g===(fillG[t]||0),keys=new Set(),
+    take=it=>{if(!live()||P.items.length>=P.n||keys.has(it.key))return false;keys.add(it.key);S.seen[t].add(it.key);P.items.push(it);pkTile(t,P.items.length-1);return true};
+  if(fillP[t]){try{await fillP[t]}catch(e){}if(PK[t]!==P)return}
+  if(!live()){P.loading=false;if(PK[t]===P&&S.tab===t&&P.open)pkLoad(t);return} // a prefetch in flight: let it land first, then use it
+  while(S.queue[t].length&&P.items.length<P.n)take(S.queue[t].shift());
+  lastErr[t]='';let par=pkSlow[t]?1:(PKPAR[t]||1),dup=0,stop=false;
+  const worker=async w=>{let wait=0;while(!stop&&live()&&P.items.length<P.n&&w<par){
+    let it;try{it=await SRC[t]()}catch(e){if(!live())return;lastErr[t]=netMsg(e.message,'연결 거부 (프록시 · 네트워크 확인)');
+      if(/HTTP (403|429)|\b(403|429)\b/.test(e.message)){if(w>=par)return;if(par>1){par=1;pkSlow[t]=true;if(w===0){await new Promise(r=>setTimeout(r,1500));continue}return} // back off: worker 0 carries on alone, after a pause
+        if(++wait<=2){await new Promise(r=>setTimeout(r,2500));continue}} // still pushed back: two more tries, slower
+      stop=true;return}
+    if(!live())return;if(!take(it)&&++dup>P.n*2)return}}; // same cut picked twice by two workers: drop it and pick again
+  await Promise.all(Array.from({length:par},(_,w)=>worker(w)));P.loading=false;
+  if(PK[t]!==P)return;if(g!==(fillG[t]||0)){if(S.tab===t&&P.open)pkLoad(t);return} // filter changed while loading
   if(P.items.length<P.n){P.n=P.items.length;if(S.tab===t&&P.open)pkRender()}
   if(!P.items.length){delete PK[t];if(S.tab===t){pkSync();showErr(lastErr[t]||'불러오기 실패')}return}
   fill(t)}
