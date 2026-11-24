@@ -118,6 +118,8 @@ body.zen #zoomUi{display:none}
 #pick .t.cur>span{outline:3px solid var(--yel);outline-offset:1px}
 @media (hover:hover){#pick .t:hover>span{outline:3px solid var(--yel);outline-offset:1px}}
 #pkBack{pointer-events:auto;gap:5px}
+#viewBtn.hidden+.isep{display:none}
+#pick .t:active>span{outline:3px solid var(--yel);outline-offset:1px}
 #pkBack .bk{width:5px;height:9px;fill:currentColor;shape-rendering:crispEdges;flex:none}
 #stTop{position:absolute;left:10px;top:10px;right:10px;z-index:4;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;pointer-events:none}
 #stTop>*{pointer-events:auto}
@@ -1569,6 +1571,7 @@ async function pinRandom(){const f=S.f.pin;if(!f.boards.length)throw new Error('
 }
 
 // ---------- SAKUGABOORU (Moebooru API)
+const sbBuf={q:'',list:[]};
 async function sbRandom(){
   const a=S.f.anim,tl=['order:random'];
   if(S.sbRating)tl.push('rating:'+S.sbRating);
@@ -1580,12 +1583,17 @@ async function sbRandom(){
   if((a.works||[]).length)tl.push(a.works[Math.floor(Math.random()*a.works.length)]);
   if((a.artists||[]).length)tl.push(a.artists[Math.floor(Math.random()*a.artists.length)]);(a.artistsEx||[]).forEach(k=>tl.push('-'+k));
   tl.push(...a.tags.trim().split(/\s+/).filter(Boolean));
-  const {data}=await getJSON(SB+`post.json?limit=8&tags=${encodeURIComponent(tl.join(' '))}`);
-  const list=data.filter(p=>p.file_url&&!S.seen.anim.has(p.id));
-  if(!list.length)throw new Error('조건에 맞는 클립이 없음 · 필터를 줄여 보기');
-  const p=list[0];const ext=(p.file_ext||p.file_url.split('.').pop()).toLowerCase();
+  // images only (no mp4/webm clips, no moving gifs): most posts are clips, so ask for a big random page and keep the stills
+  // one random page serves several cuts (the 여러 장 grid asks for up to 12 in a row): reuse it while the filter is the same
+  const q=SB+`post.json?limit=100&tags=${encodeURIComponent(tl.join(' '))}`;
+  let list=sbBuf.q===q?sbBuf.list.filter(p=>!S.seen.anim.has(p.id)):[];
+  if(!list.length){const {data}=await getJSON(q);
+    const still=p=>/^(jpe?g|png|webp)$/.test((p.file_ext||(p.file_url||'').split('?')[0].split('.').pop()||'').toLowerCase());
+    list=data.filter(p=>p.file_url&&still(p)&&!S.seen.anim.has(p.id))}
+  if(!list.length){sbBuf.q='';throw new Error('조건에 맞는 이미지가 없음 · 필터를 줄여 보기')}
+  const p=list[0];sbBuf.q=q;sbBuf.list=list.slice(1);const ext=(p.file_ext||p.file_url.split('.').pop()).toLowerCase();
   const tagStr=(p.tags||'').split(' ').slice(0,4).join(' ');
-  return {kind:/mp4|webm|mov/.test(ext)?'vid':'img',url:abs(p.file_url),thumb:abs(p.preview_url||''),title:`#${p.id} ${tagStr}`,link:SB+'post/show/'+p.id,key:p.id};
+  return {kind:'img',url:abs(p.file_url),thumb:abs(p.preview_url||''),title:`#${p.id} ${tagStr}`,link:SB+'post/show/'+p.id,key:p.id};
 }
 
 // ---------- queue / prefetch
@@ -1728,22 +1736,22 @@ let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);b
   if(now){clearTimeout(busyT);busyT=0;h.classList.remove('hidden')}else if(!busyT&&h.classList.contains('hidden'))busyT=setTimeout(()=>{busyT=0;h.classList.remove('hidden')},300)}
 let nextWait=null; // one pending load per tab: repeated taps while loading don't skip cuts
 async function next(){const t=S.tab;
-  if(S.pos[t]<S.hist[t].length-1){if(PK[t])PK[t].open=false;S.pos[t]++;pkSync();show();return}
+  if(S.pos[t]<S.hist[t].length-1){if(PK[t])PK[t].open=false;S.pos[t]++;show();pkSync();return}
   if(pkOK(t))return pkNext(t); // 보기 = 여러 장: next unseen cut of the set, or a new set
   if(!S.queue[t].length){if(nextWait===t)return;nextWait=t;busy(true);lastErr[t]='';try{let g;do{g=fillG[t]||0;await fill(t)}while(!S.queue[t].length&&g!==(fillG[t]||0))}finally{if(nextWait===t)nextWait=null}
     if(S.tab!==t)return; // user switched tabs while this one was loading
     if(!S.queue[t].length){return showErr(lastErr[t]||'불러오기 실패')}}
   S.hist[t].push(S.queue[t].shift());S.pos[t]=S.hist[t].length-1;show();fill(t);
 }
-function prev(){const t=S.tab;if(PK[t]&&PK[t].open&&S.pos[t]>=0){PK[t].open=false;pkSync();show();return}if(S.pos[t]>0){S.pos[t]--;show()}}
+function prev(){const t=S.tab;if(PK[t]&&PK[t].open&&S.pos[t]>=0){PK[t].open=false;pkSync();show();return}if(S.pos[t]>0){S.pos[t]--;show();pkSync()}}
 function resetQueues(tab){clearQ(tab);fill(tab)}
 // ---------- picker (보기 = 여러 장): load a set of cuts, show them as a grid, tap one to view it big
 const PK={},pkEl=$('#pick'),pkOK=t=>S.view==='grid'&&t!=='3d';
 const PKAR={film:16/9,anim:16/9,game:16/9,fig:3/4,photo:3/4,pin:3/4},PKMAX=12;
 const pkWH=()=>[stage.clientWidth-24,stage.clientHeight-62];
-// how many fit: tiles at least 240px (landscape) / 150px (portrait) wide, never more than 12 — extra room makes tiles bigger, not more
+// how many fit: tiles at least 200px (landscape) / 130px (portrait) wide, never more than 12 — extra room makes tiles bigger, not more
 function pkCount(t){const [W,H]=pkWH(),ar=PKAR[t]||16/9,gap=10;let n=1;
-  for(let c=1;c<=8;c++){const tw=(W-gap*(c-1))/c;if(c>1&&tw<(ar>1?240:150))break;n=Math.max(n,Math.min(PKMAX,c*Math.max(1,Math.floor((H+gap)/(tw/ar+gap)))))}return n}
+  for(let c=1;c<=8;c++){const tw=(W-gap*(c-1))/c;if(c>1&&tw<(ar>1?200:130))break;n=Math.max(n,Math.min(PKMAX,c*Math.max(1,Math.floor((H+gap)/(tw/ar+gap)))))}return n}
 // columns × rows for n tiles that makes each tile biggest
 function pkFit(n,ar){const [W,H]=pkWH(),gap=10;let b=null;for(let c=1;c<=n;c++){const r=Math.ceil(n/c),tw=Math.min((W-gap*(c-1))/c,(H-gap*(r-1))/r*ar);if(!b||tw>b.tw)b={c,r,tw}}return b}
 function pkCell(t,i){const P=PK[t],it=P.items[i],ar=PKAR[t]||16/9;
@@ -1755,13 +1763,13 @@ function pkWire(root){root.querySelectorAll('img').forEach(im=>{im.onload=()=>{i
 function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);
   pkEl.innerHTML=`<div class="pkh"><span><b>${P.n}장 중 고르기</b>${P.seen.size?` · ${P.seen.size}장 봄`:''} · 탭하면 크게 보기</span><button class="pkr" type="button">${PHI('ref')}새로 고르기</button></div>`+
     `<div class="pkg" style="grid-template-columns:repeat(${f.c},${tw}px);grid-template-rows:repeat(${f.r},${th}px)">${P.items.length||P.n?Array.from({length:P.n},(_,i)=>pkCell(t,i)).join(''):''}</div>`;
-  {const fr=$('#frow').getBoundingClientRect(),sr=stage.getBoundingClientRect();pkEl.firstChild.style.marginLeft=Math.max(12,Math.round(fr.right-sr.left)+16)+'px'} // header text starts right of the 필터 chips
-  pkWire(pkEl)}
+  pkHead();pkWire(pkEl)}
+function pkHead(){const h=pkEl.firstChild;if(!h||pkEl.classList.contains('hidden'))return;const fr=$('#frow').getBoundingClientRect(),sr=$('#stage').getBoundingClientRect();h.style.marginLeft=Math.max(12,Math.round(fr.right-sr.left)+16)+'px'} // header text starts right of the 필터 chips
 function pkTile(t,i){if(S.tab!==t||!PK[t].open)return;const c=pkEl.querySelectorAll('.pkg>.t')[i];if(!c)return pkRender();
   const d=document.createElement('div');d.innerHTML=pkCell(t,i);const n=d.firstChild;c.replaceWith(n);pkWire(n)}
-function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);pkEl.classList.toggle('hidden',!on);if(on)pkRender();
+function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);if(P){const k=P.items.indexOf(curItem());if(k>=0)P.cur=k} /* yellow frame / next = the cut last on screen (also after 이전) */pkEl.classList.toggle('hidden',!on);if(on)pkRender();
   const bk=$('#pkBack'),sh=!!(pkOK(t)&&P&&!P.open&&P.items.length&&P.g===(fillG[t]||0));bk.classList.toggle('hidden',!sh);
-  if(sh)$('#pkCnt').textContent=(P.cur+1)+'/'+P.items.length;
+  if(sh){const k=P.items.indexOf(curItem());$('#pkCnt').textContent=(k<0?'–':k+1)+'/'+P.items.length}
   ['#favBtn','#pinBtn','#info','#srcLink','#zoomUi'].forEach(q=>{const e=$(q);if(e)e.style.visibility=on?'hidden':''})}
 async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen:new Set(),cur:-1,open:true,g};
   if(S.tab===t){msg.className='hidden';busy(false);pkSync()}
@@ -1772,8 +1780,9 @@ async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen
   if(P.items.length<P.n){P.n=P.items.length;if(S.tab===t&&P.open)pkRender()}
   if(!P.items.length){delete PK[t];if(S.tab===t){pkSync();showErr(lastErr[t]||'불러오기 실패')}return}
   fill(t)}
+const pkUp=()=>!$('#pick').classList.contains('hidden'); // grid on screen: the big cut behind it is not the one the user is looking at
 function pkPick(t,i){const P=PK[t],it=P&&P.items[i];if(!it)return;P.seen.add(i);P.cur=i;P.open=false;
-  if(S.hist[t][S.pos[t]]!==it){S.hist[t].push(it);S.pos[t]=S.hist[t].length-1}pkSync();show()}
+  if(S.hist[t][S.pos[t]]!==it){S.hist[t].push(it);S.pos[t]=S.hist[t].length-1}show();pkSync()}
 function pkNext(t){const P=PK[t];
   if(!P||P.g!==(fillG[t]||0)||!P.items.length)return pkLoad(t); // first time, or filter / settings changed
   const L=P.items.length,start=P.open?-1:P.cur;
@@ -2024,7 +2033,7 @@ const ARTISTS=[['시조',[['kenichi_kutsuna','쿠츠나 켄이치'],['ryo-timo',
   ['한국',[['moaang','Moaang'],['myoun','MYOUN'],['bono','BONO'],['kes','Kes'],['nanman','NANMAN']]]];
 const wkName=k=>k.replace(/_/g,' ');
 const ARTALL=ARTISTS.flatMap(g=>g[1]),artName=k=>(ARTALL.find(x=>x[0]===k)||[k,k])[1];
-const MATS=[['','작화 영상'],['settei','설정화']];
+const MATS=[['','작화'],['settei','설정화']];
 const REGIONS=[['','전체'],['jp','일본'],['west','서양']],SCORES=[[0,'전체'],[20,'20+'],[50,'50+'],[100,'100+']];
 let fltDirty=false;
 function fChange(){fltDirty=true;save();renderRow();renderFlt();if(curPop)placeP(curPop)}
@@ -2053,7 +2062,7 @@ function renderRow(){const t=S.tab,f=S.f[t],n=fCount(t),ch=[];
     f.tags.trim().split(/\s+/).filter(Boolean).forEach(x=>ch.push([x,'t',x]))}
   $('#frow').innerHTML=`<button class="chip${curPop==='flt'?' on':''}" id="fltBtn"><span class="ar"></span>${t==='pin'?'보드':'필터'}${n?`<span class="cnt">${n}</span>`:''}</button>`+
     (ch.length?ch.slice(0,3).map(c=>`<span class="chip set${/x$/.test(c[1])?' ex':''}" data-rm="${c.slice(1).map(esc).join('|')}">${esc(c[0])}<b>×</b></span>`).join('')+`<span class="more" data-more data-extra="${Math.max(0,ch.length-3)}"></span>`:''); // at most 3 chips; the rest live in the filter window
-  $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};fitChips();
+  $('#fltBtn').onclick=e=>{e.stopPropagation();curPop==='flt'?closeP():openP('flt')};fitChips();try{pkHead()}catch(_){}
 }
 // chips never take more than 2 lines on screen: drop from the end into the +N count
 function fitChips(){const fr=$('#frow'),m=fr.querySelector('.more');if(!m)return;const cs=[...fr.querySelectorAll('.chip.set')];
@@ -2157,7 +2166,7 @@ function renderFlt0(){const t=S.tab,b=$('#fltBody');$('#fltSum').textContent=fCo
     else body=row('<span style="display:block;padding-top:3px">작품</span>',`<div class="wk-box"><input type="text" id="fWork" placeholder="작품 이름을 영어로 (예: naruto)" autocomplete="off"><div class="wk-list" id="wkList"></div></div>${(f.works||[]).length?`<div class="gr" style="margin-top:6px">${f.works.map(k=>`<span class="o on" data-wkdel="${esc(k)}" title="누르면 빼기">${esc(wkName(k))} ×</span>`).join('')}</div>`:''}`,1)
       +row('태그',`<input type="text" id="fTags" value="${esc(f.tags)}" placeholder="예: yutaka_nakamura  -3d_cg" autocomplete="off">`);
     b.innerHTML=`<div class="fx-tabs">${TABS.map(([k,l,n])=>`<button class="fx-tab${ft===k?' on':''}" data-ftab="${k}">${l}${n?`<i>${n}</i>`:''}</button>`).join('')}</div>${body}
-    <div class="ft"><label><input type="checkbox" id="fPlay" ${S.play?'checked':''}> 영상 재생</label><a id="fReset">초기화</a></div>`}
+    <div class="ft"><span></span><a id="fReset">초기화</a></div>`}
   // option rows live in one bordered list (name ┊ options), the tabs sit on top of it
   {let box=null;[...b.children].forEach(el=>{if(el.matches('.fx-row,.fx-one')){if(!box){box=document.createElement('div');box.className='fl';el.before(box)}box.appendChild(el)}else box=null})}
   if(ae&&!TOUCH()){const el=document.getElementById(ae);if(el&&el.tagName==='INPUT'){el.focus();try{el.setSelectionRange(sel,sel)}catch(e){}}}
@@ -2539,7 +2548,7 @@ $('#pinBtn').addEventListener('click',()=>{const it=curItem(),m=pinMedia(it);if(
   window.open('https://www.pinterest.com/pin/create/button/?'+q,'_blank','noopener,width=760,height=640')});
 function savedToday(it){const k=dkey(new Date());return it&&LOG.find(r=>r.date===k&&r.url===it.url)}
 function syncSaveBtn(){const it=curItem(),b=$('#saveCut');b.disabled=!it||!msg.classList.contains('hidden');b.classList.toggle('done',!!savedToday(it))}
-function toggleSave(){const it=curItem();if(!it||!msg.classList.contains('hidden'))return;if(it.kind==='3d'&&!it.url){if(!M3||c3d.classList.contains('hidden'))return;M3.then(m=>{it.url=m.snapshot(320);toggleSave()});return}const ex=savedToday(it);
+function toggleSave(){if(pkUp())return toast('목록에서 컷을 먼저 고르기');const it=curItem();if(!it||!msg.classList.contains('hidden'))return;if(it.kind==='3d'&&!it.url){if(!M3||c3d.classList.contains('hidden'))return;M3.then(m=>{it.url=m.snapshot(320);toggleSave()});return}const ex=savedToday(it);
   if(ex){LOG=LOG.filter(r=>r!==ex);saveLog();toast('기록 취소')}
   else{const sec=Math.max(0,Math.min(3*3600,Math.round((Date.now()-cutShownAt)/1000)));
     LOG.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),ts:Date.now(),date:dkey(new Date()),tab:S.tab,src:it.src||SRCNAME[S.tab],title:it.title,link:it.link,url:it.url,thumb:it.thumb,kind:it.kind,sec});
@@ -2604,7 +2613,7 @@ async function favSrc(x){if(!x.blob)return M(thumbOf(x));if(FAV.urls[x.id])retur
 function favSync(){const b=$('#favBtn'),it=curItem(),on=!!favFind(it);b.classList.toggle('hidden',!!(!it||!msg.classList.contains('hidden')||(it.favId&&!on)));pinSync(it); // a removed upload can't be re-added from the stage
   b.classList.toggle('on',on);b.setAttribute('aria-pressed',on);b.dataset.tip=on?'보관함에서 빼기':'보관함에 담기'}
 function favCount(){$('#favTabN').textContent=FAV.items.length||'';$('#calTabN').textContent=(()=>{const n=LOG.filter(r=>r.date===dkey(new Date())).length;return n?'오늘 '+n:''})()}
-async function favToggle(){let it=curItem();if(!it||!msg.classList.contains('hidden'))return;
+async function favToggle(){if(pkUp())return toast('목록에서 컷을 먼저 고르기');let it=curItem();if(!it||!msg.classList.contains('hidden'))return;
   if(it.kind==='3d'&&!it.url){if(!M3||c3d.classList.contains('hidden'))return;const m=await M3;it.url=m.snapshot(320)}
   const ex=favFind(it),b=$('#favBtn');
   if(ex){await favRemove(ex);toast('보관함에서 뺌')}
