@@ -1495,7 +1495,7 @@ const pinBuf={};
 // boards collected in full with the bookmarklet: {"user/board":{n,t,pins:[{i,l,t}]}} — links only, images stay on Pinterest
 let PINS={};try{PINS=JSON.parse(localStorage.getItem('cutref-pins')||'{}')||{}}catch(e){PINS={}}
 const pinSave=()=>{try{localStorage.setItem('cutref-pins',J(PINS))}catch(e){toast('핀 저장 실패 · 브라우저 저장 공간 부족','err')}};
-const pinExp=p=>({img:/^https?:/.test(p.i)?p.i:'https://i.pinimg.com/736x/'+p.i,title:p.t||'',link:!p.l?'':/^[\w-]+$/.test(p.l)?'https://www.pinterest.com/pin/'+p.l+'/':p.l});
+const pinExp=p=>({img:/^https?:/.test(p.i)?p.i:'https://i.pinimg.com/736x/'+p.i,title:p.t||'',link:!p.l?'':/^[\w-]+$/.test(p.l)?'https://www.pinterest.com/pin/'+p.l+'/':safeLink(p.l)});
 let pinPaste=false,pinMenu='';
 const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{grid:'M100,36H56A20,20,0,0,0,36,56v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,100,36ZM96,96H60V60H96ZM200,36H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,200,36Zm-4,60H160V60h36Zm-96,40H56a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,100,136Zm-4,60H60V160H96Zm104-60H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,200,136Zm-4,60H160V160h36Z',check:'M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z',ref:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',plus:'M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z',paste:'M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z',bm:'M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z',link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
 // runs on a Pinterest board page (as a bookmarklet): scrolls to the end, collects every pin above "More ideas", hands the list to cutref
@@ -1898,14 +1898,16 @@ function show(){
     img.onerror=()=>{if(curItem()!==it)return;if(viaProxy(img,img.dataset.raw||it.url))return;if(it.hd&&img.dataset.raw===it.hd){img.dataset.raw=it.url;delete img.dataset.px;img.src=M(it.url);return} /* HD failed: keep the normal size */showErr('이미지 로드 실패 (핫링크 차단 가능)')};img.onload=()=>{if(curItem()===it)busy(false)};delete img.dataset.px;img.dataset.raw=it.url;img.src=M(it.url);if(img.complete&&img.naturalWidth)busy(false);
   }
   {const inf=$('#info'),src=it.src||SRCNAME[t];inf.innerHTML=`<span>${S.pos[t]+1}</span><span>${esc(it.title)}</span>`;inf.classList.remove('gone');
-   inf.classList.toggle('lnk',!!it.link);inf.dataset.link=it.link||'';requestAnimationFrame(infoTone);inf.dataset.src=src||'';if(it.link)inf.dataset.tip='원본 : '+src;else delete inf.dataset.tip}
-  const sl=$('#srcLink');if(it.link){sl.href=it.link;sl.innerHTML=`원본 <b>${esc(it.src||SRCNAME[t])}</b> ↗`;sl.classList.remove('hidden')}else sl.classList.add('hidden');
+   inf.classList.toggle('lnk',!!safeLink(it.link));inf.dataset.link=safeLink(it.link);requestAnimationFrame(infoTone);inf.dataset.src=src||'';if(safeLink(it.link))inf.dataset.tip='원본 : '+src;else delete inf.dataset.tip}
+  const sl=$('#srcLink');if(safeLink(it.link)){sl.href=safeLink(it.link);sl.innerHTML=`원본 <b>${esc(it.src||SRCNAME[t])}</b> ↗`;sl.classList.remove('hidden')}else sl.classList.add('hidden');
   applyView();if(window.favReady)favSync();
 }
-$('#info').addEventListener('click',async e=>{e.stopPropagation();const inf=$('#info'),u=inf.dataset.link;if(!u)return;hideTip();
+$('#info').addEventListener('click',async e=>{e.stopPropagation();const inf=$('#info'),u=safeLink(inf.dataset.link);if(!u)return;hideTip();
   if(await askYes(inf,`원본 홈페이지로 이동할까요?<small>${esc(inf.dataset.src)}</small>`,'Y',{no:'N',kind:'go'}))window.open(u,'_blank','noopener,noreferrer')});
 $('#info').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#info').click()}});
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+// only web addresses may become a link or be opened: a 'javascript:' link from shared / imported data would run on this page
+const safeLink=u=>/^https?:\/\//i.test(String(u||''))?String(u):'';
 function applyView(){
   if(S.tone!=='color'&&S.tone!=='gray')S.tone='color'; // 2/3/5-tone were removed
   const t=S.tab,f=t==='3d'||S.tone==='color'?'':'grayscale(1)';
@@ -2809,7 +2811,7 @@ function lgMenu(el){const id=el.dataset.id,r=LOG.find(x=>x.id===id);if(!r)return
 lgm.addEventListener('click',async e=>{const a=e.target.closest('[data-a]');if(!a||!lgm.dataset.log)return;const id=lgm.dataset.log;lgm.classList.add('hidden');lgm.dataset.log='';
   if(a.classList.contains('off'))return;
   if(a.dataset.a==='fav')await logToFav(id);
-  else if(a.dataset.a==='src'){const r=LOG.find(x=>x.id===id);if(r&&r.link)window.open(r.link,'_blank','noopener,noreferrer');else toast('원본 링크가 없음','err')}
+  else if(a.dataset.a==='src'){const r=LOG.find(x=>x.id===id);if(r&&safeLink(r.link))window.open(safeLink(r.link),'_blank','noopener,noreferrer');else toast('원본 링크가 없음','err')}
   else{LOG=LOG.filter(r=>r.id!==id);saveLog();renderCal();syncSaveBtn();toast('기록 지움')}});
 document.addEventListener('pointerdown',e=>{if(lgm.dataset.log&&!e.target.closest('#favMenu')){lgm.classList.add('hidden');lgm.dataset.log='';document.querySelectorAll('#calDay .lg.sel').forEach(x=>x.classList.remove('sel'))}},true);
 $('#calDay').addEventListener('click',e=>{const el=e.target.closest('.lg');if(!el)return;e.preventDefault();if(lgNoClick){lgNoClick=false;return}e.stopPropagation();lgMenu(el)});
@@ -3073,7 +3075,12 @@ async function pinShared(id){const anc=document.querySelector('.tabs button[data
 function pinHash(){const sh=location.hash.match(/^#pinshare=([@\w%./-]+)$/);
   if(sh){history.replaceState(null,'',location.pathname+location.search);pinShared(sh[1]).catch(e=>toast('공유 링크 · '+e.message,'err'));return}
   const m=location.hash.match(/^#pinimp=(.+)$/s);if(!m)return;history.replaceState(null,'',location.pathname+location.search);
-  try{pinImportTxt(decodeURIComponent(m[1]))}catch(e){toast('핀 가져오기 실패 · '+(e instanceof SyntaxError||e instanceof URIError?'데이터가 잘림 · 수집 상자에서 [복사] → 붙여넣기':e.message),'err')}}
+  let o;try{o=JSON.parse(decodeURIComponent(m[1]))}catch(e){toast('핀 가져오기 실패 · 데이터가 잘림 · 수집 상자에서 [복사] → 붙여넣기','err');return}
+  // a link can be made by anyone: replacing a board you already have takes a yes (a new board is just added)
+  const u=pinKey('pinterest.com/'+String(o&&o.b||'')),has=u&&S.f.pin.boards.some(v=>v.u===u);
+  (async()=>{if(has){const anc=document.querySelector('.tabs button[data-tab="pin"]')||document.body;
+      if(!await askYes(anc,`<b>보드 갱신 · ${esc(o.n||u)}</b><small>핀 ${Array.isArray(o.pins)?o.pins.length:0}장 · 지금 목록을 새 목록으로 바꿈</small>`,'갱신',{kind:'go'}))return}
+    try{pinImportTxt(JSON.stringify(o))}catch(e){toast('핀 가져오기 실패 · '+e.message,'err')}})()}
 pinHash();window.addEventListener('hashchange',pinHash);
 
 // UI rule: a select box is exactly as wide as its longest option (+ its own padding / arrow), never stretched to fill a row
