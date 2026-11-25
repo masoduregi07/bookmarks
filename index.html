@@ -106,7 +106,6 @@ body.zen #zoomUi{display:none}
 #pick{position:absolute;inset:0;z-index:3;background:var(--stage);display:flex;flex-direction:column}
 #pick .pkh{display:flex;align-items:center;justify-content:flex-end;gap:8px;height:24px;margin:10px 12px 0 120px;font-size:11px;color:var(--tx2);white-space:nowrap;min-width:0}
 #pick .pkh>span{overflow:hidden;text-overflow:ellipsis;min-width:0}
-#pick em svg{width:12px;height:12px;fill:currentColor;flex:none}
 #pick .pkg{flex:1;min-height:0;display:grid;gap:10px;padding:8px 12px 12px;align-content:center;justify-content:center}
 #pick .t{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;container-type:size;cursor:pointer}
 #pick .t>span{position:relative;display:block;aspect-ratio:var(--ar);width:min(100cqw,calc(100cqh * var(--ar)));border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);background:#111;box-sizing:border-box;overflow:hidden}
@@ -115,8 +114,6 @@ body.zen #zoomUi{display:none}
 #pick .t.ld>span{background:#d6d4cd;border-color:var(--tx3);box-shadow:none;animation:pkld 1.2s steps(2) infinite}
 @keyframes pkld{50%{opacity:.55}}
 #pick .t.bad>span::after{content:"불러오기 실패";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb}
-#pick .t.seen img{opacity:.38}
-#pick .t em{position:absolute;right:0;top:0;display:flex;align-items:center;justify-content:center;width:18px;height:18px;background:#fff;color:var(--ink)} /* seen: check icon only */
 #pick .t.cur>span{outline:3px solid var(--yel);outline-offset:1px}
 @media (hover:hover){#pick .t:hover>span{outline:3px solid var(--yel);outline-offset:1px}}
 #pkPeek{position:absolute;z-index:5;pointer-events:none;border:2px solid var(--ink);background:#111;transform-origin:0 0;will-change:transform}
@@ -1492,7 +1489,7 @@ let PINS={};try{PINS=JSON.parse(localStorage.getItem('cutref-pins')||'{}')||{}}c
 const pinSave=()=>{try{localStorage.setItem('cutref-pins',J(PINS))}catch(e){toast('핀 저장 실패 · 브라우저 저장 공간 부족','err')}};
 const pinExp=p=>({img:/^https?:/.test(p.i)?p.i:'https://i.pinimg.com/736x/'+p.i,title:p.t||'',link:!p.l?'':/^[\w-]+$/.test(p.l)?'https://www.pinterest.com/pin/'+p.l+'/':safeLink(p.l)});
 let pinPaste=false,pinMenu='';
-const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{check:'M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z',plus:'M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z',paste:'M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z',bm:'M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z',link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
+const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{plus:'M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z',paste:'M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z',bm:'M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z',link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
 // runs on a Pinterest board page (as a bookmarklet): scrolls to the end, collects every pin above "More ideas", hands the list to cutref
 function cutrefPins(SITE){
   if(window.__crp){window.__crp.style.display='';return}
@@ -1793,8 +1790,8 @@ function sizedUrl(it,cssW){const w=PKSTEP.find(v=>v>=cssW*Math.min(2,devicePixel
   return it.kind==='vid'?it.thumb:(w<=800&&it.thumb)||it.url}
 function pkCell(t,i){const P=PK[t],it=P.items[i],ar=PKAR[t]||16/9;
   if(!it)return `<div class="t ld"><span style="--ar:${ar}"></span></div>`;
-  const src=it.kind==='vid'?it.thumb:sizedUrl(it,P.tw||320),sn=P.seen.has(i);
-  return `<div class="t${sn?' seen':''}${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}" data-full="${esc(it.url||'')}">`:'<u>영상</u>'}${sn?`<em aria-label="봄">${PHI('check')}</em>`:''}</span></div>`}
+  const src=it.kind==='vid'?it.thumb:sizedUrl(it,P.tw||320);
+  return `<div class="t${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}" data-full="${esc(it.url||'')}">`:'<u>영상</u>'}</span></div>`}
 function pkWire(root){root.querySelectorAll('img').forEach(im=>{im.onload=()=>{if(im.naturalWidth)im.parentNode.style.setProperty('--ar',im.naturalWidth/im.naturalHeight)};
   im.onerror=()=>{if(viaProxy(im,im.dataset.raw))return;if(im.dataset.full&&im.dataset.raw!==im.dataset.full){im.dataset.raw=im.dataset.full;delete im.dataset.px;im.src=M(im.dataset.full);return}im.closest('.t').classList.add('bad')}})}
 function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);P.tw=tw;
@@ -1804,7 +1801,9 @@ function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=
 function pkHead(){const h=pkEl.firstChild;if(!h||pkEl.classList.contains('hidden'))return;const fr=$('#frow').getBoundingClientRect(),sr=$('#stage').getBoundingClientRect();h.style.marginLeft=Math.max(12,Math.round(fr.right-sr.left)+16)+'px'} // header text starts right of the 필터 chips
 function pkTile(t,i){if(S.tab!==t||!PK[t].open)return;const c=pkEl.querySelectorAll('.pkg>.t')[i];if(!c)return pkRender();
   const d=document.createElement('div');d.innerHTML=pkCell(t,i);const n=d.firstChild;c.replaceWith(n);pkWire(n)}
-function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);try{prevSync()}catch(e){}if(P){const k=P.items.indexOf(curItem());if(k>=0)P.cur=k} /* yellow frame / next = the cut last on screen (also after 이전) */pkEl.classList.toggle('hidden',!on);if(on)pkRender();
+function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);
+  document.querySelectorAll('#tone button,#flip').forEach(b=>b.disabled=on); /* they act on the single cut: off while the grid is up */
+  try{prevSync()}catch(e){}if(P){const k=P.items.indexOf(curItem());if(k>=0)P.cur=k} /* yellow frame / next = the cut last on screen (also after 이전) */pkEl.classList.toggle('hidden',!on);if(on)pkRender();
   const bk=$('#pkBack'),sh=!!(pkOK(t)&&P&&!P.open&&P.items.length&&P.g===(fillG[t]||0));bk.classList.toggle('hidden',!sh);
   if(sh){const k=P.items.indexOf(curItem());$('#pkCnt').textContent=(k<0?'–':k+1)+'/'+P.items.length}
   ['#favBtn','#info','#srcLink','#zoomUi'].forEach(q=>{const e=$(q);if(e)e.style.visibility=on?'hidden':''})}
@@ -2913,9 +2912,9 @@ document.addEventListener('keydown',e=>{
   else if(act==='prev'){e.preventDefault();prev()}
   else if(act==='tone'&&S.tab==='3d'){{const L=[...D3LIGHTS,['off','꺼짐']],i=L.findIndex(x=>x[0]===S.d3light);S.d3light=L[(i+1)%L.length][0];d3Set();toast('라이팅: '+nm(L,S.d3light))}}
   else if(act==='grid'&&S.tab==='3d'){S.d3poly=!S.d3poly;d3Set();toast('폴리곤 '+(S.d3poly?'켜짐':'꺼짐'))}
-  else if(act==='tone'){S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백'})[S.tone])}
+  else if(act==='tone'){if(pkUp())return;S.tone=tones[(tones.indexOf(S.tone)+1)%tones.length];save();applyView();toast('색: '+({color:'컬러',gray:'흑백'})[S.tone])}
   else if(act==='grid'){S.gridOn[S.tab]=!S.gridOn[S.tab];save();applyView();toast('분할 '+(S.gridOn[S.tab]?'켜짐':'꺼짐'))}
-  else if(act==='flip'){S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
+  else if(act==='flip'){if(pkUp())return;S.flip=!S.flip;applyView();toast('좌우반전 '+(S.flip?'켜짐':'꺼짐'))}
   else if(act==='zen')setZen(!document.body.classList.contains('zen'));
   else if(act==='save'){toggleSave()}
   else if(act==='fav'){favToggle()}
