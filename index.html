@@ -123,7 +123,7 @@ body.zen #zoomUi{display:none}
 #pick .t em{position:absolute;right:0;top:0;display:flex;align-items:center;justify-content:center;width:18px;height:18px;background:#fff;color:var(--ink)} /* seen: check icon only */
 #pick .t.cur>span{outline:3px solid var(--yel);outline-offset:1px}
 @media (hover:hover){#pick .t:hover>span{outline:3px solid var(--yel);outline-offset:1px}}
-#pkPeek{position:absolute;z-index:5;pointer-events:none;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shd);background:#111}
+#pkPeek{position:absolute;z-index:5;pointer-events:none;border:2px solid var(--ink);background:#111;transform-origin:0 0;will-change:transform}
 #pkPeek img{width:100%;height:100%;display:block;object-fit:cover}
 #pkBack{pointer-events:auto;gap:5px}
 #viewBtn.hidden+.isep{display:none}
@@ -1824,17 +1824,24 @@ function pkNext(t){const P=PK[t];
   for(let k=1;k<=L;k++){const j=(start+k+L)%L;if(!P.seen.has(j))return pkPick(t,j)}
   return pkLoad(t)} // all seen: a new set
 // hover a tile (mouse, trackpad, Pencil hover): a bigger look, about twice the tile, without opening the cut
-{let pt=0,pc=null;const hide=()=>{clearTimeout(pt);pc=null;const pv=$('#pkPeek');if(pv)pv.classList.add('hidden')};
-  pkEl.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const c=e.target.closest('.t[data-i]');if(!c||c===pc)return;hide();pc=c;
-    pt=setTimeout(()=>{const P=PK[S.tab],it=P&&P.items[+c.dataset.i],pv=$('#pkPeek'),ti=c.querySelector('img');if(!it||!pv||!ti||!ti.naturalWidth)return;
+{let pt=0,pc=null,back='',ht=0;const pvEl=()=>$('#pkPeek'),
+  ease=on=>{const pv=pvEl();pv.style.transition=on&&!matchMedia('(prefers-reduced-motion:reduce)').matches?'transform .2s cubic-bezier(.2,.75,.25,1),box-shadow .2s':'none'};
+  // close: shrink back onto its tile, then hide
+  const hide=()=>{clearTimeout(pt);pc=null;const pv=pvEl();if(!pv||pv.classList.contains('hidden'))return;
+    ease(true);pv.style.transform=back;pv.style.boxShadow='0 0 0 var(--shd)';clearTimeout(ht);ht=setTimeout(()=>{if(!pc)pv.classList.add('hidden')},200)};
+  pkEl.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const c=e.target.closest('.t[data-i]');if(!c||c===pc)return;clearTimeout(pt);pc=c;
+    pt=setTimeout(()=>{const P=PK[S.tab],it=P&&P.items[+c.dataset.i],pv=pvEl(),ti=c.querySelector('img');if(!it||!pv||!ti||!ti.naturalWidth||pc!==c)return;
       const ar=ti.naturalWidth/ti.naturalHeight,sr=pkEl.getBoundingClientRect(),cr=c.querySelector('span').getBoundingClientRect();
       let w=Math.min(cr.width*2.2,sr.width*.55),h=w/ar;if(h>sr.height*.7){h=sr.height*.7;w=h*ar}
       const x=Math.max(8,Math.min(sr.width-w-8,cr.left-sr.left+cr.width/2-w/2)),y=Math.max(8,Math.min(sr.height-h-8,cr.top-sr.top+cr.height/2-h/2));
       const im=pv.firstChild;im.src=ti.src; // the tile picture right away, the sharper one when it lands
       const big=sizedUrl(it,w);if(big&&big!==ti.dataset.raw){const pre=new Image();pre.referrerPolicy='no-referrer';pre.onload=()=>{if(pc===c)im.src=pre.src};pre.src=M(big)}
-      Object.assign(pv.style,{left:x+'px',top:y+'px',width:Math.round(w)+'px',height:Math.round(h)+'px'});pv.classList.remove('hidden')},220)});
+      // open: start exactly over the tile and grow out of it
+      back=`translate(${cr.left-sr.left-x}px,${cr.top-sr.top-y}px) scale(${cr.width/w},${cr.height/h})`;clearTimeout(ht);
+      ease(false);Object.assign(pv.style,{left:x+'px',top:y+'px',width:Math.round(w)+'px',height:Math.round(h)+'px',transform:back,boxShadow:'0 0 0 var(--shd)'});
+      pv.classList.remove('hidden');pv.offsetWidth;ease(true);pv.style.transform='none';pv.style.boxShadow='4px 4px 0 var(--shd)'},180)});
   pkEl.addEventListener('pointerout',e=>{if(e.pointerType==='touch')return;const c=e.target.closest('.t[data-i]');if(c&&!c.contains(e.relatedTarget))hide()});
-  pkEl.addEventListener('pointerdown',hide);pkEl.addEventListener('pointerleave',hide)}
+  pkEl.addEventListener('pointerdown',()=>{clearTimeout(pt);pc=null;const pv=pvEl();if(pv)pv.classList.add('hidden')});pkEl.addEventListener('pointerleave',hide)}
 pkEl.addEventListener('click',e=>{const t=S.tab;if(!PK[t])return;if(e.target.closest('.pkr'))return pkLoad(t);
   const c=e.target.closest('.t[data-i]');if(c)pkPick(t,+c.dataset.i)});
 $('#pkBack').onclick=e=>{e.stopPropagation();const P=PK[S.tab];if(!P)return;P.open=true;vid.pause();pkSync()};
