@@ -1662,8 +1662,8 @@ async function wiki(host,q){const u=`https://${host}/api.php?format=json&origin=
   const tmo=(ms)=>{const c=new AbortController();setTimeout(()=>c.abort(),ms);return c.signal}; // a stalled wiki must end in an error, not an endless hourglass
   if(!(gw.px=gw.px||{})[host])try{const r=await fetch(u,{credentials:'omit',signal:tmo(12000)});if(r.ok)return await r.json()}catch(e){if(e.name!=='AbortError')gw.px[host]=true}
   try{const r=await fetch(P(u),{credentials:'omit',signal:tmo(15000)});if(!r.ok)throw new Error('HTTP '+r.status);return await r.json()}catch(e){if(e.name==='AbortError')throw new Error('위키 응답 없음 · 잠시 후 다시');throw new Error('위키 연결 실패 · '+netMsg(e.message,'연결 거부')+(/403/.test(e.message)?' (Worker 허용 목록에 fandom.com · wiki.gg 확인)':''))}}
-async function gameCats(g){const [id,,host,known]=g;if(gw.cats[id])return gw.cats[id];
-  if(known){gw.cats[id]=known;return known}
+async function gameCats(g,lookup){const [id,,host,known]=g;if(gw.cats[id])return gw.cats[id];
+  if(known&&!lookup){gw.cats[id]=known;return known}
   // unknown wiki: find file categories whose name looks like artwork
   const out={splash:[],sheet:[],extra:[]};let cont='';
   for(let i=0;i<6;i++){const d=await wiki(host,`action=query&list=allcategories&acmin=5&aclimit=500&acprop=size${cont?'&accontinue='+encodeURIComponent(cont):''}`);
@@ -1677,20 +1677,35 @@ async function rxFiles(host,re,fresh){const k=host+'|'+re,p=gw.files[k]||(gw.fil
   for(let i=0;i<4&&p.filter(fresh).length<3;i++){const d=await wiki(host,'action=query&list=random&rnnamespace=6&rnlimit=500');
     for(const x of (d.query&&d.query.random)||[])if(re.test(x.title)&&!p.includes(x.title))p.push(x.title)}
   return p}
-async function catFiles(host,cat){const k=host+'|'+cat;if(gw.files[k])return gw.files[k];let list=[],cont='';
+// category file lists: kept on this device for a day (a reload doesn't re-list hundreds of files)
+const GWC='cutref-gwfiles',gwStore=(()=>{try{return JSON.parse(localStorage.getItem(GWC)||'{}')||{}}catch(e){return {}}})();
+async function catFiles(host,cat){const k=host+'|'+cat;if(gw.files[k])return gw.files[k];
+  const c=gwStore[k];if(c&&Date.now()-c.t<864e5&&Array.isArray(c.l))return gw.files[k]=c.l;/* an empty one too: a renamed category isn't asked again all day */let list=[],cont='';
   for(let i=0;i<4;i++){const d=await wiki(host,`action=query&list=categorymembers&cmtitle=${encodeURIComponent('Category:'+cat)}&cmtype=file&cmlimit=500${cont?'&cmcontinue='+encodeURIComponent(cont):''}`);
     list.push(...((d.query&&d.query.categorymembers)||[]).map(x=>x.title));cont=d.continue&&d.continue.cmcontinue;if(!cont)break}
-  gw.files[k]=list;return list}
-async function gameRandom(){const f=S.f.game,pool=GAMES.filter(g=>!f.games.length||f.games.includes(g[0]));const g=pool[rnd(pool.length)];
-  const cats=await gameCats(g),kinds=f.kind?[f.kind]:['splash','sheet','extra'];const cl=kinds.flatMap(k=>cats[k]||[]);
-  if(!cl.length)throw new Error('조건에 맞는 분류가 없음 · '+g[1]);
-  for(let t=0;t<5;t++){const cat=cl[rnd(cl.length)],fresh=x=>/\.(png|jpe?g|webp)$/i.test(x)&&!S.seen.game.has(g[0]+x),files=(await (cat instanceof RegExp?rxFiles(g[2],cat,fresh):catFiles(g[2],cat))).filter(fresh);if(!files.length)continue;
-    const title=files[rnd(files.length)];
-    const d=await wiki(g[2],`action=query&prop=imageinfo&iiprop=url&iiurlwidth=1800&titles=${encodeURIComponent(title)}`);
-    const pg=Object.values((d.query&&d.query.pages)||{})[0],ii=pg&&pg.imageinfo&&pg.imageinfo[0];if(!ii)continue;
-    const name=title.replace(/^File:/,'').replace(/\.\w+$/,'').replace(/^Character /,'').replace(/_/g,' ');
-    return {kind:'img',url:ii.thumburl||ii.url,thumb:ii.thumburl&&/\/scale-to-width-down\/\d+/.test(ii.thumburl)?ii.thumburl.replace(/\/scale-to-width-down\/\d+/,'/scale-to-width-down/640'):'',hd:ii.url,title:`${g[1]} · ${name}`,link:ii.descriptionurl||`https://${g[2]}/wiki/${encodeURIComponent(title)}`,key:g[0]+title,src:g[1]+' 위키'}}
-  throw new Error('이미지를 찾지 못함 · 다시 시도')}
+  gw.files[k]=list;gwStore[k]={t:Date.now(),l:list};try{localStorage.setItem(GWC,JSON.stringify(gwStore))}catch(e){}return list}
+const gbuf={}; // per game + kind: cuts already looked up, waiting to be shown
+async function gameRandom(){const f=S.f.game,pool=GAMES.filter(g=>!f.games.length||f.games.includes(g[0]));let lastE=null;
+  // try the picked game, then up to two others, before giving up (one stuck wiki doesn't stop the tab)
+  const order=[];const left=[...pool];while(left.length&&order.length<3)order.push(left.splice(rnd(left.length),1)[0]);
+  for(const g of order){try{return await gameOne(g,f)}catch(e){lastE=new Error(g[1]+' · '+e.message)}}
+  throw lastE||new Error('이미지를 찾지 못함 · 다시 시도')}
+async function gameOne(g,f){const kinds=f.kind?[f.kind]:['splash','sheet','extra'],bk=g[0]+'|'+kinds.join(),fresh0=x=>!S.seen.game.has(g[0]+x);
+  const B=gbuf[bk]=(gbuf[bk]||[]).filter(it=>fresh0(it.key.slice(g[0].length)));if(B.length)return B.splice(rnd(B.length),1)[0];
+  for(let pass=0;pass<2;pass++){const cats=await gameCats(g,pass===1),cl=kinds.flatMap(k=>cats[k]||[]);if(!cl.length)continue;
+    // gather unseen image files from the chosen categories (empty ones are skipped)
+    let files=[];const fresh=x=>/\.(png|jpe?g|webp)$/i.test(x)&&fresh0(x);
+    for(const cat of [...cl].sort(()=>Math.random()-.5)){const l=(await (cat instanceof RegExp?rxFiles(g[2],cat,fresh):catFiles(g[2],cat))).filter(fresh);files.push(...l);if(files.length>=60)break}
+    if(!files.length){if(pass===0&&g[3]){delete gw.cats[g[0]];continue}break} // listed categories gone (renamed?): find them again once
+    // one call: picture info for up to 20 random files
+    const pick=[];while(files.length&&pick.length<20)pick.push(files.splice(rnd(files.length),1)[0]);
+    const d=await wiki(g[2],`action=query&prop=imageinfo&iiprop=url|size&iiurlwidth=1800&titles=${encodeURIComponent(pick.join('|'))}`);
+    for(const pg of Object.values((d.query&&d.query.pages)||{})){const ii=pg.imageinfo&&pg.imageinfo[0];if(!ii||!pg.title)continue;
+      if(ii.width&&ii.width<300)continue; // icons and tiny crops are not reference pictures
+      const title=pg.title,name=title.replace(/^File:/,'').replace(/\.\w+$/,'').replace(/^Character /,'').replace(/_/g,' ');
+      B.push({kind:'img',url:ii.thumburl||ii.url,hd:ii.url,title:`${g[1]} · ${name}`,link:ii.descriptionurl||`https://${g[2]}/wiki/${encodeURIComponent(title)}`,key:g[0]+title,src:g[1]+' 위키',thumb:ii.thumburl&&/\/scale-to-width-down\/\d+/.test(ii.thumburl)?ii.thumburl.replace(/\/scale-to-width-down\/\d+/,'/scale-to-width-down/640'):''})}
+    if(B.length)return B.splice(rnd(B.length),1)[0]}
+  throw new Error('이미지를 찾지 못함')}
 // ---------- Unsplash (fashion)
 const PTOPICS=[['street fashion','스트리트'],['fashion editorial','화보'],['model pose','모델 포즈'],['outfit','코디'],['coat','코트 · 아우터'],['dress','드레스'],['suit','정장'],['hanbok','한복'],['kimono','기모노'],['sneakers','신발'],['jewelry hands','손 · 액세서리'],['hat fashion','모자']];
 const PORIENT=[['','전체'],['portrait','세로'],['landscape','가로']];
@@ -1794,7 +1809,7 @@ function pkSync(){const t=S.tab,P=PK[t],on=!!(pkOK(t)&&P&&P.open);try{prevSync()
   if(sh){const k=P.items.indexOf(curItem());$('#pkCnt').textContent=(k<0?'–':k+1)+'/'+P.items.length}
   ['#favBtn','#info','#srcLink','#zoomUi'].forEach(q=>{const e=$(q);if(e)e.style.visibility=on?'hidden':''})}
 // tabs whose every cut is its own page fetch load 3 at a time; tabs that fill a shared buffer (사진 API, Sakugabooru page, 보드 RSS) stay at 1 so they never fetch the same batch twice
-const PKPAR={film:3,fig:3,game:3},pkSlow={}; // pkSlow: the site pushed back (403 / 429) → one at a time for this session
+const PKPAR={film:3,fig:3},pkSlow={}; // pkSlow: the site pushed back (403 / 429) → one at a time for this session
 const PKH={},PKHMAX=10; // earlier sets per tab, newest last: 이전 in 여러 장 보기 brings them back
 async function pkLoad(t){const old=PK[t];if(old&&old.items.length&&!old.loading){(PKH[t]=PKH[t]||[]).push(old);if(PKH[t].length>PKHMAX)PKH[t].shift()}
   const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen:new Set(),cur:-1,open:true,g,loading:true};
