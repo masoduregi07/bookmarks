@@ -1988,7 +1988,9 @@ function tRender(){const el=$('#timerBig');$('#tIn').value=fmt(tState==='idle'?S
   {const st=$('#stTop'),rt=el.textContent?(el.offsetWidth+18)+'px':'';if(st.style.right!==rt){st.style.right=rt;fitChips()}} // chips wrap before the timer box
   $('#tmr').classList.toggle('run',tState==='run');$('#tmr').classList.toggle('pause',tState==='pause');
   $('#tPlay').disabled=tState==='run';$('#tPause').disabled=tState!=='run';$('#tReset').disabled=tState==='idle'}
-function tTick(){if(tState!=='run')return;const n=tCalc();
+function tTick(){if(tState!=='run')return;
+  try{if(pkUp()){tEnd=Date.now()+tLeft*1000;return}}catch(e){} // 여러 장 grid on screen: the clock waits while a cut is being picked (picking restarts it)
+  const n=tCalc();
   if(n<=0){if(S.tSnd)SFX.chime();toast('시간 종료 → 다음 컷','ok');tLeft=S.tDur;tEnd=Date.now()+tLeft*1000;tRender();next();return}
   if(n!==tLeft){tLeft=n;tRender()}}
 function tPlay(){if(S.tDur<=0)return;SFX.unlock();if(tState==='idle')tLeft=S.tDur;tEnd=Date.now()+tLeft*1000;tState='run';clearInterval(tInt);tInt=setInterval(tTick,250);tRender()}
