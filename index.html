@@ -123,6 +123,8 @@ body.zen #zoomUi{display:none}
 #pick .t em{position:absolute;right:0;top:0;display:flex;align-items:center;justify-content:center;width:18px;height:18px;background:#fff;color:var(--ink)} /* seen: check icon only */
 #pick .t.cur>span{outline:3px solid var(--yel);outline-offset:1px}
 @media (hover:hover){#pick .t:hover>span{outline:3px solid var(--yel);outline-offset:1px}}
+#pkPeek{position:absolute;z-index:5;pointer-events:none;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--shd);background:#111}
+#pkPeek img{width:100%;height:100%;display:block;object-fit:cover}
 #pkBack{pointer-events:auto;gap:5px}
 #viewBtn.hidden+.isep{display:none}
 #pick .t:active>span{outline:3px solid var(--yel);outline-offset:1px}
@@ -1766,16 +1768,25 @@ function pkCount(t){const [W,H]=pkWH(),ar=PKAR[t]||16/9,gap=10;let n=1;
   for(let c=1;c<=8;c++){const tw=(W-gap*(c-1))/c;if(c>1&&tw<(ar>1?200:130))break;n=Math.max(n,Math.min(PKMAX,c*Math.max(1,Math.floor((H+gap)/(tw/ar+gap)))))}return n}
 // columns × rows for n tiles that makes each tile biggest
 function pkFit(n,ar){const [W,H]=pkWH(),gap=10;let b=null;for(let c=1;c<=n;c++){const r=Math.ceil(n/c),tw=Math.min((W-gap*(c-1))/c,(H-gap*(r-1))/r*ar);if(!b||tw>b.tw)b={c,r,tw}}return b}
+// picture sized for how big it is shown (CSS px × screen density, rounded to a few steps so the browser cache is shared):
+// Unsplash / Pexels / Fandom / Pinterest serve any of these sizes; other sites fall back to their small or full picture
+const PKSTEP=[320,480,640,800,1080,1440];
+function sizedUrl(it,cssW){const w=PKSTEP.find(v=>v>=cssW*Math.min(2,devicePixelRatio||1))||1440,u=it.hd||it.url||'';
+  try{if(/images\.unsplash\.com/.test(u)){const x=new URL(u);x.searchParams.set('w',w);x.searchParams.set('q','75');x.searchParams.set('fm','jpg');return x.href}
+    if(/images\.pexels\.com/.test(u)){const x=new URL(u);x.search='';x.searchParams.set('auto','compress');x.searchParams.set('cs','tinysrgb');x.searchParams.set('w',w);return x.href}}catch(e){}
+  if(/\/scale-to-width-down\/\d+/.test(it.url||''))return it.url.replace(/\/scale-to-width-down\/\d+/,'/scale-to-width-down/'+w);
+  if(/i\.pinimg\.com\/(236x|474x|736x|originals)\//.test(it.url||''))return it.url.replace(/\/(236x|474x|736x|originals)\//,'/'+(w<=236?'236x':w<=474?'474x':w<=736?'736x':'originals')+'/');
+  return it.kind==='vid'?it.thumb:(w<=800&&it.thumb)||it.url}
 function pkCell(t,i){const P=PK[t],it=P.items[i],ar=PKAR[t]||16/9;
   if(!it)return `<div class="t ld"><span style="--ar:${ar}"></span></div>`;
-  const src=it.kind==='vid'?it.thumb:(it.thumb||it.url),sn=P.seen.has(i);
+  const src=it.kind==='vid'?it.thumb:sizedUrl(it,P.tw||320),sn=P.seen.has(i);
   return `<div class="t${sn?' seen':''}${P.cur===i?' cur':''}" data-i="${i}"><span style="--ar:${ar}">${src?`<img alt="" referrerpolicy="no-referrer" src="${esc(M(src))}" data-raw="${esc(src)}" data-full="${esc(it.url||'')}">`:'<u>영상</u>'}${sn?`<em aria-label="봄">${PHI('check')}</em>`:''}</span></div>`}
 function pkWire(root){root.querySelectorAll('img').forEach(im=>{im.onload=()=>{if(im.naturalWidth)im.parentNode.style.setProperty('--ar',im.naturalWidth/im.naturalHeight)};
   im.onerror=()=>{if(viaProxy(im,im.dataset.raw))return;if(im.dataset.full&&im.dataset.raw!==im.dataset.full){im.dataset.raw=im.dataset.full;delete im.dataset.px;im.src=M(im.dataset.full);return}im.closest('.t').classList.add('bad')}})}
-function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);
+function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);P.tw=tw;
   pkEl.innerHTML=`<div class="pkh"><span>탭하면 크게 보기</span><button class="pkr" type="button">${PHI('ref')}새로 고르기</button></div>`+
     `<div class="pkg" style="grid-template-columns:repeat(${f.c},${tw}px);grid-template-rows:repeat(${f.r},${th}px)">${P.items.length||P.n?Array.from({length:P.n},(_,i)=>pkCell(t,i)).join(''):''}</div>`;
-  pkHead();pkWire(pkEl)}
+  pkEl.insertAdjacentHTML('beforeend','<div id="pkPeek" class="hidden" aria-hidden="true"><img alt="" referrerpolicy="no-referrer"></div>');pkHead();pkWire(pkEl)}
 function pkHead(){const h=pkEl.firstChild;if(!h||pkEl.classList.contains('hidden'))return;const fr=$('#frow').getBoundingClientRect(),sr=$('#stage').getBoundingClientRect();h.style.marginLeft=Math.max(12,Math.round(fr.right-sr.left)+16)+'px'} // header text starts right of the 필터 chips
 function pkTile(t,i){if(S.tab!==t||!PK[t].open)return;const c=pkEl.querySelectorAll('.pkg>.t')[i];if(!c)return pkRender();
   const d=document.createElement('div');d.innerHTML=pkCell(t,i);const n=d.firstChild;c.replaceWith(n);pkWire(n)}
@@ -1812,6 +1823,18 @@ function pkNext(t){const P=PK[t];
   const L=P.items.length,start=P.open?-1:P.cur;
   for(let k=1;k<=L;k++){const j=(start+k+L)%L;if(!P.seen.has(j))return pkPick(t,j)}
   return pkLoad(t)} // all seen: a new set
+// hover a tile (mouse, trackpad, Pencil hover): a bigger look, about twice the tile, without opening the cut
+{let pt=0,pc=null;const hide=()=>{clearTimeout(pt);pc=null;const pv=$('#pkPeek');if(pv)pv.classList.add('hidden')};
+  pkEl.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const c=e.target.closest('.t[data-i]');if(!c||c===pc)return;hide();pc=c;
+    pt=setTimeout(()=>{const P=PK[S.tab],it=P&&P.items[+c.dataset.i],pv=$('#pkPeek'),ti=c.querySelector('img');if(!it||!pv||!ti||!ti.naturalWidth)return;
+      const ar=ti.naturalWidth/ti.naturalHeight,sr=pkEl.getBoundingClientRect(),cr=c.querySelector('span').getBoundingClientRect();
+      let w=Math.min(cr.width*2.2,sr.width*.55),h=w/ar;if(h>sr.height*.7){h=sr.height*.7;w=h*ar}
+      const x=Math.max(8,Math.min(sr.width-w-8,cr.left-sr.left+cr.width/2-w/2)),y=Math.max(8,Math.min(sr.height-h-8,cr.top-sr.top+cr.height/2-h/2));
+      const im=pv.firstChild;im.src=ti.src; // the tile picture right away, the sharper one when it lands
+      const big=sizedUrl(it,w);if(big&&big!==ti.dataset.raw){const pre=new Image();pre.referrerPolicy='no-referrer';pre.onload=()=>{if(pc===c)im.src=pre.src};pre.src=M(big)}
+      Object.assign(pv.style,{left:x+'px',top:y+'px',width:Math.round(w)+'px',height:Math.round(h)+'px'});pv.classList.remove('hidden')},220)});
+  pkEl.addEventListener('pointerout',e=>{if(e.pointerType==='touch')return;const c=e.target.closest('.t[data-i]');if(c&&!c.contains(e.relatedTarget))hide()});
+  pkEl.addEventListener('pointerdown',hide);pkEl.addEventListener('pointerleave',hide)}
 pkEl.addEventListener('click',e=>{const t=S.tab;if(!PK[t])return;if(e.target.closest('.pkr'))return pkLoad(t);
   const c=e.target.closest('.t[data-i]');if(c)pkPick(t,+c.dataset.i)});
 $('#pkBack').onclick=e=>{e.stopPropagation();const P=PK[S.tab];if(!P)return;P.open=true;vid.pause();pkSync()};
