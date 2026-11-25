@@ -107,10 +107,7 @@ body.zen #zoomUi{display:none}
 #pick{position:absolute;inset:0;z-index:3;background:var(--stage);display:flex;flex-direction:column}
 #pick .pkh{display:flex;align-items:center;justify-content:flex-end;gap:8px;height:24px;margin:10px 12px 0 120px;font-size:11px;color:var(--tx2);white-space:nowrap;min-width:0}
 #pick .pkh>span{overflow:hidden;text-overflow:ellipsis;min-width:0}
-#pick .pkr{display:inline-flex;align-items:center;gap:4px;height:22px;padding:0 3px;border:none;background:none;box-shadow:none;font-size:11px;color:var(--ink)}
-#pick .pkr svg,#pick em svg{width:12px;height:12px;fill:currentColor;flex:none}
-@media (hover:hover){#pick .pkr:hover{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}}
-#pick .pkr:active{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;transform:none}
+#pick em svg{width:12px;height:12px;fill:currentColor;flex:none}
 #pick .pkg{flex:1;min-height:0;display:grid;gap:10px;padding:8px 12px 12px;align-content:center;justify-content:center}
 #pick .t{display:flex;align-items:center;justify-content:center;min-width:0;min-height:0;container-type:size;cursor:pointer}
 #pick .t>span{position:relative;display:block;aspect-ratio:var(--ar);width:min(100cqw,calc(100cqh * var(--ar)));border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shd);background:#111;box-sizing:border-box;overflow:hidden}
@@ -1497,7 +1494,7 @@ let PINS={};try{PINS=JSON.parse(localStorage.getItem('cutref-pins')||'{}')||{}}c
 const pinSave=()=>{try{localStorage.setItem('cutref-pins',J(PINS))}catch(e){toast('핀 저장 실패 · 브라우저 저장 공간 부족','err')}};
 const pinExp=p=>({img:/^https?:/.test(p.i)?p.i:'https://i.pinimg.com/736x/'+p.i,title:p.t||'',link:!p.l?'':/^[\w-]+$/.test(p.l)?'https://www.pinterest.com/pin/'+p.l+'/':safeLink(p.l)});
 let pinPaste=false,pinMenu='';
-const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{grid:'M100,36H56A20,20,0,0,0,36,56v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,100,36ZM96,96H60V60H96ZM200,36H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,200,36Zm-4,60H160V60h36Zm-96,40H56a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,100,136Zm-4,60H60V160H96Zm104-60H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,200,136Zm-4,60H160V160h36Z',check:'M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z',ref:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',plus:'M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z',paste:'M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z',bm:'M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z',link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
+const PHI=n=>`<svg viewBox="0 0 256 256" aria-hidden="true"><path d="${{check:'M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z',plus:'M228,128a12,12,0,0,1-12,12H140v76a12,12,0,0,1-24,0V140H40a12,12,0,0,1,0-24h76V40a12,12,0,0,1,24,0v76h76A12,12,0,0,1,228,128Z',paste:'M172,164a12,12,0,0,1-12,12H96a12,12,0,0,1,0-24h64A12,12,0,0,1,172,164Zm-12-52H96a12,12,0,0,0,0,24h64a12,12,0,0,0,0-24Zm60-64V216a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V48A20,20,0,0,1,56,28H90.53a51.88,51.88,0,0,1,74.94,0H200A20,20,0,0,1,220,48ZM100.29,60h55.42a28,28,0,0,0-55.42,0ZM196,52H178.59A52.13,52.13,0,0,1,180,64v8a12,12,0,0,1-12,12H88A12,12,0,0,1,76,72V64a52.13,52.13,0,0,1,1.41-12H60V212H196Z',bm:'M184,28H72A20,20,0,0,0,52,48V224a12,12,0,0,0,18.36,10.18l57.63-36,57.65,36A12,12,0,0,0,204,224V48A20,20,0,0,0,184,28Zm-4,174.35-45.65-28.53a12,12,0,0,0-12.72,0L76,202.35V52H180Z',link:'M87.5,151.52l64-64a12,12,0,0,1,17,17l-64,64a12,12,0,0,1-17-17Zm131-114a60.08,60.08,0,0,0-84.87,0L103.51,67.61a12,12,0,0,0,17,17l30.07-30.06a36,36,0,0,1,50.93,50.92L171.4,135.52a12,12,0,1,0,17,17l30.08-30.06A60.09,60.09,0,0,0,218.45,37.55ZM135.52,171.4l-30.07,30.08a36,36,0,0,1-50.92-50.93l30.06-30.07a12,12,0,0,0-17-17L37.55,133.58a60,60,0,0,0,84.88,84.87l30.06-30.07a12,12,0,0,0-17-17Z',dots:'M144,128a16,16,0,1,1-16-16A16,16,0,0,1,144,128ZM60,112a16,16,0,1,0,16,16A16,16,0,0,0,60,112Zm136,0a16,16,0,1,0,16,16A16,16,0,0,0,196,112Z',re:'M228,48V96a12,12,0,0,1-12,12H168a12,12,0,0,1,0-24h19l-7.8-7.8a75.55,75.55,0,0,0-53.32-22.26h-.43A75.49,75.49,0,0,0,72.39,75.57,12,12,0,1,1,55.61,58.41a99.38,99.38,0,0,1,69.87-28.47H126A99.42,99.42,0,0,1,196.2,59.23L204,67V48a12,12,0,0,1,24,0ZM183.61,180.43a75.49,75.49,0,0,1-53.09,21.63h-.43A75.55,75.55,0,0,1,76.77,179.8L69,172H88a12,12,0,0,0,0-24H40a12,12,0,0,0-12,12v48a12,12,0,0,0,24,0V189l7.8,7.8A99.42,99.42,0,0,0,130,226.06h.56a99.38,99.38,0,0,0,69.87-28.47,12,12,0,0,0-16.78-17.16Z',trash:'M216,48H180V36A28,28,0,0,0,152,8H104A28,28,0,0,0,76,36V48H40a12,12,0,0,0,0,24h4V208a20,20,0,0,0,20,20H192a20,20,0,0,0,20-20V72h4a12,12,0,0,0,0-24ZM100,36a4,4,0,0,1,4-4h48a4,4,0,0,1,4,4V48H100Zm88,168H68V72H188ZM116,104v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Zm48,0v64a12,12,0,0,1-24,0V104a12,12,0,0,1,24,0Z',open:'M220,112v96a20,20,0,0,1-20,20H56a20,20,0,0,1-20-20V112A20,20,0,0,1,56,92H76a12,12,0,0,1,0,24H60v88H196V116H180a12,12,0,0,1,0-24h20A20,20,0,0,1,220,112ZM96.49,72.49,116,53v83a12,12,0,0,0,24,0V53l19.51,19.52a12,12,0,1,0,17-17l-40-40a12,12,0,0,0-17,0l-40,40a12,12,0,1,0,17,17Z'}[n]}"/></svg>`;
 // runs on a Pinterest board page (as a bookmarklet): scrolls to the end, collects every pin above "More ideas", hands the list to cutref
 function cutrefPins(SITE){
   if(window.__crp){window.__crp.style.display='';return}
@@ -1750,8 +1747,8 @@ let busyT=0;function busy(on,now){const h=$('#hg');if(!on){clearTimeout(busyT);b
   if(now){clearTimeout(busyT);busyT=0;h.classList.remove('hidden')}else if(!busyT&&h.classList.contains('hidden'))busyT=setTimeout(()=>{busyT=0;h.classList.remove('hidden')},300)}
 let nextWait=null; // one pending load per tab: repeated taps while loading don't skip cuts
 async function next(){const t=S.tab;
-  if(S.pos[t]<S.hist[t].length-1){if(PK[t])PK[t].open=false;S.pos[t]++;show();pkSync();return}
-  if(pkOK(t))return pkNext(t); // 보기 = 여러 장: next unseen cut of the set, or a new set
+  if(pkOK(t))return pkLoad(t); // 여러 장 보기: 다음 컷 = a new set to pick from (stepping cut by cut is 한 장 보기's job)
+  if(S.pos[t]<S.hist[t].length-1){S.pos[t]++;show();return}
   if(!S.queue[t].length){if(nextWait===t)return;nextWait=t;busy(true);lastErr[t]='';try{let g;do{g=fillG[t]||0;await fill(t)}while(!S.queue[t].length&&g!==(fillG[t]||0))}finally{if(nextWait===t)nextWait=null}
     if(S.tab!==t)return; // user switched tabs while this one was loading
     if(!S.queue[t].length){return showErr(lastErr[t]||'불러오기 실패')}}
@@ -1784,7 +1781,7 @@ function pkCell(t,i){const P=PK[t],it=P.items[i],ar=PKAR[t]||16/9;
 function pkWire(root){root.querySelectorAll('img').forEach(im=>{im.onload=()=>{if(im.naturalWidth)im.parentNode.style.setProperty('--ar',im.naturalWidth/im.naturalHeight)};
   im.onerror=()=>{if(viaProxy(im,im.dataset.raw))return;if(im.dataset.full&&im.dataset.raw!==im.dataset.full){im.dataset.raw=im.dataset.full;delete im.dataset.px;im.src=M(im.dataset.full);return}im.closest('.t').classList.add('bad')}})}
 function pkRender(){const t=S.tab,P=PK[t];if(!P)return;const ar=PKAR[t]||16/9,f=pkFit(P.n,ar),tw=Math.floor(f.tw),th=Math.floor(tw/ar);P.tw=tw;
-  pkEl.innerHTML=`<div class="pkh"><span>탭하면 크게 보기</span><button class="pkr" type="button">${PHI('ref')}새로 고르기</button></div>`+
+  pkEl.innerHTML=`<div class="pkh"><span>탭하면 크게 보기</span></div>`+
     `<div class="pkg" style="grid-template-columns:repeat(${f.c},${tw}px);grid-template-rows:repeat(${f.r},${th}px)">${P.items.length||P.n?Array.from({length:P.n},(_,i)=>pkCell(t,i)).join(''):''}</div>`;
   pkEl.insertAdjacentHTML('beforeend','<div id="pkPeek" class="hidden" aria-hidden="true"><img alt="" referrerpolicy="no-referrer"></div>');pkHead();pkWire(pkEl)}
 function pkHead(){const h=pkEl.firstChild;if(!h||pkEl.classList.contains('hidden'))return;const fr=$('#frow').getBoundingClientRect(),sr=$('#stage').getBoundingClientRect();h.style.marginLeft=Math.max(12,Math.round(fr.right-sr.left)+16)+'px'} // header text starts right of the 필터 chips
@@ -1818,17 +1815,12 @@ async function pkLoad(t){const g=fillG[t]||0,P=PK[t]={n:pkCount(t),items:[],seen
 const pkUp=()=>!$('#pick').classList.contains('hidden'); // grid on screen: the big cut behind it is not the one the user is looking at
 function pkPick(t,i){const P=PK[t],it=P&&P.items[i];if(!it)return;P.seen.add(i);P.cur=i;P.open=false;
   if(S.hist[t][S.pos[t]]!==it){S.hist[t].push(it);S.pos[t]=S.hist[t].length-1}show();pkSync()}
-function pkNext(t){const P=PK[t];
-  if(!P||P.g!==(fillG[t]||0)||!P.items.length)return pkLoad(t); // first time, or filter / settings changed
-  const L=P.items.length,start=P.open?-1:P.cur;
-  for(let k=1;k<=L;k++){const j=(start+k+L)%L;if(!P.seen.has(j))return pkPick(t,j)}
-  return pkLoad(t)} // all seen: a new set
 // hover a tile (mouse, trackpad, Pencil hover): a bigger look, about twice the tile, without opening the cut
 {let pt=0,pc=null,back='',ht=0;const pvEl=()=>$('#pkPeek'),
-  ease=on=>{const pv=pvEl();pv.style.transition=on&&!matchMedia('(prefers-reduced-motion:reduce)').matches?'transform .2s cubic-bezier(.2,.75,.25,1),box-shadow .2s':'none'};
+  ease=on=>{const pv=pvEl();pv.style.transition=on&&!matchMedia('(prefers-reduced-motion:reduce)').matches?'transform .2s cubic-bezier(.2,.75,.25,1)':'none'};
   // close: shrink back onto its tile, then hide
   const hide=()=>{clearTimeout(pt);pc=null;const pv=pvEl();if(!pv||pv.classList.contains('hidden'))return;
-    ease(true);pv.style.transform=back;pv.style.boxShadow='0 0 0 var(--shd)';clearTimeout(ht);ht=setTimeout(()=>{if(!pc)pv.classList.add('hidden')},200)};
+    ease(true);pv.style.transform=back;clearTimeout(ht);ht=setTimeout(()=>{if(!pc)pv.classList.add('hidden')},200)};
   pkEl.addEventListener('pointerover',e=>{if(e.pointerType==='touch')return;const c=e.target.closest('.t[data-i]');if(!c||c===pc)return;clearTimeout(pt);pc=c;
     pt=setTimeout(()=>{const P=PK[S.tab],it=P&&P.items[+c.dataset.i],pv=pvEl(),ti=c.querySelector('img');if(!it||!pv||!ti||!ti.naturalWidth||pc!==c)return;
       const ar=ti.naturalWidth/ti.naturalHeight,sr=pkEl.getBoundingClientRect(),cr=c.querySelector('span').getBoundingClientRect();
@@ -1838,11 +1830,11 @@ function pkNext(t){const P=PK[t];
       const big=sizedUrl(it,w);if(big&&big!==ti.dataset.raw){const pre=new Image();pre.referrerPolicy='no-referrer';pre.onload=()=>{if(pc===c)im.src=pre.src};pre.src=M(big)}
       // open: start exactly over the tile and grow out of it
       back=`translate(${cr.left-sr.left-x}px,${cr.top-sr.top-y}px) scale(${cr.width/w},${cr.height/h})`;clearTimeout(ht);
-      ease(false);Object.assign(pv.style,{left:x+'px',top:y+'px',width:Math.round(w)+'px',height:Math.round(h)+'px',transform:back,boxShadow:'0 0 0 var(--shd)'});
-      pv.classList.remove('hidden');pv.offsetWidth;ease(true);pv.style.transform='none';pv.style.boxShadow='4px 4px 0 var(--shd)'},180)});
+      ease(false);Object.assign(pv.style,{left:x+'px',top:y+'px',width:Math.round(w)+'px',height:Math.round(h)+'px',transform:back});
+      pv.classList.remove('hidden');pv.offsetWidth;ease(true);pv.style.transform='none'},180)});
   pkEl.addEventListener('pointerout',e=>{if(e.pointerType==='touch')return;const c=e.target.closest('.t[data-i]');if(c&&!c.contains(e.relatedTarget))hide()});
   pkEl.addEventListener('pointerdown',()=>{clearTimeout(pt);pc=null;const pv=pvEl();if(pv)pv.classList.add('hidden')});pkEl.addEventListener('pointerleave',hide)}
-pkEl.addEventListener('click',e=>{const t=S.tab;if(!PK[t])return;if(e.target.closest('.pkr'))return pkLoad(t);
+pkEl.addEventListener('click',e=>{const t=S.tab;if(!PK[t])return;
   const c=e.target.closest('.t[data-i]');if(c)pkPick(t,+c.dataset.i)});
 $('#pkBack').onclick=e=>{e.stopPropagation();const P=PK[S.tab];if(!P)return;P.open=true;vid.pause();pkSync()};
 const VIC={grid:'M100,36H56A20,20,0,0,0,36,56v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,100,36ZM96,96H60V60H96ZM200,36H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V56A20,20,0,0,0,200,36Zm-4,60H160V60h36Zm-96,40H56a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,100,136Zm-4,60H60V160H96Zm104-60H156a20,20,0,0,0-20,20v44a20,20,0,0,0,20,20h44a20,20,0,0,0,20-20V156A20,20,0,0,0,200,136Zm-4,60H160V160h36Z',one:'M208,28H48A20,20,0,0,0,28,48V208a20,20,0,0,0,20,20H208a20,20,0,0,0,20-20V48A20,20,0,0,0,208,28Zm-4,176H52V52H204Z'};
